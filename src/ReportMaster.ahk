@@ -236,6 +236,7 @@ ReportMasterMain(params*){
 }
 
 openMyDocs(reportName){
+	WinSetAlwaysOnTop false
 	myText := Format("已保存报表：{1}·`n`n是否打开所在文件夹? ", reportName)
 	openFolder := MsgBox(myText, "ReportMaster","OKCancel")
 	if (openFolder = "OK") {
