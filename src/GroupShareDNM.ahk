@@ -4,15 +4,16 @@ GroupShareDnmMain() {
     WinMaximize "ahk_class SunAwtFrame"
     WinActivate "ahk_class SunAwtFrame"
 
-    ; MsgBox options
-    myTextYes := "是(Y) = 进行DNM和Share"
-    myTextNo := "否(N) = 只进行DNM"
-    myTextCancel := "取消 = 退出脚本"
-    myTextMain := "`n将开始团Share及DNM"
-    myText := Format("{1}`n{2}`n{3}`n`n{4}", myTextYes, myTextNo, myTextCancel, myTextMain)
-    myTitle := "Q.Group Share&DNM"
+    textMsg := "
+    (
+    是(Y) = 进行DNM和Share
+    否(N) = 只进行DNM
+    取消 = 退出脚本
 
-    selector := MsgBox(myText, myTitle, "YesNoCancel")
+    将开始团Share及DNM
+    )"
+
+    selector := MsgBox(textMsg, "Q.Group Share&DNM", "YesNoCancel")
     if (selector = "Yes") {
         dnmShare()
     } else if (selector = "No") {
@@ -40,7 +41,7 @@ dnm() {
         Sleep 400
         Click
         Sleep 300
-        Click
+        Click 
         MouseMove 473, 494
         Sleep 500
         Click
