@@ -1,6 +1,7 @@
 ; reminder: Y-pos needs to minus 20
 ; Main runs the main process
-#Include "%A_WorkingDir%\Lib\reports.ahk"
+; #Include "%A_ScriptDir%\Lib\reports.ahk"
+#Include "../Lib/reports.ahk"
 
 ReportMasterMain(params*){
     WinMaximize "ahk_class SunAwtFrame"
