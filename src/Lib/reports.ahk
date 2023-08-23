@@ -1,6 +1,6 @@
-reportOpen(searchStr){
-	WinMaximize "ahk_class SunAwtFrame"
-	WinActivate "ahk_class SunAwtFrame"
+reportOpen(searchStr) {
+    WinMaximize "ahk_class SunAwtFrame"
+    WinActivate "ahk_class SunAwtFrame"
     BlockInput true
 
     MouseMove 591, 436
@@ -8,12 +8,12 @@ reportOpen(searchStr){
     Send "!m"
     Sleep 300
     Send "{R}"
-	
+
     ; SayString 处输入搜索报表字段
     Sleep 200
     Send searchStr
     Sleep 200
-	
+
     ; 通用 - 操作为：搜索报表，勾选Print to PDF，打开报表选项
     MouseMove 785, 211
     Sleep 150
@@ -30,79 +30,79 @@ reportOpen(searchStr){
     BlockInput false
 }
 
-reportOpenDelimitedData(searchStr){
-	WinMaximize "ahk_class SunAwtFrame"
-	WinActivate "ahk_class SunAwtFrame"
-    BlockInput true
-
-	MouseMove 591, 436
-    Sleep 150
-    Send "!m"
-    Sleep 150
-    Send "R"
-    Sleep 150
-	
-    Sleep 200
-    Send searchStr
-    Sleep 200
-    
-	MouseMove 756, 222
-	MouseMove 786, 211
-	Sleep 150
-	Click
-	MouseMove 456, 581
-	Sleep 150
-	Click "Down"
-	MouseMove 459, 581
-	Sleep 100
-	Click "Up"
-	MouseMove 816, 578
-	Sleep 150
-	Click
-	MouseMove 773, 682
-	Sleep 150
-	Click
-	MouseMove 736, 669
-	Sleep 150
-	Click
-    BlockInput false
-}
-
-reportOpenSpreadSheet(searchStr){
+reportOpenDelimitedData(searchStr) {
     WinMaximize "ahk_class SunAwtFrame"
-	WinActivate "ahk_class SunAwtFrame"
+    WinActivate "ahk_class SunAwtFrame"
     BlockInput true
 
-	MouseMove 591, 436
+    MouseMove 591, 436
     Sleep 150
     Send "!m"
     Sleep 150
     Send "R"
     Sleep 150
-	
+
     Sleep 200
     Send searchStr
     Sleep 200
-    
-	MouseMove 797, 215
-	Sleep 100
-	Click
-	MouseMove 455, 583
-	Sleep 100
-	Click
-	MouseMove 728, 579
-	Sleep 100
-	Click
-	MouseMove 757, 703
-	Sleep 100
-	Click
-	MouseMove 731, 669
-	Sleep 100
-	Click
+
+    MouseMove 756, 222
+    MouseMove 786, 211
+    Sleep 150
+    Click
+    MouseMove 456, 581
+    Sleep 150
+    Click "Down"
+    MouseMove 459, 581
+    Sleep 100
+    Click "Up"
+    MouseMove 816, 578
+    Sleep 150
+    Click
+    MouseMove 773, 682
+    Sleep 150
+    Click
+    MouseMove 736, 669
+    Sleep 150
+    Click
     BlockInput false
 }
 
-reportSave(savename){
+reportOpenSpreadSheet(searchStr) {
+    WinMaximize "ahk_class SunAwtFrame"
+    WinActivate "ahk_class SunAwtFrame"
+    BlockInput true
+
+    MouseMove 591, 436
+    Sleep 150
+    Send "!m"
+    Sleep 150
+    Send "R"
+    Sleep 150
+
+    Sleep 200
+    Send searchStr
+    Sleep 200
+
+    MouseMove 797, 215
+    Sleep 100
+    Click
+    MouseMove 455, 583
+    Sleep 100
+    Click
+    MouseMove 728, 579
+    Sleep 100
+    Click
+    MouseMove 757, 703
+    Sleep 100
+    Click
+    MouseMove 731, 669
+    Sleep 100
+    Click
+    BlockInput false
+}
+
+reportSave(savename) {
 
     BlockInput true
     Sleep 1000
@@ -126,22 +126,22 @@ reportSave(savename){
     BlockInput false
 }
 
-comp(){
+comp() {
     searchStr := "%complimentary"
     fileName := "comp.pdf"
     BlockInput true
-    reportOpen(searchStr) 
+    reportOpen(searchStr)
     Sleep 200
     reportSave(fileName)
     TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-mgrFlash(){
+mgrFlash() {
     searchStr := "FI01"
     fileName := "NA02-MANAGER FLASH.pdf"
     BlockInput true
-    reportOpen(searchStr) 
+    reportOpen(searchStr)
     Sleep 200
 
     MouseMove 749, 313
@@ -153,18 +153,18 @@ mgrFlash(){
     Sleep 150
 
     reportSave(fileName)
-    TrayTip Format("正在保存：{1}",fileName)
+    TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-hisFor15(){
+hisFor15() {
     searchStr := "RS05"
     fileName := "RS05-林总.pdf"
     BlockInput true
-    reportOpen(searchStr) 
+    reportOpen(searchStr)
     Sleep 200
 
-    ; report options here    
+    ; report options here
     MouseMove 644, 158
     Sleep 150
     Click "Down"
@@ -196,20 +196,19 @@ hisFor15(){
     Sleep 150
 
     reportSave(fileName)
-    TrayTip Format("正在保存：{1}",fileName)
+    TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-hisForThisMonth(){
+hisForThisMonth() {
     preAuditDate := DateAdd(A_Now, -1, "Days")
-    preAuditMonth := FormatTime(preAuditDate, "MM") 
-    preAuditDay := FormatTime(preAuditDate, "dd") 
+    preAuditMonth := FormatTime(preAuditDate, "MM")
+    preAuditDay := FormatTime(preAuditDate, "dd")
     preAuditYear := FormatTime(preAuditDate, "yyyy")
-    
+
     nextMonth := preAuditMonth = 12 ? 1 : preAuditMonth + 1
     if (nextMonth < 10) nextMonth := Format("0{1}", nextMonth)
-
-    printYear := preAuditMonth = 12 ? preAuditYear + 1 : preAuditYear
+        printYear := preAuditMonth = 12 ? preAuditYear + 1 : preAuditYear
     firstDayOfNextMonth := Format("{2}{1}01", nextMonth, printYear)
 
     dateFirst := Format("{1}01{2}", preAuditMonth, preAuditYear)
@@ -218,22 +217,22 @@ hisForThisMonth(){
     searchStr := "RS05"
     fileName := Format("RS05-{1}月.pdf", preAuditMonth)
     BlockInput true
-    reportOpen(searchStr) 
+    reportOpen(searchStr)
     Sleep 200
-    
-    ; report options here    
-	Sleep 150
+
+    ; report options here
+    Sleep 150
     Send "{Backspace}"
-	Sleep 300
-   	Send dateFirst
-   	Sleep 300
-	MouseMove 645, 185
-	Sleep 150
-	Click "Down"
-	MouseMove 531, 184
-	Sleep 150
-	Click "Up"
-	Sleep 150
+    Sleep 300
+    Send dateFirst
+    Sleep 300
+    MouseMove 645, 185
+    Sleep 150
+    Click "Down"
+    MouseMove 531, 184
+    Sleep 150
+    Click "Up"
+    Sleep 150
     Send "{Backspace}"
     Sleep 300
     Send dateLast
@@ -245,21 +244,21 @@ hisForThisMonth(){
     Sleep 150
     Click
     Sleep 150
-    
+
     reportSave(fileName)
-    TrayTip Format("正在保存：{1}",fileName)
+    TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-hisForNextMonth(){
+hisForNextMonth() {
     preAuditDate := DateAdd(A_Now, -1, "Days")
-    preAuditMonth := FormatTime(preAuditDate, "MM") 
-    preAuditDay := FormatTime(preAuditDate, "dd") 
+    preAuditMonth := FormatTime(preAuditDate, "MM")
+    preAuditDay := FormatTime(preAuditDate, "dd")
     preAuditYear := FormatTime(preAuditDate, "yyyy")
 
     nMonth := preAuditMonth = 12 ? 1 : preAuditMonth + 1
     if (nMonth < 10) nextMonth := Format("0{1}", nMonth)
-    nextNextMonth := nextMonth = 12 ? 1 : nextMonth + 1
+        nextNextMonth := nextMonth = 12 ? 1 : nextMonth + 1
     if (nextNextMonth < 10) {
         nextNextMonth := Format("0{1}", nextNextMonth)
     }
@@ -268,26 +267,26 @@ hisForNextMonth(){
     firstDayOfNextNextMonth := Format("{2}{1}01", nextNextMonth, printYear)
     dateFirstNext := Format("{1}01{2}", nextMonth, printYear)
     dateLastNext := FormatTime(DateAdd(firstDayOfNextNextMonth, -1, "Days"), "MMddyyyy")
-    
+
     searchStr := "RS05"
     fileName := Format("RS05-{1}月.pdf", nextMonth)
     BlockInput true
-    reportOpen(searchStr) 
+    reportOpen(searchStr)
     Sleep 200
-    
-    ; report options here    
-	Sleep 150
+
+    ; report options here
+    Sleep 150
     Send "{Backspace}"
-	Sleep 300
-   	Send dateFirstNext
-   	Sleep 300
-	MouseMove 645, 185
-	Sleep 150
-	Click "Down"
-	MouseMove 531, 184
-	Sleep 150
-	Click "Up"
-	Sleep 150
+    Sleep 300
+    Send dateFirstNext
+    Sleep 300
+    MouseMove 645, 185
+    Sleep 150
+    Click "Down"
+    MouseMove 531, 184
+    Sleep 150
+    Click "Up"
+    Sleep 150
     Send "{Backspace}"
     Sleep 300
     Send dateLastNext
@@ -299,20 +298,20 @@ hisForNextMonth(){
     Sleep 150
     Click
     Sleep 150
-    
+
     reportSave(fileName)
-    TrayTip Format("正在保存：{1}",fileName)
+    TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-vipArr(){
+vipArr() {
     searchStr := "FO01-VIP"
     fileName := "FO01-VIP ARR.pdf"
     BlockInput true
-    reportOpen(searchStr) 
+    reportOpen(searchStr)
     Sleep 200
 
-    ; report options here    
+    ; report options here
     MouseMove 464, 174
     Sleep 150
     Click "Down"
@@ -334,32 +333,32 @@ vipArr(){
     Sleep 150
 
     reportSave(fileName)
-    TrayTip Format("正在保存：{1}",fileName)
+    TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-vipInh(){
+vipInh() {
     searchStr := "%GUEST INH WITHOUT DUE OUT"
     fileName := "VIP INH-Guest INH without due out.pdf"
     BlockInput true
-    reportOpen(searchStr) 
+    reportOpen(searchStr)
     Sleep 200
 
-    ; report options here    
+    ; report options here
 
     reportSave(fileName)
-    TrayTip Format("正在保存：{1}",fileName)
+    TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-vipDep(){
+vipDep() {
     searchStr := "FO03"
     fileName := "FO03-VIP DEP.pdf"
     BlockInput true
-    reportOpen(searchStr) 
+    reportOpen(searchStr)
     Sleep 200
 
-    ; report options here    
+    ; report options here
     MouseMove 600, 525
     Sleep 150
     Click
@@ -380,25 +379,25 @@ vipDep(){
     Sleep 150
 
     reportSave(fileName)
-    TrayTip Format("正在保存：{1}",fileName)
+    TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-arrAll(){
+arrAll() {
     searchStr := "FO01"
     fileName := "FO01-Arrival Detailed.pdf"
     BlockInput true
-    reportOpen(searchStr) 
+    reportOpen(searchStr)
     Sleep 200
 
-    ; report options here    
+    ; report options here
     MouseMove 309, 546
     Sleep 150
     Click
-    
+
     MouseMove 317, 599
     Sleep 150
-    Click 
+    Click
     MouseMove 325, 643
     Sleep 150
     Click
@@ -410,35 +409,35 @@ arrAll(){
     Sleep 150
 
     reportSave(fileName)
-    TrayTip Format("正在保存：{1}",fileName)
+    TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-inhAll(){
+inhAll() {
     searchStr := "FO02"
     fileName := "FO02-INH.pdf"
     BlockInput true
-    reportOpen(searchStr) 
+    reportOpen(searchStr)
     Sleep 200
 
-    ; report options here    
+    ; report options here
     MouseMove 433, 503
     Sleep 150
     Click
 
     reportSave(fileName)
-    TrayTip Format("正在保存：{1}",fileName)
+    TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-depAll(){
+depAll() {
     searchStr := "FO03"
     fileName := "FO03-DEP.pdf"
     BlockInput true
-    reportOpen(searchStr) 
+    reportOpen(searchStr)
     Sleep 200
 
-    ; report options here    
+    ; report options here
     MouseMove 607, 520
     Sleep 150
     click
@@ -448,18 +447,18 @@ depAll(){
     Click
 
     reportSave(fileName)
-    TrayTip Format("正在保存：{1}",fileName)
+    TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-creditLimit(){
+creditLimit() {
     searchStr := "FO11"
     fileName := "FO11-CREDIT LIMIT.pdf"
     BlockInput true
-    reportOpen(searchStr) 
+    reportOpen(searchStr)
     Sleep 200
 
-    ; report options here    
+    ; report options here
     MouseMove 686, 454
     Click
     MouseMove 409, 502
@@ -468,18 +467,18 @@ creditLimit(){
     Sleep 200
 
     reportSave(fileName)
-    TrayTip Format("正在保存：{1}",fileName)
+    TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-bbf(){
+bbf() {
     searchStr := "FO13"
     fileName := "FO13-Packages 早餐.pdf"
     BlockInput true
-    reportOpen(searchStr) 
+    reportOpen(searchStr)
     Sleep 200
 
-    ; report options here    
+    ; report options here
 
     MouseMove 599, 256
     Sleep 150
@@ -540,51 +539,51 @@ bbf(){
     Sleep 150
 
     reportSave(fileName)
-    TrayTip Format("正在保存：{1}",fileName)
+    TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-rooms(){
+rooms() {
     searchStr := "%hkroomstatusperroom"
     fileName := "Rooms.pdf"
     BlockInput true
-    reportOpen(searchStr) 
+    reportOpen(searchStr)
     Sleep 200
 
-    ; report options here    
+    ; report options here
     MouseMove 476, 495
     Sleep 150
     Click
     Sleep 150
 
     reportSave(fileName)
-    TrayTip Format("正在保存：{1}",fileName)
+    TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-ooo(){
+ooo() {
     searchStr := "HK03"
     fileName := "HK03-OOO.pdf"
     BlockInput true
-    reportOpen(searchStr) 
+    reportOpen(searchStr)
     Sleep 200
 
-    ; report options here    
+    ; report options here
 
 
     reportSave(fileName)
-    TrayTip Format("正在保存：{1}",fileName)
+    TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-groupRoom(){
+groupRoom() {
     searchStr := "GRPRMLIST"
     fileName := "Group Rooming List.pdf"
     BlockInput true
-    reportOpen(searchStr) 
+    reportOpen(searchStr)
     Sleep 200
 
-    ; report options here    
+    ; report options here
     MouseMove 372, 524
     Sleep 150
     Click
@@ -597,18 +596,18 @@ groupRoom(){
     Sleep 150
 
     reportSave(fileName)
-    TrayTip Format("正在保存：{1}",fileName)
+    TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-groupInh(){
+groupInh() {
     searchStr := "GROUP IN HOUSE"
     fileName := "Group INH.pdf"
     BlockInput true
-    reportOpen(searchStr) 
+    reportOpen(searchStr)
     Sleep 200
 
-    ; report options here    
+    ; report options here
     MouseMove 470, 405
     Sleep 150
     Click
@@ -618,69 +617,69 @@ groupInh(){
     Sleep 150
 
     reportSave(fileName)
-    TrayTip Format("正在保存：{1}",fileName)
+    TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-noShow(){
+noShow() {
     searchStr := "FO08"
     fileName := "FO08-NO SHOW.pdf"
     BlockInput true
-    reportOpen(searchStr) 
+    reportOpen(searchStr)
     Sleep 200
 
-    ; report options here    
+    ; report options here
     MouseMove 573, 420
-	Sleep 50
-	; KeyDown "Backspace", 1
-	; Sleep 64
-	; KeyUp "Backspace", 1
+    Sleep 50
+    ; KeyDown "Backspace", 1
+    ; Sleep 64
+    ; KeyUp "Backspace", 1
     Send "{Backspace}"
-	Sleep 150
-	; KeyDown "Num -", 1
-	; Sleep 150
-	; KeyUp "Num -", 1
-	; Sleep 72
+    Sleep 150
+    ; KeyDown "Num -", 1
+    ; Sleep 150
+    ; KeyUp "Num -", 1
+    ; Sleep 72
     Send "{NumpadSub}"
     Sleep 100
-	; KeyDown "Num 1", 1
-	; Sleep 150
-	; KeyUp "Num 1", 1
-	; Sleep 55
+    ; KeyDown "Num 1", 1
+    ; Sleep 150
+    ; KeyUp "Num 1", 1
+    ; Sleep 55
     Send "1"
     Sleep 150
-	; KeyDown "Tab", 1
-	; Sleep 81
-	; KeyUp "Tab", 1
-	; Sleep 150
+    ; KeyDown "Tab", 1
+    ; Sleep 81
+    ; KeyUp "Tab", 1
+    ; Sleep 150
     Send "{Tab}"
     Sleep 150
-	; KeyDown "Num -", 1
-	; Sleep 96
-	; KeyUp "Num -", 1
-	; Sleep 88
+    ; KeyDown "Num -", 1
+    ; Sleep 96
+    ; KeyUp "Num -", 1
+    ; Sleep 88
     Send "{NumpadSub}"
     Sleep 100
-	; KeyDown "Num 1", 1
-	; Sleep 97
-	; KeyUp "Num 1", 1
-	; Sleep 150
+    ; KeyDown "Num 1", 1
+    ; Sleep 97
+    ; KeyUp "Num 1", 1
+    ; Sleep 150
     Send "1"
     Sleep 150
 
     reportSave(fileName)
-    TrayTip Format("正在保存：{1}",fileName)
+    TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-cancel(){
+cancel() {
     searchStr := "RESCANCEL"
     fileName := "CXL.pdf"
     BlockInput true
-    reportOpen(searchStr) 
+    reportOpen(searchStr)
     Sleep 200
 
-    ; report options here    
+    ; report options here
     MouseMove 601, 271
     Sleep 150
     Click "Down"
@@ -721,142 +720,141 @@ cancel(){
     Sleep 150
 
     reportSave(fileName)
-    TrayTip Format("正在保存：{1}",fileName)
+    TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-arrivingGroups(blockCodeInput, saveName){
+arrivingGroups(blockCodeInput, saveName) {
     fileName := Format("{1}.pdf", saveName)
     BlockInput true
-    reportOpen("GRPRMLIST") 
+    reportOpen("GRPRMLIST")
     Sleep 200
 
-    ; report options here    
+    ; report options here
     MouseMove 845, 356
-	Sleep 150
-	Click
-	MouseMove 804, 366
-	Sleep 150
-	Send "!a"
     Sleep 150
-	MouseMove 808, 585
-	Sleep 150
-	Click "Down"
-	MouseMove 805, 594
-	Sleep 150
-	Click "Up"
-	MouseMove 737, 595
-	Sleep 150
-	Click
-	Sleep 150
-	; KeyDown "Space", 1
-	; Sleep 101
-	; KeyUp "Space", 1
-	; Sleep 30
-    Send "{Space}"
-    Sleep 100
-	Send "{Up}"
-	Sleep 100
-    Send "{Space}"
-    Sleep 100
-    Send "{Up}"
-	Sleep 100
-    Send "{Space}"
-    Sleep 100
-    Send "{Up}"
-	Sleep 100
-    Send "{Space}"
-    Sleep 100
-    Send "{Up}"
-	Sleep 100
-    Send "{Space}"
-    Sleep 100
-    Send "{Up}"
-	Sleep 100
-    Send "{Space}"
-    Sleep 100
-    Send "{Up}"
-	Sleep 100
-    Send "{Space}"
-    Sleep 100
-    Send "{Up}"
-	Sleep 100
-    Send "{Space}"
-    Sleep 100
-    Send "{Up}"
-	Sleep 350
-	Send "!o"
+    Click
+    MouseMove 804, 366
     Sleep 150
-	MouseMove 842, 304
-	Sleep 150
-	Click
-	MouseMove 569, 263
-	Sleep 150
-	Click
-	Sleep 150
-	
-	Send blockCodeInput
-	Sleep 150
+    Send "!a"
+    Sleep 150
+    MouseMove 808, 585
+    Sleep 150
+    Click "Down"
+    MouseMove 805, 594
+    Sleep 150
+    Click "Up"
+    MouseMove 737, 595
+    Sleep 150
+    Click
+    Sleep 150
+    ; KeyDown "Space", 1
+    ; Sleep 101
+    ; KeyUp "Space", 1
+    ; Sleep 30
+    Send "{Space}"
+    Sleep 100
+    Send "{Up}"
+    Sleep 100
+    Send "{Space}"
+    Sleep 100
+    Send "{Up}"
+    Sleep 100
+    Send "{Space}"
+    Sleep 100
+    Send "{Up}"
+    Sleep 100
+    Send "{Space}"
+    Sleep 100
+    Send "{Up}"
+    Sleep 100
+    Send "{Space}"
+    Sleep 100
+    Send "{Up}"
+    Sleep 100
+    Send "{Space}"
+    Sleep 100
+    Send "{Up}"
+    Sleep 100
+    Send "{Space}"
+    Sleep 100
+    Send "{Up}"
+    Sleep 100
+    Send "{Space}"
+    Sleep 100
+    Send "{Up}"
+    Sleep 350
+    Send "!o"
+    Sleep 150
+    MouseMove 842, 304
+    Sleep 150
+    Click
+    MouseMove 569, 263
+    Sleep 150
+    Click
+    Sleep 150
 
-	MouseMove 848, 261
-	Sleep 150
-	Click
-	MouseMove 603, 392
-	Sleep 150
-	Click
-	Sleep 150
+    Send blockCodeInput
+    Sleep 150
+
+    MouseMove 848, 261
+    Sleep 150
+    Click
+    MouseMove 603, 392
+    Sleep 150
+    Click
+    Sleep 150
     Send "{Space}"
-	MouseMove 728, 453
-	Sleep 150
-	Send "!o"
-	Sleep 150
-	Send "!o"
-	Sleep 150
-	MouseMove 711, 471
-	Sleep 150
-	Click
-	MouseMove 422, 500
-	Sleep 150
-	Click
-	MouseMove 609, 627
+    MouseMove 728, 453
+    Sleep 150
+    Send "!o"
+    Sleep 150
+    Send "!o"
+    Sleep 150
+    MouseMove 711, 471
+    Sleep 150
+    Click
+    MouseMove 422, 500
+    Sleep 150
+    Click
+    MouseMove 609, 627
 
     reportSave(fileName)
-    TrayTip Format("正在保存：{1}",fileName)
+    TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
 }
 
-special(today){
+special(today) {
     searchStr := "Wshgz_special"
     fileName := Format("{1} 水果5.xls", today)
     BlockInput true
-    reportOpenSpreadSheet(searchStr) 
+    reportOpenSpreadSheet(searchStr)
     Sleep 200
 
-    ; report options here    
+    ; report options here
     MouseMove 600, 462
-	Sleep 200
+    Sleep 200
     Click
-	Sleep 200
-	Send "水果5"
-	Sleep 100	
-	MouseMove 616, 518
-	Sleep 200
+    Sleep 200
+    Send "水果5"
+    Sleep 100
+    MouseMove 616, 518
+    Sleep 200
 
     reportSave(fileName)
-    TrayTip Format("正在保存：",fileName)
+    TrayTip Format("正在保存：", fileName)
     BlockInput false
 }
-
 
 
 ; template(){
 ;     searchStr := ""
 ;     fileName := ""
 ;     BlockInput true
-;     reportOpen(searchStr) 
+;     reportOpen(searchStr)
 ;     Sleep 200
 
-;     ; report options here    
+;     ; report options here
 
 ;     reportSave(fileName)
 ;     TrayTip Format("正在保存：{1}",fileName)
