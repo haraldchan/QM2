@@ -1,7 +1,12 @@
-#Include "%A_ScriptDir%\src\SharePbPf.ahk"
-#Include "%A_ScriptDir%\src\CityLedgerCO.ahk"
-#Include "%A_ScriptDir%\src\ReportMaster.ahk"
-#Include "%A_ScriptDir%\src\GroupShareDNM.ahk"
+; #Include "%A_ScriptDir%\src\SharePbPf.ahk"
+; #Include "%A_ScriptDir%\src\CityLedgerCO.ahk"
+; #Include "%A_ScriptDir%\src\ReportMaster.ahk"
+; #Include "%A_ScriptDir%\src\GroupShareDNM.ahk"
+
+#Include "../src/SharePbPf.ahk"
+#Include "../src/CityLedgerCO.ahk"
+#Include "../src/ReportMaster.ahk"
+#Include "../src/GroupShareDNM.ahk"
 TrayTip "QM 2 运行中。 按下Alt+F1 可查看快捷键指南"
 
 tips := "
