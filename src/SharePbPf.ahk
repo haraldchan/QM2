@@ -5,7 +5,6 @@ SharePbPfMain() {
 	WinMaximize "ahk_class SunAwtFrame"
 	WinActivate "ahk_class SunAwtFrame"
 
-	; MsgBox options
 	textMsg := "
 	(
 	是(Y) = InHouse Share
