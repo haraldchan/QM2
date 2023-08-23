@@ -18,10 +18,11 @@ CityLedgerCOMain() {
 fullWin() {
 	BlockInput true
 	MouseMove 862, 252
+	Sleep 100
 	Click
 	Sleep 100
 	Send "!o"
-	Sleep 200
+	Sleep 1500
 	Send "{Blind}{Text}CL"
 	Sleep 150
 	Send "!f"
@@ -40,13 +41,14 @@ fullWin() {
 smallWin() {
 	BlockInput true
 	MouseMove 700, 180
-	Sleep 50
+	Sleep 100
 	Click
-	Sleep 50
-	MouseMove 660, 605
-	Sleep 50
-	Click
-	Sleep 200
+	Sleep 100
+	; MouseMove 660, 605
+	; Sleep 50
+	; Click
+	Send "!o"
+	Sleep 1500
 	Send "{Blind}{Text}CL"
 	Sleep 150
 	Send "!f"
