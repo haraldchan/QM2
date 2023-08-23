@@ -10,8 +10,9 @@ ReportMasterMain(params*){
     today := FormatTime(A_Now, "yyyyMMdd")
 	prompt := "
 	(
-	请输入对应的报表编号（默认为夜审后操作）。`n
-	（报表将保存至 开始菜单-文档）。`n`n
+	请输入对应的报表编号（默认为夜审后操作）。
+	（报表将保存至 开始菜单-文档）。
+
 	1  - Guest INH Complimentary
 	2  - NA02-Manager Flash
 	3  - RS05-（前后15天）History & Forecast
@@ -30,7 +31,8 @@ ReportMasterMain(params*){
 	16 - Group Rooming List
 	17 - Group In House
 	18 - FO08-No Show
-	19 - Cancellations`n`n
+	19 - Cancellations
+
 	garr - 保存当天团单
 	sp - 保存当天水果5（Excel格式）
 	666 - 保存以上所有报表（执行时间约8分钟，期间请勿操作电脑）`n
