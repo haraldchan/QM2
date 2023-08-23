@@ -3,31 +3,31 @@
 
 ; findColor location: X600, Y830
 ; # = 0xFF
-CityLedgerCOMain(){
-    WinMaximize "ahk_class SunAwtFrame"
+CityLedgerCOMain() {
+	WinMaximize "ahk_class SunAwtFrame"
 	WinActivate "ahk_class SunAwtFrame"
 
-    isBlue := "0x004080" 
-    if (PixelGetColor(600, 830) = isBlue) {
-        fullWin()
-    } else {
-        smallWin()
-    }
+	isBlue := "0x004080"
+	if (PixelGetColor(600, 830) = isBlue) {
+		fullWin()
+	} else {
+		smallWin()
+	}
 }
 
-fullWin(){
-    BlockInput true
-    MouseMove 862, 252
+fullWin() {
+	BlockInput true
+	MouseMove 862, 252
 	Click
 	Sleep 100
-    Send "!o"
-    Sleep 200
+	Send "!o"
+	Sleep 200
 	Send "{Blind}{Text}CL"
 	Sleep 150
-    Send "!f"
-    Sleep 100
-    Send "!p"
-    Sleep 200
+	Send "!f"
+	Sleep 100
+	Send "!p"
+	Sleep 200
 	MouseMove 669, 515
 	Sleep 1000
 	Click
@@ -37,9 +37,9 @@ fullWin(){
 	BlockInput false
 }
 
-smallWin(){
-    BlockInput true
-    MouseMove 700, 180
+smallWin() {
+	BlockInput true
+	MouseMove 700, 180
 	Sleep 50
 	Click
 	Sleep 50
@@ -49,17 +49,17 @@ smallWin(){
 	Sleep 200
 	Send "{Blind}{Text}CL"
 	Sleep 150
-    Send "!f"
-    Sleep 100
-    Send "!p"
-    Sleep 200
+	Send "!f"
+	Sleep 100
+	Send "!p"
+	Sleep 200
 	MouseMove 662, 520
 	Sleep 1000
 	Click
 	Sleep 300
-    BlockInput false
-    Sleep 100
-    WinRestore "ahk_class SunAwtFrame"
+	BlockInput false
+	Sleep 100
+	WinRestore "ahk_class SunAwtFrame"
 }
 
 ; hotkeys
