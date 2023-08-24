@@ -15,7 +15,7 @@ SharePbPfMain() {
 	粘贴P/B P/F：请在InHouse点开Comment窗口后启动
 	)"
 
-	selector := MsgBox(textMsg, "Q.INH Share & P/B P/F", "YesNoCancel")
+	selector := MsgBox(textMsg, "INH Share & P/B P/F", "YesNoCancel")
 	if (selector = "Yes") {
 		share()
 	} else if (selector = "No") {
