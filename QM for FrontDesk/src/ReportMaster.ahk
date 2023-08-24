@@ -255,6 +255,7 @@ ReportMasterMain(params*) {
 
 		Default:
 			MsgBox("请选择表中的指令", "ReportMaster")
+			WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 	}
 
 }
