@@ -1,13 +1,15 @@
 ; reminder: Y-pos needs to minus 20
 ; Main runs the main process
 ; #Include "%A_ScriptDir%\Lib\reports.ahk"
+; #Include "%A_ScriptDir%\Lib\utils.ahk"
 #Include "../Lib/reports.ahk"
+#Include "../Lib/utils.ahk"
+today := FormatTime(A_Now, "yyyyMMdd")
 
 ReportMasterMain(params*) {
 	WinMaximize "ahk_class SunAwtFrame"
 	WinActivate "ahk_class SunAwtFrame"
 
-	today := FormatTime(A_Now, "yyyyMMdd")
 	prompt := "
 	(
 	请输入对应的报表编号（默认为夜审后操作）。
