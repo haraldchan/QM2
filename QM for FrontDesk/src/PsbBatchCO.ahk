@@ -5,10 +5,7 @@
 #Include "../lib/reports.ahk"
 #Include "../config.ini"
 
-/* TODO:Create GUI
-    1. create a file select ui
-    2. create ini file for file path(for xls depencies) store
-*/
+; TODO:Create GUI: create a file select ui
 today := FormatTime(A_Now, "yyyyMMdd")
 PsbBatchCoMain() {
     quitOnRoom := IniRead("%A_ScriptDir%\config.ini", "PsbBatchCO", "errorQuitAt")
