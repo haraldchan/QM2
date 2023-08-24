@@ -3,11 +3,15 @@
 ; #Include "%A_ScriptDir%\src\CityLedgerCO.ahk"
 ; #Include "%A_ScriptDir%\src\ReportMaster.ahk"
 ; #Include "%A_ScriptDir%\src\GroupShareDNM.ahk"
+; #Include "%A_ScriptDir%\src\PsbBatchCO.ahk"
+; #Include "%A_ScriptDir%\src\GroupKeys.ahk"
 #Include "../src/lib/utils.ahk"
 #Include "../src/SharePbPf.ahk"
 #Include "../src/CityLedgerCO.ahk"
 #Include "../src/ReportMaster.ahk"
 #Include "../src/GroupShareDNM.ahk"
+#Include ../src/PsbBatchCO.ahk
+#Include ../src/GroupKeys.ahk
 TrayTip "QM 2 运行中。 按下Alt+F1 可查看快捷键指南"
 
 tips := "
@@ -34,5 +38,7 @@ F12:: cleanReload()	; use 'Reload' for script reset
 #Hotif WinExist("ahk_class SunAwtFrame") 
 F9:: SharePbPfMain()
 F4:: GroupShareDnmMain()
+^F9:: PsbBatchCoMain()
 ^o:: CityLedgerCOMain()
+^F1:: GroupKeysMain()
 ^F11:: ReportMasterMain()
