@@ -1,5 +1,7 @@
-; #Include "%A_ScriptDir%\Lib\reports.ahk"
-#Include "../Lib/reports.ahk"
+; #Include "%A_ScriptDir%\lib\utils.ahk"
+; #Include "%A_ScriptDir%\lib\reports.ahk"
+#Include "../lib/utils.ahk"
+#Include "../lib/reports.ahk"
 #Include "../config.ini"
 
 /* TODO:Create GUI
@@ -8,6 +10,11 @@
 */
 today := FormatTime(A_Now, "yyyyMMdd")
 PsbBatchCoMain() {
+    quitOnRoom := IniRead("%A_ScriptDir%\config.ini", "PsbBatchCO", "errorQuitAt")
+    if (quitOnRoom != "") {
+        MsgBox(Format("上次拍Out为出错停止，已拍至：{1}`n请先更新CheckOut.xls", quitOnRoom))
+    }
+
     textMsg := "
     (
     即将开始批量拍Out 脚本
@@ -19,12 +26,12 @@ PsbBatchCoMain() {
 
     selector := MsgBox(textMsg, "PSB CheckOut(Batch)", "YesNoCancel")
     if (selector = "No") {
-        pakOut()
+        batchOut()
     } else if (selector = "Yes") {
         saveDep()
-        pakOut()
+        batchOut()
     } else {
-        Reload
+        cleanReload()
     }
 }
 
@@ -53,15 +60,15 @@ saveDep() {
             frTime := "1400"
             toTime := "2359"
         Case "0":
-            frTime := InputBox("请输入开始时间（格式：“hhmm”）","PSB CheckOut(Batch)").Value
-            toTime := InputBox("请输入结束时间（格式：“hhmm”）","PSB CheckOut(Batch)").Value
+            frTime := InputBox("请输入开始时间（格式：“hhmm”）", "PSB CheckOut(Batch)").Value
+            toTime := InputBox("请输入结束时间（格式：“hhmm”）", "PSB CheckOut(Batch)").Value
         default:
             MsgBox("请输入对应时间的指令。")
     }
 
     BlockInput true
     WinMaximize "ahk_class SunAwtFrame"
-	WinActivate "ahk_class SunAwtFrame"
+    WinActivate "ahk_class SunAwtFrame"
     ; { saving departured room numbers (y-pos already modified!)
     reportOpenDelimitedData("departure_all")
     Sleep 100
@@ -99,43 +106,43 @@ saveDep() {
     roomNumsTxt := Format("{1} check-out.txt", today)
     reportSave(roomNumsTxt)
     ; }
-    MsgBox("保存房号中，请等待(5)秒","PSB CheckOut(Batch)","T5 4096")
+    MsgBox("保存房号中，请等待(5)秒", "PSB CheckOut(Batch)", "T5 4096")
     A_Clipboard := FileRead("%A_MyDocuments%\%roomNumsTxt%")
     BlockInput false
 
     ; TODO: open excel file and paste
     path := IniRead("%A_ScriptDir%\config.ini", "PsbBatchCO", "xlsPath")
     Run path
-    WinWait "" ;TODO: findout wps's ahk_class 
-    WinMaximize "" 
+    WinWait "" ;TODO: findout wps's ahk_class
+    WinMaximize ""
     Sleep 3500
     ; { pasting data (y-pos already modified!)
     MouseMove 735, 408
-	Sleep 500
+    Sleep 500
     Send "{E}"
-	Sleep 1000
-	MouseMove 231, 921
-	Sleep 100
-	Click
-	MouseMove 70, 195
-	Sleep 100
-	Click
-	Sleep 100
+    Sleep 1000
+    MouseMove 231, 921
+    Sleep 100
+    Click
+    MouseMove 70, 195
+    Sleep 100
+    Click
+    Sleep 100
     Send "^v"
     Sleep 300
-	MouseMove 946, 177
-	Sleep 100
-	Click
-	Sleep 100
-	Send "^x"
+    MouseMove 946, 177
+    Sleep 100
+    Click
+    Sleep 100
+    Send "^x"
     Sleep 300
-	MouseMove 176, 918
-	Sleep 100
-	Click
-	MouseMove 91, 174
-	Sleep 100
-	Click
-	Sleep 100
+    MouseMove 176, 918
+    Sleep 100
+    Click
+    MouseMove 91, 174
+    Sleep 100
+    Click
+    Sleep 100
     Send "^v"
     Sleep 300
     ; }
@@ -147,11 +154,66 @@ saveDep() {
     MsgBox(continueText, "PSB CheckOut(Batch)")
 }
 
-pakOut() {
+batchOut() {
+    autoOut := MsgBox("即将开始自动拍Out脚本`n请先打开PSB，进入“旅客退房”界面", "PSB CheckOut(Batch)", "OKCancel")
+    if (autoOut.Result := "Cancel") {
+        cleanReload()
+    }
+    path := IniRead("%A_ScriptDir%\config.ini", "PsbBatchCO", "xlsPath")
+    Xl := ComObject("Excel.Application")
+    Xlbook := Xl.Workbooks.Open(path)
+    depRooms := Xlbook.Worksheets("Sheet1")
+    lastRow := Xlbook.ActiveSheet.UsedRange.Rows.Count
+    roomNum := Integer(depRooms.Cells(1, 1))
+    row := 1
+    errorBrown := "0x804000" ; TODO: confirm this hex color code!
+    BlockInput true
+     loop lastRow {
+        roomNum := Integer(depRooms.Cells(row, 1).Value)
+        A_Clipboard := roomNum
+        ; { check out in psb (y-pos already modified!)
+        MouseMove 294, 177
+        Sleep 500
+        Click
+        Sleep 350
+        Send "^v"
+        MouseMove 297, 171
+        Sleep 100
+        Send "^f"
+        Sleep 300
+        Send "{Enter}"
+        Sleep 800
+        Send "{Enter}"
+        Sleep 800
+        MouseMove 304, 182
+        Sleep 800
+        Click "Down"
+        MouseMove 182, 187
+        Sleep 720
+        Click "Up"
+        MouseMove 183, 185
+        Sleep 50
+        Send "{BackSpace}"
+        Send 200
+        ; }
+        ; terminate on error pop-up
+        if (PixelGetColor(251, 196) = errorBrown) {
+            MsgBox(Format("PSB系统出错，脚本已终止`n`n已拍Out到：{1}", roomNum))
+            quitOnRoom := roomNum
+            IniWrite(quitOnRoom, "%A_ScriptDir%\config.ini", "PsbBatchCO", "errorQuitAt")
+            cleanReload()
+        }
 
+        row += 1
+    }
+    BlockInput false
+    Xlbook.Close
+    Xl.Quit
+    IniWrite("", "%A_ScriptDir%\config.ini", "PsbBatchCO", "errorQuitAt")
+    MsgBox("PSB 批量拍Out 已完成！", "PSB CheckOut(Batch)")
 }
 
 ; hotkeys
-; ^F9:: SharePbPfMain()
-; F12:: Reload	; use 'Reload' for script reset
+; ^F9:: PsbBatchCoMain()
+; F12:: cleanReload()	; use 'Reload' for script reset
 ; ^F12:: ExitApp	; use 'ExitApp' to kill script
