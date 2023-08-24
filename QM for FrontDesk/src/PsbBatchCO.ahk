@@ -1,5 +1,6 @@
 ; #Include "%A_ScriptDir%\lib\utils.ahk"
 ; #Include "%A_ScriptDir%\lib\reports.ahk"
+; #Include "%A_ScriptDir%\config.ini"
 #Include "../lib/utils.ahk"
 #Include "../lib/reports.ahk"
 #Include "../config.ini"
