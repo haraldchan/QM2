@@ -161,7 +161,6 @@ batchOut() {
     Xlbook := Xl.Workbooks.Open(path)
     depRooms := Xlbook.Worksheets("Sheet1")
     lastRow := Xlbook.ActiveSheet.UsedRange.Rows.Count
-    roomNum := Integer(depRooms.Cells(1, 1))
     row := 1
     errorBrown := "0x804000" ; TODO: confirm this hex color code!
     BlockInput true
