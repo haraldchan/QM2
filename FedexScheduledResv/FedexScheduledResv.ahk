@@ -20,7 +20,6 @@ lastRow := Xlbook.ActiveSheet.UsedRange.Rows.Count
 BlockInput true
 loop (lastRow - 4) {
 	; receiving shedule info (row)
-	col := 1
 	flightInfo := Map()
 	flightFormat := [
 		"tripNum",
@@ -36,8 +35,7 @@ loop (lastRow - 4) {
 		"flightOut2"
 	]
 	loop flightFormat.Legnth {
-		flightInfo[flightFormat[A_Index]] := shcdDay.Cells(row, col).Text
-		col++
+		flightInfo[flightFormat[A_Index]] := shcdDay.Cells(row, A_Index).Text
 	}
 	; date reformatting
 	if (StrSplit(flightInfo["ibDate"], "/")[1] < A_MM) {
