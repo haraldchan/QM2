@@ -39,10 +39,10 @@ loop schdSheetAmount {
 
 	loop (lastRow - 3) {
 		flightInfo := []
-		loop 11 {
+		loop flightFormat.Length {
 			flightInfo[A_Index] := schdData.ActiveSheet.Cells(schdRow, A_Index).Text
 		}
-		loop 11 {
+		loop flightFormat.Length {
 			template.ActiveSheet.Cells(tempRow, A_Index + 4) := flightInfo[A_Index]
 		}
 		schdRow++
