@@ -108,7 +108,6 @@ saveDep() {
     A_Clipboard := FileRead("%A_MyDocuments%\%roomNumsTxt%")
     BlockInput false
 
-    ; TODO: open excel file and paste
     path := IniRead("%A_ScriptDir%\config.ini", "PsbBatchCO", "xlsPath")
     Run path
     WinWait "" ;TODO: findout wps's ahk_class
