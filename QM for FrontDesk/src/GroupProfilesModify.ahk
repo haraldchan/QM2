@@ -79,7 +79,7 @@ GroupProfilesModifyMain() {
         ;     cleanReload()
         ; }
         row++
-        roomNum := Integer(groupRooms.Cells(row, 1))
+        roomNum := Integer(groupRooms.Cells(row, 1).Value)
     }
     Xlbook.Close
     Xl.Quit
