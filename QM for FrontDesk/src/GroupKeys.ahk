@@ -49,9 +49,9 @@ GroupKeysMain() {
     Xlbook := Xl.Workbooks.Open(path)
     groupRooms := Xlbook.Worksheets("Sheet1")
     lastRow := Xlbook.ActiveSheet.UsedRange.Rows.Count
-    roomNum := Integer(groupRooms.Cells(1, 1))
-    coDateRead := Integer(groupRooms.Cells(1, 2))
-    coTimeRead := Integer(groupRooms.Cells(1, 3))
+    roomNum := Integer(groupRooms.Cells(1, 1).Value)
+    coDateRead := Integer(groupRooms.Cells(1, 2).Value)
+    coTimeRead := Integer(groupRooms.Cells(1, 3).Value)
     A_Clipboard := roomNum
     row := 1
 
