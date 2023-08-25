@@ -35,7 +35,7 @@ loop (lastRow - 4) {
 		"flightOut1",
 		"flightOut2"
 	]
-	loop 11 {
+	loop flightFormat.Legnth {
 		flightInfo[flightFormat[A_Index]] := shcdDay.Cells(row, col).Text
 		col++
 	}
