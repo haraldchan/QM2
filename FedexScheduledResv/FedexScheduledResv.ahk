@@ -36,7 +36,7 @@ loop (lastRow - 4) {
 		"flightOut2"
 	]
 	loop 11 {
-		flightInfo[flightFormat(A_Index)] := shcdDay.Cells(row, col).Text
+		flightInfo[flightFormat[A_Index]] := shcdDay.Cells(row, col).Text
 		col++
 	}
 	; date reformatting
