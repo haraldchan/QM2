@@ -6,7 +6,7 @@
 #Include "../Lib/utils.ahk"
 today := FormatTime(A_Now, "yyyyMMdd")
 
-ReportMasterMain(params*) {
+ReportMasterMain() {
 	WinMaximize "ahk_class SunAwtFrame"
 	WinActivate "ahk_class SunAwtFrame"
 
@@ -273,6 +273,8 @@ openMyDocs(reportName) {
 
 getBlockInfo() {
 	blockInfoObj := {}
+	; if Obj not working as expected, use Map instead.
+	; blockInfoMap := Map()
 	Xl := ComObject("Excel.Application")
 	fileName := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{1}Group ARR&DEP.xlsx", today)
 	info := Xl.Workbooks.Open(fileName).Worksheets("Sheet1")
@@ -280,13 +282,17 @@ getBlockInfo() {
 	loop {
 		blockCodeReceived := info.Cells(row, 1)
 		blockNameReceived := info.Cells(row, 2)
-		blockInfoObj.blockNameReceived := blockCodeReceived
+		blockInfoObj[blockNameReceived] := blockCodeReceived
+		; blockInfoMap[blockCodeReceived] := blockCodeReceived
 		if (blockCodeReceived = "" || blockCodeReceived = "GROUP STAYOVER") {
 			break
 		}
 		row++
 	}
+	info.Close
+    Xl.Quit
 	return blockInfoObj
+	; return blockInfoMap
 }
 
 groupArr() {
@@ -303,7 +309,6 @@ groupArr() {
 		arrivingGroups(g, g)
 	}
 	WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-
 }
 
 groupArrAuto(blockInfo) {
