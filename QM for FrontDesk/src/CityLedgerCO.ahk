@@ -2,17 +2,18 @@
 ; Main runs the main process
 
 ; findColor location: X600, Y830
-; # = 0xFF
+; # = 0x
 CityLedgerCOMain() {
 	WinMaximize "ahk_class SunAwtFrame"
 	WinActivate "ahk_class SunAwtFrame"
-
+	WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 	isBlue := "0x004080"
 	if (PixelGetColor(600, 830) = isBlue) {
 		fullWin()
 	} else {
 		smallWin()
 	}
+	WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 }
 
 fullWin() {
