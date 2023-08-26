@@ -46,18 +46,8 @@ loop schdSheetAmount {
 	TrayTip Format("正在保存：{1} FedEx Sign In Sheet.xlsx", fileDate)
 
 	loop (lastRow - 3) {
-		flightInfo := []
 		loop flightFormat.Length {
-			flightInfo.Push(schdData.Worksheets(sheetIndex).Cells(schdRow, A_Index).Text)
-		}
-		; flightInfoText := ""
-		; 	for f in flightInfo {
-		; 		flightInfoText .= Format("{1}：{2}`n", flightFormat[A_Index], flightInfo[A_Index])
-		; 	}
-		; 	MsgBox(flightInfoText)
-		loop flightFormat.Length {
-			template.ActiveSheet.Cells(tempRow, A_Index + 4).Value := flightInfo[A_Index]
-
+			template.ActiveSheet.Cells(tempRow, A_Index + 4).Value := schdData.Worksheets(sheetIndex).Cells(schdRow, A_Index).Text
 		}
 		schdRow++
 		tempRow++
