@@ -15,7 +15,8 @@ toNextDayTime := IniRead("%A_ScriptDir%\config.ini", "FSR", "toNextDayTime")
 Xl := ComObject("Excel.Application")
 Xlbook := Xl.Workbooks.Open(path)
 shcdDay := Xlbook.Worksheets("Sheet%sheetIndex.Value%")
-lastRow := Xlbook.ActiveSheet.UsedRange.Rows.Count
+lastRow := Xlbook.ActiveSheet.Cells(Xlbook.ActiveSheet.Rows.Count,"A").End(-4162).Row
+
 ; filling in pmsreservations
 BlockInput true
 loop (lastRow - 4) {
