@@ -1,14 +1,14 @@
-path := IniRead("%A_ScriptDir%\config.ini", "FSM", "schedulePath")
-range := IniRead("%A_ScriptDir%\config.ini", "FSM", "scheduleRange")
+config := Format("{1}\config.ini", A_ScriptDir)
+path := IniRead(config, "FSM", "schedulePath")
+schdRange := IniRead(config, "FSM", "scheduleRange")
 tempPath := "\\10.0.2.13\fd\25-FEDEX\Schedule生成处理工具\FedEx Sign In Sheet temp(空模板).xlsx"
-
-if (DirExist("\\10.0.2.13\fd\25-FEDEX\Sign-In sheet生成\%range%") = false) {
-	DirCreate "\\10.0.2.13\fd\25-FEDEX\Sign-In sheet生成\%range%"
-}
+saveDir := Format("\\10.0.2.13\fd\25-FEDEX\Sign-In sheet生成({1})", schdRange)
+DirCreate saveDir
 
 Xl := ComObject("Excel.Application")
 schdData := Xl.Workbooks.Open(path)
 schdSheetAmount := schdData.Sheets.Count
+
 sheet := 1
 schdRow := 4
 tempRow := 3
@@ -27,36 +27,48 @@ flightFormat := [
 ]
 
 loop schdSheetAmount {
-	sheetIndex := Format("Sheet{1}", A_Index)
 	template := Xl.Workbooks.Open(tempPath)
-	ciDate := schdData.Worksheets(sheetIndex).Cells(3, 1).Text
-	lastRow := schdData.Worksheets(sheetIndex).UsedRange.Rows.Count
+	sheetIndex := Format("Sheet{1}", sheet)
+	schdData.Worksheets(sheetIndex).Activate
+	ciDate := schdData.ActiveSheet.Cells(3, 1).Text
+	lastRow := schdData.ActiveSheet.Cells(schdData.ActiveSheet.Rows.Count,"A").End(-4162).Row
+	if (ciDate = "") {
+		schdData.Close
+		template.Close
+		Xl.Quit
+		break
+	}
 	if (StrSplit(ciDate, "/")[1] < A_MM) {
 		fileDate := Format("{1}{2}", A_Year + 1, StrReplace(ciDate, "/", ""))
 	} else {
 		fileDate := Format("{1}{2}", A_Year, StrReplace(ciDate, "/", ""))
 	}
-	TrayTip "正在保存：%fileDate% FedEx Sign In Sheet.xlsx"
+	TrayTip Format("正在保存：{1} FedEx Sign In Sheet.xlsx", fileDate)
 
 	loop (lastRow - 3) {
 		flightInfo := []
 		loop flightFormat.Length {
-			flightInfo[A_Index] := schdData.ActiveSheet.Cells(schdRow, A_Index).Text
+			flightInfo.Push(schdData.Worksheets(sheetIndex).Cells(schdRow, A_Index).Text)
 		}
+		; flightInfoText := ""
+		; 	for f in flightInfo {
+		; 		flightInfoText .= Format("{1}：{2}`n", flightFormat[A_Index], flightInfo[A_Index])
+		; 	}
+		; 	MsgBox(flightInfoText)
 		loop flightFormat.Length {
-			template.ActiveSheet.Cells(tempRow, A_Index + 4) := flightInfo[A_Index]
+			template.ActiveSheet.Cells(tempRow, A_Index + 4).Value := flightInfo[A_Index]
+
 		}
 		schdRow++
 		tempRow++
 	}
-	saveName := "\\10.0.2.13\25-FEDEX\Sign-In sheet生成(%range%)\%ciDate%FedEx Sign In Sheet.xlsx"
-	template.SaveAs(saveName)
-	template.close
+	sheet++
+	template.SaveAs(Format("{1}\{2}FedEx Sign In Sheet.xlsx", saveDir, fileDate))
 	schdRow := 4
 	tempRow := 3
 }
-
+Xl.Quit()
 checkSavedSchdules := MsgBox("已生成Sign-in Sheet文件。`n是否打开保存所在文件夹查看？", "FedexScheduleMonthly", "OKCancel")
 if (checkSavedSchdules = "OK") {
-	Run "\\10.0.2.13\fd\25-FEDEX\Sign-In sheet生成\%range%"
+	Run saveDir
 }
