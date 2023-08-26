@@ -27,9 +27,10 @@ flightFormat := [
 ]
 
 loop schdSheetAmount {
+	sheetIndex := Format("Sheet{1}", A_Index)
 	template := Xl.Workbooks.Open(tempPath)
-	ciDate := schdData.Worksheets(sheet).Cells(3, 1).Text
-	lastRow := schdData.ActiveSheet.UsedRange.Rows.Count
+	ciDate := schdData.Worksheets(sheetIndex).Cells(3, 1).Text
+	lastRow := schdData.Worksheets(sheetIndex).UsedRange.Rows.Count
 	if (StrSplit(ciDate, "/")[1] < A_MM) {
 		fileDate := Format("{1}{2}", A_Year + 1, StrReplace(ciDate, "/", ""))
 	} else {
@@ -49,9 +50,8 @@ loop schdSheetAmount {
 		tempRow++
 	}
 	saveName := "\\10.0.2.13\25-FEDEX\Sign-In sheet生成(%range%)\%ciDate%FedEx Sign In Sheet.xlsx"
-	Xl.ActiveWorkbooks.SaveAs(saveName)
+	template.SaveAs(saveName)
 	template.close
-	sheet++
 	schdRow := 4
 	tempRow := 3
 }
