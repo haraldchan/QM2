@@ -4,6 +4,7 @@
 ; #Include "%A_ScriptDir%\Lib\utils.ahk"
 #Include "../Lib/reports.ahk"
 #Include "../Lib/utils.ahk"
+
 today := FormatTime(A_Now, "yyyyMMdd")
 
 ReportMasterMain() {
@@ -227,11 +228,11 @@ ReportMasterMain() {
 		Case "garr":
 			WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 			reportName := "团单"
-			fileName := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{1}Group ARR&DEP.xlsx")
+			fileName := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{2}\{2}{3}\{1}Group ARR&DEP.xlsx", today, A_Year, A_MM)			
 			blockInfo := getBlockInfo()
 			blockInfoText := ""
 			for blockName, blockCode in blockInfo {
-				blockInfoText .= Format("{1}:`t`t{2}`n", blockName, blockCode)
+				blockInfoText .= Format("{1}：{2}`n", blockName, blockCode)
 			}
 			RmListSaver := MsgBox(Format("
 			(	
@@ -272,27 +273,22 @@ openMyDocs(reportName) {
 }
 
 getBlockInfo() {
-	blockInfoObj := {}
 	; if Obj not working as expected, use Map instead.
-	; blockInfoMap := Map()
+	blockInfoMap := Map()
 	Xl := ComObject("Excel.Application")
-	fileName := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{1}Group ARR&DEP.xlsx", today)
+	fileName := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{2}\{2}{3}\{1}Group ARR&DEP.xlsx", today,A_Year,A_MM)
 	info := Xl.Workbooks.Open(fileName).Worksheets("Sheet1")
-	row := 4
 	loop {
-		blockCodeReceived := info.Cells(row, 1)
-		blockNameReceived := info.Cells(row, 2)
-		blockInfoObj[blockNameReceived] := blockCodeReceived
-		; blockInfoMap[blockCodeReceived] := blockCodeReceived
-		if (blockCodeReceived = "" || blockCodeReceived = "GROUP STAYOVER") {
+		blockCodeReceived := info.Cells(A_Index + 3, 1).Text
+		blockNameReceived := info.Cells(A_Index + 3, 2).Text
+		if (blockCodeReceived = "" || blockCodeReceived = "Group StayOver") {
 			break
 		}
-		row++
+		blockInfoMap[blockNameReceived] := blockCodeReceived
 	}
-	info.Close
+	Xl.Workbooks.Close
     Xl.Quit
-	return blockInfoObj
-	; return blockInfoMap
+	return blockInfoMap
 }
 
 groupArr() {
@@ -323,6 +319,6 @@ groupArrAuto(blockInfo) {
 }
 
 ; hotkeys
-;^F11:: ReportMasterMain()
-;F12:: cleanReload()	; use 'Reload' for script reset
+; ^F11:: ReportMasterMain()
+; F12:: cleanReload()	; use 'Reload' for script reset
 ;^F12:: ExitApp	; use 'ExitApp' to kill script
