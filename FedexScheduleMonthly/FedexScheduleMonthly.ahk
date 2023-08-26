@@ -12,19 +12,6 @@ schdSheetAmount := schdData.Sheets.Count
 sheet := 1
 schdRow := 4
 tempRow := 3
-flightFormat := [
-	"tripNum",
-	"roomQty",
-	"flightIn1",
-	"flightIn2",
-	"ibDate",
-	"ETA",
-	"stayHours",
-	"obDate",
-	"ETD",
-	"flightOut1",
-	"flightOut2"
-]
 
 loop schdSheetAmount {
 	template := Xl.Workbooks.Open(tempPath)
@@ -35,7 +22,6 @@ loop schdSheetAmount {
 	if (ciDate = "") {
 		schdData.Close
 		template.Close
-		Xl.Quit
 		break
 	}
 	if (StrSplit(ciDate, "/")[1] < A_MM) {
@@ -46,7 +32,7 @@ loop schdSheetAmount {
 	TrayTip Format("正在保存：{1} FedEx Sign In Sheet.xlsx", fileDate)
 
 	loop (lastRow - 3) {
-		loop flightFormat.Length {
+		loop 11 {
 			template.ActiveSheet.Cells(tempRow, A_Index + 4).Value := schdData.Worksheets(sheetIndex).Cells(schdRow, A_Index).Text
 		}
 		schdRow++
@@ -57,7 +43,7 @@ loop schdSheetAmount {
 	schdRow := 4
 	tempRow := 3
 }
-Xl.Quit()
+Xl.Quit
 checkSavedSchdules := MsgBox("已生成Sign-in Sheet文件。`n是否打开保存所在文件夹查看？", "FedexScheduleMonthly", "OKCancel")
 if (checkSavedSchdules = "OK") {
 	Run saveDir
