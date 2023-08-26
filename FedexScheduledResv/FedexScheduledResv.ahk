@@ -64,6 +64,7 @@ loop (lastRow - 4) {
 
 	; fill in pms reservations
 	loop flightInfo["roomQty"] {
+		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 		; { opening a booking
 		Sleep 1000
 		MouseMove 399, 244
@@ -321,6 +322,7 @@ loop (lastRow - 4) {
 		Sleep 1000
 		; }
 		row++
+		WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 	}
 }
 BlockInput false
