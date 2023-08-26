@@ -1,15 +1,14 @@
 ; #Include "%A_ScriptDir%\lib\utils.ahk"
 ; #Include "%A_ScriptDir%\lib\reports.ahk"
-; #Include "%A_ScriptDir%\config.ini"
 #Include "../lib/utils.ahk"
 #Include "../lib/reports.ahk"
-#Include "../config.ini"
 
 ; TODO:Create GUI: create a file select ui
 today := FormatTime(A_Now, "yyyyMMdd")
+config := Format("{1}\src\config.ini", A_ScriptDir)
 PsbBatchCoMain() {
-    quitOnRoom := IniRead("%A_ScriptDir%\config.ini", "PsbBatchCO", "errorQuitAt")
-    if (quitOnRoom != "") {
+    quitOnRoom := IniRead(config, "PsbBatchCO", "errorQuitAt")
+    if (quitOnRoom != "null") {
         MsgBox(Format("上次拍Out为出错停止，已拍至：{1}`n请先更新CheckOut.xls", quitOnRoom))
     }
 
@@ -18,8 +17,8 @@ PsbBatchCoMain() {
     即将开始批量拍Out 脚本
 
     是(Y) = 保存FO03 - Departures数据txt 文件后开始
-	否(N) = 直接开始拍Out
-	取消 = 退出脚本
+    否(N) = 直接开始拍Out
+    取消 = 退出脚本
     )"
 
     selector := MsgBox(textMsg, "PSB CheckOut(Batch)", "YesNoCancel")
@@ -105,13 +104,13 @@ saveDep() {
     reportSave(roomNumsTxt)
     ; }
     MsgBox("保存房号中，请等待(5)秒", "PSB CheckOut(Batch)", "T5 4096")
-    A_Clipboard := FileRead("%A_MyDocuments%\%roomNumsTxt%")
+    A_Clipboard := FileRead(Format("{1}\{2}", A_MyDocuments, roomNumsTxt))
     BlockInput false
 
-    path := IniRead("%A_ScriptDir%\config.ini", "PsbBatchCO", "xlsPath")
+    path := IniRead(config, "PsbBatchCO", "xlsPath")
     Run path
-    WinWait "" ;TODO: findout wps's ahk_class
-    WinMaximize ""
+    WinWait "ahk_class XLMAIN" 
+    WinMaximize "ahk_class XLMAIN"
     Sleep 3500
     ; { pasting data (y-pos already modified!)
     MouseMove 735, 408
@@ -156,7 +155,7 @@ batchOut() {
     if (autoOut.Result := "Cancel") {
         cleanReload()
     }
-    path := IniRead("%A_ScriptDir%\config.ini", "PsbBatchCO", "xlsPath")
+    path := IniRead(config, "PsbBatchCO", "xlsPath")
     Xl := ComObject("Excel.Application")
     Xlbook := Xl.Workbooks.Open(path)
     depRooms := Xlbook.Worksheets("Sheet1")
@@ -196,7 +195,7 @@ batchOut() {
         if (PixelGetColor(251, 196) = errorBrown) {
             MsgBox(Format("PSB系统出错，脚本已终止`n`n已拍Out到：{1}", roomNum))
             quitOnRoom := roomNum
-            IniWrite(quitOnRoom, "%A_ScriptDir%\config.ini", "PsbBatchCO", "errorQuitAt")
+            IniWrite(quitOnRoom, config, "PsbBatchCO", "errorQuitAt")
             cleanReload()
         }
 
@@ -205,11 +204,11 @@ batchOut() {
     BlockInput false
     Xlbook.Close
     Xl.Quit
-    IniWrite("", "%A_ScriptDir%\config.ini", "PsbBatchCO", "errorQuitAt")
+    IniWrite("null", config, "PsbBatchCO", "errorQuitAt")
     MsgBox("PSB 批量拍Out 已完成！", "PSB CheckOut(Batch)")
 }
 
 ; hotkeys
 ; ^F9:: PsbBatchCoMain()
-; F12:: cleanReload()	; use 'Reload' for script reset
-; ^F12:: ExitApp	; use 'ExitApp' to kill script
+; F12:: cleanReload()   ; use 'Reload' for script reset
+; ^F12:: ExitApp    ; use 'ExitApp' to kill script
