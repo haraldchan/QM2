@@ -1,6 +1,8 @@
 cleanReload(){
     BlockInput false
-    WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+    if (WinExist("ahk_class SunAwtFrame")) {
+        WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+    }
 	SetCapsLockState false
 	Reload
 }
