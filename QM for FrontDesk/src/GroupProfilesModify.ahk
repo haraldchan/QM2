@@ -5,7 +5,7 @@
 GroupProfilesModifyMain() {
     path := IniRead("%A_ScriptDir%\config.ini", "GroupProfilesModify", "xlsPath")
     wwly := IniRead("%A_ScriptDir%\config.ini", "GroupProfilesModify", "wwlyPath")
-
+    errorBrown := "0x800000"
     gpmStart := MsgBox("
     (
     将开始团队Profile modify
@@ -82,9 +82,8 @@ GroupProfilesModifyMain() {
         Send "{Down}"
         Sleep 200
 
-        ; TODO: find out hex color of the error popup
-        ; errorBrown := ""
-        ; if (PixelGetColor(251, 196) = errorBrown) {
+
+        ; if (PixelGetColor(698, 306) = errorBrown) {
         ;     MsgBox(Format("Modify出错，脚本已终止`n`n已Modify到：{1}", roomNum))
         ;     quitOnRoom := roomNum
         ;     IniWrite(quitOnRoom, "%A_ScriptDir%\config.ini", "PsbBatchCO", "errorQuitAt")
