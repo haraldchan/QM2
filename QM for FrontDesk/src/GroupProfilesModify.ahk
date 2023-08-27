@@ -21,8 +21,8 @@ GroupProfilesModifyMain() {
     Xl := ComObject("Excel.Application")
     Xlbook := Xl.Workbooks.Open(path)
     groupRooms := Xlbook.Worksheets("Sheet1")
-    lastRow := Xlbook.ActiveSheet.UsedRange.Rows.Count
-    roomNum := Integer(groupRooms.Cells(1, 1))
+    lastRow := Xlbook.ActiveSheet.Cells(Xlbook.ActiveSheet.Rows.Count,"A").End(-4162).Row
+    roomNum := Integer(groupRooms.Cells(1, 1).Text)
     row := 1
 
     WinMaximize "ahk_class SunAwtFrame"
@@ -42,22 +42,34 @@ GroupProfilesModifyMain() {
         Sleep 3000
         Run wwly
         Send "{Pause}"
-        WinWait "" ;TODO: use title instead of class!
+        WinWait "ahk_class TMAIN"
+        WinActivate "ahk_class TMAIN"
 
-        MouseMove 690, 243
-        Sleep 1300
-        Click
-        Sleep 100
+        ; MouseMove 690, 243
+        ; Sleep 1300
+        ; Click
+        ; Sleep 100
+        ; Click "Down"
+        ; MouseMove 575, 240
+        ; Sleep 450
+        ; Click "Up"
+        ; Sleep 200
+        ; Send "^v"
+        ; Sleep 1000
+        ; Send "{F11}"
+        ; Sleep 300
+
+        ; window coord
+        MouseMove 400, 23
         Click "Down"
-        MouseMove 575, 240
-        Sleep 450
+        Sleep 200
+        MouseMove 324, 23
         Click "Up"
         Sleep 200
-        Send "^v"
-        Sleep 1000
+        Send A_Clipboard
+        Sleep 200
         Send "{F11}"
         Sleep 300
-
         Send "{Enter}"
         Sleep 7500
 
@@ -80,6 +92,7 @@ GroupProfilesModifyMain() {
         ; }
         row++
         roomNum := Integer(groupRooms.Cells(row, 1).Value)
+        Sleep 500
     }
     Xlbook.Close
     Xl.Quit
