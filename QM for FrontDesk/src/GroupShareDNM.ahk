@@ -88,35 +88,13 @@ dnmShare() {
 
     loop roomQty.Value {
         BlockInput true
-        MouseMove 425, 537
+        MouseMove 425, 517
         Sleep 200
-        ; KeyDown "Alt", 1
-        ; Sleep 75
-        ; KeyDown "R", 1
-        ; Sleep 80
-        ; KeyUp "R", 1
-        ; Sleep 6
-        ; KeyUp "Alt", 1
         Send "!r"
-        MouseMove 469, 512
+        MouseMove 469, 492
         Sleep 3000
         Click
         Sleep 700
-        ; KeyDown "Alt", 1
-        ; Sleep 194
-        ; KeyDown "T", 1
-        ; Sleep 81
-        ; KeyUp "T", 1
-        ; Sleep 84
-        ; KeyDown "S", 1
-        ; Sleep 94
-        ; KeyUp "S", 1
-        ; Sleep 119
-        ; KeyDown "M", 1
-        ; Sleep 63
-        ; KeyUp "M", 1
-        ; Sleep 28
-        ; KeyUp "Alt", 1
         Send "!t"
         Sleep 100
         Send "!s"
@@ -125,119 +103,48 @@ dnmShare() {
         Sleep 100
         Sleep 3000
         Send "{Esc}"
+        Sleep 300
+        Send "{Text}1"
         Sleep 100
-        Send "1"
-        Sleep 100
-        MouseMove 487, 402
+        MouseMove 487, 382
         Sleep 100
         Click "Down"
-        MouseMove 518, 403
+        MouseMove 518, 383
         Sleep 200
         Click "Up"
-        MouseMove 516, 443
+        MouseMove 516, 423
         Sleep 200
         Send "0"
         Sleep 200
-        ; KeyDown "Alt", 1
-        ; Sleep 70
-        ; KeyDown "O", 1
-        ; Sleep 77
-        ; KeyUp "O", 1
-        ; Sleep 54
-        ; KeyUp "Alt", 1
         Send "!o"
         Sleep 1000
-        ; KeyDown "Alt", 1
-        ; Sleep 23
-        ; KeyDown "R", 1
-        ; Sleep 81
-        ; KeyUp "Alt", 1
-        ; Sleep 3
-        ; KeyUp "R", 1
         Send "!r"
         Sleep 200
-        MouseMove 942, 598
-        Sleep 2800
+        MouseMove 942, 578
+        Sleep 2500
         Click
-        Sleep 1500
-        ; KeyDown "Alt", 1
-        ; Sleep 40
-        ; KeyDown "D", 1
-        ; Sleep 77
-        ; KeyUp "D", 1
-        ; Sleep 15
-        ; KeyUp "Alt", 1
+        Sleep 800
         Send "!d"
-        Sleep 1200
+        Sleep 1000
         Send "{Left}"
         Sleep 150
-        ; KeyDown "Space", 1
-        ; Sleep 42
-        ; KeyUp "Space", 1
         Send "{Space}"
         Sleep 500
-        ; KeyDown "Alt", 1
-        ; Sleep 84
-        ; KeyDown "O", 1
-        ; Sleep 73
-        ; KeyUp "O", 1
-        ; Sleep 40
-        ; KeyUp "Alt", 1
         Send "!o"
         Sleep 500
-        ; KeyDown "Alt", 1
-        ; Sleep 40
-        ; KeyDown "C", 1
-        ; Sleep 69
-        ; KeyUp "Alt", 1
-        ; Sleep 23
-        ; KeyUp "C", 1
         Send "!c"
         Sleep 300
-        MouseMove 321, 507
-        Sleep 2000
+        MouseMove 321, 487
+        Sleep 1500
         Click "Down"
-        MouseMove 186, 509
+        MouseMove 186, 489
         Sleep 200
         Click "Up"
         Sleep 200
-        ; KeyDown "N", 1
-        ; Sleep 85
-        ; KeyUp "N", 1
-        ; Sleep 40
-        ; KeyDown "R", 1
-        ; Sleep 72
-        ; KeyUp "R", 1
-        ; Sleep 53
-        ; KeyDown "R", 1
-        ; Sleep 90
         Send "{Text}NRR"
         Sleep 100
-        ; KeyDown "Alt", 1
-        ; Sleep 62
-        ; KeyDown "O", 1
-        ; Sleep 73
-        ; KeyUp "O", 1
-        ; Sleep 46
-        ; KeyUp "Alt", 1
-        ; Sleep 945
-        Send "!o"
+        Send "{Tab}"
         Sleep 500
-        ; KeyDown "Esc", 1
-        ; Sleep 64
-        ; KeyUp "Esc", 1
-        ; Sleep 501
-        ; KeyDown "Esc", 1
-        ; Sleep 68
-        ; KeyUp "Esc", 1
-        ; Sleep 502
-        ; KeyDown "Esc", 1
-        ; Sleep 67
-        ; KeyUp "Esc", 1
-        ; Sleep 507
-        ; KeyDown "Esc", 1
-        ; Sleep 86
-        ; KeyUp "Esc", 1
         Send "{Esc}"
         Sleep 200
         Send "{Esc}"
@@ -246,39 +153,23 @@ dnmShare() {
         Sleep 200
         Send "{Esc}"
         Sleep 200
-        ; KeyDown "Alt", 1
-        ; Sleep 32
-        ; KeyDown "O", 1
-        ; Sleep 94
-        ; KeyUp "O", 1
-        ; Sleep 55
-        ; KeyUp "Alt", 1
-        ; Sleep 1618
+        Send "{Esc}"
+        Sleep 200
         Send "!o"
-        Sleep 1500
-        ; KeyDown "Alt", 1
-        ; Sleep 32
-        ; KeyDown "C", 1
-        ; Sleep 80
-        ; KeyUp "Alt", 1
-        ; Sleep 28
-        ; KeyUp "C", 1
-        ; Sleep 862
+        Sleep 800
+        Send "!o"
+        Sleep 3000
         Send "!c"
-        Sleep 200
-        ; KeyDown "Alt", 1
-        ; Sleep 23
-        ; KeyDown "C", 1
-        ; Sleep 82
-        ; KeyUp "Alt", 1
-        ; Sleep 28
-        ; KeyUp "C", 1
+        Sleep 800
         Send "!c"
-        Sleep 200
+        Sleep 300
+        Send "!c"
+        Sleep 2000
         BlockInput false
     }
-
+    MsgBox("已完成DNM & Share，请核对有否错漏。","Group Share&DNM","4096")
 }
+
 
 ; hotkeys
 ; F4:: GroupShareDNMMain()
