@@ -1,7 +1,8 @@
 ; #Include "%A_ScriptDir%\lib\utils.ahk"
 ; #Include "%A_ScriptDir%\config.ini"
 #Include "../lib/utils.ahk"
-#Include "../config.ini"
+
+popupTitle := popupTitle
 ; date RegEx
 dateDash := "^\d{1,4}-\d{1,2}-\d{1,2}"
 dateSlash := "^\d{1,4}/\{1,2}/d{1,2}"
@@ -20,11 +21,11 @@ GroupKeysMain() {
     3、确保VingCard已经打开处于Check-in界面。
     )"
 
-    start := MsgBox(startMsg, "GroupKeys", "OKCancel 4096")
+    start := MsgBox(startMsg, popupTitle, "OKCancel 4096")
     if (start = "Cancel") {
         cleanReload()
     }
-    coDateInput := InputBox("请输入退房日期：", "GroupKeys").Value
+    coDateInput := InputBox("请输入退房日期：", popupTitle).Value
     loop {
         if (RegExMatch(coDateInput, dateDash) > 0
             || RegExMatch(coDateInput, dateSlash)
@@ -34,31 +35,37 @@ GroupKeysMain() {
             MsgBox("输入格式必须为yyyy-mm-dd或yyyy/mm/dd，如2023-01-01或2023/01/01。")
         }
     }
-    coTimeInput := InputBox("请输入退房时间：", "GroupKeys", , "13:00").Value
+    coTimeInput := InputBox("请输入退房时间：", popupTitle, , "13:00").Value
     infoConfirm := MsgBox(Format("
     (
     当前团队制卡信息：
     退房日期：{1}
     退房时间：{2}
-    )", coDateInput, coTimeInput), "GroupKeys", "OKCancel")
+    )", coDateInput, coTimeInput), popupTitle, "OKCancel")
     if (infoConfirm = "Cancel") {
         cleanReload()
     }
-    path := IniRead("%A_ScriptDir%\config.ini", "GroupKeys", "xlsPath")
+    path := IniRead("%A_ScriptDir%\config.ini", popupTitle, "xlsPath")
     Xl := ComObject("Excel.Application")
-    Xlbook := Xl.Workbooks.Open(path)
-    groupRooms := Xlbook.Worksheets("Sheet1")
-    lastRow := Xlbook.ActiveSheet.UsedRange.Rows.Count
-    roomNum := Integer(groupRooms.Cells(1, 1).Value)
-    coDateRead := Integer(groupRooms.Cells(1, 2).Value)
-    coTimeRead := Integer(groupRooms.Cells(1, 3).Value)
-    A_Clipboard := roomNum
+    GroupKeys := Xl.Workbooks.Open(path)
+    groupRooms := GroupKeys.Worksheets("Sheet1")
+    lastRow := GroupKeys.ActiveSheet.UsedRange.Rows.Count
+    ; roomNum := Integer(groupRooms.Cells(1, 1).Value)
+    ; coDateRead := Integer(groupRooms.Cells(1, 2).Value)
+    ; coTimeRead := Integer(groupRooms.Cells(1, 3).Value)
+    ; A_Clipboard := roomNum
     row := 1
 
     BlockInput true
     loop lastRow {
-        coDateLoop := coDateInput
-        coTimeLoop := coTimeInput
+        roomNum := Integer(groupRooms.Cells(row, 1).Value)
+        coDateRead := Integer(groupRooms.Cells(row, 2).Value)
+        coTimeRead := Integer(groupRooms.Cells(row, 3).Value)
+        A_Clipboard := roomNum
+        coDateLoop := (coDateRead = "") ? coDateInput : coDateRead
+        coTimeLoop := (coTimeRead = "") ? coTimeInput : coTimeRead
+        ; coDateLoop := coDateInput
+        ; coTimeLoop := coTimeInput
         ; { paste room number (y-pos already modified!)
         MouseMove 421, 392
         Sleep 300
@@ -75,12 +82,12 @@ GroupKeysMain() {
         Send A_Clipboard
         Sleep 200
         ; }
-        if (coDateRead != "") {
-            coDateLoop := coDateRead
-        }
-        if (coTimeRead != "") {
-            coTimeLoop := coTimeRead
-        }
+        ; if (coDateRead != "") {
+        ;     coDateLoop := coDateRead
+        ; }
+        ; if (coTimeRead != "") {
+        ;     coTimeLoop := coTimeRead
+        ; }
         MouseMove 417, 558
         Sleep 150
         Click "Down"
@@ -113,20 +120,16 @@ GroupKeysMain() {
         已做房卡：{1}
          - 是(Y)制作下一个
          - 否(N)退出制卡
-        )", roomNum), "GroupKeys","OKCancel 4096")
+        )", roomNum), popupTitle, "OKCancel 4096")
         if (check = "Cancel") {
             cleanReload()
         }
-        row += 1
-        roomNum := Integer(groupRooms.Cells(row, 1))
-        A_Clipboard := roomNum
-        coDateRead := Integer(groupRooms.Cells(row, 2))
-        coTimeRead := Integer(groupRooms.Cells(row, 3))
+        row++
     }
     BlockInput false
-    Xlbook.Close
+    GroupKeys.Close
     Xl.Quit
-    MsgBox("已完成团队制卡，请与Opera/蓝豆系统核对是否正确！","GroupKeys")
+    MsgBox("已完成团队制卡，请与Opera/蓝豆系统核对是否正确！", popupTitle)
 }
 
 

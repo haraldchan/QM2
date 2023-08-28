@@ -1,10 +1,11 @@
 ; reminder: Y-pos needs to minus 20
 ; #Include "%A_ScriptDir%\lib\utils.ahk"
 #Include "../lib/utils.ahk"
+popupTitle := popupTitle
 
 GroupProfilesModifyMain() {
-    path := IniRead("%A_ScriptDir%\config.ini", "GroupProfilesModify", "xlsPath")
-    wwly := IniRead("%A_ScriptDir%\config.ini", "GroupProfilesModify", "wwlyPath")
+    path := IniRead("%A_ScriptDir%\config.ini", popupTitle, "xlsPath")
+    wwly := IniRead("%A_ScriptDir%\config.ini", popupTitle, "wwlyPath")
     errorBrown := "0x800000"
     gpmStart := MsgBox("
     (
@@ -14,14 +15,14 @@ GroupProfilesModifyMain() {
     1、请确保同一个房间内，PSB与Opera客人数量一致（关注一个人、三个人住）；
     2、请在InHouse界面下启动；
     3、请确保旅业信息同步系统已经启动。
-    )", "GroupProfilesModify", "OKCancel 4096")
+    )", popupTitle, "OKCancel 4096")
     if (gpmStart = "Cancel") {
         cleanReload()
     }
     Xl := ComObject("Excel.Application")
-    Xlbook := Xl.Workbooks.Open(path)
-    groupRooms := Xlbook.Worksheets("Sheet1")
-    lastRow := Xlbook.ActiveSheet.Cells(Xlbook.ActiveSheet.Rows.Count,"A").End(-4162).Row
+    GroupRoomNum := Xl.Workbooks.Open(path)
+    groupRooms := GroupRoomNum.Worksheets("Sheet1")
+    lastRow := GroupRoomNum.ActiveSheet.Cells(GroupRoomNum.ActiveSheet.Rows.Count,"A").End(-4162).Row
     roomNum := Integer(groupRooms.Cells(1, 1).Text)
     row := 1
 
@@ -93,10 +94,10 @@ GroupProfilesModifyMain() {
         roomNum := Integer(groupRooms.Cells(row, 1).Value)
         Sleep 500
     }
-    Xlbook.Close
+    GroupRoomNum.Close
     Xl.Quit
     BlockInput false
-    MsgBox("已Modify 完成，请再次检查是否正确。", "GroupProfilesModify")
+    MsgBox("已Modify 完成，请再次检查是否正确。", popupTitle)
 }
 
 

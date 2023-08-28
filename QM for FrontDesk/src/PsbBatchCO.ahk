@@ -6,6 +6,8 @@
 ; TODO:Create GUI: create a file select ui
 today := FormatTime(A_Now, "yyyyMMdd")
 config := Format("{1}\src\config.ini", A_ScriptDir)
+popupTitle := "PSB CheckOut(Batch)"
+
 PsbBatchCoMain() {
     quitOnRoom := IniRead(config, "PsbBatchCO", "errorQuitAt")
     if (quitOnRoom != "null") {
@@ -21,7 +23,7 @@ PsbBatchCoMain() {
     取消 = 退出脚本
     )"
 
-    selector := MsgBox(textMsg, "PSB CheckOut(Batch)", "YesNoCancel")
+    selector := MsgBox(textMsg, popupTitle, "YesNoCancel")
     if (selector = "No") {
         batchOut()
     } else if (selector = "Yes") {
@@ -42,7 +44,7 @@ saveDep() {
     3 - 中班： 15:00 ~ 23:59
     0 - 自定义时间段
     )"
-    timePeriod := InputBox(textMsg, "PSB CheckOut(Batch)")
+    timePeriod := InputBox(textMsg, popupTitle)
     if (timePeriod.Result = "Cancel") {
         Reload
     }
@@ -57,8 +59,8 @@ saveDep() {
             frTime := "1400"
             toTime := "2359"
         Case "0":
-            frTime := InputBox("请输入开始时间（格式：“hhmm”）", "PSB CheckOut(Batch)").Value
-            toTime := InputBox("请输入结束时间（格式：“hhmm”）", "PSB CheckOut(Batch)").Value
+            frTime := InputBox("请输入开始时间（格式：“hhmm”）", popupTitle).Value
+            toTime := InputBox("请输入结束时间（格式：“hhmm”）", popupTitle).Value
         default:
             MsgBox("请输入对应时间的指令。")
     }
@@ -103,13 +105,13 @@ saveDep() {
     roomNumsTxt := Format("{1} check-out.txt", today)
     reportSave(roomNumsTxt)
     ; }
-    MsgBox("保存房号中，请等待(5)秒", "PSB CheckOut(Batch)", "T5 4096")
+    MsgBox("保存房号中，请等待(5)秒", popupTitle, "T5 4096")
     A_Clipboard := FileRead(Format("{1}\{2}", A_MyDocuments, roomNumsTxt))
     BlockInput false
 
     path := IniRead(config, "PsbBatchCO", "xlsPath")
     Run path
-    WinWait "ahk_class XLMAIN" 
+    WinWait "ahk_class XLMAIN"
     WinMaximize "ahk_class XLMAIN"
     Sleep 3500
     ; { pasting data (y-pos already modified!)
@@ -147,23 +149,23 @@ saveDep() {
     请打开蓝豆查看“续住工单”，剔除excel中续住的房间后，点击确定继续拍out。
     完成上述操作前请不要按掉此弹窗。
     )"
-    MsgBox(continueText, "PSB CheckOut(Batch)")
+    MsgBox(continueText, popupTitle)
 }
 
 batchOut() {
-    autoOut := MsgBox("即将开始自动拍Out脚本`n请先打开PSB，进入“旅客退房”界面", "PSB CheckOut(Batch)", "OKCancel")
+    autoOut := MsgBox("即将开始自动拍Out脚本`n请先打开PSB，进入“旅客退房”界面", popupTitle, "OKCancel")
     if (autoOut.Result := "Cancel") {
         cleanReload()
     }
     path := IniRead(config, "PsbBatchCO", "xlsPath")
     Xl := ComObject("Excel.Application")
-    Xlbook := Xl.Workbooks.Open(path)
-    depRooms := Xlbook.Worksheets("Sheet1")
-    lastRow := Xlbook.ActiveSheet.UsedRange.Rows.Count
+    CheckOut := Xl.Workbooks.Open(path)
+    depRooms := CheckOut.Worksheets("Sheet1")
+    lastRow := CheckOut.ActiveSheet.UsedRange.Rows.Count
     row := 1
     errorBrown := "0x804000" ; TODO: confirm this hex color code!
     BlockInput true
-     loop lastRow {
+    loop lastRow {
         roomNum := Integer(depRooms.Cells(row, 1).Value)
         A_Clipboard := roomNum
         ; { check out in psb (y-pos already modified!)
@@ -201,7 +203,7 @@ batchOut() {
         row++
     }
     BlockInput false
-    Xlbook.Close
+    CheckOut.Close
     Xl.Quit
     IniWrite("null", config, "PsbBatchCO", "errorQuitAt")
     MsgBox("PSB 批量拍Out 已完成！", "PSB CheckOut(Batch)")
