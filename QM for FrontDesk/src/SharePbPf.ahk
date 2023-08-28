@@ -1,5 +1,6 @@
 ; reminder: Y-pos needs to minus 20
 ; Main runs the main process
+popupTitle := "INH Share & P/B P/F"
 SharePbPfMain() {
 	; bring OperaPMS window upfront and maximize
 	WinMaximize "ahk_class SunAwtFrame"
@@ -14,7 +15,7 @@ SharePbPfMain() {
 	INH Share：请在InHouse界面，窗口最大化情况下启动)
 	粘贴P/B P/F：请在InHouse点开Comment窗口后启动
 	)"
-	selector := MsgBox(textMsg, "INH Share & P/B P/F", "YesNoCancel")
+	selector := MsgBox(textMsg, popupTitle, "YesNoCancel")
 	if (selector = "Yes") {
 		share()
 	} else if (selector = "No") {

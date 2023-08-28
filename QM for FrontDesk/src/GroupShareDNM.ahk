@@ -1,4 +1,6 @@
 ; reminder: Y-pos needs to minus 20
+popupTitle := "Group Share & DoNotMove"
+
 GroupShareDnmMain() {
     ; bring OperaPMS window upfront and maximize
     WinMaximize "ahk_class SunAwtFrame"
@@ -12,7 +14,7 @@ GroupShareDnmMain() {
     将开始团Share及DNM
     )"
 
-    selector := MsgBox(textMsg, "Q.Group Share&DNM", "YesNoCancel")
+    selector := MsgBox(textMsg, popupTitle, "YesNoCancel")
     if (selector = "Yes") {
         dnmShare()
     } else if (selector = "No") {
@@ -24,7 +26,7 @@ GroupShareDnmMain() {
 
 ; dnm only
 dnm() {
-    roomQty := InputBox("`n请输入需要DNM的房间数量", "Q.Group Share&DNM", "h150")
+    roomQty := InputBox("`n请输入需要DNM的房间数量", popupTitle, "h150")
     if (roomQty.Result = "Cancel") {
         Reload
     }
@@ -40,7 +42,7 @@ dnm() {
         Sleep 400
         Click
         Sleep 300
-        Click 
+        Click
         MouseMove 473, 494
         Sleep 500
         Click
@@ -163,7 +165,7 @@ dnmShare() {
         Sleep 2000
         BlockInput false
     }
-    MsgBox("已完成DNM & Share，请核对有否错漏。","Group Share&DNM","4096")
+    MsgBox("已完成DNM & Share，请核对有否错漏。", popupTitle, "4096")
 }
 
 ; hotkeys

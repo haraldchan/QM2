@@ -5,6 +5,7 @@
 #Include "../Lib/reports.ahk"
 #Include "../Lib/utils.ahk"
 
+popupTitle := "ReportMaster"
 today := FormatTime(A_Now, "yyyyMMdd")
 
 ReportMasterMain() {
@@ -40,7 +41,7 @@ ReportMasterMain() {
 	sp - 保存当天水果5（Excel格式）
 	666 - 保存以上所有报表（执行时间约8分钟，期间请勿操作电脑）`n
 	)"
-	reportSelector := InputBox(reportMsg, "ReportMaster", "h600", "666")
+	reportSelector := InputBox(reportMsg, popupTitle, "h600", "666")
 	if (reportSelector.Result = "Cancel") {
 		cleanReload()
 	}
@@ -253,7 +254,7 @@ ReportMasterMain() {
 			openMyDocs(reportName)
 
 		Default:
-			MsgBox("请选择表中的指令", "ReportMaster")
+			MsgBox("请选择表中的指令", popupTitle)
 			WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 	}
 
@@ -262,7 +263,7 @@ ReportMasterMain() {
 openMyDocs(reportName) {
 	WinSetAlwaysOnTop false
 	myText := Format("已保存报表：{1}·`n`n是否打开所在文件夹? ", reportName)
-	openFolder := MsgBox(myText, "ReportMaster", "OKCancel")
+	openFolder := MsgBox(myText, popupTitle, "OKCancel")
 	if (openFolder = "OK") {
 		Run A_MyDocuments
 	} else {
@@ -274,10 +275,10 @@ getBlockInfo() {
 	blockInfoMap := Map()
 	Xl := ComObject("Excel.Application")
 	fileName := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{2}\{2}{3}\{1}Group ARR&DEP.xlsx", today,A_Year,A_MM)
-	info := Xl.Workbooks.Open(fileName).Worksheets("Sheet1")
+	OnDayGroupDetails := Xl.Workbooks.Open(fileName).Worksheets("Sheet1")
 	loop {
-		blockCodeReceived := info.Cells(A_Index + 3, 1).Text
-		blockNameReceived := info.Cells(A_Index + 3, 2).Text
+		blockCodeReceived := OnDayGroupDetails.Cells(A_Index + 3, 1).Text
+		blockNameReceived := OnDayGroupDetails.Cells(A_Index + 3, 2).Text
 		if (blockCodeReceived = "" || blockCodeReceived = "Group StayOver") {
 			break
 		}
