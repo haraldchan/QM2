@@ -6,7 +6,7 @@ popupTitle := popupTitle
 GroupProfilesModifyMain() {
     path := IniRead("%A_ScriptDir%\config.ini", popupTitle, "xlsPath")
     wwly := IniRead("%A_ScriptDir%\config.ini", popupTitle, "wwlyPath")
-    errorBrown := "0x800000"
+    errorRed := "0x800000"
     gpmStart := MsgBox("
     (
     将开始团队Profile modify
@@ -83,13 +83,12 @@ GroupProfilesModifyMain() {
         Send "{Down}"
         Sleep 200
 
-
-        ; if (PixelGetColor(698, 306) = errorBrown) {
-        ;     MsgBox(Format("Modify出错，脚本已终止`n`n已Modify到：{1}", roomNum))
-        ;     quitOnRoom := roomNum
-        ;     IniWrite(quitOnRoom, "%A_ScriptDir%\config.ini", "PsbBatchCO", "errorQuitAt")
-        ;     cleanReload()
-        ; }
+        if (PixelGetColor(698, 306) = errorRed) {
+            MsgBox(Format("Modify出错，脚本已终止`n`n已Modify到：{1}", roomNum))
+            quitOnRoom := roomNum
+            IniWrite(quitOnRoom, "%A_ScriptDir%\config.ini", "PsbBatchCO", "errorQuitAt")
+            cleanReload()
+        }
         row++
         roomNum := Integer(groupRooms.Cells(row, 1).Value)
         Sleep 500
