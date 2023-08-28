@@ -72,7 +72,7 @@ GroupKeysMain() {
         Sleep 78
         MouseMove 395, 395
         Sleep 150
-        Send "^v"
+        Send A_Clipboard
         Sleep 200
         ; }
         if (coDateRead != "") {
@@ -103,7 +103,7 @@ GroupKeysMain() {
         Sleep 93
         Click "Up"
         Sleep 100
-        Send "2"
+        Send "{Text}2"
         Sleep 100
         Send "!e"
         Sleep 100

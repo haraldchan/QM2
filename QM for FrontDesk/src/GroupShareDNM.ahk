@@ -3,7 +3,6 @@ GroupShareDnmMain() {
     ; bring OperaPMS window upfront and maximize
     WinMaximize "ahk_class SunAwtFrame"
     WinActivate "ahk_class SunAwtFrame"
-
     textMsg := "
     (
     是(Y) = 进行DNM和Share
@@ -53,7 +52,6 @@ dnm() {
     MsgBox(Format("已完成批量DoNotMove，合共 {1} 房。", roomQty.Value), "Q.Group Share&DNM")
 }
 
-; dnm share
 dnmShare() {
     msgText := "
     (
@@ -73,7 +71,6 @@ dnmShare() {
             Reload
         }
     }
-
     MouseMove 340, 291
     Sleep 100
     Click "Down"
@@ -84,8 +81,7 @@ dnmShare() {
     Sleep 100
     Send "{Backspace}"
     Sleep 100
-    Send "TGDA"
-
+    Send "{Text}TGDA"
     loop roomQty.Value {
         BlockInput true
         MouseMove 425, 517
@@ -114,7 +110,7 @@ dnmShare() {
         Click "Up"
         MouseMove 516, 423
         Sleep 200
-        Send "0"
+        Send "{Text}0"
         Sleep 200
         Send "!o"
         Sleep 1000
@@ -169,7 +165,6 @@ dnmShare() {
     }
     MsgBox("已完成DNM & Share，请核对有否错漏。","Group Share&DNM","4096")
 }
-
 
 ; hotkeys
 ; F4:: GroupShareDNMMain()

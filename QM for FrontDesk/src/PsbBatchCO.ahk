@@ -124,7 +124,7 @@ saveDep() {
     Sleep 100
     Click
     Sleep 100
-    Send "^v"
+    Send A_Clipboard
     Sleep 300
     MouseMove 946, 177
     Sleep 100
@@ -139,7 +139,7 @@ saveDep() {
     Sleep 100
     Click
     Sleep 100
-    Send "^v"
+    Send A_Clipboard
     Sleep 300
     ; }
     continueText := "
@@ -171,7 +171,7 @@ batchOut() {
         Sleep 500
         Click
         Sleep 350
-        Send "^v"
+        Send A_Clipboard
         MouseMove 297, 171
         Sleep 100
         Send "^f"
@@ -198,8 +198,7 @@ batchOut() {
             IniWrite(quitOnRoom, config, "PsbBatchCO", "errorQuitAt")
             cleanReload()
         }
-
-        row += 1
+        row++
     }
     BlockInput false
     Xlbook.Close

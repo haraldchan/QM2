@@ -11,7 +11,7 @@ ReportMasterMain() {
 	WinMaximize "ahk_class SunAwtFrame"
 	WinActivate "ahk_class SunAwtFrame"
 
-	prompt := "
+	reportMsg := "
 	(
 	请输入对应的报表编号（默认为夜审后操作）。
 	（报表将保存至 开始菜单-文档）。
@@ -40,138 +40,136 @@ ReportMasterMain() {
 	sp - 保存当天水果5（Excel格式）
 	666 - 保存以上所有报表（执行时间约8分钟，期间请勿操作电脑）`n
 	)"
-
-	reportSelector := InputBox(prompt, "ReportMaster", "h600", "666")
+	reportSelector := InputBox(reportMsg, "ReportMaster", "h600", "666")
 	if (reportSelector.Result = "Cancel") {
 		cleanReload()
 	}
 	WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
-	; report selector
 	switch reportSelector.value, "Off" {
 		; { C-shift reports
 		Case "1":
 			reportName := "1  - Guest INH Complimentary"
 			comp()
-			Sleep 300
+			Sleep 1000
 			openMyDocs(reportName)
 
 		Case "2":
 			reportName := "2  - NA02-Manager Flash"
 			mgrFlash()
-			Sleep 300
+			Sleep 1000
 			openMyDocs(reportName)
 
 		Case "3":
 			reportName := "3  - （前后15天）RS05-History & Forecast"
 			hisFor15()
-			Sleep 300
+			Sleep 1000
 			openMyDocs(reportName)
 
 		Case "4":
 			reportName := "4  - RS05-（FO当月）History & Forecast"
 			hisForThisMonth()
-			Sleep 300
+			Sleep 1000
 			openMyDocs(reportName)
 
 		Case "5":
 			reportName := "5  - RS05-（FO次月）History & Forecast"
 			hisForNextMonth()
-			Sleep 300
+			Sleep 1000
 			openMyDocs(reportName)
 
 		Case "6":
 			reportName := "6  - FO01-VIP Arrival (VIP Arr)"
 			vipArr()
-			Sleep 300
+			Sleep 1000
 			openMyDocs(reportName)
 
 		Case "7":
 			reportName := "7  - Guest In House w/o Due Out"
 			vipInh()
-			Sleep 300
+			Sleep 1000
 			openMyDocs(reportName)
 
 		Case "8":
 			reportName := "8  - FO03-VIP DEP"
 			vipDep()
-			Sleep 300
+			Sleep 1000
 			openMyDocs(reportName)
 
 		Case "9":
 			reportName := "9  - FO01-Arrival Detailed"
 			arrAll()
-			Sleep 300
+			Sleep 1000
 			openMyDocs(reportName)
 
 		Case "10":
 			reportName := "10 - FO02-Guests INH by Room"
 			inhAll()
-			Sleep 300
+			Sleep 1000
 			openMyDocs(reportName)
 
 		Case "11":
 			reportName := "11 - FO03-Departures"
 			depAll()
-			Sleep 300
+			Sleep 1000
 			openMyDocs(reportName)
 
 		Case "12":
 			reportName := "12 - FO11-Credit Limit"
 			creditLimit()
-			Sleep 300
+			Sleep 1000
 			openMyDocs(reportName)
 
 		Case "13":
 			reportName := "13 - FO13-Package Forecast（仅早餐）"
 			bbf()
-			Sleep 300
+			Sleep 1000
 			openMyDocs(reportName)
 
 		Case "14":
 			reportName := "14 - Rooms-housekeepingstatus"
 			rooms()
-			Sleep 300
+			Sleep 1000
 			openMyDocs(reportName)
 
 		Case "15":
 			reportName := "15 - HK03-OOO"
 			ooo()
-			Sleep 300
+			Sleep 1000
 			openMyDocs(reportName)
 
 		Case "16":
 			reportName := "16 - Group Rooming List"
 			groupRoom()
-			Sleep 300
+			Sleep 1000
 			openMyDocs(reportName)
 
 		Case "17":
 			reportName := "17 - Group In House"
 			groupInh()
-			Sleep 300
+			Sleep 1000
 			openMyDocs(reportName)
 
 		Case "18":
 			reportName := "18 - FO08-No Show"
 			noShow()
-			Sleep 300
+			Sleep 1000
 			openMyDocs(reportName)
 
 		Case "19":
 			reportName := "19 - Cancellations"
 			cancel()
-			Sleep 300
+			Sleep 1000
 			openMyDocs(reportName)
 
 		Case "666":
 			; save all
 			comp()
 			mgrFlash()
-			Sleep 5000
+			Sleep 2000
 			hisFor15()
-			Sleep 5000
+			Sleep 2000
 			hisForThisMonth()
-			Sleep 8000
+			Sleep 2000
 			; save next month when today is the last 5 day in current month
 			preAuditDate := DateAdd(A_Now, -1, "Days")
 			preAuditMonth := FormatTime(preAuditDate, "MM")
@@ -185,37 +183,37 @@ ReportMasterMain() {
 			dateLast := FormatTime(DateAdd(firstDayOfNextMonth, -1, "Days"), "dd")
 			if (dateLast - A_DD < 5) {
 				hisForNextMonth()
-				Sleep 5000
+				Sleep 2000
 			}
 			vipArr()
-			Sleep 5000
+			Sleep 2000
 			vipInh()
 			Sleep 25000
 			vipDep()
-			Sleep 5000
+			Sleep 2000
 			arrAll()
-			Sleep 5000
+			Sleep 2000
 			inhAll()
-			Sleep 5000
+			Sleep 2000
 			depAll()
-			Sleep 5000
+			Sleep 2000
 			creditLimit()
-			Sleep 5000
+			Sleep 2000
 			bbf()
-			Sleep 5000
+			Sleep 2000
 			rooms()
-			Sleep 5000
+			Sleep 2000
 			ooo()
-			Sleep 5000
+			Sleep 2000
 			groupRoom()
-			Sleep 5000
+			Sleep 2000
 			groupInh()
-			Sleep 5000
+			Sleep 2000
 			noShow()
-			Sleep 5000
+			Sleep 2000
 			cancel()
 			WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-			Sleep 5000
+			Sleep 2000
 			openMyDocs("全部夜班报表")
 			; }
 
@@ -273,7 +271,6 @@ openMyDocs(reportName) {
 }
 
 getBlockInfo() {
-	; if Obj not working as expected, use Map instead.
 	blockInfoMap := Map()
 	Xl := ComObject("Excel.Application")
 	fileName := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{2}\{2}{3}\{1}Group ARR&DEP.xlsx", today,A_Year,A_MM)

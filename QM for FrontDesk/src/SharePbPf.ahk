@@ -14,7 +14,6 @@ SharePbPfMain() {
 	INH Share：请在InHouse界面，窗口最大化情况下启动)
 	粘贴P/B P/F：请在InHouse点开Comment窗口后启动
 	)"
-
 	selector := MsgBox(textMsg, "INH Share & P/B P/F", "YesNoCancel")
 	if (selector = "Yes") {
 		share()
@@ -36,7 +35,7 @@ share() {
 	Sleep 700
 	Send "{Esc}"
 	Sleep 800
-	Send "1"
+	Send "{Text}1"
 	Sleep 364
 	Send "{Tab}"
 	Sleep 50
@@ -46,13 +45,13 @@ share() {
 	Sleep 50
 	Send "{Tab}"
 	Sleep 50
-	Send "0"
+	Send "{Text}0"
 	Sleep 210
 	Send "{Tab}"
 	Sleep 50
 	Send "{Tab}"
 	Sleep 207
-	Send "6"
+	Send "{Text}6"
 	Sleep 1500
 	Send "!o"
 	Sleep 800
@@ -75,9 +74,7 @@ share() {
 	Sleep 200
 	Click "Up"
 	Sleep 200
-
 	Send "{Text}NRR"
-
 	Sleep 200
 	Send "!o"
 	Sleep 1000
@@ -122,7 +119,7 @@ pbpf() {
 	Click
 	Send "!n"
 	Sleep 200
-	Send "OTH"
+	Send "{Text}OTH"
 	MouseMove 517, 379
 	Sleep 100
 	Click
@@ -144,7 +141,6 @@ pbpf() {
 	Sleep 200
 	Send "!c"
 	Sleep 200
-
 	BlockInput false
 }
 

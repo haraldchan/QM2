@@ -45,9 +45,6 @@ smallWin() {
 	Sleep 100
 	Click
 	Sleep 100
-	; MouseMove 660, 605
-	; Sleep 50
-	; Click
 	Send "!o"
 	Sleep 1500
 	Send "{Blind}{Text}CL"
