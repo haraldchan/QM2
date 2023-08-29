@@ -7,6 +7,7 @@
 today := FormatTime(A_Now, "yyyyMMdd")
 config := Format("{1}\src\config.ini", A_ScriptDir)
 popupTitle := "PSB CheckOut(Batch)"
+path := IniRead(config, "PsbBatchCO", "xlsPath")
 
 PsbBatchCoMain() {
     quitOnRoom := IniRead(config, "PsbBatchCO", "errorQuitAt")
@@ -91,7 +92,7 @@ saveDep() {
     Sleep 100
     Click "Up"
     Sleep 100
-    Send frTime
+    Send Format("{Text}{1}", frTime)
     Sleep 100
     MouseMove 579, 346
     Sleep 100
@@ -100,16 +101,16 @@ saveDep() {
     Sleep 100
     Click "Up"
     Sleep 100
-    Send toTime
+    Send Format("{Text}{1}", toTime)
     Sleep 100
     roomNumsTxt := Format("{1} check-out.txt", today)
     reportSave(roomNumsTxt)
     ; }
     MsgBox("保存房号中，请等待(5)秒", popupTitle, "T5 4096")
+
+    ; { copy&paste (legacy approach)
     A_Clipboard := FileRead(Format("{1}\{2}", A_MyDocuments, roomNumsTxt))
     BlockInput false
-
-    path := IniRead(config, "PsbBatchCO", "xlsPath")
     Run path
     WinWait "ahk_class XLMAIN"
     WinMaximize "ahk_class XLMAIN"
@@ -144,6 +145,29 @@ saveDep() {
     Send A_Clipboard
     Sleep 300
     ; }
+    ; }
+
+    ; ; { WIP: read txt, write xls file (new approach, to be test!)
+    ; ; loop parse txt
+    ; TrayTip "往 CheckOut.xls 写入房号中……请等待"
+    ; roomNums := []
+    ; depTxt := FileRead(Format("{1}\{2}", A_MyDocuments, roomNumsTxt))
+    ; loop parse (depTxt, "`n", "`r") {
+    ;     ; TODO: find out the delimiter & room number Index
+    ;     roomNums.Push(StrSplit(A_LoopField, "delimiter?")["index?"])
+    ; }
+    ; ; Excel files write-in
+    ; Xl := ComObject("Excel.Application")
+    ; CheckOut := Xl.Open(path)
+    ; CheckOut.Worksheets("Sheet1").Range("A:A").ClearContents
+    ; loop roomNums.Length {
+    ;     CheckOut.ActiveSheet.Cells(A_Index, 1).value := roomNums[A_Index + 1]
+    ; }
+    ; CheckOut.Close()
+    ; Xl.Quit()
+    ; Run path
+    ; Sleep 500
+    ; ; }
     continueText := "
     (
     请打开蓝豆查看“续住工单”，剔除excel中续住的房间后，点击确定继续拍out。
@@ -157,7 +181,6 @@ batchOut() {
     if (autoOut.Result := "Cancel") {
         cleanReload()
     }
-    path := IniRead(config, "PsbBatchCO", "xlsPath")
     Xl := ComObject("Excel.Application")
     CheckOut := Xl.Workbooks.Open(path)
     depRooms := CheckOut.Worksheets("Sheet1")
