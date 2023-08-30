@@ -5,17 +5,17 @@ SharePbPfMain() {
 	; bring OperaPMS window upfront and maximize
 	WinMaximize "ahk_class SunAwtFrame"
 	WinActivate "ahk_class SunAwtFrame"
-	WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
-
+	
 	textMsg := "
 	(
-	是(Y) = InHouse Share
-	否(N) = 粘贴P/B P/F信息
-	取消 = 退出脚本
-
-	INH Share：请在InHouse界面，窗口最大化情况下启动)
-	粘贴P/B P/F：请在InHouse点开Comment窗口后启动
+		是(Y) = InHouse Share
+		否(N) = 粘贴P/B P/F信息
+		取消 = 退出脚本
+		
+		INH Share：请在InHouse界面，窗口最大化情况下启动)
+		粘贴P/B P/F：请在InHouse点开Comment窗口后启动
 	)"
+
 	selector := MsgBox(textMsg, popupTitle, "YesNoCancel")
 	if (selector = "Yes") {
 		share()
@@ -28,6 +28,7 @@ SharePbPfMain() {
 }
 
 share() {
+	WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 	BlockInput true
 	Sleep 100
 	Send "!t"
@@ -104,6 +105,7 @@ share() {
 }
 
 pbpf() {
+	WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 	BlockInput true
 	; pbpf paste process start
 	MouseMove 316, 679
