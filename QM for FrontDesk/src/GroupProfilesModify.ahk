@@ -1,7 +1,7 @@
 ; reminder: Y-pos needs to minus 20
 ; #Include "%A_ScriptDir%\lib\utils.ahk"
 #Include "../lib/utils.ahk"
-popupTitle := popupTitle
+popupTitle := "GroupProfilesModify"
 
 GroupProfilesModifyMain() {
     path := IniRead("%A_ScriptDir%\config.ini", popupTitle, "xlsPath")
