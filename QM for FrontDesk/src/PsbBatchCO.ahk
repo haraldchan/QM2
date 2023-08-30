@@ -161,37 +161,37 @@ batchOut() {
     Xl := ComObject("Excel.Application")
     CheckOut := Xl.Workbooks.Open(path)
     depRooms := CheckOut.Worksheets("Sheet1")
-    lastRow := CheckOut.ActiveSheet.UsedRange.Rows.Count
+    lastRow := depRooms.Cells(depRooms.Rows.Count,"A").End(-4162).Row
+    MsgBox(lastRow)
     row := 1
     errorBrown := "0x804000" ; TODO: confirm this hex color code!
-    BlockInput true
+    ; BlockInput true
+    CoordMode "Mouse", "Screen"
     loop lastRow {
         roomNum := Integer(depRooms.Cells(row, 1).Value)
         A_Clipboard := roomNum
         ; { check out in psb (y-pos already modified!)
-        MouseMove 294, 177
+        MouseMove 279, 204
         Sleep 500
         Click
         Sleep 350
-        Send A_Clipboard
-        MouseMove 297, 171
+        Send "^v"
         Sleep 100
         Send "^f"
-        Sleep 300
-        Send "{Enter}"
         Sleep 800
         Send "{Enter}"
         Sleep 800
-        MouseMove 304, 182
+        Send "{Enter}"
+        Sleep 800
+        MouseMove 279, 204
         Sleep 800
         Click "Down"
-        MouseMove 182, 187
-        Sleep 720
+        MouseMove 160, 204
+        Sleep 200
         Click "Up"
-        MouseMove 183, 185
         Sleep 50
         Send "{BackSpace}"
-        Send 200
+        Sleep 200
         ; }
         ; terminate on error pop-up
         if (PixelGetColor(251, 196) = errorBrown) {
@@ -202,12 +202,13 @@ batchOut() {
         }
         row++
     }
-    BlockInput false
+    ; BlockInput false
     CheckOut.Close
     Xl.Quit
     IniWrite("null", config, "PsbBatchCO", "errorQuitAt")
     MsgBox("PSB 批量拍Out 已完成！", "PSB CheckOut(Batch)")
 }
+
 
 ; hotkeys
 ; ^F9:: PsbBatchCoMain()
