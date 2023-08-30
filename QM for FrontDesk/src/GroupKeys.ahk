@@ -2,7 +2,7 @@
 ; #Include "%A_ScriptDir%\config.ini"
 #Include "../lib/utils.ahk"
 
-popupTitle := popupTitle
+popupTitle := "GroupKeys"
 ; date RegEx
 dateDash := "^\d{1,4}-\d{1,2}-\d{1,2}"
 dateSlash := "^\d{1,4}/\{1,2}/d{1,2}"
@@ -115,13 +115,13 @@ GroupKeysMain() {
         Send "!e"
         Sleep 100
 
-        check := MsgBox(Format("
+        checkConf := MsgBox(Format("
         (
         已做房卡：{1}
          - 是(Y)制作下一个
          - 否(N)退出制卡
         )", roomNum), popupTitle, "OKCancel 4096")
-        if (check = "Cancel") {
+        if (checkConf = "Cancel") {
             cleanReload()
         }
         row++
