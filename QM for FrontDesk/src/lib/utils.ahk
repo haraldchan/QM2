@@ -4,5 +4,6 @@ cleanReload(){
         WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
     }
 	SetCapsLockState false
+    CoordMode "Mouse", "Client"
 	Reload
 }
