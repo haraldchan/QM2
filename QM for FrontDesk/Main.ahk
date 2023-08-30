@@ -24,12 +24,13 @@ F9: 		In-house Share & PayBy/PayFor
 F4: 		批量DoNotMove & 旅行团(TGDA)房批量Share+DNM
 Ctrl+O:		CityLedger CheckOut
 Ctrl+F11:		常用报表保存
-Ctrl+F1:        团队房卡批量制作
-Ctrl+F4:        团队Profile 批量录入
-Ctrl+F9:        旅安系统批量旅客退房（拍Out）
+Ctrl+F1:        	团队房卡批量制作
+Ctrl+F4:        	团队Profile 批量录入
+Ctrl+F9:       	旅安系统批量旅客退房（拍Out）
 
 F12:		刷新脚本状态
 Ctrl+F12:		退出
+
 
 备注： 部分功能可能会收到输入法干扰，建议使用前切换到英文输入法。
 )"
