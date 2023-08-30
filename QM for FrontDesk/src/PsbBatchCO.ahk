@@ -106,9 +106,6 @@ saveDep() {
     roomNumsTxt := Format("{1} check-out.txt", today)
     reportSave(roomNumsTxt)
     ; }
-    MsgBox("保存房号中，请等待(5)秒", popupTitle, "T5 4096")
-
-    ; { copy&paste (legacy approach)
     A_Clipboard := FileRead(Format("{1}\{2}", A_MyDocuments, roomNumsTxt))
     BlockInput false
     Run path
@@ -116,58 +113,38 @@ saveDep() {
     WinMaximize "ahk_class XLMAIN"
     Sleep 3500
     ; { pasting data (y-pos already modified!)
-    MouseMove 735, 408
+    WinWait "ahk_class QWidget"
+    WinActivate "ahk_class QWidget"
     Sleep 500
     Send "{E}"
     Sleep 1000
-    MouseMove 231, 921
+    MouseMove 225, 942
     Sleep 100
     Click
-    MouseMove 70, 195
+    MouseMove 22, 187
     Sleep 100
     Click
     Sleep 100
-    Send A_Clipboard
+    Send "{Delete}"
+    Sleep 100
+    Send "^v"
     Sleep 300
-    MouseMove 946, 177
+    MouseMove 930, 193
     Sleep 100
     Click
     Sleep 100
     Send "^x"
     Sleep 300
-    MouseMove 176, 918
+    MouseMove 149, 942
     Sleep 100
     Click
-    MouseMove 91, 174
+    MouseMove 70, 206
     Sleep 100
     Click
     Sleep 100
-    Send A_Clipboard
+    Send "^v"
     Sleep 300
     ; }
-    ; }
-
-    ; ; { WIP: read txt, write xls file (new approach, to be test!)
-    ; ; loop parse txt
-    ; TrayTip "往 CheckOut.xls 写入房号中……请等待"
-    ; roomNums := []
-    ; depTxt := FileRead(Format("{1}\{2}", A_MyDocuments, roomNumsTxt))
-    ; loop parse (depTxt, "`n", "`r") {
-    ;     ; TODO: find out the delimiter & room number Index
-    ;     roomNums.Push(StrSplit(A_LoopField, "delimiter?")["index?"])
-    ; }
-    ; ; Excel files write-in
-    ; Xl := ComObject("Excel.Application")
-    ; CheckOut := Xl.Open(path)
-    ; CheckOut.Worksheets("Sheet1").Range("A:A").ClearContents
-    ; loop roomNums.Length {
-    ;     CheckOut.ActiveSheet.Cells(A_Index, 1).value := roomNums[A_Index + 1]
-    ; }
-    ; CheckOut.Close()
-    ; Xl.Quit()
-    ; Run path
-    ; Sleep 500
-    ; ; }
     continueText := "
     (
     请打开蓝豆查看“续住工单”，剔除excel中续住的房间后，点击确定继续拍out。
@@ -178,7 +155,7 @@ saveDep() {
 
 batchOut() {
     autoOut := MsgBox("即将开始自动拍Out脚本`n请先打开PSB，进入“旅客退房”界面", popupTitle, "OKCancel")
-    if (autoOut.Result := "Cancel") {
+    if (autoOut := "Cancel") {
         cleanReload()
     }
     Xl := ComObject("Excel.Application")
@@ -234,5 +211,7 @@ batchOut() {
 
 ; hotkeys
 ; ^F9:: PsbBatchCoMain()
+; ^F9:: saveDep()
 ; F12:: cleanReload()   ; use 'Reload' for script reset
 ; ^F12:: ExitApp    ; use 'ExitApp' to kill script
+
