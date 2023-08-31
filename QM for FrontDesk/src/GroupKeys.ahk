@@ -1,11 +1,11 @@
-; #Include "%A_ScriptDir%\lib\utils.ahk"
-; #Include "%A_ScriptDir%\config.ini"
+; #Include "%A_ScriptDir%\src\lib\utils.ahk"
 #Include "../lib/utils.ahk"
 
 popupTitle := "GroupKeys"
 ; date RegEx
 dateDash := "^\d{1,4}-\d{1,2}-\d{1,2}"
 dateSlash := "^\d{1,4}/\{1,2}/d{1,2}"
+config := Format("{1}\src\config.ini", A_ScriptDir)
 
 ; TODO:Create GUI: create a file select ui
 GroupKeysMain() {
@@ -20,19 +20,19 @@ GroupKeysMain() {
      - 时间格式：HH:MM
     3、确保VingCard已经打开处于Check-in界面。
     )"
-
     start := MsgBox(startMsg, popupTitle, "OKCancel 4096")
     if (start = "Cancel") {
         cleanReload()
     }
-    coDateInput := InputBox("请输入退房日期：", popupTitle).Value
     loop {
+        coDateInput := InputBox("请输入退房日期：", popupTitle).Value
         if (RegExMatch(coDateInput, dateDash) > 0
             || RegExMatch(coDateInput, dateSlash)
             || coDateInput = "") {
             break
         } else {
             MsgBox("输入格式必须为yyyy-mm-dd或yyyy/mm/dd，如2023-01-01或2023/01/01。")
+            continue
         }
     }
     coTimeInput := InputBox("请输入退房时间：", popupTitle, , "13:00").Value
@@ -45,76 +45,56 @@ GroupKeysMain() {
     if (infoConfirm = "Cancel") {
         cleanReload()
     }
-    path := IniRead("%A_ScriptDir%\config.ini", popupTitle, "xlsPath")
+    path := IniRead(config, popupTitle, "xlsPath")
     Xl := ComObject("Excel.Application")
     GroupKeys := Xl.Workbooks.Open(path)
     groupRooms := GroupKeys.Worksheets("Sheet1")
-    lastRow := GroupKeys.ActiveSheet.UsedRange.Rows.Count
-    ; roomNum := Integer(groupRooms.Cells(1, 1).Value)
-    ; coDateRead := Integer(groupRooms.Cells(1, 2).Value)
-    ; coTimeRead := Integer(groupRooms.Cells(1, 3).Value)
-    ; A_Clipboard := roomNum
+    lastRow := groupRooms.Cells(groupRooms.Rows.Count,"A").End(-4162).Row
     row := 1
-
-    BlockInput true
+    
+    CoordMode "Mouse", "Screen"
     loop lastRow {
-        roomNum := Integer(groupRooms.Cells(row, 1).Value)
-        coDateRead := Integer(groupRooms.Cells(row, 2).Value)
-        coTimeRead := Integer(groupRooms.Cells(row, 3).Value)
+        BlockInput true
+        roomNum := groupRooms.Cells(row, 1).Text
+        coDateRead := groupRooms.Cells(row, 2).Text
+        coTimeRead := groupRooms.Cells(row, 3).Text
         A_Clipboard := roomNum
         coDateLoop := (coDateRead = "") ? coDateInput : coDateRead
         coTimeLoop := (coTimeRead = "") ? coTimeInput : coTimeRead
-        ; coDateLoop := coDateInput
-        ; coTimeLoop := coTimeInput
         ; { paste room number (y-pos already modified!)
-        MouseMove 421, 392
+        MouseMove 387, 409
         Sleep 300
         Click "Down"
-        MouseMove 255, 395
+        MouseMove 252, 409
         Sleep 150
         Click "Up"
-        MouseMove 387, 379
         Sleep 150
-        Click 2
-        Sleep 78
-        MouseMove 395, 395
-        Sleep 150
-        Send A_Clipboard
+        Send "^v"
         Sleep 200
-        ; }
-        ; if (coDateRead != "") {
-        ;     coDateLoop := coDateRead
-        ; }
-        ; if (coTimeRead != "") {
-        ;     coTimeLoop := coTimeRead
-        ; }
-        MouseMove 417, 558
+        MouseMove 410, 582
         Sleep 150
         Click "Down"
-        MouseMove 233, 564
+        MouseMove 249, 582
         Sleep 150
         Click "Up"
         Sleep 100
-        Send coDateLoop
+        Send Format("{Text}{1}", coDateLoop)
         Sleep 100
-        MouseMove 524, 557
+        MouseMove 528, 578
+        Sleep 150
+        Click 2
+        Sleep 200
+        Send Format("{Text}{1}", coTimeLoop)
+        Sleep 100
+        MouseMove 499, 742
         Sleep 100
         Click 2
-        Sleep 100
-        Send coTimeLoop
-        Sleep 100
-        MouseMove 505, 737
-        Sleep 150
-        Click "Down"
-        MouseMove 505, 738
-        Sleep 93
-        Click "Up"
         Sleep 100
         Send "{Text}2"
         Sleep 100
         Send "!e"
         Sleep 100
-
+        BlockInput false
         checkConf := MsgBox(Format("
         (
         已做房卡：{1}
@@ -126,7 +106,6 @@ GroupKeysMain() {
         }
         row++
     }
-    BlockInput false
     GroupKeys.Close
     Xl.Quit
     MsgBox("已完成团队制卡，请与Opera/蓝豆系统核对是否正确！", popupTitle)
@@ -135,5 +114,5 @@ GroupKeysMain() {
 
 ; hotkeys
 ; !F1:: GroupKeysMain()
-; F12:: cleanReload()	; use 'Reload' for script reset
-; ^F12:: ExitApp	; use 'ExitApp' to kill script
+; F12:: cleanReload()   ; use 'Reload' for script reset
+; ^F12:: ExitApp    ; use 'ExitApp' to kill script
