@@ -31,7 +31,6 @@ Ctrl+F9:       	旅安系统批量旅客退房（拍Out）
 F12:		刷新脚本状态
 Ctrl+F12:		退出
 
-
 备注： 部分功能可能会收到输入法干扰，建议使用前切换到英文输入法。
 )"
 
@@ -47,5 +46,7 @@ F9:: SharePbPfMain()
 ^F11:: ReportMasterMain()
 F4:: GroupShareDnmMain()
 ^F9:: PsbBatchCoMain()
+; ^F4:: GroupProfilesModifyMain()
+return
+#Hotif WinExist("ahk_exe vision.exe")
 ^F1:: GroupKeysMain()
-^F4:: GroupProfilesModifyMain()
