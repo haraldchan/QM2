@@ -112,7 +112,7 @@ pbpf() {
 	Sleep 300
 	Send "!e"
 	Sleep 200
-	Send A_ClipBoard
+	Send "^v"
 	Sleep 150
 	Send "!o"
 	Sleep 100
@@ -138,7 +138,7 @@ pbpf() {
 	Sleep 100
 	Click "Up"
 	Sleep 100
-	Send A_ClipBoard
+	Send "^v"
 	Sleep 150
 	Send "!o"
 	Sleep 400
