@@ -189,16 +189,17 @@ hisFor15() {
 hisForThisMonth() {
     preAuditDate := DateAdd(A_Now, -1, "Days")
     preAuditMonth := FormatTime(preAuditDate, "MM")
-    preAuditDay := FormatTime(preAuditDate, "dd")
     preAuditYear := FormatTime(preAuditDate, "yyyy")
     nextMonth := (preAuditMonth = 12) ? 1 : preAuditMonth + 1
-    if (nextMonth < 10) { 
-        nextMonth := Format("0{1}", nextMonth)
-    }
-    printYear := preAuditMonth = 12 ? preAuditYear + 1 : preAuditYear
-    firstDayOfNextMonth := Format("{2}{1}01", nextMonth, printYear)
+    ; if (nextMonth < 10) { 
+    ;     nextMonth := Format("0{1}", nextMonth)
+    ; }
+    nextMonth := (nextMonth < 10) ? "0" . nextMonth : nextMonth
 
-    dateFirst := Format("{1}01{2}", preAuditMonth, preAuditYear)
+    printYear := (preAuditMonth) = 12 ? preAuditYear + 1 : preAuditYear
+    firstDayOfNextMonth := printYear . nextMonth . "01"
+
+    dateFirst := preAuditMonth . "01" . preAuditYear
     dateLast := FormatTime(DateAdd(firstDayOfNextMonth, -1, "Days"), "MMddyyyy")
 
     searchStr := "RS05"
@@ -238,16 +239,15 @@ hisForThisMonth() {
 hisForNextMonth() {
     preAuditDate := DateAdd(A_Now, -1, "Days")
     preAuditMonth := FormatTime(preAuditDate, "MM")
-    preAuditDay := FormatTime(preAuditDate, "dd")
     preAuditYear := FormatTime(preAuditDate, "yyyy")
     nMonth := (preAuditMonth = 12) ? 1 : preAuditMonth + 1
     nextMonth := (nMonth < 10) ? "0" . nMonth : nMonth
     nextNextMonth := (nextMonth = 12) ? 1 : nextMonth + 1
     nextNextMonth := (nextNextMonth < 10) ? "0" . nextNextMonth : nextNextMonth
     printYear := preAuditMonth = 12 ? preAuditYear + 1 : preAuditYear
-    firstDayOfNextMonth := Format("{2}{1}01", nextMonth, printYear)
-    firstDayOfNextNextMonth := Format("{2}{1}01", nextNextMonth, printYear)
-    dateFirstNext := Format("{1}01{2}", nextMonth, printYear)
+    firstDayOfNextMonth := printYear . nextMonth . "01"
+    firstDayOfNextNextMonth := printYear . nextNextMonth . "01"
+    dateFirstNext := nextMonth . "01" . printYear
     dateLastNext := FormatTime(DateAdd(firstDayOfNextNextMonth, -1, "Days"), "MMddyyyy")
 
     searchStr := "RS05"
@@ -431,7 +431,6 @@ creditLimit() {
     Sleep 150
     Click
     Sleep 200
-
     reportSave(fileName)
     TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
