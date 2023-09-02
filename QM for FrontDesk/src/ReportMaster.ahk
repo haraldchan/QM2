@@ -91,207 +91,157 @@ ReportMasterMain() {
 		cleanReload()
 	}
 	WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
-	switch reportSelector.value, "Off" {
-		; { C-shift reports
-		Case "1":
-			reportName := "1  - Guest INH Complimentary"
-			comp()
-			Sleep 1000
-			openMyDocs(reportName)
+	; switch reportSelector.value, "Off" {
+	; 	; { C-shift reports
+	; 	Case "1":
+	; 		reportName := "1  - Guest INH Complimentary"
+	; 		comp()
+	; 		Sleep 1000
+	; 		openMyDocs(reportName)
 
-		Case "2":
-			reportName := "2  - NA02-Manager Flash"
-			mgrFlash()
-			Sleep 1000
-			openMyDocs(reportName)
+	; 	Case "2":
+	; 		reportName := "2  - NA02-Manager Flash"
+	; 		mgrFlash()
+	; 		Sleep 1000
+	; 		openMyDocs(reportName)
 
-		Case "3":
-			reportName := "3  - （前后15天）RS05-History & Forecast"
-			hisFor15()
-			Sleep 1000
-			openMyDocs(reportName)
+	; 	Case "3":
+	; 		reportName := "3  - （前后15天）RS05-History & Forecast"
+	; 		hisFor15()
+	; 		Sleep 1000
+	; 		openMyDocs(reportName)
 
-		Case "4":
-			reportName := "4  - RS05-（FO当月）History & Forecast"
-			hisForThisMonth()
-			Sleep 1000
-			openMyDocs(reportName)
+	; 	Case "4":
+	; 		reportName := "4  - RS05-（FO当月）History & Forecast"
+	; 		hisForThisMonth()
+	; 		Sleep 1000
+	; 		openMyDocs(reportName)
 
-		Case "5":
-			reportName := "5  - RS05-（FO次月）History & Forecast"
-			hisForNextMonth()
-			Sleep 1000
-			openMyDocs(reportName)
+	; 	Case "5":
+	; 		reportName := "5  - RS05-（FO次月）History & Forecast"
+	; 		hisForNextMonth()
+	; 		Sleep 1000
+	; 		openMyDocs(reportName)
 
-		Case "6":
-			reportName := "6  - FO01-VIP Arrival (VIP Arr)"
-			vipArr()
-			Sleep 1000
-			openMyDocs(reportName)
+	; 	Case "6":
+	; 		reportName := "6  - FO01-VIP Arrival (VIP Arr)"
+	; 		vipArr()
+	; 		Sleep 1000
+	; 		openMyDocs(reportName)
 
-		Case "7":
-			reportName := "7  - Guest In House w/o Due Out"
-			vipInh()
-			Sleep 1000
-			openMyDocs(reportName)
+	; 	Case "7":
+	; 		reportName := "7  - Guest In House w/o Due Out"
+	; 		vipInh()
+	; 		Sleep 1000
+	; 		openMyDocs(reportName)
 
-		Case "8":
-			reportName := "8  - FO03-VIP DEP"
-			vipDep()
-			Sleep 1000
-			openMyDocs(reportName)
+	; 	Case "8":
+	; 		reportName := "8  - FO03-VIP DEP"
+	; 		vipDep()
+	; 		Sleep 1000
+	; 		openMyDocs(reportName)
 
-		Case "9":
-			reportName := "9  - FO01-Arrival Detailed"
-			arrAll()
-			Sleep 1000
-			openMyDocs(reportName)
+	; 	Case "9":
+	; 		reportName := "9  - FO01-Arrival Detailed"
+	; 		arrAll()
+	; 		Sleep 1000
+	; 		openMyDocs(reportName)
 
-		Case "10":
-			reportName := "10 - FO02-Guests INH by Room"
-			inhAll()
-			Sleep 1000
-			openMyDocs(reportName)
+	; 	Case "10":
+	; 		reportName := "10 - FO02-Guests INH by Room"
+	; 		inhAll()
+	; 		Sleep 1000
+	; 		openMyDocs(reportName)
 
-		Case "11":
-			reportName := "11 - FO03-Departures"
-			depAll()
-			Sleep 1000
-			openMyDocs(reportName)
+	; 	Case "11":
+	; 		reportName := "11 - FO03-Departures"
+	; 		depAll()
+	; 		Sleep 1000
+	; 		openMyDocs(reportName)
 
-		Case "12":
-			reportName := "12 - FO11-Credit Limit"
-			creditLimit()
-			Sleep 1000
-			openMyDocs(reportName)
+	; 	Case "12":
+	; 		reportName := "12 - FO11-Credit Limit"
+	; 		creditLimit()
+	; 		Sleep 1000
+	; 		openMyDocs(reportName)
 
-		Case "13":
-			reportName := "13 - FO13-Package Forecast（仅早餐）"
-			bbf()
-			Sleep 1000
-			openMyDocs(reportName)
+	; 	Case "13":
+	; 		reportName := "13 - FO13-Package Forecast（仅早餐）"
+	; 		bbf()
+	; 		Sleep 1000
+	; 		openMyDocs(reportName)
 
-		Case "14":
-			reportName := "14 - Rooms-housekeepingstatus"
-			rooms()
-			Sleep 1000
-			openMyDocs(reportName)
+	; 	Case "14":
+	; 		reportName := "14 - Rooms-housekeepingstatus"
+	; 		rooms()
+	; 		Sleep 1000
+	; 		openMyDocs(reportName)
 
-		Case "15":
-			reportName := "15 - HK03-OOO"
-			ooo()
-			Sleep 1000
-			openMyDocs(reportName)
+	; 	Case "15":
+	; 		reportName := "15 - HK03-OOO"
+	; 		ooo()
+	; 		Sleep 1000
+	; 		openMyDocs(reportName)
 
-		Case "16":
-			reportName := "16 - Group Rooming List"
-			groupRoom()
-			Sleep 1000
-			openMyDocs(reportName)
+	; 	Case "16":
+	; 		reportName := "16 - Group Rooming List"
+	; 		groupRoom()
+	; 		Sleep 1000
+	; 		openMyDocs(reportName)
 
-		Case "17":
-			reportName := "17 - Group In House"
-			groupInh()
-			Sleep 1000
-			openMyDocs(reportName)
+	; 	Case "17":
+	; 		reportName := "17 - Group In House"
+	; 		groupInh()
+	; 		Sleep 1000
+	; 		openMyDocs(reportName)
 
-		Case "18":
-			reportName := "18 - FO08-No Show"
-			noShow()
-			Sleep 1000
-			openMyDocs(reportName)
+	; 	Case "18":
+	; 		reportName := "18 - FO08-No Show"
+	; 		noShow()
+	; 		Sleep 1000
+	; 		openMyDocs(reportName)
 
-		Case "19":
-			reportName := "19 - Cancellations"
-			cancel()
-			Sleep 1000
-			openMyDocs(reportName)
+	; 	Case "19":
+	; 		reportName := "19 - Cancellations"
+	; 		cancel()
+	; 		Sleep 1000
+	; 		openMyDocs(reportName)
 
-		Case "666":
-			; save all
-			WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
-			loop overnightReportList.Length {
-				if (A_Index = 5) {
-					if ((dateLast() - A_DD) > 5) {
-						continue
-					}
-				}
-				overnightReportList[A_Index]()
-				Sleep 2000
-			}
-			WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-			openMyDocs("夜班报表")
-			; }
-
-		Case "sp":
-			reportName := today . "水果5"
-			special(today)
-			Sleep 300
-			openMyDocs(reportName)
-
-		Case "garr":
-			if (RmListSaver = "Yes") {
-				groupArrAuto(blockinfo)
-			} else if (RmListSaver = "No") {
-				WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-				reportName := "团单"
-				fileName := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{2}\{2}{3}\{1}Group ARR&DEP.xlsx", today, A_Year, A_MM)
-				blockInfo := getBlockInfo(fileName)
-				blockInfoText := ""
-				for blockName, blockCode in blockInfo {
-					blockInfoText .= Format("{1}：{2}`n", blockName, blockCode)
-				}
-				RmListSaver := MsgBox(Format("
-				(	
-				请确认当天Arrival 团队信息：
-
-				{1}
-
-				是(Y)：自动保存上述团队团单
-				否(N)：手动录入block code保存团单
-				取消：退出脚本
-				)", blockInfoText), "ReportMaster", "YesNoCancel")
-				groupArr()
-			} else {
-			cleanReload()
-			}
-			Sleep 300
-			openMyDocs(reportName)
-
-		Default:
-			WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-			MsgBox("请选择表中的指令", popupTitle)
-	}
-
-	; if (reportSelector.Value < 20 && reportSelector.Value > 0) {
-	; 	WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
-	; 	reportName := overnightReportNames[reportSelector.Value]
-	; 	overnightReportList[reportSelector.Value]()
-	; 	Sleep 1000
-	; 	WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-	; 	openMyDocs(reportName)
-	; } else if (reportSelector.Value = 666) {
-	; 	WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
-	; 	loop overnightReportList.Length {
-	; 		if (A_Index = 5) {
-	; 			if ((dateLast() - A_DD) > 5) {
-	; 				continue
+	; 	Case "666":
+	; 		; save all
+	; 		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
+	; 		loop overnightReportList.Length {
+	; 			if (A_Index = 5) {
+	; 				if ((dateLast() - A_DD) > 5) {
+	; 					continue
+	; 				}
 	; 			}
+	; 			overnightReportList[A_Index]()
+	; 			Sleep 2000
 	; 		}
-	; 		overnightReportList[A_Index]()
-	; 		Sleep 2000
-	; 	}
-	; 	WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-	; 	openMyDocs("夜班报表")
-	; } else if (StrLower(reportSelector.Value) = "garr") {
-	; 	reportName := "团单"
-	; 	fileName := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{2}\{2}{3}\{1}Group ARR&DEP.xlsx", today, A_Year, A_MM)
-	; 	blockInfo := getBlockInfo(fileName)
-	; 	blockInfoText := ""
-	; 	for blockName, blockCode in blockInfo {
-	; 		blockInfoText .= Format("{1}：{2}`n", blockName, blockCode)
-	; 	}
-	; 	RmListSaver := MsgBox(Format("
+	; 		WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+	; 		openMyDocs("夜班报表")
+	; 		; }
+
+	; 	Case "sp":
+	; 		reportName := today . "水果5"
+	; 		special(today)
+	; 		Sleep 300
+	; 		openMyDocs(reportName)
+
+	; 	Case "garr":
+	; 		if (RmListSaver = "Yes") {
+	; 			groupArrAuto(blockinfo)
+	; 		} else if (RmListSaver = "No") {
+	; 			WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+	; 			reportName := "团单"
+	; 			fileName := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{2}\{2}{3}\{1}Group ARR&DEP.xlsx", today, A_Year, A_MM)
+	; 			blockInfo := getBlockInfo(fileName)
+	; 			blockInfoText := ""
+	; 			for blockName, blockCode in blockInfo {
+	; 				blockInfoText .= Format("{1}：{2}`n", blockName, blockCode)
+	; 			}
+	; 			RmListSaver := MsgBox(Format("
 	; 			(	
 	; 			请确认当天Arrival 团队信息：
 
@@ -301,21 +251,74 @@ ReportMasterMain() {
 	; 			否(N)：手动录入block code保存团单
 	; 			取消：退出脚本
 	; 			)", blockInfoText), "ReportMaster", "YesNoCancel")
-	; 	if (RmListSaver = "Yes") {
-	; 		groupArrAuto(blockinfo)
-	; 	} else if (RmListSaver = "No") {
-	; 		groupArr()
-	; 	} else {
+	; 			groupArr()
+	; 		} else {
 	; 		cleanReload()
-	; 	}
-	; 	Sleep 300
-	; 	openMyDocs(reportName)
-	; } else if (StrLower(reportSelector.Value) = "sp") {
-	; 	reportName := today . "水果5"
-	; 	special(today)
-	; 	Sleep 300
-	; 	openMyDocs(reportName)
+	; 		}
+	; 		Sleep 300
+	; 		openMyDocs(reportName)
+
+	; 	Default:
+	; 		WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+	; 		MsgBox("请选择表中的指令", popupTitle)
 	; }
+
+	if (reportSelector.Value < 20 && reportSelector.Value > 0) {
+		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
+		reportName := overnightReportNames[reportSelector.Value]
+		overnightReportList[reportSelector.Value]()
+		Sleep 1000
+		WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+		openMyDocs(reportName)
+	} else if (reportSelector.Value = 666) {
+		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
+		loop overnightReportList.Length {
+			if (A_Index = 5) {
+				if ((dateLast() - A_DD) > 5) {
+					continue
+				}
+			}
+			overnightReportList[A_Index]()
+			Sleep 2000
+		}
+		WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+		openMyDocs("夜班报表")
+	} else if (StrLower(reportSelector.Value) = "garr") {
+		reportName := "团单"
+		fileName := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{2}\{2}{3}\{1}Group ARR&DEP.xlsx", today, A_Year, A_MM)
+		blockInfo := getBlockInfo(fileName)
+		blockInfoText := ""
+		for blockName, blockCode in blockInfo {
+			blockInfoText .= Format("{1}：{2}`n", blockName, blockCode)
+		}
+		RmListSaver := MsgBox(Format("
+				(	
+				请确认当天Arrival 团队信息：
+
+				{1}
+
+				是(Y)：自动保存上述团队团单
+				否(N)：手动录入block code保存团单
+				取消：退出脚本
+				)", blockInfoText), "ReportMaster", "YesNoCancel")
+		if (RmListSaver = "Yes") {
+			groupArrAuto(blockinfo)
+		} else if (RmListSaver = "No") {
+			groupArr()
+		} else {
+			cleanReload()
+		}
+		Sleep 300
+		openMyDocs(reportName)
+	} else if (StrLower(reportSelector.Value) = "sp") {
+		reportName := today . "水果5"
+		special(today)
+		Sleep 300
+		openMyDocs(reportName)
+	} else {
+		WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+		MsgBox("请选择表中的指令", popupTitle)
+	}
 }
 
 openMyDocs(reportName) {
