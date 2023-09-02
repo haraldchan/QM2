@@ -87,9 +87,13 @@ share() {
 	Send "{Esc}"
 	Sleep 500
 	Send "{Esc}"
+	Sleep 500
+	Send "{Esc}"
 	Sleep 4000
 	Send "!i"
 	Sleep 3000
+	Send "{Esc}"
+	Sleep 200
 	Send "{Esc}"
 	Sleep 200
 	Send "{Esc}"
