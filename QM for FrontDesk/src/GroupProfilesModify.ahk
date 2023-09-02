@@ -67,7 +67,7 @@ GroupProfilesModifyMain() {
         MouseMove 324, 23
         Click "Up"
         Sleep 200
-        Send A_Clipboard
+        Send "^v"
         Sleep 200
         Send "{F11}"
         Sleep 300
