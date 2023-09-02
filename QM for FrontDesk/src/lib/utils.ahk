@@ -6,7 +6,7 @@ cleanReload(){
     ; Key/Mouse state set default
     BlockInput false
 	SetCapsLockState false
-    CoordMode "Mouse", "Client"
+    CoordMode "Mouse", "Screen"
     ; Excel Quit
     ComObject("Excel.Application").Quit()
 	Reload

@@ -72,36 +72,36 @@ saveDep() {
     ; { saving departured room numbers (y-pos already modified!)
     reportOpenDelimitedData("departure_all")
     Sleep 100
-    MouseMove 473, 550
+    MouseMove 473, 570
     Sleep 100
     Click
-    MouseMove 474, 527
+    MouseMove 474, 547
     Sleep 100
     Click
-    MouseMove 483, 433
+    MouseMove 483, 453
     Sleep 100
     Click
-    MouseMove 613, 423
+    MouseMove 613, 443
     Sleep 100
     Click
     Sleep 300
-    MouseMove 495, 346
+    MouseMove 495, 366
     Sleep 100
     Click "Down"
-    MouseMove 378, 345
+    MouseMove 378, 365
     Sleep 100
     Click "Up"
     Sleep 100
-    Send Format("{Text}{1}", frTime)
+    Send "{Text}" . frTime
     Sleep 100
-    MouseMove 579, 346
+    MouseMove 579, 366
     Sleep 100
     Click "Down"
-    MouseMove 449, 346
+    MouseMove 449, 366
     Sleep 100
     Click "Up"
     Sleep 100
-    Send Format("{Text}{1}", toTime)
+    Send "{Text}" . toTime
     Sleep 100
     roomNumsTxt := Format("{1} check-out.txt", today)
     reportSave(roomNumsTxt)
@@ -118,10 +118,10 @@ saveDep() {
     Sleep 500
     Send "{E}"
     Sleep 1000
-    MouseMove 225, 942
+    MouseMove 225, 962
     Sleep 100
     Click
-    MouseMove 22, 187
+    MouseMove 22, 207
     Sleep 100
     Click
     Sleep 100
@@ -129,16 +129,16 @@ saveDep() {
     Sleep 100
     Send "^v"
     Sleep 300
-    MouseMove 930, 193
+    MouseMove 930, 213
     Sleep 100
     Click
     Sleep 100
     Send "^x"
     Sleep 300
-    MouseMove 149, 942
+    MouseMove 149, 962
     Sleep 100
     Click
-    MouseMove 70, 206
+    MouseMove 70, 226
     Sleep 100
     Click
     Sleep 100
@@ -166,12 +166,11 @@ batchOut() {
     row := 1
     errorBrown := "0x804000" ; TODO: confirm this hex color code!
     ; BlockInput true
-    CoordMode "Mouse", "Screen"
     loop lastRow {
         roomNum := Integer(depRooms.Cells(row, 1).Value)
         A_Clipboard := roomNum
         ; { check out in psb (y-pos already modified!)
-        MouseMove 279, 204
+        MouseMove 279, 224
         Sleep 500
         Click
         Sleep 350
@@ -183,10 +182,10 @@ batchOut() {
         Sleep 800
         Send "{Enter}"
         Sleep 800
-        MouseMove 279, 204
+        MouseMove 279, 224
         Sleep 800
         Click "Down"
-        MouseMove 160, 204
+        MouseMove 160, 224
         Sleep 200
         Click "Up"
         Sleep 50
@@ -209,10 +208,8 @@ batchOut() {
     MsgBox("PSB 批量拍Out 已完成！", "PSB CheckOut(Batch)")
 }
 
-
 ; hotkeys
 ; ^F9:: PsbBatchCoMain()
 ; ^F9:: saveDep()
 ; F12:: cleanReload()   ; use 'Reload' for script reset
 ; ^F12:: ExitApp    ; use 'ExitApp' to kill script
-

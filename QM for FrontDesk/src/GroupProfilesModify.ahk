@@ -31,13 +31,13 @@ GroupProfilesModifyMain() {
     A_Clipboard := roomNum
     BlockInput true
     loop lastRow {
-        MouseMove 598, 553
+        MouseMove 598, 573
         Sleep 500
         Send "!p"
         Sleep 300
         Send "!n"
         Sleep 200
-        MouseMove 666, 525
+        MouseMove 666, 545
         Sleep 1000
         Click
         Sleep 3000
@@ -61,6 +61,7 @@ GroupProfilesModifyMain() {
         ; Sleep 300
 
         ; window coord
+        CoordMode "Mouse", "Window"
         MouseMove 400, 23
         Click "Down"
         Sleep 200
@@ -82,6 +83,7 @@ GroupProfilesModifyMain() {
         Sleep 2000
         Send "{Down}"
         Sleep 200
+        CoordMode "Mouse", "Screen"
 
         if (PixelGetColor(698, 306) = errorRed) {
             MsgBox("Modify出错，脚本已终止`n`n已Modify到：" . roomNum, popupTitle)
@@ -102,5 +104,5 @@ GroupProfilesModifyMain() {
 
 ; hotkeys
 ; F4:: SharePbPfMain()
-; F12:: Reload	; use 'Reload' for script reset
-; ^F12:: ExitApp	; use 'ExitApp' to kill script
+; F12:: Reload  ; use 'Reload' for script reset
+; ^F12:: ExitApp    ; use 'ExitApp' to kill script

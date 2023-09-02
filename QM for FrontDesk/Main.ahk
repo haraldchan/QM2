@@ -14,7 +14,7 @@
 #Include "../src/PsbBatchCO.ahk"
 #Include "../src/GroupKeys.ahk"
 #Include "../src/GroupProfilesModify.ahk"
-
+CoordMode "Mouse", "Screen"
 TrayTip "QM 2 运行中。 按下Alt+F1 可查看快捷键指南"
 tips := "
 (

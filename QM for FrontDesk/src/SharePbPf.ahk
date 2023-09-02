@@ -1,6 +1,5 @@
-; reminder: Y-pos needs to minus 20
-; Main runs the main process
 popupTitle := "INH Share & P/B P/F"
+
 SharePbPfMain() {
 	; bring OperaPMS window upfront and maximize
 	WinMaximize "ahk_class SunAwtFrame"
@@ -61,20 +60,20 @@ share() {
 	Sleep 800
 	Send "!r"
 	Sleep 1000
-	MouseMove 949, 579
+	MouseMove 949, 599
 	Sleep 2000
 	Click
 	Sleep 200
 	Send "!d"
-	MouseMove 611, 526
+	MouseMove 611, 546
 	Sleep 200
 	Click
 	Sleep 1500
 	Send "!c"
-	MouseMove 324, 487
+	MouseMove 324, 507
 	Sleep 1000
 	Click "Down"
-	MouseMove 212, 500
+	MouseMove 212, 520
 	Sleep 200
 	Click "Up"
 	Sleep 200
@@ -100,7 +99,7 @@ share() {
 	Sleep 1000
 	Send "{Space}"
 	Sleep 1500
-	Send "!c"
+	Send "!o"
 	Sleep 300
 	Send "!c"
 	Sleep 300
@@ -112,7 +111,7 @@ pbpf() {
 	WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 	BlockInput true
 	; pbpf paste process start
-	MouseMove 316, 679
+	MouseMove 316, 699
 	Sleep 300
 	Send "!e"
 	Sleep 200
@@ -123,22 +122,22 @@ pbpf() {
 	Send "!c"
 	Sleep 100
 	Send "!t"
-	MouseMove 759, 246
+	MouseMove 759, 266
 	Sleep 200
 	Click
 	Send "!n"
 	Sleep 200
 	Send "{Text}OTH"
-	MouseMove 517, 379
+	MouseMove 517, 399
 	Sleep 100
 	Click
-	MouseMove 479, 415
+	MouseMove 479, 435
 	Sleep 100
 	Click
-	MouseMove 689, 457
+	MouseMove 689, 477
 	Sleep 100
 	Click "Down"
-	MouseMove 697, 457
+	MouseMove 697, 477
 	Sleep 100
 	Click "Up"
 	Sleep 100

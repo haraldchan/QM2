@@ -32,18 +32,18 @@ dnm() {
     }
     BlockInput true
     loop roomQty.Value {
-        MouseMove 696, 594
+        MouseMove 696, 614
         Sleep 200
         Send "!r"
         Sleep 100
-        MouseMove 579, 507
+        MouseMove 579, 527
         Sleep 2000
         Click
         Sleep 400
         Click
         Sleep 300
         Click
-        MouseMove 473, 494
+        MouseMove 473, 514
         Sleep 500
         Click
         Sleep 700
@@ -73,23 +73,23 @@ dnmShare() {
             Reload
         }
     }
-    MouseMove 340, 291
+    MouseMove 340, 311
     Sleep 100
     Click "Down"
-    MouseMove 182, 290
+    MouseMove 182, 310
     Sleep 100
     Click "Up"
-    MouseMove 300, 287
+    MouseMove 300, 307
     Sleep 100
     Send "{Backspace}"
     Sleep 100
     Send "{Text}TGDA"
     loop roomQty.Value {
         BlockInput true
-        MouseMove 425, 517
+        MouseMove 425, 537
         Sleep 200
         Send "!r"
-        MouseMove 469, 492
+        MouseMove 469, 512
         Sleep 3000
         Click
         Sleep 700
@@ -104,13 +104,13 @@ dnmShare() {
         Sleep 300
         Send "{Text}1"
         Sleep 100
-        MouseMove 487, 382
+        MouseMove 487, 402
         Sleep 100
         Click "Down"
-        MouseMove 518, 383
+        MouseMove 518, 403
         Sleep 200
         Click "Up"
-        MouseMove 516, 423
+        MouseMove 516, 443
         Sleep 200
         Send "{Text}0"
         Sleep 200
@@ -118,7 +118,7 @@ dnmShare() {
         Sleep 1000
         Send "!r"
         Sleep 200
-        MouseMove 942, 578
+        MouseMove 942, 598
         Sleep 2500
         Click
         Sleep 800
@@ -132,10 +132,10 @@ dnmShare() {
         Sleep 500
         Send "!c"
         Sleep 300
-        MouseMove 321, 487
+        MouseMove 321, 507
         Sleep 1500
         Click "Down"
-        MouseMove 186, 489
+        MouseMove 186, 509
         Sleep 200
         Click "Up"
         Sleep 200

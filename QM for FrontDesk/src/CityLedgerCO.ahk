@@ -18,7 +18,7 @@ CityLedgerCOMain() {
 
 fullWin() {
 	BlockInput true
-	MouseMove 862, 252
+	MouseMove 862, 272
 	Sleep 100
 	Click
 	Sleep 100
@@ -30,21 +30,24 @@ fullWin() {
 	Sleep 100
 	Send "!p"
 	Sleep 200
-	MouseMove 669, 515
+	MouseMove 669, 535
 	Sleep 1000
 	Click
 	Sleep 300
-	MouseMove 894, 702
+	MouseMove 894, 722
 	Sleep 100
 	BlockInput false
 }
 
 smallWin() {
 	BlockInput true
-	MouseMove 700, 180
+	MouseMove 700, 200
 	Sleep 100
 	Click
 	Sleep 100
+	; MouseMove 660, 605
+	; Sleep 50
+	; Click
 	Send "!o"
 	Sleep 1500
 	Send "{Blind}{Text}CL"
@@ -53,7 +56,7 @@ smallWin() {
 	Sleep 100
 	Send "!p"
 	Sleep 200
-	MouseMove 662, 520
+	MouseMove 662, 540
 	Sleep 1000
 	Click
 	Sleep 300
