@@ -237,8 +237,8 @@ ReportMasterMain() {
 			openMyDocs(reportName)
 
 		Default:
-			MsgBox("请选择表中的指令", popupTitle)
 			WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+			MsgBox("请选择表中的指令", popupTitle)
 	}
 }
 
