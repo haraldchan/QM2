@@ -84,7 +84,7 @@ GroupProfilesModifyMain() {
         Sleep 200
 
         if (PixelGetColor(698, 306) = errorRed) {
-            MsgBox(Format("Modify出错，脚本已终止`n`n已Modify到：{1}", roomNum))
+            MsgBox("Modify出错，脚本已终止`n`n已Modify到：" . roomNum, popupTitle)
             quitOnRoom := roomNum
             IniWrite(quitOnRoom, "%A_ScriptDir%\config.ini", "PsbBatchCO", "errorQuitAt")
             cleanReload()

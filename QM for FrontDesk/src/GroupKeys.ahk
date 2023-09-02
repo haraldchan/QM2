@@ -78,13 +78,13 @@ GroupKeysMain() {
         Sleep 150
         Click "Up"
         Sleep 100
-        Send Format("{Text}{1}", coDateLoop)
+        Send "{Text}" . coDateLoop
         Sleep 100
         MouseMove 528, 578
         Sleep 150
         Click 2
         Sleep 200
-        Send Format("{Text}{1}", coTimeLoop)
+        Send "{Text}" . coTimeLoop
         Sleep 100
         MouseMove 499, 742
         Sleep 100

@@ -51,7 +51,7 @@ dnm() {
         Sleep 1500
     }
     BlockInput false
-    MsgBox(Format("已完成批量DoNotMove，合共 {1} 房。", roomQty.Value), "Q.Group Share&DNM")
+    MsgBox("已完成批量DoNotMove，合共" . roomQty . "房。", "Q.Group Share&DNM")
 }
 
 dnmShare() {

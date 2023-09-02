@@ -180,7 +180,7 @@ ReportMasterMain() {
 				nextMonth := Format("0{1}", nextMonth)
 			}
 			printYear := preAuditMonth = 12 ? preAuditYear + 1 : preAuditYear
-			firstDayOfNextMonth := Format("{2}{1}01", nextMonth, printYear)
+			firstDayOfNextMonth := printYear . nextMonth . "01"
 			dateLast := FormatTime(DateAdd(firstDayOfNextMonth, -1, "Days"), "dd")
 			if (dateLast - A_DD < 5) {
 				hisForNextMonth()
@@ -219,7 +219,7 @@ ReportMasterMain() {
 			; }
 
 		Case "sp":
-			reportName := Format("{1} 水果5", today)
+			reportName := today . "水果5"
 			special(today)
 			Sleep 300
 			openMyDocs(reportName)
@@ -228,7 +228,7 @@ ReportMasterMain() {
 			WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 			reportName := "团单"
 			fileName := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{2}\{2}{3}\{1}Group ARR&DEP.xlsx", today, A_Year, A_MM)			
-			blockInfo := getBlockInfo()
+			blockInfo := getBlockInfo(fileName)
 			blockInfoText := ""
 			for blockName, blockCode in blockInfo {
 				blockInfoText .= Format("{1}：{2}`n", blockName, blockCode)
@@ -262,7 +262,7 @@ ReportMasterMain() {
 
 openMyDocs(reportName) {
 	WinSetAlwaysOnTop false
-	myText := Format("已保存报表：{1}·`n`n是否打开所在文件夹? ", reportName)
+	myText := "已保存报表：" . reportName . "`n`n是否打开所在文件夹? "
 	openFolder := MsgBox(myText, popupTitle, "OKCancel")
 	if (openFolder = "OK") {
 		Run A_MyDocuments
@@ -271,10 +271,9 @@ openMyDocs(reportName) {
 	}
 }
 
-getBlockInfo() {
+getBlockInfo(filename) {
 	blockInfoMap := Map()
 	Xl := ComObject("Excel.Application")
-	fileName := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{2}\{2}{3}\{1}Group ARR&DEP.xlsx", today,A_Year,A_MM)
 	OnDayGroupDetails := Xl.Workbooks.Open(fileName).Worksheets("Sheet1")
 	loop {
 		blockCodeReceived := OnDayGroupDetails.Cells(A_Index + 3, 1).Text

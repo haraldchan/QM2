@@ -195,7 +195,7 @@ batchOut() {
         ; }
         ; terminate on error pop-up
         if (PixelGetColor(251, 196) = errorBrown) {
-            MsgBox(Format("PSB系统出错，脚本已终止`n`n已拍Out到：{1}", roomNum))
+            MsgBox("PSB系统出错，脚本已终止`n`n已拍Out到：" . roomNum, popupTitle)
             quitOnRoom := roomNum
             IniWrite(quitOnRoom, config, "PsbBatchCO", "errorQuitAt")
             cleanReload()
