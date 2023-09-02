@@ -1,23 +1,24 @@
+; now runs in CoordMode "Screen"
 reportOpen(searchStr) {
     WinMaximize "ahk_class SunAwtFrame"
     WinActivate "ahk_class SunAwtFrame"
     BlockInput true
-    MouseMove 591, 436
+    MouseMove 591, 456
     Sleep 150
     Send "!m"
     Sleep 300
-    Send "{R}"
+    Send "{Text}R"
     Sleep 200
     Send Format("{Text}{1}", searchStr)
     Sleep 200
     ; print to PDF
-    MouseMove 785, 211
+    MouseMove 785, 231
     Sleep 150
     Click
-    MouseMove 487, 569
+    MouseMove 487, 589
     Sleep 150
     Click
-    MouseMove 605, 313
+    MouseMove 605, 333
     Sleep 150
     Click
     Sleep 50
@@ -30,7 +31,7 @@ reportOpenDelimitedData(searchStr) {
     WinMaximize "ahk_class SunAwtFrame"
     WinActivate "ahk_class SunAwtFrame"
     BlockInput true
-    MouseMove 591, 436
+    MouseMove 591, 456
     Sleep 150
     Send "!m"
     Sleep 150
@@ -38,23 +39,22 @@ reportOpenDelimitedData(searchStr) {
     Sleep 200
     Send Format("{Text}{1}", searchStr)
     Sleep 200
-    MouseMove 756, 222
-    MouseMove 786, 211
+    MouseMove 786, 231
     Sleep 150
     Click
-    MouseMove 456, 581
+    MouseMove 456, 601
     Sleep 150
     Click "Down"
-    MouseMove 459, 581
+    MouseMove 459, 601
     Sleep 100
     Click "Up"
-    MouseMove 816, 578
+    MouseMove 816, 598
     Sleep 150
     Click
-    MouseMove 773, 682
+    MouseMove 773, 702
     Sleep 150
     Click
-    MouseMove 736, 669
+    MouseMove 736, 689
     Sleep 150
     Click
     BlockInput false
@@ -64,7 +64,7 @@ reportOpenSpreadSheet(searchStr) {
     WinMaximize "ahk_class SunAwtFrame"
     WinActivate "ahk_class SunAwtFrame"
     BlockInput true
-    MouseMove 591, 436
+    MouseMove 591, 456
     Sleep 150
     Send "!m"
     Sleep 150
@@ -73,23 +73,24 @@ reportOpenSpreadSheet(searchStr) {
     Sleep 200
     Send Format("{Text}{1}", searchStr)
     Sleep 200
-    MouseMove 797, 215
+    MouseMove 797, 235
     Sleep 100
     Click
-    MouseMove 455, 583
+    MouseMove 455, 603
     Sleep 100
     Click
-    MouseMove 728, 579
+    MouseMove 728, 599
     Sleep 100
     Click
-    MouseMove 757, 703
+    MouseMove 757, 723
     Sleep 100
     Click
-    MouseMove 731, 669
+    MouseMove 731, 689
     Sleep 100
     Click
     BlockInput false
 }
+
 reportSave(savename) {
     BlockInput true
     Sleep 1000
@@ -101,12 +102,12 @@ reportSave(savename) {
     Sleep 200
     Send "{Enter}"
     saveMsg := Format("{1} 保存中", savename)
-    MsgBox(saveMsg, "ReportMaster", "T20 4096")
+    MsgBox(saveMsg, "ReportMaster", "T10 4096")
     if (savename = "VIP INH-Guest INH without due out.pdf") {
         Sleep 13000
     }
     Sleep 200
-    MouseMove 600, 600
+    MouseMove 600, 620
     Click
     Sleep 200
     Send "!c"
@@ -132,10 +133,10 @@ mgrFlash() {
     reportOpen(searchStr)
     Sleep 200
     ; report options here
-    MouseMove 749, 313
+    MouseMove 749, 333
     Sleep 150
     Send "!o"
-    MouseMove 600, 482
+    MouseMove 600, 502
     Sleep 150
     Click
     Sleep 150
@@ -151,32 +152,32 @@ hisFor15() {
     reportOpen(searchStr)
     Sleep 200
     ; report options here
-    MouseMove 644, 158
+    MouseMove 644, 178
     Sleep 150
     Click "Down"
-    MouseMove 542, 150
+    MouseMove 542, 170
     Sleep 150
     Click "Up"
-    MouseMove 527, 131
+    MouseMove 527, 151
     Sleep 150
     Send "{NumpadSub}"
     Sleep 150
     Send "8"
-    MouseMove 646, 184
+    MouseMove 646, 204
     Sleep 150
     Click "Down"
-    MouseMove 533, 199
+    MouseMove 533, 219
     Sleep 150
     Click "Up"
-    MouseMove 473, 250
+    MouseMove 473, 270
     Sleep 150
     Send "{NumpadSub}"
     Sleep 150
     Send "8"
-    MouseMove 617, 621
+    MouseMove 617, 641
     Sleep 150
     Send "{Tab}"
-    MouseMove 610, 669
+    MouseMove 610, 689
     Sleep 150
     Click
     Sleep 150
@@ -190,10 +191,11 @@ hisForThisMonth() {
     preAuditMonth := FormatTime(preAuditDate, "MM")
     preAuditDay := FormatTime(preAuditDate, "dd")
     preAuditYear := FormatTime(preAuditDate, "yyyy")
-
-    nextMonth := preAuditMonth = 12 ? 1 : preAuditMonth + 1
-    if (nextMonth < 10) nextMonth := Format("0{1}", nextMonth)
-        printYear := preAuditMonth = 12 ? preAuditYear + 1 : preAuditYear
+    nextMonth := (preAuditMonth = 12) ? 1 : preAuditMonth + 1
+    if (nextMonth < 10) { 
+        nextMonth := Format("0{1}", nextMonth)
+    }
+    printYear := preAuditMonth = 12 ? preAuditYear + 1 : preAuditYear
     firstDayOfNextMonth := Format("{2}{1}01", nextMonth, printYear)
 
     dateFirst := Format("{1}01{2}", preAuditMonth, preAuditYear)
@@ -210,10 +212,10 @@ hisForThisMonth() {
     Sleep 300
     Send Format("{Text}{1}", dateFirst)
     Sleep 300
-    MouseMove 645, 185
+    MouseMove 645, 205
     Sleep 150
     Click "Down"
-    MouseMove 531, 184
+    MouseMove 531, 204
     Sleep 150
     Click "Up"
     Sleep 150
@@ -221,10 +223,10 @@ hisForThisMonth() {
     Sleep 300
     Send Format("{Text}{1}", dateLast)
     Sleep 300
-    MouseMove 617, 621
+    MouseMove 617, 641
     Sleep 150
     Send "{Tab}"
-    MouseMove 610, 669
+    MouseMove 610, 689
     Sleep 150
     Click
     Sleep 150
@@ -238,13 +240,10 @@ hisForNextMonth() {
     preAuditMonth := FormatTime(preAuditDate, "MM")
     preAuditDay := FormatTime(preAuditDate, "dd")
     preAuditYear := FormatTime(preAuditDate, "yyyy")
-
-    nMonth := preAuditMonth = 12 ? 1 : preAuditMonth + 1
-    if (nMonth < 10) nextMonth := Format("0{1}", nMonth)
-        nextNextMonth := nextMonth = 12 ? 1 : nextMonth + 1
-    if (nextNextMonth < 10) {
-        nextNextMonth := Format("0{1}", nextNextMonth)
-    }
+    nMonth := (preAuditMonth = 12) ? 1 : preAuditMonth + 1
+    nextMonth := (nMonth < 10) ? "0" . nMonth : nMonth
+    nextNextMonth := (nextMonth = 12) ? 1 : nextMonth + 1
+    nextNextMonth := (nextNextMonth < 10) ? "0" . nextNextMonth : nextNextMonth
     printYear := preAuditMonth = 12 ? preAuditYear + 1 : preAuditYear
     firstDayOfNextMonth := Format("{2}{1}01", nextMonth, printYear)
     firstDayOfNextNextMonth := Format("{2}{1}01", nextNextMonth, printYear)
@@ -262,10 +261,10 @@ hisForNextMonth() {
     Sleep 300
     Send Format("{Text}{1}", dateFirstNext)
     Sleep 300
-    MouseMove 645, 185
+    MouseMove 645, 205
     Sleep 150
     Click "Down"
-    MouseMove 531, 184
+    MouseMove 531, 204
     Sleep 150
     Click "Up"
     Sleep 150
@@ -273,10 +272,10 @@ hisForNextMonth() {
     Sleep 300
     Send Format("{Text}{1}", dateLastNext)
     Sleep 300
-    MouseMove 617, 621
+    MouseMove 617, 641
     Sleep 150
     Send "{Tab}"
-    MouseMove 610, 669
+    MouseMove 610, 689
     Sleep 150
     Click
     Sleep 150
@@ -292,10 +291,10 @@ vipArr() {
     reportOpen(searchStr)
     Sleep 200
     ; report options here
-    MouseMove 464, 174
+    MouseMove 464, 194
     Sleep 150
     Click "Down"
-    MouseMove 336, 178
+    MouseMove 336, 198
     Sleep 50
     Click "Up"
     Sleep 800
@@ -303,13 +302,13 @@ vipArr() {
     Sleep 150
     Send "{Text}2"
     Sleep 100
-    MouseMove 610, 600
+    MouseMove 610, 620
     Sleep 150
     Click
-    MouseMove 632, 573
+    MouseMove 632, 593
     Sleep 150
     Click
-    MouseMove 610, 723
+    MouseMove 610, 743
     Sleep 150
     reportSave(fileName)
     TrayTip Format("正在保存：{1}", fileName)
@@ -335,23 +334,23 @@ vipDep() {
     reportOpen(searchStr)
     Sleep 200
     ; report options here
-    MouseMove 600, 525
+    MouseMove 600, 545
     Sleep 150
     Click
-    MouseMove 632, 367
+    MouseMove 632, 387
     Sleep 150
     Click
-    MouseMove 864, 365
+    MouseMove 864, 385
     Sleep 150
     Click
-    MouseMove 822, 434
+    MouseMove 822, 454
     Sleep 150
     Send "!a"
     Sleep 150
-    MouseMove 850, 558
+    MouseMove 850, 578
     Sleep 150
     Click
-    MouseMove 635, 661
+    MouseMove 635, 681
     Sleep 150
     reportSave(fileName)
     TrayTip Format("正在保存：{1}", fileName)
@@ -365,19 +364,19 @@ arrAll() {
     reportOpen(searchStr)
     Sleep 200
     ; report options here
-    MouseMove 309, 546
+    MouseMove 309, 566
     Sleep 150
     Click
-    MouseMove 317, 599
+    MouseMove 317, 619
     Sleep 150
     Click
-    MouseMove 325, 643
+    MouseMove 325, 663
     Sleep 150
     Click
-    MouseMove 599, 574
+    MouseMove 599, 594
     Sleep 150
     Click
-    MouseMove 608, 598
+    MouseMove 608, 618
     Click
     Sleep 150
     reportSave(fileName)
@@ -392,7 +391,7 @@ inhAll() {
     reportOpen(searchStr)
     Sleep 200
     ; report options here
-    MouseMove 433, 503
+    MouseMove 433, 523
     Sleep 150
     Click
     reportSave(fileName)
@@ -407,11 +406,11 @@ depAll() {
     reportOpen(searchStr)
     Sleep 200
     ; report options here
-    MouseMove 607, 520
+    MouseMove 607, 540
     Sleep 150
     click
     Sleep 150
-    MouseMove 488, 470
+    MouseMove 488, 490
     Sleep 150
     Click
     reportSave(fileName)
@@ -426,9 +425,9 @@ creditLimit() {
     reportOpen(searchStr)
     Sleep 200
     ; report options here
-    MouseMove 686, 454
+    MouseMove 686, 474
     Click
-    MouseMove 409, 502
+    MouseMove 409, 522
     Sleep 150
     Click
     Sleep 200
@@ -445,10 +444,10 @@ bbf() {
     reportOpen(searchStr)
     Sleep 200
     ; report options here
-    MouseMove 599, 256
+    MouseMove 599, 276
     Sleep 150
     Click "Down"
-    MouseMove 519, 259
+    MouseMove 519, 279
     Sleep 150
     Click "Up"
     Sleep 150
@@ -457,28 +456,28 @@ bbf() {
     Send "1"
     Sleep 150
     Send "{Enter}"
-    MouseMove 609, 249
+    MouseMove 609, 269
     Sleep 150
     Click "Down"
-    MouseMove 470, 263
+    MouseMove 470, 283
     Sleep 150
     Click "Up"
     Sleep 100
     Send "^c"
     Sleep 200
-    MouseMove 605, 283
+    MouseMove 605, 303
     Sleep 150
-    MouseMove 605, 283
+    MouseMove 605, 303
     Sleep 150
     Click "Down"
-    MouseMove 496, 286
+    MouseMove 496, 306
     Sleep 150
     Click "Up"
-    MouseMove 494, 287
+    MouseMove 494, 307
     Sleep 100
     Send "^v"
     Sleep 100
-    MouseMove 463, 498
+    MouseMove 463, 518
     Sleep 150
     Click
     Sleep 150
@@ -494,7 +493,7 @@ rooms() {
     reportOpen(searchStr)
     Sleep 200
     ; report options here
-    MouseMove 476, 495
+    MouseMove 476, 515
     Sleep 150
     Click
     Sleep 150
@@ -523,13 +522,13 @@ groupRoom() {
     reportOpen(searchStr)
     Sleep 200
     ; report options here
-    MouseMove 372, 524
+    MouseMove 372, 544
     Sleep 150
     Click
-    MouseMove 520, 446
+    MouseMove 520, 466
     Sleep 150
     Click
-    MouseMove 532, 529
+    MouseMove 532, 549
     Sleep 150
     Click
     Sleep 150
@@ -545,10 +544,10 @@ groupInh() {
     reportOpen(searchStr)
     Sleep 200
     ; report options here
-    MouseMove 470, 405
+    MouseMove 470, 425
     Sleep 150
     Click
-    MouseMove 625, 473
+    MouseMove 625, 493
     Sleep 150
     Click
     Sleep 150
@@ -564,7 +563,7 @@ noShow() {
     reportOpen(searchStr)
     Sleep 200
     ; report options here
-    MouseMove 573, 420
+    MouseMove 573, 440
     Sleep 50
     Send "{Backspace}"
     Sleep 150
@@ -590,10 +589,10 @@ cancel() {
     reportOpen(searchStr)
     Sleep 200
     ; report options here
-    MouseMove 601, 271
+    MouseMove 601, 291
     Sleep 150
     Click "Down"
-    MouseMove 485, 258
+    MouseMove 485, 278
     Sleep 150
     Click "Up"
     Sleep 150
@@ -605,28 +604,28 @@ cancel() {
     Sleep 50
     Send "{Enter}"
     Sleep 150
-    MouseMove 602, 268
+    MouseMove 602, 288
     Sleep 150
     Click "Down"
-    MouseMove 448, 272
+    MouseMove 448, 292
     Sleep 150
     Click "Up"
     Sleep 50
     Send "^c"
     Sleep 150
-    MouseMove 586, 289
+    MouseMove 586, 309
     Sleep 150
     Click "Down"
-    MouseMove 413, 301
+    MouseMove 413, 321
     Sleep 150
     Click "Up"
-    MouseMove 439, 305
+    MouseMove 439, 325
     Sleep 50
     Send A_Clipboard
-    MouseMove 687, 297
+    MouseMove 687, 317
     Sleep 150
     Click
-    MouseMove 695, 303
+    MouseMove 695, 323
     Sleep 150
 
     reportSave(fileName)
@@ -640,20 +639,20 @@ arrivingGroups(blockCodeInput, saveName) {
     reportOpen("GRPRMLIST")
     Sleep 200
     ; report options here
-    MouseMove 845, 356
+    MouseMove 845, 376
     Sleep 150
     Click
-    MouseMove 804, 366
+    MouseMove 804, 386
     Sleep 150
     Send "!a"
     Sleep 150
-    MouseMove 808, 585
+    MouseMove 808, 605
     Sleep 150
     Click "Down"
-    MouseMove 805, 594
+    MouseMove 805, 614
     Sleep 150
     Click "Up"
-    MouseMove 737, 595
+    MouseMove 737, 615
     Sleep 150
     Click
     Sleep 150
@@ -691,36 +690,36 @@ arrivingGroups(blockCodeInput, saveName) {
     Sleep 350
     Send "!o"
     Sleep 150
-    MouseMove 842, 304
+    MouseMove 842, 324
     Sleep 150
     Click
-    MouseMove 569, 263
+    MouseMove 569, 283
     Sleep 150
     Click
     Sleep 150
     Send Format("{Text}{1}", blockCodeInput)
     Sleep 150
-    MouseMove 848, 261
+    MouseMove 848, 281
     Sleep 150
     Click
-    MouseMove 603, 392
+    MouseMove 603, 412
     Sleep 150
     Click
     Sleep 150
     Send "{Space}"
-    MouseMove 728, 453
+    MouseMove 728, 473
     Sleep 150
     Send "!o"
     Sleep 150
     Send "!o"
     Sleep 150
-    MouseMove 711, 471
+    MouseMove 711, 491
     Sleep 150
     Click
-    MouseMove 422, 500
+    MouseMove 422, 520
     Sleep 150
     Click
-    MouseMove 609, 627
+    MouseMove 609, 647
     reportSave(fileName)
     TrayTip Format("正在保存：{1}", fileName)
     BlockInput false
@@ -733,13 +732,13 @@ special(today) {
     reportOpenSpreadSheet(searchStr)
     Sleep 200
     ; report options here
-    MouseMove 600, 462
+    MouseMove 600, 482
     Sleep 200
     Click
     Sleep 200
     Send "{Text}水果5"
     Sleep 100
-    MouseMove 616, 518
+    MouseMove 616, 538
     Sleep 200
     reportSave(fileName)
     TrayTip Format("正在保存：", fileName)

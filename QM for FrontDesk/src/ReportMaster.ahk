@@ -5,6 +5,27 @@
 #Include "../Lib/reports.ahk"
 #Include "../Lib/utils.ahk"
 
+overnightReportList := [
+	comp,
+	mgrFlash,
+	hisFor15,
+	hisForThisMonth,
+	hisForNextMonth,
+	vipArr,
+	vipDep,
+	arrAll,
+	inhAll,
+	depAll,
+	creditLimit,
+	bbf,
+	rooms,
+	ooo,
+	groupRoom,
+	groupInh,
+	noShow,
+	cancel,
+	vipInh
+]
 popupTitle := "ReportMaster"
 today := FormatTime(A_Now, "yyyyMMdd")
 
@@ -17,6 +38,7 @@ ReportMasterMain() {
 	请输入对应的报表编号（默认为夜审后操作）。
 	（报表将保存至 开始菜单-文档）。
 
+	夜班报表：
 	1  - Guest INH Complimentary
 	2  - NA02-Manager Flash
 	3  - RS05-（前后15天）History & Forecast
@@ -36,10 +58,11 @@ ReportMasterMain() {
 	17 - Group In House
 	18 - FO08-No Show
 	19 - Cancellations
+	666 - 保存以上所有报表（执行时间约8分钟，期间请勿操作电脑）
 
+	其他：
 	garr - 保存当天团单
 	sp - 保存当天水果5（Excel格式）
-	666 - 保存以上所有报表（执行时间约8分钟，期间请勿操作电脑）`n
 	)"
 	reportSelector := InputBox(reportMsg, popupTitle, "h600", "666")
 	if (reportSelector.Result = "Cancel") {
@@ -164,58 +187,18 @@ ReportMasterMain() {
 
 		Case "666":
 			; save all
-			comp()
-			mgrFlash()
-			Sleep 2000
-			hisFor15()
-			Sleep 2000
-			hisForThisMonth()
-			Sleep 2000
-			; save next month when today is the last 5 day in current month
-			preAuditDate := DateAdd(A_Now, -1, "Days")
-			preAuditMonth := FormatTime(preAuditDate, "MM")
-			preAuditYear := FormatTime(preAuditDate, "yyyy")
-			nextMonth := preAuditMonth = 12 ? 1 : preAuditMonth + 1
-			if (nextMonth < 10) {
-				nextMonth := Format("0{1}", nextMonth)
-			}
-			printYear := preAuditMonth = 12 ? preAuditYear + 1 : preAuditYear
-			firstDayOfNextMonth := printYear . nextMonth . "01"
-			dateLast := FormatTime(DateAdd(firstDayOfNextMonth, -1, "Days"), "dd")
-			if (dateLast - A_DD < 5) {
-				hisForNextMonth()
+			WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
+			loop overnightReportList.Length {
+				if (A_Index = 5) {
+					if ((dateLast() - A_DD) > 5) {
+						continue
+					}
+				}
+				overnightReportList[A_Index]()
 				Sleep 2000
 			}
-			vipArr()
-			Sleep 2000
-			vipInh()
-			Sleep 25000
-			vipDep()
-			Sleep 2000
-			arrAll()
-			Sleep 2000
-			inhAll()
-			Sleep 2000
-			depAll()
-			Sleep 2000
-			creditLimit()
-			Sleep 2000
-			bbf()
-			Sleep 2000
-			rooms()
-			Sleep 2000
-			ooo()
-			Sleep 2000
-			groupRoom()
-			Sleep 2000
-			groupInh()
-			Sleep 2000
-			noShow()
-			Sleep 2000
-			cancel()
 			WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-			Sleep 2000
-			openMyDocs("全部夜班报表")
+			openMyDocs("夜班报表")
 			; }
 
 		Case "sp":
@@ -257,7 +240,6 @@ ReportMasterMain() {
 			MsgBox("请选择表中的指令", popupTitle)
 			WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 	}
-
 }
 
 openMyDocs(reportName) {
@@ -271,7 +253,20 @@ openMyDocs(reportName) {
 	}
 }
 
-getBlockInfo(filename) {
+dateLast() {
+	preAuditDate := DateAdd(A_Now, -1, "Days")
+	preAuditMonth := FormatTime(preAuditDate, "MM")
+	preAuditYear := FormatTime(preAuditDate, "yyyy")
+	nextMonth := (preAuditMonth = 12) ? 1 : preAuditMonth + 1
+	if (nextMonth < 10) {
+		nextMonth := "0" . nextMonth
+	}
+	printYear := preAuditMonth = 12 ? preAuditYear + 1 : preAuditYear
+	firstDayOfNextMonth := printYear . nextMonth . "01"
+	return FormatTime(DateAdd(firstDayOfNextMonth, -1, "Days"), "dd")
+}
+
+getBlockInfo(fileName) {
 	blockInfoMap := Map()
 	Xl := ComObject("Excel.Application")
 	OnDayGroupDetails := Xl.Workbooks.Open(fileName).Worksheets("Sheet1")
@@ -318,4 +313,4 @@ groupArrAuto(blockInfo) {
 ; hotkeys
 ; ^F11:: ReportMasterMain()
 ; F12:: cleanReload()	; use 'Reload' for script reset
-;^F12:: ExitApp	; use 'ExitApp' to kill script
+; ^F12:: ExitApp	; use 'ExitApp' to kill script
