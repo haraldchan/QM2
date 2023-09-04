@@ -44,7 +44,7 @@ overnightReportNames := [
 	"11 - FO11-Credit Limit",
 	"12 - FO13-Package Forecast（仅早餐）",
 	"13 - Rooms-housekeepingstatus",
-	'14 - HK03-OOO',
+	"14 - HK03-OOO",
 	"15 - Group Rooming List",
 	"16 - Group In House",
 	"17 - FO08-No Show",
@@ -69,7 +69,7 @@ ReportMasterMain() {
 	6  - FO01-VIP Arrival (VIP Arr)
 	7  - FO03-VIP DEP
 	8  - FO01-Arrival Detailed
-	9 - FO02-Guests INH by Room
+	9  - FO02-Guests INH by Room
 	10 - FO03-Departures
 	11 - FO11-Credit Limit
 	12 - FO13-Package Forecast（仅早餐）
