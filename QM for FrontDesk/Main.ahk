@@ -15,9 +15,10 @@
 #Include "../src/GroupKeys.ahk"
 #Include "../src/GroupProfilesModify.ahk"
 ; univsersals
+#SingleInstance Force
+CoordMode "Mouse", "Screen"
 today := FormatTime(A_Now, "yyyyMMdd")
 config := Format("{1}\src\config.ini", A_ScriptDir)
-CoordMode "Mouse", "Screen"
 
 TrayTip "QM 2 运行中。 按下Alt+F1 可查看快捷键指南"
 tips := "
