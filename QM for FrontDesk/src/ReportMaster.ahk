@@ -285,8 +285,8 @@ ReportMasterMain() {
 		openMyDocs("夜班报表")
 	} else if (StrLower(reportSelector.Value) = "garr") {
 		reportName := "当天 Arrival 团单"
-		fileName := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{2}\{2}{3}\{1}Group ARR&DEP.xlsx", today, A_Year, A_MM)
-		blockInfo := getBlockInfo(fileName)
+		onDayGroup := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{2}\{2}{3}\{1}Group ARR&DEP.xlsx", today, A_Year, A_MM)
+		blockInfo := getBlockInfo(onDayGroup)
 		blockInfoText := ""
 		for blockName, blockCode in blockInfo {
 			blockInfoText .= Format("{1}：{2}`n", blockName, blockCode)
@@ -317,7 +317,7 @@ ReportMasterMain() {
 		openMyDocs(reportName)
 	} else {
 		WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-		MsgBox("请选择表中的指令", SharePbPfConfig.popupTitle)
+		MsgBox("请选择表中的指令", ReportMaster.popupTitle)
 	}
 }
 
