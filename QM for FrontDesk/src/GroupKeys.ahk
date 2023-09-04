@@ -6,7 +6,7 @@ dateDash := "^\d{1,4}-\d{1,2}-\d{1,2}"
 dateSlash := "^\d{1,4}/\{1,2}/d{1,2}"
 ; scoped vals
 GroupKeys := {
-    popupTitle: "GroupKeys"
+    popupTitle: "Group Keys"
 }
 
 GroupKeysMain() {
@@ -37,19 +37,20 @@ GroupKeysMain() {
         }
     }
     coTimeInput := InputBox("请输入退房时间：", GroupKeys.popupTitle, , "13:00").Value
+    
     infoConfirm := MsgBox(Format("
     (
     当前团队制卡信息：
     退房日期：{1}
     退房时间：{2}
-    )", coDateInput, coTimeInput), GroupKeys.popupTitle, "OKCancel")
+    )", coDateInput, coTimeInput), "GroupKey", "OKCancel")
     if (infoConfirm = "Cancel") {
         cleanReload()
     }
-    path := IniRead(config, GroupKeys.popupTitle, "xlsPath")
+    path := IniRead(config, "GroupKeys", "xlsPath")
     Xl := ComObject("Excel.Application")
-    GroupKeys := Xl.Workbooks.Open(path)
-    groupRooms := GroupKeys.Worksheets("Sheet1")
+    GroupKeysXl := Xl.Workbooks.Open(path)
+    groupRooms := GroupKeysXl.Worksheets("Sheet1")
     lastRow := groupRooms.Cells(groupRooms.Rows.Count,"A").End(-4162).Row
     row := 1
     
@@ -106,7 +107,7 @@ GroupKeysMain() {
         }
         row++
     }
-    GroupKeys.Close
+    GroupKeysXl.Close
     Xl.Quit
     MsgBox("已完成团队制卡，请与Opera/蓝豆系统核对是否正确！", GroupKeys.popupTitle)
 }
