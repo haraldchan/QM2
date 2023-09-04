@@ -1,8 +1,3 @@
-; reminder: Y-pos needs to minus 20
-; Main runs the main process
-
-; findColor location: X600, Y830
-; # = 0x
 CityLedgerCOMain() {
 	WinMaximize "ahk_class SunAwtFrame"
 	WinActivate "ahk_class SunAwtFrame"
@@ -23,16 +18,17 @@ fullWin() {
 	Click
 	Sleep 100
 	Send "!o"
-	Sleep 1500
+	Sleep 1000
 	Send "{Blind}{Text}CL"
 	Sleep 150
 	Send "!f"
 	Sleep 100
 	Send "!p"
 	Sleep 200
-	MouseMove 669, 535
-	Sleep 1000
-	Click
+	; MouseMove 669, 535
+	; Sleep 1000
+	; Click
+	Send "{Esc}"
 	Sleep 300
 	MouseMove 894, 722
 	Sleep 100
@@ -45,20 +41,18 @@ smallWin() {
 	Sleep 100
 	Click
 	Sleep 100
-	; MouseMove 660, 605
-	; Sleep 50
-	; Click
 	Send "!o"
-	Sleep 1500
+	Sleep 1000
 	Send "{Blind}{Text}CL"
 	Sleep 150
 	Send "!f"
 	Sleep 100
 	Send "!p"
 	Sleep 200
-	MouseMove 662, 540
-	Sleep 1000
-	Click
+	; MouseMove 662, 540
+	; Sleep 1000
+	; Click
+	Send "{Esc}"
 	Sleep 300
 	BlockInput false
 	Sleep 100
