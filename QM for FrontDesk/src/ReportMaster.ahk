@@ -1,9 +1,12 @@
-; reminder: Y-pos needs to minus 20
-; Main runs the main process
 ; #Include "%A_ScriptDir%\Lib\reports.ahk"
 ; #Include "%A_ScriptDir%\Lib\utils.ahk"
 #Include "../Lib/reports.ahk"
 #Include "../Lib/utils.ahk"
+; today := FormatTime(A_Now, "yyyyMMdd")
+; scoped vals
+ReportMaster := {
+	popupTitle: "Report Master",
+}
 
 overnightReportList := [
 	comp,
@@ -36,7 +39,7 @@ overnightReportNames := [
 	"6  - FO01-VIP Arrival (VIP Arr)",
 	"7  - FO03-VIP DEP",
 	"8  - FO01-Arrival Detailed",
-	"9 - FO02-Guests INH by Room",
+	"9  - FO02-Guests INH by Room",
 	"10 - FO03-Departures",
 	"11 - FO11-Credit Limit",
 	"12 - FO13-Package Forecast（仅早餐）",
@@ -48,13 +51,10 @@ overnightReportNames := [
 	"18 - Cancellations"
 	"19 - Guest In House w/o Due Out(VIP INH) ",
 ]
-popupTitle := "ReportMaster"
-today := FormatTime(A_Now, "yyyyMMdd")
 
 ReportMasterMain() {
 	WinMaximize "ahk_class SunAwtFrame"
 	WinActivate "ahk_class SunAwtFrame"
-
 	reportMsg := "
 	(
 	请输入对应的报表编号（默认为夜审后操作）。
@@ -67,26 +67,26 @@ ReportMasterMain() {
 	4  - RS05-（FO当月）History & Forecast
 	5  - RS05-（FO次月）History & Forecast
 	6  - FO01-VIP Arrival (VIP Arr)
-	7  - Guest In House w/o Due Out 
-	8  - FO03-VIP DEP
-	9  - FO01-Arrival Detailed
-	10 - FO02-Guests INH by Room
-	11 - FO03-Departures
-	12 - FO11-Credit Limit
-	13 - FO13-Package Forecast（仅早餐）
-	14 - Rooms-housekeepingstatus
-	15 - HK03-OOO
-	16 - Group Rooming List
-	17 - Group In House
-	18 - FO08-No Show
-	19 - Cancellations
+	7  - FO03-VIP DEP
+	8  - FO01-Arrival Detailed
+	9 - FO02-Guests INH by Room
+	10 - FO03-Departures
+	11 - FO11-Credit Limit
+	12 - FO13-Package Forecast（仅早餐）
+	13 - Rooms-housekeepingstatus
+	14 - HK03-OOO
+	15 - Group Rooming List
+	16 - Group In House
+	17 - FO08-No Show
+	18 - Cancellations
+	19 - Guest In House w/o Due Out 
 	666 - 保存以上所有报表（执行时间约8分钟，期间请勿操作电脑）
 
 	其他：
 	garr - 保存当天团单
 	sp - 保存当天水果5（Excel格式）
 	)"
-	reportSelector := InputBox(reportMsg, popupTitle, "h600", "666")
+	reportSelector := InputBox(reportMsg, ReportMaster.popupTitle, "h550", "666")
 	if (reportSelector.Result = "Cancel") {
 		cleanReload()
 	}
@@ -284,7 +284,7 @@ ReportMasterMain() {
 		WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 		openMyDocs("夜班报表")
 	} else if (StrLower(reportSelector.Value) = "garr") {
-		reportName := "团单"
+		reportName := "当天 Arrival 团单"
 		fileName := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{2}\{2}{3}\{1}Group ARR&DEP.xlsx", today, A_Year, A_MM)
 		blockInfo := getBlockInfo(fileName)
 		blockInfoText := ""
@@ -300,7 +300,7 @@ ReportMasterMain() {
 				是(Y)：自动保存上述团队团单
 				否(N)：手动录入block code保存团单
 				取消：退出脚本
-				)", blockInfoText), "ReportMaster", "YesNoCancel")
+				)", blockInfoText), ReportMaster.popupTitle, "YesNoCancel")
 		if (RmListSaver = "Yes") {
 			groupArrAuto(blockinfo)
 		} else if (RmListSaver = "No") {
@@ -317,14 +317,14 @@ ReportMasterMain() {
 		openMyDocs(reportName)
 	} else {
 		WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-		MsgBox("请选择表中的指令", popupTitle)
+		MsgBox("请选择表中的指令", SharePbPfConfig.popupTitle)
 	}
 }
 
 openMyDocs(reportName) {
 	WinSetAlwaysOnTop false
 	myText := "已保存报表：" . reportName . "`n`n是否打开所在文件夹? "
-	openFolder := MsgBox(myText, popupTitle, "OKCancel")
+	openFolder := MsgBox(myText, ReportMaster.popupTitle, "OKCancel")
 	if (openFolder = "OK") {
 		Run A_MyDocuments
 	} else {
@@ -357,8 +357,8 @@ getBlockInfo(fileName) {
 		}
 		blockInfoMap[blockNameReceived] := blockCodeReceived
 	}
-	Xl.Workbooks.Close
-	Xl.Quit
+	Xl.Workbooks.Close()
+	Xl.Quit()
 	return blockInfoMap
 }
 
@@ -386,7 +386,6 @@ groupArrAuto(blockInfo) {
 	}
 	WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 	BlockInput false
-	openMyDocs("当日Arrival团单")
 }
 
 ; hotkeys

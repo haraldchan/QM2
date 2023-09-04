@@ -1,7 +1,7 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
 #Include "../lib/utils.ahk"
 ; scoped vals
-GroupShareDnmConfig := {
+GroupShareDnm := {
     popupTitle: "Group Share & DoNotMove"
 }
 
@@ -18,7 +18,7 @@ GroupShareDnmMain() {
     将开始团Share及DNM
     )"
 
-    selector := MsgBox(textMsg, GroupShareDnmConfig.popupTitle, "YesNoCancel")
+    selector := MsgBox(textMsg, GroupShareDnm.popupTitle, "YesNoCancel")
     if (selector = "Yes") {
         dnmShare()
     } else if (selector = "No") {
@@ -29,7 +29,7 @@ GroupShareDnmMain() {
 }
 
 dnm() {
-    roomQty := InputBox("`n请输入需要DNM的房间数量", GroupShareDnmConfig.popupTitle, "h150")
+    roomQty := InputBox("`n请输入需要DNM的房间数量", GroupShareDnm.popupTitle, "h150")
     if (roomQty.Result = "Cancel") {
         cleanReload()
     }
@@ -54,7 +54,7 @@ dnm() {
         Sleep 1500
     }
     BlockInput false
-    MsgBox("已完成批量DoNotMove，合共" . roomQty . "房。", GroupShareDnmConfig.popupTitle)
+    MsgBox("已完成批量DoNotMove，合共" . roomQty . "房。", GroupShareDnm.popupTitle)
 }
 
 dnmShare() {
@@ -67,11 +67,11 @@ dnmShare() {
     2.界面在RoomAssign。
     3.以Name筛选团房（如使用BlockCode将会出错）
     )"
-    confirmMsg := MsgBox(msgText, GroupShareDnmConfig.popupTitle, "OKCancel 4096")
+    confirmMsg := MsgBox(msgText, GroupShareDnm.popupTitle, "OKCancel 4096")
     If (confirmMsg = "Cancel") {
         cleanReload()
     } else {
-        roomQty := InputBox("`n请输入需要Share + DNM的房间数量", GroupShareDnmConfig.popupTitle, "h150")
+        roomQty := InputBox("`n请输入需要Share + DNM的房间数量", GroupShareDnm.popupTitle, "h150")
         if (roomQty.Result = "Cancel") {
             cleanReload()
         }
@@ -168,7 +168,7 @@ dnmShare() {
         Sleep 2000
         BlockInput false
     }
-    MsgBox("已完成DNM & Share，请核对有否错漏。", GroupShareDnmConfig.popupTitle, "4096")
+    MsgBox("已完成DNM & Share，请核对有否错漏。", GroupShareDnm.popupTitle, "4096")
 }
 
 ; hotkeys

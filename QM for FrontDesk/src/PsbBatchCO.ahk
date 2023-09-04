@@ -3,9 +3,9 @@
 #Include "../lib/utils.ahk"
 #Include "../lib/reports.ahk"
 ; config & scoped vals
-config := Format("{1}\src\config.ini", A_ScriptDir)
+; config := Format("{1}\src\config.ini", A_ScriptDir)
 ; today := FormatTime(A_Now, "yyyyMMdd")
-PsbBatchCoConfig := {
+PsbBatchCo := {
     popupTitle: "PSB CheckOut(Batch)",
     path: IniRead(config, "PsbBatchCO", "xlsPath")
 }
@@ -23,7 +23,7 @@ PsbBatchCoMain() {
     否(N) = 直接开始拍Out
     取消 = 退出脚本
     )"
-    selector := MsgBox(textMsg, PsbBatchCoConfig.popupTitle, "YesNoCancel")
+    selector := MsgBox(textMsg, PsbBatchCo.popupTitle, "YesNoCancel")
     if (selector = "No") {
         batchOut()
     } else if (selector = "Yes") {
@@ -44,7 +44,7 @@ saveDep() {
     3 - 中班： 15:00 ~ 23:59
     0 - 自定义时间段
     )"
-    timePeriod := InputBox(textMsg, PsbBatchCoConfig.popupTitle)
+    timePeriod := InputBox(textMsg, PsbBatchCo.popupTitle)
     if (timePeriod.Result = "Cancel") {
         Reload
     }
@@ -59,8 +59,8 @@ saveDep() {
             frTime := "1400"
             toTime := "2359"
         Case "0":
-            frTime := InputBox("请输入开始时间（格式：“hhmm”）", PsbBatchCoConfig.popupTitle).Value
-            toTime := InputBox("请输入结束时间（格式：“hhmm”）", PsbBatchCoConfig.popupTitle).Value
+            frTime := InputBox("请输入开始时间（格式：“hhmm”）", PsbBatchCo.popupTitle).Value
+            toTime := InputBox("请输入结束时间（格式：“hhmm”）", PsbBatchCo.popupTitle).Value
         default:
             MsgBox("请输入对应时间的指令。")
     }
@@ -107,7 +107,7 @@ saveDep() {
     ; }
     A_Clipboard := FileRead(Format("{1}\{2}", A_MyDocuments, roomNumsTxt))
     BlockInput false
-    Run PsbBatchCoConfig.path
+    Run PsbBatchCo.path
     WinWait "ahk_class XLMAIN"
     WinMaximize "ahk_class XLMAIN"
     Sleep 3500
@@ -148,16 +148,16 @@ saveDep() {
     请打开蓝豆查看“续住工单”，剔除excel中续住的房间后，点击确定继续拍out。
     完成上述操作前请不要按掉此弹窗。
     )"
-    MsgBox(continueText, PsbBatchCoConfig.popupTitle)
+    MsgBox(continueText, PsbBatchCo.popupTitle)
 }
 
 batchOut() {
-    autoOut := MsgBox("即将开始自动拍Out脚本`n请先打开PSB，进入“旅客退房”界面", PsbBatchCoConfig.popupTitle, "OKCancel")
+    autoOut := MsgBox("即将开始自动拍Out脚本`n请先打开PSB，进入“旅客退房”界面", PsbBatchCo.popupTitle, "OKCancel")
     if (autoOut := "Cancel") {
         cleanReload()
     }
     Xl := ComObject("Excel.Application")
-    CheckOut := Xl.Workbooks.Open(PsbBatchCoConfig.path)
+    CheckOut := Xl.Workbooks.Open(PsbBatchCo.path)
     depRooms := CheckOut.Worksheets("Sheet1")
     lastRow := depRooms.Cells(depRooms.Rows.Count,"A").End(-4162).Row
     MsgBox(lastRow)
@@ -191,7 +191,7 @@ batchOut() {
         ; }
         ; terminate on error pop-up
         if (PixelGetColor(251, 196) = errorBrown) {
-            MsgBox("PSB系统出错，脚本已终止`n`n已拍Out到：" . roomNum, PsbBatchCoConfig.popupTitle)
+            MsgBox("PSB系统出错，脚本已终止`n`n已拍Out到：" . roomNum, PsbBatchCo.popupTitle)
             quitOnRoom := roomNum
             IniWrite(quitOnRoom, config, "PsbBatchCO", "errorQuitAt")
             cleanReload()
