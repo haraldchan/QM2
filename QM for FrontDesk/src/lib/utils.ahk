@@ -11,3 +11,8 @@ cleanReload(){
     ComObject("Excel.Application").Quit()
 	Reload
 }
+
+quitApp() {
+    quitConfirm := MsgBox("是否确定退出QM 2? ", "QM for FrontDesk 2.0.0", "OKCancel 4096")
+    quitConfirm = "OK" ? ExitApp : cleanReload()
+}

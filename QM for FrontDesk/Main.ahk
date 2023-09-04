@@ -42,7 +42,7 @@ Ctrl+F12:		退出
 ; universal miscs
 !F1:: MsgBox(tips, "QM for FrontDesk 2.0.0")
 F12:: cleanReload()	; use 'Reload' for script reset
-^F12:: ExitApp	; use 'ExitApp' to kill script
+^F12:: quitApp() ; use ExitApp to kill app
 
 ; Script hotkeys
 #Hotif WinExist("ahk_class SunAwtFrame") 
@@ -54,4 +54,4 @@ F4:: GroupShareDnmMain()
 ; ^F4:: GroupProfilesModifyMain()
 return
 #Hotif WinExist("ahk_exe vision.exe")
-^F1:: GroupKeysMain()
+^F1:: GroupKeysMain()   
