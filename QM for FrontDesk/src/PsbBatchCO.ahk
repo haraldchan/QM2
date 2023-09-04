@@ -1,20 +1,20 @@
-; #Include "%A_ScriptDir%\lib\utils.ahk"
-; #Include "%A_ScriptDir%\lib\reports.ahk"
+; #Include "%A_ScriptDir%\src\lib\utils.ahk"
+; #Include "%A_ScriptDir%\src\lib\reports.ahk"
 #Include "../lib/utils.ahk"
 #Include "../lib/reports.ahk"
-
-; TODO:Create GUI: create a file select ui
-today := FormatTime(A_Now, "yyyyMMdd")
+; config & scoped vals
 config := Format("{1}\src\config.ini", A_ScriptDir)
-popupTitle := "PSB CheckOut(Batch)"
-path := IniRead(config, "PsbBatchCO", "xlsPath")
+; today := FormatTime(A_Now, "yyyyMMdd")
+PsbBatchCoConfig := {
+    popupTitle: "PSB CheckOut(Batch)",
+    path: IniRead(config, "PsbBatchCO", "xlsPath")
+}
 
 PsbBatchCoMain() {
     quitOnRoom := IniRead(config, "PsbBatchCO", "errorQuitAt")
     if (quitOnRoom != "null") {
         MsgBox(Format("上次拍Out为出错停止，已拍至：{1}`n请先更新CheckOut.xls", quitOnRoom))
     }
-
     textMsg := "
     (
     即将开始批量拍Out 脚本
@@ -23,8 +23,7 @@ PsbBatchCoMain() {
     否(N) = 直接开始拍Out
     取消 = 退出脚本
     )"
-
-    selector := MsgBox(textMsg, popupTitle, "YesNoCancel")
+    selector := MsgBox(textMsg, PsbBatchCoConfig.popupTitle, "YesNoCancel")
     if (selector = "No") {
         batchOut()
     } else if (selector = "Yes") {
@@ -45,7 +44,7 @@ saveDep() {
     3 - 中班： 15:00 ~ 23:59
     0 - 自定义时间段
     )"
-    timePeriod := InputBox(textMsg, popupTitle)
+    timePeriod := InputBox(textMsg, PsbBatchCoConfig.popupTitle)
     if (timePeriod.Result = "Cancel") {
         Reload
     }
@@ -60,8 +59,8 @@ saveDep() {
             frTime := "1400"
             toTime := "2359"
         Case "0":
-            frTime := InputBox("请输入开始时间（格式：“hhmm”）", popupTitle).Value
-            toTime := InputBox("请输入结束时间（格式：“hhmm”）", popupTitle).Value
+            frTime := InputBox("请输入开始时间（格式：“hhmm”）", PsbBatchCoConfig.popupTitle).Value
+            toTime := InputBox("请输入结束时间（格式：“hhmm”）", PsbBatchCoConfig.popupTitle).Value
         default:
             MsgBox("请输入对应时间的指令。")
     }
@@ -108,11 +107,10 @@ saveDep() {
     ; }
     A_Clipboard := FileRead(Format("{1}\{2}", A_MyDocuments, roomNumsTxt))
     BlockInput false
-    Run path
+    Run PsbBatchCoConfig.path
     WinWait "ahk_class XLMAIN"
     WinMaximize "ahk_class XLMAIN"
     Sleep 3500
-    ; { pasting data (y-pos already modified!)
     WinWait "ahk_class QWidget"
     WinActivate "ahk_class QWidget"
     Sleep 500
@@ -150,16 +148,16 @@ saveDep() {
     请打开蓝豆查看“续住工单”，剔除excel中续住的房间后，点击确定继续拍out。
     完成上述操作前请不要按掉此弹窗。
     )"
-    MsgBox(continueText, popupTitle)
+    MsgBox(continueText, PsbBatchCoConfig.popupTitle)
 }
 
 batchOut() {
-    autoOut := MsgBox("即将开始自动拍Out脚本`n请先打开PSB，进入“旅客退房”界面", popupTitle, "OKCancel")
+    autoOut := MsgBox("即将开始自动拍Out脚本`n请先打开PSB，进入“旅客退房”界面", PsbBatchCoConfig.popupTitle, "OKCancel")
     if (autoOut := "Cancel") {
         cleanReload()
     }
     Xl := ComObject("Excel.Application")
-    CheckOut := Xl.Workbooks.Open(path)
+    CheckOut := Xl.Workbooks.Open(PsbBatchCoConfig.path)
     depRooms := CheckOut.Worksheets("Sheet1")
     lastRow := depRooms.Cells(depRooms.Rows.Count,"A").End(-4162).Row
     MsgBox(lastRow)
@@ -169,7 +167,6 @@ batchOut() {
     loop lastRow {
         roomNum := Integer(depRooms.Cells(row, 1).Value)
         A_Clipboard := roomNum
-        ; { check out in psb (y-pos already modified!)
         MouseMove 279, 224
         Sleep 500
         Click
@@ -194,7 +191,7 @@ batchOut() {
         ; }
         ; terminate on error pop-up
         if (PixelGetColor(251, 196) = errorBrown) {
-            MsgBox("PSB系统出错，脚本已终止`n`n已拍Out到：" . roomNum, popupTitle)
+            MsgBox("PSB系统出错，脚本已终止`n`n已拍Out到：" . roomNum, PsbBatchCoConfig.popupTitle)
             quitOnRoom := roomNum
             IniWrite(quitOnRoom, config, "PsbBatchCO", "errorQuitAt")
             cleanReload()

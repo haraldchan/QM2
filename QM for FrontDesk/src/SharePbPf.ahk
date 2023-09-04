@@ -1,10 +1,14 @@
-popupTitle := "INH Share & P/B P/F"
+; #Include "%A_ScriptDir%\src\lib\utils.ahk"
+#Include "../lib/utils.ahk"
+; scoped vals
+SharePbPf := {
+	popupTitle: "INH Share & P/B P/F"
+}
 
 SharePbPfMain() {
-	; bring OperaPMS window upfront and maximize
 	WinMaximize "ahk_class SunAwtFrame"
 	WinActivate "ahk_class SunAwtFrame"
-	
+
 	textMsg := "
 	(
 		是(Y) = InHouse Share
@@ -15,15 +19,14 @@ SharePbPfMain() {
 		粘贴P/B P/F：请在InHouse点开Comment窗口后启动
 	)"
 
-	selector := MsgBox(textMsg, popupTitle, "YesNoCancel")
+	selector := MsgBox(textMsg, SharePbPf.popupTitle, "YesNoCancel")
 	if (selector = "Yes") {
 		share()
 	} else if (selector = "No") {
 		pbpf()
 	} else {
-		Reload
+		cleanReload()
 	}
-	WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 }
 
 share() {
@@ -103,14 +106,13 @@ share() {
 	Sleep 300
 	Send "!c"
 	Sleep 300
-	; share process end
 	BlockInput false
+	WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 }
 
 pbpf() {
 	WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 	BlockInput true
-	; pbpf paste process start
 	MouseMove 316, 699
 	Sleep 300
 	Send "!e"
@@ -150,6 +152,7 @@ pbpf() {
 	Send "!c"
 	Sleep 200
 	BlockInput false
+	WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 }
 
 ; hotkeys

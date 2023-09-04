@@ -1,13 +1,14 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
 #Include "../lib/utils.ahk"
-
-popupTitle := "GroupKeys"
+config := Format("{1}\src\config.ini", A_ScriptDir)
 ; date RegEx
 dateDash := "^\d{1,4}-\d{1,2}-\d{1,2}"
 dateSlash := "^\d{1,4}/\{1,2}/d{1,2}"
-config := Format("{1}\src\config.ini", A_ScriptDir)
+; scoped vals
+GroupKeysConfig := {
+    popupTitle: "GroupKeys"
+}
 
-; TODO:Create GUI: create a file select ui
 GroupKeysMain() {
     startMsg := "
     (
@@ -20,12 +21,12 @@ GroupKeysMain() {
      - 时间格式：HH:MM
     3、确保VingCard已经打开处于Check-in界面。
     )"
-    start := MsgBox(startMsg, popupTitle, "OKCancel 4096")
+    start := MsgBox(startMsg, GroupKeysConfig.popupTitle, "OKCancel 4096")
     if (start = "Cancel") {
         cleanReload()
     }
     loop {
-        coDateInput := InputBox("请输入退房日期：", popupTitle).Value
+        coDateInput := InputBox("请输入退房日期：", GroupKeysConfig.popupTitle).Value
         if (RegExMatch(coDateInput, dateDash) > 0
             || RegExMatch(coDateInput, dateSlash)
             || coDateInput = "") {
@@ -35,24 +36,23 @@ GroupKeysMain() {
             continue
         }
     }
-    coTimeInput := InputBox("请输入退房时间：", popupTitle, , "13:00").Value
+    coTimeInput := InputBox("请输入退房时间：", GroupKeysConfig.popupTitle, , "13:00").Value
     infoConfirm := MsgBox(Format("
     (
     当前团队制卡信息：
     退房日期：{1}
     退房时间：{2}
-    )", coDateInput, coTimeInput), popupTitle, "OKCancel")
+    )", coDateInput, coTimeInput), GroupKeysConfig.popupTitle, "OKCancel")
     if (infoConfirm = "Cancel") {
         cleanReload()
     }
-    path := IniRead(config, popupTitle, "xlsPath")
+    path := IniRead(config, GroupKeysConfig.popupTitle, "xlsPath")
     Xl := ComObject("Excel.Application")
     GroupKeys := Xl.Workbooks.Open(path)
     groupRooms := GroupKeys.Worksheets("Sheet1")
     lastRow := groupRooms.Cells(groupRooms.Rows.Count,"A").End(-4162).Row
     row := 1
     
-    CoordMode "Mouse", "Screen"
     loop lastRow {
         BlockInput true
         roomNum := groupRooms.Cells(row, 1).Text
@@ -100,7 +100,7 @@ GroupKeysMain() {
         已做房卡：{1}
          - 是(Y)制作下一个
          - 否(N)退出制卡
-        )", roomNum), popupTitle, "OKCancel 4096")
+        )", roomNum), GroupKeysConfig.popupTitle, "OKCancel 4096")
         if (checkConf = "Cancel") {
             cleanReload()
         }
@@ -108,9 +108,8 @@ GroupKeysMain() {
     }
     GroupKeys.Close
     Xl.Quit
-    MsgBox("已完成团队制卡，请与Opera/蓝豆系统核对是否正确！", popupTitle)
+    MsgBox("已完成团队制卡，请与Opera/蓝豆系统核对是否正确！", GroupKeysConfig.popupTitle)
 }
-
 
 ; hotkeys
 ; !F1:: GroupKeysMain()

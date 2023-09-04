@@ -1,5 +1,9 @@
-; reminder: Y-pos needs to minus 20
-popupTitle := "Group Share & DoNotMove"
+; #Include "%A_ScriptDir%\src\lib\utils.ahk"
+#Include "../lib/utils.ahk"
+; scoped vals
+GroupShareDnmConfig := {
+    popupTitle: "Group Share & DoNotMove"
+}
 
 GroupShareDnmMain() {
     ; bring OperaPMS window upfront and maximize
@@ -14,21 +18,20 @@ GroupShareDnmMain() {
     将开始团Share及DNM
     )"
 
-    selector := MsgBox(textMsg, popupTitle, "YesNoCancel")
+    selector := MsgBox(textMsg, GroupShareDnmConfig.popupTitle, "YesNoCancel")
     if (selector = "Yes") {
         dnmShare()
     } else if (selector = "No") {
         dnm()
     } else {
-        Reload
+        cleanReload()
     }
 }
 
-; dnm only
 dnm() {
-    roomQty := InputBox("`n请输入需要DNM的房间数量", popupTitle, "h150")
+    roomQty := InputBox("`n请输入需要DNM的房间数量", GroupShareDnmConfig.popupTitle, "h150")
     if (roomQty.Result = "Cancel") {
-        Reload
+        cleanReload()
     }
     BlockInput true
     loop roomQty.Value {
@@ -51,7 +54,7 @@ dnm() {
         Sleep 1500
     }
     BlockInput false
-    MsgBox("已完成批量DoNotMove，合共" . roomQty . "房。", "Q.Group Share&DNM")
+    MsgBox("已完成批量DoNotMove，合共" . roomQty . "房。", GroupShareDnmConfig.popupTitle)
 }
 
 dnmShare() {
@@ -64,13 +67,13 @@ dnmShare() {
     2.界面在RoomAssign。
     3.以Name筛选团房（如使用BlockCode将会出错）
     )"
-    confirmMsg := MsgBox(msgText, "Q.Group Share&DNM", "OKCancel 4096")
+    confirmMsg := MsgBox(msgText, GroupShareDnmConfig.popupTitle, "OKCancel 4096")
     If (confirmMsg = "Cancel") {
-        Reload
+        cleanReload()
     } else {
-        roomQty := InputBox("`n请输入需要Share + DNM的房间数量", "Q.Group Share&DNM", "h150")
+        roomQty := InputBox("`n请输入需要Share + DNM的房间数量", GroupShareDnmConfig.popupTitle, "h150")
         if (roomQty.Result = "Cancel") {
-            Reload
+            cleanReload()
         }
     }
     MouseMove 340, 311
@@ -165,7 +168,7 @@ dnmShare() {
         Sleep 2000
         BlockInput false
     }
-    MsgBox("已完成DNM & Share，请核对有否错漏。", popupTitle, "4096")
+    MsgBox("已完成DNM & Share，请核对有否错漏。", GroupShareDnmConfig.popupTitle, "4096")
 }
 
 ; hotkeys
