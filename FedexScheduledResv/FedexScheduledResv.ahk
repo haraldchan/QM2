@@ -88,7 +88,7 @@ loop (lastRow - 4) {
 		Sleep 300
 		Send "{Backspace}"
 		Sleep 300
-		Send Format("{1}{2}  {3}", flightInfo["flightIn1"], flightInfo["flightIn2"], flightInfo["tripNum"])
+		Send "{Text}" . Format("{1}{2}  {3}", flightInfo["flightIn1"], flightInfo["flightIn2"], flightInfo["tripNum"])
 		Sleep 300
 		MouseMove 594, 394
 		Sleep 150
@@ -113,7 +113,7 @@ loop (lastRow - 4) {
 		Click "Up"
 		MouseMove 172, 340
 		Sleep 300
-		Send pmsCiDate
+		Send "{Text}" . pmsCiDate
 		Sleep 100
 		MouseMove 325, 378
 		Sleep 300
@@ -139,7 +139,7 @@ loop (lastRow - 4) {
 		Click "Up"
 		MouseMove 207, 395
 		Sleep 300
-		Send pmsCoDate
+		Send "{Text}" . pmsCoDate
 		Sleep 300
 		; }
 		Sleep 100
@@ -159,7 +159,7 @@ loop (lastRow - 4) {
 		Sleep 200
 		Click "Up"
 		Sleep 200
-		Send flightInfo["ETA"]
+		Send "{Text}" . flightInfo["ETA"]
 		Sleep 200
 		MouseMove 499, 577
 		Sleep 200
@@ -168,7 +168,7 @@ loop (lastRow - 4) {
 		Sleep 200
 		Click "Up"
 		Sleep 200
-		Send flightInfo["ETD"]
+		Send "{Text}" . flightInfo["ETD"]
 		Sleep 200
 		; }
 		Sleep 100
@@ -180,7 +180,7 @@ loop (lastRow - 4) {
 		Sleep 200
 		Click "Up"
 		Sleep 200
-		Send comment
+		Send "{Text}" . comment
 		Sleep 200
 		MouseMove 839, 535
 		Sleep 100
@@ -189,7 +189,7 @@ loop (lastRow - 4) {
 		Sleep 200
 		Click "Up"
 		Sleep 200
-		Send Format("{1}{2}  {3}", flightInfo["flightIn1"], flightInfo["flightIn2"], flightInfo["tripNum"])
+		Send "{Text}" . Format("{1}{2}  {3}", flightInfo["flightIn1"], flightInfo["flightIn2"], flightInfo["tripNum"])
 		Sleep 1000
 		; }
 		Sleep 100
@@ -205,7 +205,7 @@ loop (lastRow - 4) {
 		Sleep 342
 		Click "Up"
 		Sleep 100
-		Send Format("{1}{2}", flightInfo["flightIn1"], flightInfo["flightIn2"])
+		Send "{Text}" . Format("{1}{2}", flightInfo["flightIn1"], flightInfo["flightIn2"])
 		Sleep 100
 		MouseMove 672, 483
 		Sleep 281
@@ -213,7 +213,7 @@ loop (lastRow - 4) {
 		MouseMove 523, 483
 		Sleep 358
 		Click "Up"
-		Send schdCiDate
+		Send "{Text}" . schdCiDate
 		Sleep 100
 		MouseMove 685, 506
 		Sleep 100
@@ -221,7 +221,7 @@ loop (lastRow - 4) {
 		MouseMove 422, 501
 		Sleep 100
 		Click "Up"
-		Send flightInfo["ETA"]
+		Send "{Text}" . flightInfo["ETA"]
 		Sleep 100
 		MouseMove 922, 441
 		Sleep 100
@@ -229,7 +229,7 @@ loop (lastRow - 4) {
 		MouseMove 704, 439
 		Sleep 100
 		Click "Up"
-		Send Format("{1}{2}", flightInfo["flightOut1"], flightInfo["flightOut2"])
+		Send "{Text}" . Format("{1}{2}", flightInfo["flightOut1"], flightInfo["flightOut2"])
 		Sleep 100
 		MouseMove 917, 483
 		Sleep 100
@@ -238,7 +238,7 @@ loop (lastRow - 4) {
 		Sleep 1000
 		Click "Up"
 		Sleep 100
-		Send pmsCoDate
+		Send "{Text}" . pmsCoDate
 		Sleep 100
 		MouseMove 922, 504
 		Sleep 100
@@ -247,7 +247,7 @@ loop (lastRow - 4) {
 		Sleep 100
 		Click "Up"
 		Sleep 100
-		Send flightInfo["ETD"]
+		Send "{Text}" . flightInfo["ETD"]
 		Sleep 100
 		MouseMove 841, 660
 		Sleep 100
@@ -327,7 +327,7 @@ loop (lastRow - 4) {
 	}
 }
 BlockInput false
-Xlbook.close
-Xl.Quit
+Xlbook.Close()
+Xl.Quit()
 MsgBox("已完成FedEx 预订修改，请抽检以确保准确！", "FedexScheduledReservations")
 cleanReload()
