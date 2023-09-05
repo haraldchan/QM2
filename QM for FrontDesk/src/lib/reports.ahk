@@ -97,9 +97,9 @@ reportSave(savename) {
     Send "!f"
     Sleep 1000
     Send "{Backspace}"
-    Sleep 1000
-    Send Format("{Text}{1}", savename)
     Sleep 200
+    Send Format("{Text}{1}", savename)
+    Sleep 1000
     Send "{Enter}"
     saveMsg := Format("{1} 保存中", savename)
     MsgBox(saveMsg, "ReportMaster", "T10 4096")
