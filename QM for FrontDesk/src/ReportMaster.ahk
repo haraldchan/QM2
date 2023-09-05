@@ -7,48 +7,26 @@ ReportMaster := {
 	popupTitle: "Report Master",
 }
 
-overnightReportList := [
-	comp,
-	mgrFlash,
-	hisFor15,
-	hisForThisMonth,
-	hisForNextMonth,
-	vipArr,
-	vipDep,
-	arrAll,
-	inhAll,
-	depAll,
-	creditLimit,
-	bbf,
-	rooms,
-	ooo,
-	groupRoom,
-	groupInh,
-	noShow,
-	cancel,
-	vipInh
-]
-
-overnightReportNames := [
-	"1  - Guest INH Complimentary",
-	"2  - NA02-Manager Flash",
-	"3  - RS05-（前后15天）History & Forecast",
-	"4  - RS05-（FO当月）History & Forecast",
-	"5  - RS05-（FO次月）History & Forecast",
-	"6  - FO01-VIP Arrival (VIP Arr)",
-	"7  - FO03-VIP DEP",
-	"8  - FO01-Arrival Detailed",
-	"9  - FO02-Guests INH by Room",
-	"10 - FO03-Departures",
-	"11 - FO11-Credit Limit",
-	"12 - FO13-Package Forecast（仅早餐）",
-	"13 - Rooms-housekeepingstatus",
-	"14 - HK03-OOO",
-	"15 - Group Rooming List",
-	"16 - Group In House",
-	"17 - FO08-No Show",
-	"18 - Cancellations"
-	"19 - Guest In House w/o Due Out(VIP INH) ",
+overnightReports := [
+    [comp, "1  - Guest INH Complimentary"],
+    [mgrFlash, "2  - NA02-Manager Flash"],
+    [hisFor15, "3  - RS05-（前后15天）History & Forecast"],
+    [hisForThisMonth, "4  - RS05-（FO当月）History & Forecast"],
+    [hisForNextMonth, "5  - RS05-（FO次月）History & Forecast"],
+    [vipArr, "6  - FO01-VIP Arrival (VIP Arr)"],
+    [vipDep, "7  - FO03-VIP DEP"],
+    [arrAll, "8  - FO01-Arrival Detailed"],
+    [inhAll, "9  - FO02-Guests INH by Room"],
+    [depAll, "10 - FO03-Departures"],
+    [creditLimit, "11 - FO11-Credit Limit"],
+    [bbf, "12 - FO13-Package Forecast（仅早餐）"],
+    [rooms, "13 - Rooms-housekeepingstatus"],
+    [ooo, "14 - HK03-OOO"],
+    [groupRoom, "15 - Group Rooming List"],
+    [groupInh, "16 - Group In House"],
+    [noShow, "17 - FO08-No Show"],
+    [cancel, "18 - Cancellations"],
+    [vipInh, "19 - Guest In House w/o Due Out(VIP INH) "]
 ]
 
 ReportMasterMain() {
@@ -92,21 +70,21 @@ ReportMasterMain() {
 	try { ; input value is number
 		if (reportSelector.Value < 20 && reportSelector.Value > 0) {
 			WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
-			reportName := overnightReportNames[reportSelector.Value]
-			overnightReportList[reportSelector.Value]()
-			Sleep 1000
+			reportName := overnightReports[reportSelector.Value][2]
+			overnightReports[reportSelector.Value][1]()
+			Sleep 1500
 			WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 			openMyDocs(reportName)
 		} else if (reportSelector.Value = 666) {
 			WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
-			loop overnightReportList.Length {
+			loop overnightReports.Length {
 				if (A_Index = 5) {
 					if ((dateLast() - A_DD) > 5) {
 						continue
 					}
 				}
-				overnightReportList[A_Index]()
-				Sleep 2000
+				overnightReports[A_Index][1]()
+				Sleep 2500
 			}
 			WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 			openMyDocs("夜班报表")
