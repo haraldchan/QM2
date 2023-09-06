@@ -68,7 +68,7 @@ ReportMasterMain() {
 		cleanReload()
 	}
 	try { ; input value is number
-		if (reportSelector.Value < 20 && reportSelector.Value > 0) {
+		if (reportSelector.Value > 0 && reportSelector.Value <= overnightReports.Length) {
 			WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 			reportName := overnightReports[reportSelector.Value][2]
 			overnightReports[reportSelector.Value][1]()
@@ -112,15 +112,15 @@ ReportMasterMain() {
 					否(N)：手动录入block code保存团单
 					取消：退出脚本
 					)", blockInfoText), ReportMaster.popupTitle, "YesNoCancel")
-	if (RmListSaver = "Yes") {
-		groupArrAuto(blockinfo)
-	} else if (RmListSaver = "No") {
-		groupArr()
-	} else {
-		cleanReload()
-	}
-	Sleep 300
-	openMyDocs(reportName)
+			if (RmListSaver = "Yes") {
+				groupArrAuto(blockinfo)
+			} else if (RmListSaver = "No") {
+				groupArr()
+			} else {
+				cleanReload()
+			}
+			Sleep 300
+			openMyDocs(reportName)
 		} else if (StrLower(reportSelector.Value) = "sp") {
 			reportName := today . "水果5"
 			special(today)
@@ -177,7 +177,13 @@ getBlockInfo(fileName) {
 groupArr() {
 	groups := []
 	Loop {
-		blocks := InputBox("请输入blockcode，按下取消或Esc退出", "Arr Group Rooming Lists")
+		blocks := InputBox("
+		(
+		请输入blockcode，按下取消或Esc退出
+		
+		如需另外命名pdf 文件，请以“blockcode=文件名”形式输入
+		如：20230901huaha=华海
+		)", "Arr Group Rooming Lists")
 		if (blocks.Result = "Cancel" || blocks.Value = "") {
 			break
 		}
@@ -185,7 +191,12 @@ groupArr() {
 	}
 	WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 	For g in groups {
-		arrivingGroups(g, g)
+		if (InStr(g, "=")) {
+			StrSplit(g, "=")
+			arrivingGroups(g[1], g[2])
+		} else {
+			arrivingGroups(g, g)
+		}
 	}
 	WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 }
