@@ -14,7 +14,7 @@
 #Include "../src/PsbBatchCO.ahk"
 #Include "../src/GroupKeys.ahk"
 #Include "../src/GroupProfilesModify.ahk"
-; univsersals
+; setup & global variables
 #SingleInstance Force
 CoordMode "Mouse", "Screen"
 today := FormatTime(A_Now, "yyyyMMdd")
