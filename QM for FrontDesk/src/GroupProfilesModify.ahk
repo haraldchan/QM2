@@ -23,7 +23,7 @@ GroupProfilesModifyMain() {
     Xl := ComObject("Excel.Application")
     GroupRoomNum := Xl.Workbooks.Open(path)
     groupRooms := GroupRoomNum.Worksheets("Sheet1")
-    lastRow := GroupRoomNum.ActiveSheet.Cells(GroupRoomNum.ActiveSheet.Rows.Count,"A").End(-4162).Row
+    lastRow := groupRooms.Cells(groupRooms.Rows.Count,"A").End(-4162).Row
     roomNum := Integer(groupRooms.Cells(1, 1).Text)
     row := 1
 
