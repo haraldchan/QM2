@@ -8,25 +8,25 @@ ReportMaster := {
 }
 
 overnightReports := [
-    [comp, "1  - Guest INH Complimentary"],
-    [mgrFlash, "2  - NA02-Manager Flash"],
-    [hisFor15, "3  - RS05-（前后15天）History & Forecast"],
-    [hisForThisMonth, "4  - RS05-（FO当月）History & Forecast"],
-    [hisForNextMonth, "5  - RS05-（FO次月）History & Forecast"],
-    [vipArr, "6  - FO01-VIP Arrival (VIP Arr)"],
-    [vipDep, "7  - FO03-VIP DEP"],
-    [arrAll, "8  - FO01-Arrival Detailed"],
-    [inhAll, "9  - FO02-Guests INH by Room"],
-    [depAll, "10 - FO03-Departures"],
-    [creditLimit, "11 - FO11-Credit Limit"],
-    [bbf, "12 - FO13-Package Forecast（仅早餐）"],
-    [rooms, "13 - Rooms-housekeepingstatus"],
-    [ooo, "14 - HK03-OOO"],
-    [groupRoom, "15 - Group Rooming List"],
-    [groupInh, "16 - Group In House"],
-    [noShow, "17 - FO08-No Show"],
-    [cancel, "18 - Cancellations"],
-    [vipInh, "19 - Guest In House w/o Due Out(VIP INH) "]
+	[comp, "1  - Guest INH Complimentary"],
+	[mgrFlash, "2  - NA02-Manager Flash"],
+	[hisFor15, "3  - RS05-（前后15天）History & Forecast"],
+	[hisForThisMonth, "4  - RS05-（FO当月）History & Forecast"],
+	[hisForNextMonth, "5  - RS05-（FO次月）History & Forecast"],
+	[vipArr, "6  - FO01-VIP Arrival (VIP Arr)"],
+	[vipDep, "7  - FO03-VIP DEP"],
+	[arrAll, "8  - FO01-Arrival Detailed"],
+	[inhAll, "9  - FO02-Guests INH by Room"],
+	[depAll, "10 - FO03-Departures"],
+	[creditLimit, "11 - FO11-Credit Limit"],
+	[bbf, "12 - FO13-Package Forecast（仅早餐）"],
+	[rooms, "13 - Rooms-housekeepingstatus"],
+	[ooo, "14 - HK03-OOO"],
+	[groupRoom, "15 - Group Rooming List"],
+	[groupInh, "16 - Group In House"],
+	[noShow, "17 - FO08-No Show"],
+	[cancel, "18 - Cancellations"],
+	[vipInh, "19 - Guest In House w/o Due Out(VIP INH) "]
 ]
 
 ReportMasterMain() {
@@ -112,15 +112,15 @@ ReportMasterMain() {
 					否(N)：手动录入block code保存团单
 					取消：退出脚本
 					)", blockInfoText), ReportMaster.popupTitle, "YesNoCancel")
-			if (RmListSaver = "Yes") {
-				groupArrAuto(blockinfo)
-			} else if (RmListSaver = "No") {
-				groupArr()
-			} else {
-				cleanReload()
-			}
-			Sleep 300
-			openMyDocs(reportName)
+	if (RmListSaver = "Yes") {
+		groupArrAuto(blockinfo)
+	} else if (RmListSaver = "No") {
+		groupArr()
+	} else {
+		cleanReload()
+	}
+	Sleep 300
+	openMyDocs(reportName)
 		} else if (StrLower(reportSelector.Value) = "sp") {
 			reportName := today . "水果5"
 			special(today)
