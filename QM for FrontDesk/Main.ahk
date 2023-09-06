@@ -46,12 +46,12 @@ F12:: cleanReload()	; use 'Reload' for script reset
 
 ; Script hotkeys
 #Hotif WinExist("ahk_class SunAwtFrame") 
-F9:: SharePbPfMain()
-^o:: CityLedgerCOMain()
-^F11:: ReportMasterMain()
-F4:: GroupShareDnmMain()
-^F9:: PsbBatchCoMain()
+F9:: SharePbPf.Main()
+^o:: CityLedgerCo.Main()
+^F11:: ReportMaster.Main()
+F4:: GroupShareDNM.Main()
+^F9:: PsbBatchCO.Main()
 ; ^F4:: GroupProfilesModifyMain()
 return
 #Hotif WinExist("ahk_exe vision.exe")
-^F1:: GroupKeysMain()   
+^F1:: GroupKeys.Main()
