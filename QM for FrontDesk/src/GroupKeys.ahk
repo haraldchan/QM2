@@ -215,6 +215,6 @@ class GroupKeys {
         }
         GroupKeysXl.Close
         Xl.Quit
-        MsgBox("已完成团队制卡，请与Opera/蓝豆系统核对是否正确！", GroupKeys.popupTitle)
+        MsgBox("已完成团队制卡，请与Opera/蓝豆系统核对是否正确！", this.popupTitle)
     }
 }

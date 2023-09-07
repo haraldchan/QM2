@@ -318,15 +318,15 @@ class ReportMaster {
 						否(N)：手动录入block code保存团单
 						取消：退出脚本
 						)", blockInfoText), this.popupTitle, "YesNoCancel")
-		if (RmListSaver = "Yes") {
-			this.groupArrAuto(blockinfo)
-		} else if (RmListSaver = "No") {
-			this.groupArr()
-		} else {
-			cleanReload()
-		}
-		Sleep 300
-		this.openMyDocs(reportName)
+			if (RmListSaver = "Yes") {
+				this.groupArrAuto(blockinfo)
+			} else if (RmListSaver = "No") {
+				this.groupArr()
+			} else {
+				cleanReload()
+			}
+			Sleep 300
+			this.openMyDocs(reportName)
 			} else if (StrLower(reportSelector.Value) = "sp") {
 				reportName := today . "水果5"
 				special(today)
