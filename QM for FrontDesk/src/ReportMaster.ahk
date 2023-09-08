@@ -6,61 +6,44 @@
 class ReportMaster {
 	static popupTitle := "Report Master"
 	static overnightReports := [
-		[comp, "1  - Guest INH Complimentary"],
-		[mgrFlash, "2  - NA02-Manager Flash"],
-		[hisFor15, "3  - RS05-（前后15天）History & Forecast"],
-		[hisForThisMonth, "4  - RS05-（FO当月）History & Forecast"],
-		[hisForNextMonth, "5  - RS05-（FO次月）History & Forecast"],
-		[vipArr, "6  - FO01-VIP Arrival (VIP Arr)"],
-		[vipDep, "7  - FO03-VIP DEP"],
-		[arrAll, "8  - FO01-Arrival Detailed"],
-		[inhAll, "9  - FO02-Guests INH by Room"],
-		[depAll, "10 - FO03-Departures"],
-		[creditLimit, "11 - FO11-Credit Limit"],
-		[bbf, "12 - FO13-Package Forecast（仅早餐）"],
-		[rooms, "13 - Rooms-housekeepingstatus"],
-		[ooo, "14 - HK03-OOO"],
-		[groupRoom, "15 - Group Rooming List"],
-		[groupInh, "16 - Group In House"],
-		[noShow, "17 - FO08-No Show"],
-		[cancel, "18 - Cancellations"],
-		[vipInh, "19 - Guest In House w/o Due Out(VIP INH) "]
+		; [report name, report saving func]
+		["1  - Guest INH Complimentary", comp],
+		["2  - NA02-Manager Flash", mgrFlash],
+		["3  - RS05-（前后15天）History & Forecast", hisFor15],
+		["4  - RS05-（FO当月）History & Forecast", hisForThisMonth],
+		["5  - RS05-（FO次月）History & Forecast", hisForNextMonth],
+		["6  - FO01-VIP Arrival (VIP Arr)", vipArr],
+		["7  - FO03-VIP DEP", vipDep],
+		["8  - FO01-Arrival Detailed", arrAll],
+		["9  - FO02-Guests INH by Room", inhAll],
+		["10 - FO03-Departures", depAll],
+		["11 - FO11-Credit Limit", creditLimit],
+		["12 - FO13-Package Forecast（仅早餐）", bbf],
+		["13 - Rooms-housekeepingstatus", rooms],
+		["14 - HK03-OOO", ooo],
+		["15 - Group Rooming List", groupRoom],
+		["16 - Group In House", groupInh],
+		["17 - FO08-No Show", noShow],
+		["18 - Cancellations", cancel],
+		["19 - Guest In House w/o Due Out(VIP INH) ", vipInh]
 	]
 
 	static Main() {
 		WinMaximize "ahk_class SunAwtFrame"
 		WinActivate "ahk_class SunAwtFrame"
-		reportMsg := "
+		reportMsg := Format("
 		(
 		请输入对应的报表编号（默认为夜审后操作）。
 		（报表将保存至 开始菜单-文档）。
 	
 		夜班报表：
-		1  - Guest INH Complimentary
-		2  - NA02-Manager Flash
-		3  - RS05-（前后15天）History & Forecast
-		4  - RS05-（FO当月）History & Forecast
-		5  - RS05-（FO次月）History & Forecast
-		6  - FO01-VIP Arrival (VIP Arr)
-		7  - FO03-VIP DEP
-		8  - FO01-Arrival Detailed
-		9  - FO02-Guests INH by Room
-		10 - FO03-Departures
-		11 - FO11-Credit Limit
-		12 - FO13-Package Forecast（仅早餐）
-		13 - Rooms-housekeepingstatus
-		14 - HK03-OOO
-		15 - Group Rooming List
-		16 - Group In House
-		17 - FO08-No Show
-		18 - Cancellations
-		19 - Guest In House w/o Due Out 
+		{1}
 		666 - 保存以上所有报表（执行时间约8分钟，期间请勿操作电脑）
 	
 		其他：
 		garr - 保存当天团单
 		sp - 保存当天水果5（Excel格式）
-		)"
+		)", this.getReportListStr(this.overnightReports))
 		reportSelector := InputBox(reportMsg, this.popupTitle, "h600", "666")
 		if (reportSelector.Result = "Cancel") {
 			cleanReload()
@@ -68,8 +51,8 @@ class ReportMaster {
 		try { ; input value is number
 			if (reportSelector.Value > 0 && reportSelector.Value <= this.overnightReports.Length) {
 				WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
-				reportName := this.overnightReports[reportSelector.Value][2]
-				this.overnightReports[reportSelector.Value][1]()
+				reportName := this.overnightReports[reportSelector.Value][1]
+				this.overnightReports[reportSelector.Value][2]()
 				Sleep 1500
 				WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 				this.openMyDocs(reportName)
@@ -81,7 +64,7 @@ class ReportMaster {
 							continue
 						}
 					}
-					this.overnightReports[A_Index][1]()
+					this.overnightReports[A_Index][2]()
 					Sleep 2500
 				}
 				WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
@@ -101,21 +84,21 @@ class ReportMaster {
 					blockInfoText .= Format("{1}：{2}`n", blockName, blockCode)
 				}
 				RmListSaver := MsgBox(Format("
-						(	
-						请确认当天Arrival 团队信息：
-	
-						{1}
-	
-						是(Y)：自动保存上述团队团单
-						否(N)：手动录入block code保存团单
-						取消：退出脚本
-						)", blockInfoText), this.popupTitle, "YesNoCancel")
+					(	
+					请确认当天Arrival 团队信息：
+		
+					{1}
+		
+					是(Y)：自动保存上述团队团单
+					否(N)：手动录入block code保存团单
+					取消：退出脚本
+					)", blockInfoText), this.popupTitle, "YesNoCancel")
 			if (RmListSaver = "Yes") {
 				this.groupArrAuto(blockinfo)
 			} else if (RmListSaver = "No") {
 				this.groupArr()
 			} else {
-				cleanReload()
+			cleanReload()
 			}
 			Sleep 300
 			this.openMyDocs(reportName)
@@ -129,6 +112,14 @@ class ReportMaster {
 				MsgBox("请选择表中的指令", this.popupTitle)
 			}
 		}
+	}
+
+	static getReportListStr(reportList){
+		list := ""
+		loop reportList.Length {
+			list .= Format("{1}`n", reportList[A_Index][1])
+		}
+		return list
 	}
 
 	static openMyDocs(reportName) {
@@ -154,7 +145,7 @@ class ReportMaster {
 		firstDayOfNextMonth := printYear . nextMonth . "01"
 		return FormatTime(DateAdd(firstDayOfNextMonth, -1, "Days"), "dd")
 	}
-	
+
 	static getBlockInfo(fileName) {
 		blockInfoMap := Map()
 		Xl := ComObject("Excel.Application")
@@ -182,10 +173,10 @@ class ReportMaster {
 			如需另外命名pdf 文件，请以“blockcode=文件名”形式输入
 			如：20230901huaha=华海
 			)", "Arr Group Rooming Lists")
-		if (blocks.Result = "Cancel" || blocks.Value = "") {
-			break
-		}
-		groups.push(blocks.Value)
+			if (blocks.Result = "Cancel" || blocks.Value = "") {
+				break
+			}
+			groups.push(blocks.Value)
 		}
 		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 		For g in groups {
