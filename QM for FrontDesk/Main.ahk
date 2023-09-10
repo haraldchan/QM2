@@ -51,7 +51,7 @@ F9:: SharePbPf.Main()
 ^F11:: ReportMaster.Main()
 F4:: GroupShareDNM.Main()
 ^F9:: PsbBatchCO.Main()
-; ^F4:: GroupProfilesModifyMain()
+^F4:: GroupProfilesModify.Main()
 return
 #Hotif WinExist("ahk_exe vision.exe")
 ^F1:: GroupKeys.Main()
