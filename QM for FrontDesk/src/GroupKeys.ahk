@@ -5,6 +5,7 @@ class GroupKeys {
     static popupTitle := "Group Keys"
     static dateDash := "^\d{1,4}-\d{1,2}-\d{1,2}"
     static dateSlash := "\d{4}/\d{2}/\d{2}"
+    static path := IniRead(A_ScriptDir . "\src\config.ini", "GroupKeys", "xlsPath")
 
     static Main() {
         start := MsgBox("
@@ -43,9 +44,9 @@ class GroupKeys {
         if (infoConfirm = "Cancel") {
             cleanReload()
         }
-        path := IniRead(A_ScriptDir . "\src\config.ini", "GroupKeys", "xlsPath")
+        
         Xl := ComObject("Excel.Application")
-        GroupKeysXl := Xl.Workbooks.Open(path)
+        GroupKeysXl := Xl.Workbooks.Open(this.path)
         groupRooms := GroupKeysXl.Worksheets("Sheet1")
         lastRow := groupRooms.Cells(groupRooms.Rows.Count, "A").End(-4162).Row
         row := 1
