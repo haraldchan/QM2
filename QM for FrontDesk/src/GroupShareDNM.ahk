@@ -25,6 +25,9 @@ class GroupShareDNM {
     }
 
     static dnm() {
+        WinMaximize "ahk_class SunAwtFrame"
+        WinActivate "ahk_class SunAwtFrame"
+        Sleep 1000
         roomQty := InputBox("`n请输入需要DNM的房间数量", this.popupTitle, "h150")
         if (roomQty.Result = "Cancel") {
             cleanReload()
@@ -54,6 +57,9 @@ class GroupShareDNM {
     }
 
     static dnmShare() {
+        WinMaximize "ahk_class SunAwtFrame"
+        WinActivate "ahk_class SunAwtFrame"
+        Sleep 1000
         confirmMsg := MsgBox("
         (
         将开始批量团Share及DoNotMove操作。
