@@ -27,6 +27,9 @@ class SharePbPf {
 	}
 
 	static share() {
+		WinMaximize "ahk_class SunAwtFrame"
+        WinActivate "ahk_class SunAwtFrame"
+        Sleep 1000
 		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 		BlockInput true
 		Sleep 100
@@ -108,6 +111,9 @@ class SharePbPf {
 	}
 
 	static pbpf() {
+		WinMaximize "ahk_class SunAwtFrame"
+        WinActivate "ahk_class SunAwtFrame"
+        Sleep 1000
 		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 		BlockInput true
 		MouseMove 316, 699
