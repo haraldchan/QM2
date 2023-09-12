@@ -16,6 +16,7 @@
 #Include "../src/GroupKeys.ahk"
 #Include "../src/GroupProfilesModify.ahk"
 ;}
+
 ; { setup
 #SingleInstance Force
 TrayTip "QM 2 运行中…按下 F9 开始使用脚本"
@@ -37,6 +38,7 @@ scriptIndex := [
     ReportMaster
 ]
 ; }
+
 ; { GUI
 QM := Gui("+Resize", "QM for FrontDesk 2")
 QM.AddText(, "
@@ -48,7 +50,7 @@ F12:    强制停止脚本
 
 )")
 
-tab3 := QM.AddTab3("w300 h280", ["基础功能", "Excel辅助", "ReportMaster"])
+tab3 := QM.AddTab3("w350 h280", ["基础功能", "Excel辅助", "ReportMaster"])
 tab3.UseTab(1)
 basic := [
     QM.AddRadio("Checked h20 y+10", "空白InHouse Share"),
@@ -67,6 +69,7 @@ xldp := [
     	gkXl := QM.AddEdit("h25 w150 x20 y+10", GroupKeys.path),
     	gkXl.OnEvent("LoseFocus", saveXlPath.Bind("GroupKeys", gkXl)),
     	QM.AddButton("h25 w70 x+20", "选择文件").OnEvent("Click", getXlFile.Bind("GroupKeys", gkXl)),
+        QM.AddButton("h25 w70 x+10", "打开表格").OnEvent("Click", openXlFile.Bind(gkXl.Text)),
     ],
     [
     	gpm := QM.AddRadio("h20 x20 y+10", "团队Profile录入  - Excel表：GroupRoomNum.xls"),
@@ -74,6 +77,7 @@ xldp := [
     	gpmXl := QM.AddEdit("h25 w150 x20 y+10", GroupProfilesModify.path),
     	gpmXl.OnEvent("LoseFocus", saveXlPath.Bind("GroupProfilesModify", gpmXl)),
     	QM.AddButton("h25 w70 x+20", "选择文件").OnEvent("Click", getXlFile.Bind("GroupProfilesModify", gpmXl)),
+        QM.AddButton("h25 w70 x+10", "打开表格").OnEvent("Click", openXlFile.Bind(gpmXl.Text)),
     ],
     [
     	co := QM.AddRadio("h20 x20 y+10", "旅业系统批量退房 - Excel表：CheckOut.xls"),
@@ -81,6 +85,7 @@ xldp := [
     	coXl := QM.AddEdit("h25 w150 x20 y+10", PsbBatchCO.path),
     	coXl.OnEvent("LoseFocus", saveXlPath.Bind("PsbBatchCO", coXl)),
     	QM.AddButton("h25 w70 x+20", "选择文件").OnEvent("Click", getXlFile.Bind("PsbBatchCO", coXl)),
+        QM.AddButton("h25 w70 x+10", "打开表格").OnEvent("Click", openXlFile.Bind(coXl.Text)),
     ],
 ]
 QM.AddButton("Default h25 w70 x30 y310", "启动脚本").OnEvent("Click", runSelectedScript.bind(tab3.Value))
@@ -139,6 +144,10 @@ getXlFile(script, ctrlObj, *) {
     IniWrite(selectFile, config, script, "xlsPath")
 }
 
+openXlFile(file, *) {
+    Run file
+}
+
 singleSelect(ctrlObj, *) {
     loop xldp.Length {
         xldp[A_Index][1].Value := 0
@@ -156,6 +165,6 @@ F9:: QM.Show() ; show QM2 window
 F12:: cleanReload()	; use 'Reload' for script reset
 ^F12:: quitApp() ; use ExitApp to kill app
 
-#Hotif WinExist("ahk_class AutoHotkeyGUI") 
+#Hotif WinActive("ahk_class AutoHotkeyGUI") 
 Esc:: hideWin()
 Enter:: runSelectedScript(tab3.Value,)
