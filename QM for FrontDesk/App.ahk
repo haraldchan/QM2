@@ -95,6 +95,8 @@ tab3.UseTab(3)
 QM.AddText("h20", "`n点击“启动脚本”打开报表选择器.")
 QM.AddButton("Default h25 w70 x30 y310", "启动脚本").OnEvent("Click", runSelectedScript.bind(tab3.Value))
 QM.AddButton("h25 w70 x+20", "隐藏窗口").OnEvent("Click", hideWin)
+
+QM.Show()
 ; }
 
 ; { callback funcs
