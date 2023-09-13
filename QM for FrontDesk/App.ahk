@@ -40,13 +40,17 @@ scriptIndex := [
 ; }
 
 ; { GUI
-QM := Gui("+Resize", "QM for FrontDesk 2")
+QM := Gui("+Resize", "QM for FrontDesk 2.1.0")
 QM.AddText(, "
 (
 快捷键及对应功能：
 
-F9:     显示脚本选择窗
-F12:    强制停止脚本
+F9:       显示脚本选择窗
+F12:      强制停止脚本
+Ctrl+F2:  退出
+
+常驻脚本(按下即启动)
+Ctrl+O:   CityLedger挂账
 
 )")
 
@@ -58,45 +62,43 @@ basic := [
     QM.AddRadio("h20 y+10", "旅行团Share + DoNotMove"),
     QM.AddRadio("h20 y+10", "批量DoNotMove Only"),
 ]
-QM.AddButton("Default h25 w70 x30 y310", "启动脚本").OnEvent("Click", runSelectedScript.Bind(tab3.Value))
+QM.AddButton("Default h25 w70 x30 y370", "启动脚本").OnEvent("Click", runSelectedScript.Bind(1))
 QM.AddButton("h25 w70 x+20", "隐藏窗口").OnEvent("Click", hideWin)
 
 tab3.UseTab(2)
 xldp := [
     [
-    	gk := QM.AddRadio("Checked h20 y+10", "团队房卡制作     - Excel表：GroupKeys.xls"),
+        gk := QM.AddRadio("Checked h20 y+10", "团队房卡制作     - Excel表：GroupKeys.xls"),
         gk.OnEvent("Click", singleSelect.Bind(gk)),
-    	gkXl := QM.AddEdit("h25 w150 x20 y+10", GroupKeys.path),
-    	gkXl.OnEvent("LoseFocus", saveXlPath.Bind("GroupKeys", gkXl)),
-    	QM.AddButton("h25 w70 x+20", "选择文件").OnEvent("Click", getXlFile.Bind("GroupKeys", gkXl)),
+        gkXl := QM.AddEdit("h25 w150 x20 y+10", GroupKeys.path),
+        gkXl.OnEvent("LoseFocus", saveXlPath.Bind("GroupKeys", gkXl)),
+        QM.AddButton("h25 w70 x+20", "选择文件").OnEvent("Click", getXlPath.Bind("GroupKeys", gkXl)),
         QM.AddButton("h25 w70 x+10", "打开表格").OnEvent("Click", openXlFile.Bind(gkXl.Text)),
     ],
     [
-    	gpm := QM.AddRadio("h20 x20 y+10", "团队Profile录入  - Excel表：GroupRoomNum.xls"),
+        gpm := QM.AddRadio("h20 x20 y+10", "团队Profile录入  - Excel表：GroupRoomNum.xls"),
         gpm.OnEvent("Click", singleSelect.Bind(gpm)),
-    	gpmXl := QM.AddEdit("h25 w150 x20 y+10", GroupProfilesModify.path),
-    	gpmXl.OnEvent("LoseFocus", saveXlPath.Bind("GroupProfilesModify", gpmXl)),
-    	QM.AddButton("h25 w70 x+20", "选择文件").OnEvent("Click", getXlFile.Bind("GroupProfilesModify", gpmXl)),
+        gpmXl := QM.AddEdit("h25 w150 x20 y+10", GroupProfilesModify.path),
+        gpmXl.OnEvent("LoseFocus", saveXlPath.Bind("GroupProfilesModify", gpmXl)),
+        QM.AddButton("h25 w70 x+20", "选择文件").OnEvent("Click", getXlPath.Bind("GroupProfilesModify", gpmXl)),
         QM.AddButton("h25 w70 x+10", "打开表格").OnEvent("Click", openXlFile.Bind(gpmXl.Text)),
     ],
     [
-    	co := QM.AddRadio("h20 x20 y+10", "旅业系统批量退房 - Excel表：CheckOut.xls"),
+        co := QM.AddRadio("h20 x20 y+10", "旅业系统批量退房 - Excel表：CheckOut.xls"),
         co.OnEvent("Click", singleSelect.Bind(co)),
-    	coXl := QM.AddEdit("h25 w150 x20 y+10", PsbBatchCO.path),
-    	coXl.OnEvent("LoseFocus", saveXlPath.Bind("PsbBatchCO", coXl)),
-    	QM.AddButton("h25 w70 x+20", "选择文件").OnEvent("Click", getXlFile.Bind("PsbBatchCO", coXl)),
+        coXl := QM.AddEdit("h25 w150 x20 y+10", PsbBatchCO.path),
+        coXl.OnEvent("LoseFocus", saveXlPath.Bind("PsbBatchCO", coXl)),
+        QM.AddButton("h25 w70 x+20", "选择文件").OnEvent("Click", getXlPath.Bind("PsbBatchCO", coXl)),
         QM.AddButton("h25 w70 x+10", "打开表格").OnEvent("Click", openXlFile.Bind(coXl.Text)),
     ],
 ]
-QM.AddButton("Default h25 w70 x30 y310", "启动脚本").OnEvent("Click", runSelectedScript.bind(tab3.Value))
+QM.AddButton("Default h25 w70 x30 y370", "启动脚本").OnEvent("Click", runSelectedScript.Bind(2))
 QM.AddButton("h25 w70 x+20", "隐藏窗口").OnEvent("Click", hideWin)
 
 tab3.UseTab(3)
 QM.AddText("h20", "`n点击“启动脚本”打开报表选择器.")
-QM.AddButton("Default h25 w70 x30 y310", "启动脚本").OnEvent("Click", runSelectedScript.bind(tab3.Value))
+QM.AddButton("Default h25 w70 x30 y370", "启动脚本").OnEvent("Click", runSelectedScript.Bind(3))
 QM.AddButton("h25 w70 x+20", "隐藏窗口").OnEvent("Click", hideWin)
-
-QM.Show()
 ; }
 
 ; { callback funcs
@@ -135,15 +137,15 @@ saveXlPath(script, ctrlObj, *) {
     IniWrite(ctrlObj.Text, config, script, "xlsPath")
 }
 
-getXlFile(script, ctrlObj, *) {
+getXlPath(script, ctrlObj, *) {
     QM.Opt("+OwnDialogs")
-    selectFile := FileSelect(3, , "请选择 Excel 文件")
-    if (selectFile = "") {
+    selectedFile := FileSelect(3, , "请选择 Excel 文件")
+    if (selectedFile = "") {
         MsgBox("请选择文件")
         return
     }
-    ctrlObj.Value := selectFile
-    IniWrite(selectFile, config, script, "xlsPath")
+    ctrlObj.Value := selectedFile
+    IniWrite(selectedFile, config, script, "xlsPath")
 }
 
 openXlFile(file, *) {
@@ -166,7 +168,8 @@ hideWin(*) {
 F9:: QM.Show() ; show QM2 window
 F12:: cleanReload()	; use 'Reload' for script reset
 ^F12:: quitApp() ; use ExitApp to kill app
+^o::CityLedgerCo.Main()
 
-#Hotif WinActive("ahk_class AutoHotkeyGUI") 
+#Hotif WinActive("ahk_class AutoHotkeyGUI")
 Esc:: hideWin()
-Enter:: runSelectedScript(tab3.Value,)
+Enter:: runSelectedScript(tab3.Value)
