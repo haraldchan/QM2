@@ -88,6 +88,7 @@ class GroupProfilesModify {
         GroupRoomNum.Close()
         Xl.Quit()
         BlockInput false
+        Sleep 500
         MsgBox("已Modify 完成，请再次检查是否正确。", this.popupTitle)
     }
 }

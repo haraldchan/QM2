@@ -53,7 +53,8 @@ class GroupShareDNM {
             Sleep 1500
         }
         BlockInput false
-        MsgBox("已完成批量DoNotMove，合共" . roomQty . "房。", this.popupTitle)
+        Sleep 500
+        MsgBox("已完成批量DoNotMove，合共" . roomQty.Value . "房。", this.popupTitle)
     }
 
     static dnmShare() {
@@ -169,6 +170,7 @@ class GroupShareDNM {
             Sleep 2000
             BlockInput false
         }
-        MsgBox("已完成DNM & Share，请核对有否错漏。", this.popupTitle, "4096")
+        Sleep 500
+        MsgBox("已完成DNM & Share共 " . roomQty.Value . " 房，请核对有否错漏。", this.popupTitle, "4096")
     }
 }
