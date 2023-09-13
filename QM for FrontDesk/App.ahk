@@ -39,6 +39,11 @@ scriptIndex := [
 ]
 ; }
 
+; TODO: add "Desktop Mode" for Excel dependent scripts.
+;       when enabled, Excel file path will set to 'A_Desktop . "\filename.xls"'
+;       when enabled, Edit control will be disabled.
+;       when enabled, should check FileExist first, if false, remind user to copy it to desktop.
+
 ; { GUI
 QM := Gui("+Resize", "QM for FrontDesk 2.1.0")
 QM.AddText(, "
