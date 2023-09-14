@@ -19,6 +19,17 @@
 
 ; { setup
 #SingleInstance Force
+; check "Run as admin", ExitApp if false
+try {
+    WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+} catch {
+    MsgBox("
+    (
+    当前为非管理员状态，将无法正确运行。
+    请在QM 2 图标上右键点击，选择“以管理员身份运行”。    
+    )", "QM for FrontDesk 2.1.0")
+    ExitApp
+}
 TraySetIcon A_ScriptDir . "\src\assets\QMTray.ico"
 TrayTip "QM 2 运行中…按下 F9 开始使用脚本"
 CoordMode "Mouse", "Screen"
