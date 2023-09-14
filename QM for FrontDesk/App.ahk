@@ -163,7 +163,7 @@ runSelectedScript(currentTab, *) {
     if (currentTab = 1) {
         loop basic.Length {
             if (basic[A_Index].Value = 1) {
-                QM.Hide()
+                hideWin()
                 if (A_Index = 1) {
                     SharePbPf.share()
                 } else if (A_Index = 2) {
@@ -178,7 +178,7 @@ runSelectedScript(currentTab, *) {
     } else if (currentTab = 2) {
         loop xldp.Length {
             if (xldp[A_Index][1].Value = 1) {
-                QM.Hide()
+                hideWin()
                 if (desktopMode = true) {
                     scriptIndex[2][A_Index].Main("desktop")
                 } else {
@@ -187,7 +187,7 @@ runSelectedScript(currentTab, *) {
             }
         }
     } else {
-        QM.Hide()
+        hideWin()
         scriptIndex[3].Main()
     }
 }
