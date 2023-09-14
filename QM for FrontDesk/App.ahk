@@ -19,6 +19,7 @@
 
 ; { setup
 #SingleInstance Force
+TraySetIcon A_ScriptDir . "\src\assets\QMTray.ico"
 TrayTip "QM 2 运行中…按下 F9 开始使用脚本"
 CoordMode "Mouse", "Screen"
 today := FormatTime(A_Now, "yyyyMMdd")
@@ -50,12 +51,12 @@ QM.AddText(, "
 (
 快捷键及对应功能：
 
-F9:       显示脚本选择窗
-F12:      强制停止脚本
-Ctrl+F2:  退出
+F9:        显示脚本选择窗
+F12:       强制停止脚本
+Ctrl+F12:  退出
 
 常驻脚本(按下即启动)
-Ctrl+O:   CityLedger挂账
+Ctrl+O:    CityLedger挂账
 
 )")
 
