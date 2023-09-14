@@ -7,7 +7,16 @@ class GroupKeys {
     static dateSlash := "\d{4}/\d{2}/\d{2}"
     static path := IniRead(A_ScriptDir . "\src\config.ini", "GroupKeys", "xlsPath")
 
-    static Main() {
+    static Main(desktopMode := 0) {
+        if (desktopMode := "desktop") {
+            path := A_Desktop . "GroupKeys.xls"
+            if (!FileExist(path)) {
+                MsgBox("对应 Excel表：GroupKeys.xls并不存在！`n 请先创建或复制文件到桌面！", this.popupTitle)
+                return
+            }
+        } else {
+            path := this.path
+        }
         start := MsgBox("
         (
         即将进行批量团卡制作，启动前请先完成以下准备工作：
@@ -46,7 +55,7 @@ class GroupKeys {
         }
         
         Xl := ComObject("Excel.Application")
-        GroupKeysXl := Xl.Workbooks.Open(this.path)
+        GroupKeysXl := Xl.Workbooks.Open(path)
         groupRooms := GroupKeysXl.Worksheets("Sheet1")
         lastRow := groupRooms.Cells(groupRooms.Rows.Count, "A").End(-4162).Row
         row := 1

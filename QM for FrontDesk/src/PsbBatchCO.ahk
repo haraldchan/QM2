@@ -7,7 +7,16 @@ class PsbBatchCO {
     static popupTitle := "PSB CheckOut(Batch)"
     static path := IniRead(A_ScriptDir . "\src\config.ini", "PsbBatchCO", "xlsPath")
 
-    static Main() {
+    static Main(desktopMode := 0) {
+        if (desktopMode := "desktop") {
+            path := A_Desktop . "CheckOut.XLS"
+            if (!FileExist(path)) {
+                MsgBox("对应 Excel表：CheckOut.xls并不存在！`n 请先创建或复制文件到桌面！", this.popupTitle)
+                return
+            }
+        } else {
+            path := this.path
+        }
         quitOnRoom := IniRead(A_ScriptDir . "\src\config.ini", "PsbBatchCO", "errorQuitAt")
         if (quitOnRoom != "null") {
             MsgBox(Format("上次拍Out为出错停止，已拍至：{1}`n请先更新CheckOut.xls", quitOnRoom))
@@ -22,16 +31,16 @@ class PsbBatchCO {
         )"
         selector := MsgBox(textMsg, this.popupTitle, "YesNoCancel")
         if (selector = "No") {
-            this.batchOut()
+            this.batchOut(path)
         } else if (selector = "Yes") {
-            this.saveDep()
-            this.batchOut()
+            this.saveDep(path)
+            this.batchOut(path)
         } else {
             cleanReload()
         }
     }
 
-    static saveDep() {
+    static saveDep(path) {
         timePeriod := InputBox(
             textMsg := "
         (
@@ -65,7 +74,6 @@ class PsbBatchCO {
         BlockInput true
         WinMaximize "ahk_class SunAwtFrame"
         WinActivate "ahk_class SunAwtFrame"
-        ; { saving departured room numbers (y-pos already modified!)
         reportOpenDelimitedData("departure_all")
         Sleep 100
         MouseMove 473, 570
@@ -104,7 +112,7 @@ class PsbBatchCO {
         ; }
         A_Clipboard := FileRead(Format("{1}\{2}", A_MyDocuments, roomNumsTxt))
         BlockInput false
-        Run PsbBatchCo.path
+        Run path
         WinWait "ahk_class XLMAIN"
         WinMaximize "ahk_class XLMAIN"
         Sleep 3500
@@ -148,18 +156,18 @@ class PsbBatchCO {
         MsgBox(continueText, this.popupTitle)
     }
 
-    static batchOut() {
+    static batchOut(path) {
         autoOut := MsgBox("即将开始自动拍Out脚本`n请先打开PSB，进入“旅客退房”界面", PsbBatchCo.popupTitle, "OKCancel")
         if (autoOut := "Cancel") {
             cleanReload()
         }
         Xl := ComObject("Excel.Application")
-        CheckOut := Xl.Workbooks.Open(PsbBatchCo.path)
+        CheckOut := Xl.Workbooks.Open(path)
         depRooms := CheckOut.Worksheets("Sheet1")
         lastRow := depRooms.Cells(depRooms.Rows.Count, "A").End(-4162).Row
         MsgBox(lastRow)
         row := 1
-        errorBrown := "0x804000" ; TODO: confirm this hex color code!
+        errorBrown := "0x804000"
         ; BlockInput true
         loop lastRow {
             roomNum := Integer(depRooms.Cells(row, 1).Value)
@@ -199,6 +207,6 @@ class PsbBatchCO {
         CheckOut.Close
         Xl.Quit
         IniWrite("null", config, "PsbBatchCO", "errorQuitAt")
-        MsgBox("PSB 批量拍Out 已完成！", "PSB CheckOut(Batch)")
+        MsgBox("PSB 批量拍Out 已完成！", this.popupTitle)
     }
 }
