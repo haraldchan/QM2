@@ -35,6 +35,8 @@ TrayTip "QM 2 运行中…按下 F9 开始使用脚本"
 CoordMode "Mouse", "Screen"
 today := FormatTime(A_Now, "yyyyMMdd")
 config := A_ScriptDir . "\src\config.ini"
+cityLedgerOn := true
+desktopMode := false
 scriptIndex := [
     [
         SharePbPf.share,
@@ -52,10 +54,10 @@ scriptIndex := [
 ; }
 
 ; TODO: add "Desktop Mode" for Excel dependent scripts.
-;       when enabled, Excel file path will set to 'A_Desktop . "\filename.xls"'
-;       when enabled, Edit control will be disabled.
-;       when enabled, should check FileExist first, if false, remind user to copy it to desktop.
-
+;       tbt - when enabled, Excel file path will set to 'A_Desktop . "\filename.xls"'
+;       tbt - when enabled, Edit control will be disabled.
+;       tbt - when enabled, should check FileExist first, if false, remind user to copy it to desktop.
+; TODO: check the pos of checkboxes
 ; { GUI
 QM := Gui("+Resize", "QM for FrontDesk 2.1.0")
 QM.AddText(, "
@@ -75,9 +77,10 @@ tab3 := QM.AddTab3("w350 h280", ["基础功能", "Excel辅助", "ReportMaster"])
 tab3.UseTab(1)
 basic := [
     QM.AddRadio("Checked h20 y+10", "空白InHouse Share"),
-    QM.AddRadio("h20 y+10", "粘贴PayBy PayFor"),
-    QM.AddRadio("h20 y+10", "旅行团Share + DoNotMove"),
-    QM.AddRadio("h20 y+10", "批量DoNotMove Only"),
+    QM.AddRadio("h25 y+10", "粘贴PayBy PayFor"),
+    QM.AddRadio("h25 y+10", "旅行团Share + DoNotMove"),
+    QM.AddRadio("h25 y+10", "批量DoNotMove Only"),
+    QM.AddCheckbox("h25 y+10", "令 CityLedger 挂账保持常驻").OnEvent("Click", cityLedgerKeepAlive)
 ]
 QM.AddButton("Default h25 w70 x30 y370", "启动脚本").OnEvent("Click", runSelectedScript.Bind(1))
 QM.AddButton("h25 w70 x+20", "隐藏窗口").OnEvent("Click", hideWin)
@@ -89,26 +92,33 @@ xldp := [
         gk.OnEvent("Click", singleSelect.Bind(gk)),
         gkXl := QM.AddEdit("h25 w150 x20 y+10", GroupKeys.path),
         gkXl.OnEvent("LoseFocus", saveXlPath.Bind("GroupKeys", gkXl)),
-        QM.AddButton("h25 w70 x+20", "选择文件").OnEvent("Click", getXlPath.Bind("GroupKeys", gkXl)),
-        QM.AddButton("h25 w70 x+10", "打开表格").OnEvent("Click", openXlFile.Bind(gkXl.Text)),
+        gkBtn1 := QM.AddButton("h25 w70 x+20", "选择文件")
+        gkBtn1.OnEvent("Click", getXlPath.Bind("GroupKeys", gkXl)),
+        gkBtn2 := QM.AddButton("h25 w70 x+10", "打开表格")
+        gkBtn2.OnEvent("Click", openXlFile.Bind(gkXl.Text)),
     ],
     [
         gpm := QM.AddRadio("h20 x20 y+10", "团队Profile录入  - Excel表：GroupRoomNum.xls"),
         gpm.OnEvent("Click", singleSelect.Bind(gpm)),
         gpmXl := QM.AddEdit("h25 w150 x20 y+10", GroupProfilesModify.path),
         gpmXl.OnEvent("LoseFocus", saveXlPath.Bind("GroupProfilesModify", gpmXl)),
-        QM.AddButton("h25 w70 x+20", "选择文件").OnEvent("Click", getXlPath.Bind("GroupProfilesModify", gpmXl)),
-        QM.AddButton("h25 w70 x+10", "打开表格").OnEvent("Click", openXlFile.Bind(gpmXl.Text)),
+        gpmBtn1 := QM.AddButton("h25 w70 x+20", "选择文件")
+        gpmBtn1.OnEvent("Click", getXlPath.Bind("GroupProfilesModify", gpmXl)),
+        gpmBtn2 := QM.AddButton("h25 w70 x+10", "打开表格")
+        gpmBtn2.OnEvent("Click", openXlFile.Bind(gpmXl.Text)),
     ],
     [
         co := QM.AddRadio("h20 x20 y+10", "旅业系统批量退房 - Excel表：CheckOut.xls"),
         co.OnEvent("Click", singleSelect.Bind(co)),
         coXl := QM.AddEdit("h25 w150 x20 y+10", PsbBatchCO.path),
         coXl.OnEvent("LoseFocus", saveXlPath.Bind("PsbBatchCO", coXl)),
-        QM.AddButton("h25 w70 x+20", "选择文件").OnEvent("Click", getXlPath.Bind("PsbBatchCO", coXl)),
-        QM.AddButton("h25 w70 x+10", "打开表格").OnEvent("Click", openXlFile.Bind(coXl.Text)),
+        coBtn1 := QM.AddButton("h25 w70 x+20", "选择文件")
+        coBtn1.OnEvent("Click", getXlPath.Bind("PsbBatchCO", coXl)),
+        coBtn2 := QM.AddButton("h25 w70 x+10", "打开表格")
+        coBtn2.OnEvent("Click", openXlFile.Bind(coXl.Text)),
     ],
 ]
+QM.AddCheckbox("vDesktopMode h25 y+15", "使用桌面文件模式").OnEvent("Click", toggleDesktopMode)
 QM.AddButton("Default h25 w70 x30 y370", "启动脚本").OnEvent("Click", runSelectedScript.Bind(2))
 QM.AddButton("h25 w70 x+20", "隐藏窗口").OnEvent("Click", hideWin)
 
@@ -119,6 +129,36 @@ QM.AddButton("h25 w70 x+20", "隐藏窗口").OnEvent("Click", hideWin)
 ; }
 
 ; { callback funcs
+cityLedgerKeepAlive(*) {
+    cityLedgerOn := !cityLedgerOn
+}
+
+toggleDesktopMode(*) {
+    desktopMode := !desktopMode
+    gkXl.Enabled := !gkXl.Enabled
+    gkBtn1.Enabled := !gkBtn1.Enabled
+    gkBtn2.Enabled := !gkBtn2.Enabled
+    gpmXl.Enabled := !gpmXl.Enabled
+    gpmBtn1.Enabled := !gpmBtn1.Enabled
+    gpmBtn2.Enabled := !gpmBtn2.Enabled
+    coXl.Enabled := !coXl.Enabled
+    coBtn1.Enabled := !coBtn1.Enabled
+    coBtn2.Enabled := !coBtn2.Enabled
+}
+
+desktopModeTooltip(*) {
+    MouseGetPos ,,,&control
+    if (control = "DesktopMode") {
+        ToolTip (
+            "
+            (
+            使用桌面文件模式后，请确保桌面有脚本读取数据所需的 Excel表。
+            不启用时，默认使用 Share盘 QM 2所在文件夹中的辅助 Excel表。
+            )"    
+        )
+    }
+}
+
 runSelectedScript(currentTab, *) {
     if (currentTab = 1) {
         loop basic.Length {
@@ -133,15 +173,17 @@ runSelectedScript(currentTab, *) {
                 } else if (A_Index = 4) {
                     GroupShareDNM.dnm()
                 }
-                return
             }
         }
     } else if (currentTab = 2) {
         loop xldp.Length {
             if (xldp[A_Index][1].Value = 1) {
                 QM.Hide()
-                scriptIndex[2][A_Index].Main()
-                return
+                if (desktopMode = true) {
+                    scriptIndex[2][A_Index].Main("desktop")
+                } else {
+                    scriptIndex[2][A_Index].Main()
+                }
             }
         }
     } else {
@@ -178,15 +220,19 @@ singleSelect(ctrlObj, *) {
 
 hideWin(*) {
     QM.Hide()
+    SetTimer(, 0)
 }
 ; }
 
 ; hotkey setup
-F9:: QM.Show() ; show QM2 window
+F9:: {
+    QM.Show()
+    SetTimer(desktopModeTooltip, 100)
+ } ; show QM2 window
 F12:: cleanReload()	; use 'Reload' for script reset
 ^F12:: quitApp() ; use ExitApp to kill app
+#HotIf cityLedgerOn
 ^o::CityLedgerCo.Main()
-
 #Hotif WinActive("ahk_class AutoHotkeyGUI")
 Esc:: hideWin()
 Enter:: runSelectedScript(tab3.Value)
