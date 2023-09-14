@@ -83,7 +83,7 @@ class ReportMaster {
 				for blockName, blockCode in blockInfo {
 					blockInfoText .= Format("{1}：{2}`n", blockName, blockCode)
 				}
-				RmListSaver := MsgBox(Format("
+				rmListSaver := MsgBox(Format("
 					(	
 					请确认当天Arrival 团队信息：
 		
@@ -93,9 +93,9 @@ class ReportMaster {
 					否(N)：手动录入block code保存团单
 					取消：退出脚本
 					)", blockInfoText), this.popupTitle, "YesNoCancel")
-			if (RmListSaver = "Yes") {
+			if (rmListSaver = "Yes") {
 				this.groupArrAuto(blockinfo)
-			} else if (RmListSaver = "No") {
+			} else if (rmListSaver = "No") {
 				this.groupArr()
 			} else {
 			cleanReload()
