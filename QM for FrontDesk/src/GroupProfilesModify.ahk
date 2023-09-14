@@ -4,9 +4,18 @@
 class GroupProfilesModify {
     static popupTitle := "GroupProfilesModify"
     static path := IniRead(A_ScriptDir . "\src\config.ini", "GroupProfilesModify", "xlsPath")
-    static wwly := IniRead(A_ScriptDir . "\src\config.ini", "GroupProfilesModify", "wwlyPath")
+    static wwly := this.getWwlyPath()
 
-    static Main() {
+    static Main(desktopMode := 0) {
+        if (desktopMode = "desktop") {
+            path := A_Desktop . "GroupRoomNum.xls"
+            if (!FileExist(path)) {
+                MsgBox("对应 Excel表：GroupRoomNum.xls并不存在！`n 请先创建或复制文件到桌面！", this.popupTitle)
+                return
+            }
+        } else {
+            path := this.path
+        }
         errorRed := "0x800000"
         gpmStart := MsgBox("
         (
@@ -19,19 +28,25 @@ class GroupProfilesModify {
         if (gpmStart = "Cancel") {
             cleanReload()
         }
+
         Xl := ComObject("Excel.Application")
-        GroupRoomNum := Xl.Workbooks.Open(this.path)
+        GroupRoomNum := Xl.Workbooks.Open(path)
         groupRooms := GroupRoomNum.Worksheets("Sheet1")
-        lastRow := groupRooms.Cells(groupRooms.Rows.Count,"A").End(-4162).Row
+        lastRow := groupRooms.Cells(groupRooms.Rows.Count, "A").End(-4162).Row
         roomNum := Integer(groupRooms.Cells(1, 1).Text)
         row := 1
         Run this.wwly
         Sleep 5000
+
         WinMaximize "ahk_class SunAwtFrame"
         WinActivate "ahk_class SunAwtFrame"
         A_Clipboard := roomNum
         BlockInput true
+
         loop lastRow {
+            roomNum := Integer(groupRooms.Cells(row, 1).Value)
+            A_Clipboard := roomNum
+            Sleep 500
             MouseMove 598, 573
             Sleep 500
             Send "!p"
@@ -46,7 +61,7 @@ class GroupProfilesModify {
             Send "{Pause}"
             WinWait "ahk_class TMAIN"
             WinActivate "ahk_class TMAIN"
-    
+
             CoordMode "Mouse", "Client"
             MouseMove 400, 23
             Click "Down"
@@ -69,7 +84,7 @@ class GroupProfilesModify {
             Send "{Down}"
             Sleep 200
             CoordMode "Mouse", "Screen"
-    
+
             if (PixelGetColor(698, 306) = errorRed) {
                 MsgBox("Modify出错，脚本已终止`n`n已Modify到：" . roomNum, this.popupTitle)
                 quitOnRoom := roomNum
@@ -77,18 +92,24 @@ class GroupProfilesModify {
                 cleanReload()
             }
             row++
-            try {
-            roomNum := Integer(groupRooms.Cells(row, 1).Value)
-            A_Clipboard := roomNum
-            Sleep 500
-            } catch {
-                break
-            }
         }
         GroupRoomNum.Close()
         Xl.Quit()
         BlockInput false
         Sleep 500
         MsgBox("已Modify 完成，请再次检查是否正确。", this.popupTitle)
+    }
+
+    static getWwlyPath() {
+
+        if (FileExist("C:\SQL\wwly.exe")) {
+            return "C:\SQL\wwly.exe"
+        } else if (FileExist("D:\SQL\wwly.exe")) {
+            return "D:\SQL\wwly.exe"
+        } else if (FileExist("E:\SQL\wwly.exe")) {
+            return "E:\SQL\wwly.exe"
+        } else if (FileExist("F:\SQL\wwly.exe")) {
+            return "F:\SQL\wwly.exe"
+        }
     }
 }
