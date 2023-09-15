@@ -1,10 +1,10 @@
-; #Include "%A_ScriptDir\FedexScheduleMonthly.ahk%"
+; #Include "%A_ScriptDir%\FedexScheduleMonthly.ahk"
 #Include ../FedexScheduleMonthly.ahk
-; configs
-config := Format("{1}\config.ini", A_ScriptDir)
+; {setup
+config := A_ScriptDir . "\config.ini"
 path := IniRead(config, "FSM", "schedulePath")
 schdRange := IniRead(config, "FSM", "scheduleRange")
-
+; }
 ; { GUI
 FSM := Gui("+Resize", "Fedex Schedule Monthly")
 FSM.AddText("x20 y20", "请选择Schedule 文件")
