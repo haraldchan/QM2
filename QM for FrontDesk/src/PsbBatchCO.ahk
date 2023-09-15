@@ -165,13 +165,17 @@ class PsbBatchCO {
         CheckOut := Xl.Workbooks.Open(path)
         depRooms := CheckOut.Worksheets("Sheet1")
         lastRow := depRooms.Cells(depRooms.Rows.Count, "A").End(-4162).Row
-        MsgBox(lastRow)
-        row := 1
+        ; row := 1
         errorBrown := "0x804000"
-        ; BlockInput true
+        depRoomNums := []
         loop lastRow {
-            roomNum := Integer(depRooms.Cells(row, 1).Value)
-            A_Clipboard := roomNum
+            depRoomNums.Push(Integer(depRooms.Cells(A_Index, 1).Value))
+        }
+        CheckOut.Close()
+        Xl.Quit()
+
+        loop lastRow {
+            A_Clipboard := depRoomNums[A_Index]
             MouseMove 279, 224
             Sleep 500
             Click
@@ -193,20 +197,55 @@ class PsbBatchCO {
             Sleep 50
             Send "{BackSpace}"
             Sleep 200
-            ; }
             ; terminate on error pop-up
             if (PixelGetColor(251, 196) = errorBrown) {
-                MsgBox("PSB系统出错，脚本已终止`n`n已拍Out到：" . roomNum, PsbBatchCo.popupTitle)
+                MsgBox("PSB系统出错，脚本已终止`n`n已拍Out到：" . depRoomNums[A_Index], PsbBatchCo.popupTitle)
                 quitOnRoom := roomNum
                 IniWrite(quitOnRoom, config, "PsbBatchCO", "errorQuitAt")
                 cleanReload()
             }
-            row++
         }
-        ; BlockInput false
-        CheckOut.Close
-        Xl.Quit
+
+        ; BlockInput true
+        ; loop lastRow {
+        ;     roomNum := Integer(depRooms.Cells(row, 1).Value)
+        ;     A_Clipboard := roomNum
+        ;     MouseMove 279, 224
+        ;     Sleep 500
+        ;     Click
+        ;     Sleep 350
+        ;     Send "^v"
+        ;     Sleep 100
+        ;     Send "^f"
+        ;     Sleep 800
+        ;     Send "{Enter}"
+        ;     Sleep 800
+        ;     Send "{Enter}"
+        ;     Sleep 800
+        ;     MouseMove 279, 224
+        ;     Sleep 800
+        ;     Click "Down"
+        ;     MouseMove 160, 224
+        ;     Sleep 200
+        ;     Click "Up"
+        ;     Sleep 50
+        ;     Send "{BackSpace}"
+        ;     Sleep 200
+        ;     ; }
+        ;     ; terminate on error pop-up
+        ;     if (PixelGetColor(251, 196) = errorBrown) {
+        ;         MsgBox("PSB系统出错，脚本已终止`n`n已拍Out到：" . roomNum, PsbBatchCo.popupTitle)
+        ;         quitOnRoom := roomNum
+        ;         IniWrite(quitOnRoom, config, "PsbBatchCO", "errorQuitAt")
+        ;         cleanReload()
+        ;     }
+        ;     row++
+        ; }
+        ; ; BlockInput false
+        ; CheckOut.Close
+        ; Xl.Quit
         IniWrite("null", config, "PsbBatchCO", "errorQuitAt")
+        Sleep 500
         MsgBox("PSB 批量拍Out 已完成！", this.popupTitle)
     }
 }

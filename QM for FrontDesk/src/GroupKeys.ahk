@@ -58,17 +58,29 @@ class GroupKeys {
         GroupKeysXl := Xl.Workbooks.Open(path)
         groupRooms := GroupKeysXl.Worksheets("Sheet1")
         lastRow := groupRooms.Cells(groupRooms.Rows.Count, "A").End(-4162).Row
-        row := 1
+        ; row := 1
+
+        ; { tbt
+        roomNums := []
+        coDateRead := []
+        coTimeRead := []
+        loop lastRow {
+            roomNums.Push(groupRooms.Cells(A_Index, 1).Text)
+            groupRooms.Cells(A_Index, 2).Text = "" 
+                ? coDateRead.Push("blank") 
+                : coDateRead.Push(groupRooms.Cells(A_Index, 2).Text)
+            groupRooms.Cells(A_Index, 3).Text = "" 
+                ? coTimeRead.Push("blank")
+                : coTimeRead.Push(groupRooms.Cells(A_Index, 3).Text)
+        }
+        GroupKeysXl.Close()
+        Xl.Quit()
 
         loop lastRow {
             BlockInput true
-            roomNum := groupRooms.Cells(row, 1).Text
-            coDateRead := groupRooms.Cells(row, 2).Text
-            coTimeRead := groupRooms.Cells(row, 3).Text
-            A_Clipboard := roomNum
-            coDateLoop := (coDateRead = "") ? coDateInput : coDateRead
-            coTimeLoop := (coTimeRead = "") ? coTimeInput : coTimeRead
-            ; { paste room number (y-pos already modified!)
+            A_Clipboard := roomNums[A_Index]
+            coDateLoop := (coDateRead[A_Index] = "blank") ? coDateInput : coDateRead[A_Index]
+            coTimeLoop := (coTimeRead[A_Index] = "blank") ? coTimeInput : coTimeRead[A_Index]
             MouseMove 387, 409
             Sleep 300
             Click "Down"
@@ -107,14 +119,69 @@ class GroupKeys {
                 已做房卡：{1}
                 - 是(Y)制作下一个
                 - 否(N)退出制卡
-                )", roomNum), GroupKeys.popupTitle, "OKCancel 4096")
-        if (checkConf = "Cancel") {
-            cleanReload()
+                )", roomNums[A_Index]), GroupKeys.popupTitle, "OKCancel 4096")
+            if (checkConf = "Cancel") {
+                cleanReload()
+            }
         }
-        row++
-        }
-        GroupKeysXl.Close
-        Xl.Quit
+        ; }
+
+        ; loop lastRow {
+        ;     BlockInput true
+        ;     roomNum := groupRooms.Cells(row, 1).Text
+        ;     coDateRead := groupRooms.Cells(row, 2).Text
+        ;     coTimeRead := groupRooms.Cells(row, 3).Text
+        ;     A_Clipboard := roomNum
+        ;     coDateLoop := (coDateRead = "") ? coDateInput : coDateRead
+        ;     coTimeLoop := (coTimeRead = "") ? coTimeInput : coTimeRead
+        ;     ; { paste room number (y-pos already modified!)
+        ;     MouseMove 387, 409
+        ;     Sleep 300
+        ;     Click "Down"
+        ;     MouseMove 252, 409
+        ;     Sleep 150
+        ;     Click "Up"
+        ;     Sleep 150
+        ;     Send "^v"
+        ;     Sleep 200
+        ;     MouseMove 410, 582
+        ;     Sleep 150
+        ;     Click "Down"
+        ;     MouseMove 249, 582
+        ;     Sleep 150
+        ;     Click "Up"
+        ;     Sleep 100
+        ;     Send "{Text}" . coDateLoop
+        ;     Sleep 100
+        ;     MouseMove 528, 578
+        ;     Sleep 150
+        ;     Click 2
+        ;     Sleep 200
+        ;     Send "{Text}" . coTimeLoop
+        ;     Sleep 100
+        ;     MouseMove 499, 742
+        ;     Sleep 100
+        ;     Click 2
+        ;     Sleep 100
+        ;     Send "{Text}2"
+        ;     Sleep 100
+        ;     Send "!e"
+        ;     Sleep 100
+        ;     BlockInput false
+        ;     checkConf := MsgBox(Format("
+        ;         (
+        ;         已做房卡：{1}
+        ;         - 是(Y)制作下一个
+        ;         - 否(N)退出制卡
+        ;         )", roomNum), GroupKeys.popupTitle, "OKCancel 4096")
+        ; if (checkConf = "Cancel") {
+        ;     cleanReload()
+        ; }
+        ; row++
+        ; }
+        ; GroupKeysXl.Close
+        ; Xl.Quit
+        Sleep 500
         MsgBox("已完成团队制卡，请与Opera/蓝豆系统核对是否正确！", this.popupTitle)
     }
 }
