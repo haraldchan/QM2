@@ -7,7 +7,7 @@ class GroupProfilesModify {
     static wwly := this.getWwlyPath()
 
     static Main(desktopMode := 0) {
-        if (desktopMode = "desktop") {
+        if (desktopMode = true) {
             path := A_Desktop . "GroupRoomNum.xls"
             if (!FileExist(path)) {
                 MsgBox("对应 Excel表：GroupRoomNum.xls并不存在！`n 请先创建或复制文件到桌面！", this.popupTitle)

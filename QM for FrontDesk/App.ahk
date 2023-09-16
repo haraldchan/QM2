@@ -179,11 +179,7 @@ runSelectedScript(currentTab, *) {
         loop xldp.Length {
             if (xldp[A_Index][1].Value = 1) {
                 hideWin()
-                if (desktopMode = true) {
-                    scriptIndex[2][A_Index].Main("desktop")
-                } else {
-                    scriptIndex[2][A_Index].Main()
-                }
+                scriptIndex[2][A_Index].Main(desktopMode)
             }
         }
     } else {

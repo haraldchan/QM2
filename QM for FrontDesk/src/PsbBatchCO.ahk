@@ -8,7 +8,7 @@ class PsbBatchCO {
     static path := IniRead(A_ScriptDir . "\src\config.ini", "PsbBatchCO", "xlsPath")
 
     static Main(desktopMode := 0) {
-        if (desktopMode := "desktop") {
+        if (desktopMode = true) {
             path := A_Desktop . "CheckOut.XLS"
             if (!FileExist(path)) {
                 MsgBox("对应 Excel表：CheckOut.xls并不存在！`n 请先创建或复制文件到桌面！", this.popupTitle)
@@ -200,8 +200,8 @@ class PsbBatchCO {
             ; terminate on error pop-up
             if (PixelGetColor(251, 196) = errorBrown) {
                 MsgBox("PSB系统出错，脚本已终止`n`n已拍Out到：" . depRoomNums[A_Index], PsbBatchCo.popupTitle)
-                quitOnRoom := roomNum
-                IniWrite(quitOnRoom, config, "PsbBatchCO", "errorQuitAt")
+                quitOnRoom := depRoomNums[A_Index]
+                IniWrite(quitOnRoom, A_ScriptDir . "\src\config.ini", "PsbBatchCO", "errorQuitAt")
                 cleanReload()
             }
         }
@@ -244,7 +244,7 @@ class PsbBatchCO {
         ; ; BlockInput false
         ; CheckOut.Close
         ; Xl.Quit
-        IniWrite("null", config, "PsbBatchCO", "errorQuitAt")
+        IniWrite("null", A_ScriptDir . "\src\config.ini", "PsbBatchCO", "errorQuitAt")
         Sleep 500
         MsgBox("PSB 批量拍Out 已完成！", this.popupTitle)
     }
