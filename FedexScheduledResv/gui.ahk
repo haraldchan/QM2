@@ -31,13 +31,16 @@ F12:       强制停止脚本
 Ctrl+F12:  退出
 
 )")
-FSR.AddText("x20 y+20", "(请选择Schedule 文件")
+FSR.AddText("x20 y+20", "请选择Schedule 文件")
 ; schedule path (by input or file select)
 schdPath := FSR.AddEdit("h25 w150 x20 y+10", path)
 schdPath.OnEvent("LoseFocus", savePath)
 FSR.AddButton("h25 w70 x+20", "选择文件").OnEvent("Click", getSchd)
 
 ;TODO: add dropdown list to determine toNextDayTime
+FSR.AddText("x20 y+20", "请指定提前一天留房时间点：")
+toNextDropdown := FSR.AddDropDownList("x+20", ["09:00", "10:00", "11:00", "12:00", "13:00"])
+toNextDropdown.OnEvent("Change", saveTime)
 
 ; click to run main script / quit FSR
 FSR.AddButton("h25 w70 y+20", "开始录入").OnEvent("Click", runFSR)
@@ -60,6 +63,10 @@ getSchd(*) {
     }
     schdPath.Value := selectFile
     IniWrite(selectFile, config, "FSR", "schedulePath")
+}
+
+saveTime(*) {
+    IniWrite(toNextDropdown.Text, config, "FSR", "toNextDayTime")
 }
 
 runFSR(*) {

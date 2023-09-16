@@ -12,7 +12,8 @@ FsrMain() {
 	; schedule reading prep
 	row := 4
 	path := IniRead(A_ScriptDir . "\config.ini", "FSR", "schedulePath")
-	toNextDayTime := IniRead(A_ScriptDir . "\config.ini", "FSR", "toNextDayTime")
+	resvOnDayTime := IniRead(A_ScriptDir . "\config.ini", "FSR", "toNextDayTime")
+	bringForwardTime := getBringForwardTime(resvOnDayTime)
 	Xl := ComObject("Excel.Application")
 	Xlbook := Xl.Workbooks.Open(path)
 	shcdDay := Xlbook.Worksheets("Sheet%sheetIndex.Value%")
@@ -50,7 +51,7 @@ FsrMain() {
 		schdCoDate := Format("{1}{2}{3}", myYear, StrSplit(flightInfo["obDate"], "/")[1], StrSplit(flightInfo["obDate"], "/")[2])
 		splitHours := StrSplit(flightInfo["stayHours"], ":")
 		daysActual := getDaysActual(splitHours[1], splitHours[2])
-		if (StrSplit(flightInfo["ETA"], ":")[1]) < toNextDayTime {
+		if (StrSplit(flightInfo["ETA"], ":")[1]) < bringForwardTime {
 			pmsCiDate := DateAdd(schdCiDate, -1, "days")
 		} else {
 			pmsCiDate := schdCiDate
