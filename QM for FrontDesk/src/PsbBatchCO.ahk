@@ -9,7 +9,7 @@ class PsbBatchCO {
 
     static Main(desktopMode := 0) {
         if (desktopMode = true) {
-            path := A_Desktop . "CheckOut.XLS"
+            path := A_Desktop . "\CheckOut.XLS"
             if (!FileExist(path)) {
                 MsgBox("对应 Excel表：CheckOut.xls并不存在！`n 请先创建或复制文件到桌面！", this.popupTitle)
                 return

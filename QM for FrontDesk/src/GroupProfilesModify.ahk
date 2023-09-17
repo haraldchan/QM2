@@ -8,13 +8,17 @@ class GroupProfilesModify {
 
     static Main(desktopMode := 0) {
         if (desktopMode = true) {
-            path := A_Desktop . "GroupRoomNum.xls"
+            path := A_Desktop . "\GroupRoomNum.xls"
             if (!FileExist(path)) {
                 MsgBox("对应 Excel表：GroupRoomNum.xls并不存在！`n 请先创建或复制文件到桌面！", this.popupTitle)
                 return
             }
         } else {
             path := this.path
+        }
+        if (this.wwly = "") {
+            MsgBox("没有找到旅业同步系统，请换一台电脑。")
+            return
         }
         errorRed := "0x800000"
         gpmStart := MsgBox("

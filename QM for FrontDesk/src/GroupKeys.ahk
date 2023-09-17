@@ -9,7 +9,7 @@ class GroupKeys {
 
     static Main(desktopMode := 0) {
         if (desktopMode := true) {
-            path := A_Desktop . "GroupKeys.xls"
+            path := A_Desktop . "\GroupKeys.xls"
             if (!FileExist(path)) {
                 MsgBox("对应 Excel表：GroupKeys.xls并不存在！`n 请先创建或复制文件到桌面！", this.popupTitle)
                 return
