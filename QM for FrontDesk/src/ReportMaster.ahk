@@ -73,8 +73,7 @@ class ReportMaster {
 				WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 				MsgBox("请选择表中的指令", ReportMaster.popupTitle)
 			}
-		}
-		catch { ; input value is string
+		} catch { ; input value is string
 			if (StrLower(reportSelector.Value) = "garr") {
 				reportName := "当天 Arrival 团单"
 				onDayGroup := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{2}\{2}{3}\{1}Group ARR&DEP.xlsx", today, A_Year, A_MM)
