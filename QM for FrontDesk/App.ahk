@@ -36,7 +36,7 @@ TrayTip "QM 2 运行中…按下 F9 开始使用脚本"
 CoordMode "Mouse", "Screen"
 today := FormatTime(A_Now, "yyyyMMdd")
 config := A_ScriptDir . "\src\config.ini"
-cityLedgerOn := false
+cityLedgerOn := true
 desktopMode := false
 scriptIndex := [
     [
@@ -68,7 +68,7 @@ Ctrl+F12:  退出
 Ctrl+O:    CityLedger挂账
 
 )")
-QM.AddCheckbox("h25 y+10", "令 CityLedger 挂账保持常驻").OnEvent("Click", cityLedgerKeepAlive)
+QM.AddCheckbox("Checked h25 y+10", "令 CityLedger 挂账保持常驻").OnEvent("Click", cityLedgerKeepAlive)
 
 tab3 := QM.AddTab3("w350 h300", ["基础功能", "Excel辅助", "ReportMaster"])
 tab3.UseTab(1)
