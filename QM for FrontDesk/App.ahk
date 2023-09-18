@@ -19,7 +19,6 @@
 
 ; { setup
 #SingleInstance Force
-; check "Run as admin", ExitApp if false
 try {
     WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 } catch {
@@ -85,33 +84,33 @@ tab3.UseTab(2)
 xldp := [
     [
         gk := QM.AddRadio("Checked h20 y+10", "团队房卡制作     - Excel表：GroupKeys.xls"),
-        gk.OnEvent("Click", singleSelect.Bind(gk)),
         gkXl := QM.AddEdit("h25 w150 x20 y+10", GroupKeys.path),
         gkBtn1 := QM.AddButton("h25 w70 x+20", "选择文件"),
         gkBtn2 := QM.AddButton("h25 w70 x+10", "打开表格"),
     ],
     [
         gpm := QM.AddRadio("h20 x20 y+10", "团队Profile录入  - Excel表：GroupRoomNum.xls"),
-        gpm.OnEvent("Click", singleSelect.Bind(gpm)),
         gpmXl := QM.AddEdit("h25 w150 x20 y+10", GroupProfilesModify.path),
         gpmBtn1 := QM.AddButton("h25 w70 x+20", "选择文件"),
         gpmBtn2 := QM.AddButton("h25 w70 x+10", "打开表格"),
     ],
     [
         co := QM.AddRadio("h20 x20 y+10", "旅业系统批量退房 - Excel表：CheckOut.xls"),
-        co.OnEvent("Click", singleSelect.Bind(co)),
         coXl := QM.AddEdit("h25 w150 x20 y+10", PsbBatchCO.path),
         coBtn1 := QM.AddButton("h25 w70 x+20", "选择文件"),
         coBtn2 := QM.AddButton("h25 w70 x+10", "打开表格"),
     ],
 ]
 ; { xldp events
+gk.OnEvent("Click", singleSelect.Bind(gk)),
 gkXl.OnEvent("LoseFocus", saveXlPath.Bind("GroupKeys", gkXl))
 gkBtn1.OnEvent("Click", getXlPath.Bind("GroupKeys", gkXl))
 gkBtn2.OnEvent("Click", openXlFile.Bind(gkXl.Text))
+gpm.OnEvent("Click", singleSelect.Bind(gpm)),
 gpmXl.OnEvent("LoseFocus", saveXlPath.Bind("GroupProfilesModify", gpmXl))
 gpmBtn1.OnEvent("Click", getXlPath.Bind("GroupProfilesModify", gpmXl))
 gpmBtn2.OnEvent("Click", openXlFile.Bind(gpmXl.Text))
+co.OnEvent("Click", singleSelect.Bind(co)),
 coXl.OnEvent("LoseFocus", saveXlPath.Bind("PsbBatchCO", coXl))
 coBtn1.OnEvent("Click", getXlPath.Bind("PsbBatchCO", coXl))
 coBtn2.OnEvent("Click", openXlFile.Bind(coXl.Text))
@@ -133,15 +132,20 @@ cityLedgerKeepAlive(*) {
 
 toggleDesktopMode(*) {
     global desktopMode := !desktopMode
-    gkXl.Enabled := !desktopMode
-    gkBtn1.Enabled := !desktopMode
-    gkBtn2.Enabled := !desktopMode
-    gpmXl.Enabled := !desktopMode
-    gpmBtn1.Enabled := !desktopMode
-    gpmBtn2.Enabled := !desktopMode
-    coXl.Enabled := !desktopMode
-    coBtn1.Enabled := !desktopMode
-    coBtn2.Enabled := !desktopMode
+    loop xldp.Length {
+        xldp[A_Index][2].Enabled := !desktopMode
+        xldp[A_Index][3].Enabled := !desktopMode
+        xldp[A_Index][4].Enabled := !desktopMode
+    }
+    ; gkXl.Enabled := !desktopMode
+    ; gkBtn1.Enabled := !desktopMode
+    ; gkBtn2.Enabled := !desktopMode
+    ; gpmXl.Enabled := !desktopMode
+    ; gpmBtn1.Enabled := !desktopMode
+    ; gpmBtn2.Enabled := !desktopMode
+    ; coXl.Enabled := !desktopMode
+    ; coBtn1.Enabled := !desktopMode
+    ; coBtn2.Enabled := !desktopMode
 }
 
 runSelectedScript(currentTab, *) {
@@ -207,9 +211,9 @@ hideWin(*) {
 ; hotkey setup
 F9:: {
     QM.Show()
- } ; show QM2 window
-F12:: cleanReload()	; use 'Reload' for script reset
-^F12:: quitApp() ; use ExitApp to kill app
+ } 
+F12:: cleanReload()
+^F12:: quitApp() 
 #HotIf cityLedgerOn
 ^o::CityLedgerCo.Main()
 #Hotif WinActive("ahk_class AutoHotkeyGUI")
