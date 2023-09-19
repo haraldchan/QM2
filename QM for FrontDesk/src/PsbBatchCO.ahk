@@ -8,9 +8,12 @@ class PsbBatchCO {
     static path := IniRead(A_ScriptDir . "\src\config.ini", "PsbBatchCO", "xlsPath")
 
     static Main(desktopMode := 0) {
-        if (desktopMode = true) {
-            path := A_Desktop . "\CheckOut.XLS"
-            if (!FileExist(path)) {
+        if (desktopMode := true) {
+            if (FileExist(A_Desktop . "\CheckOut.xls")) {
+                path := A_Desktop . "\CheckOut.xls"
+            } else if (FileExist(A_Desktop . "\CheckOut.xlsx")) {
+                path := A_Desktop . "\CheckOut.xlsx"
+            } else {
                 MsgBox("对应 Excel表：CheckOut.xls并不存在！`n 请先创建或复制文件到桌面！", this.popupTitle)
                 return
             }

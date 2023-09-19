@@ -7,9 +7,12 @@ class GroupProfilesModify {
     static wwly := this.getWwlyPath()
 
     static Main(desktopMode := 0) {
-        if (desktopMode = true) {
-            path := A_Desktop . "\GroupRoomNum.xls"
-            if (!FileExist(path)) {
+        if (desktopMode := true) {
+            if (FileExist(A_Desktop . "\GroupRoomNum.xls")) {
+                path := A_Desktop . "\GroupRoomNum.xls"
+            } else if (FileExist(A_Desktop . "\GroupRoomNum.xlsx")) {
+                path := A_Desktop . "\GroupRoomNum.xlsx"
+            } else {
                 MsgBox("对应 Excel表：GroupRoomNum.xls并不存在！`n 请先创建或复制文件到桌面！", this.popupTitle)
                 return
             }

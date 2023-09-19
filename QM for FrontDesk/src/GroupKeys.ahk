@@ -9,8 +9,11 @@ class GroupKeys {
 
     static Main(desktopMode := 0) {
         if (desktopMode := true) {
-            path := A_Desktop . "\GroupKeys.xls"
-            if (!FileExist(path)) {
+            if (FileExist(A_Desktop . "\GroupKeys.xls")) {
+                path := A_Desktop . "\GroupKeys.xls"
+            } else if (FileExist(A_Desktop . "\GroupKeys.xlsx")) {
+                path := A_Desktop . "\GroupKeys.xlsx"
+            } else {
                 MsgBox("对应 Excel表：GroupKeys.xls并不存在！`n 请先创建或复制文件到桌面！", this.popupTitle)
                 return
             }
@@ -125,62 +128,6 @@ class GroupKeys {
             }
         }
         ; }
-
-        ; loop lastRow {
-        ;     BlockInput true
-        ;     roomNum := groupRooms.Cells(row, 1).Text
-        ;     coDateRead := groupRooms.Cells(row, 2).Text
-        ;     coTimeRead := groupRooms.Cells(row, 3).Text
-        ;     A_Clipboard := roomNum
-        ;     coDateLoop := (coDateRead = "") ? coDateInput : coDateRead
-        ;     coTimeLoop := (coTimeRead = "") ? coTimeInput : coTimeRead
-        ;     ; { paste room number (y-pos already modified!)
-        ;     MouseMove 387, 409
-        ;     Sleep 300
-        ;     Click "Down"
-        ;     MouseMove 252, 409
-        ;     Sleep 150
-        ;     Click "Up"
-        ;     Sleep 150
-        ;     Send "^v"
-        ;     Sleep 200
-        ;     MouseMove 410, 582
-        ;     Sleep 150
-        ;     Click "Down"
-        ;     MouseMove 249, 582
-        ;     Sleep 150
-        ;     Click "Up"
-        ;     Sleep 100
-        ;     Send "{Text}" . coDateLoop
-        ;     Sleep 100
-        ;     MouseMove 528, 578
-        ;     Sleep 150
-        ;     Click 2
-        ;     Sleep 200
-        ;     Send "{Text}" . coTimeLoop
-        ;     Sleep 100
-        ;     MouseMove 499, 742
-        ;     Sleep 100
-        ;     Click 2
-        ;     Sleep 100
-        ;     Send "{Text}2"
-        ;     Sleep 100
-        ;     Send "!e"
-        ;     Sleep 100
-        ;     BlockInput false
-        ;     checkConf := MsgBox(Format("
-        ;         (
-        ;         已做房卡：{1}
-        ;         - 是(Y)制作下一个
-        ;         - 否(N)退出制卡
-        ;         )", roomNum), GroupKeys.popupTitle, "OKCancel 4096")
-        ; if (checkConf = "Cancel") {
-        ;     cleanReload()
-        ; }
-        ; row++
-        ; }
-        ; GroupKeysXl.Close
-        ; Xl.Quit
         Sleep 500
         MsgBox("已完成团队制卡，请与Opera/蓝豆系统核对是否正确！", this.popupTitle)
     }
