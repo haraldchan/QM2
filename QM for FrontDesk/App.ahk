@@ -19,22 +19,14 @@
 
 ; { setup
 #SingleInstance Force
-try {
-    WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-} catch {
-    MsgBox("
-    (
-    当前为非管理员状态或未运行Opera PMS，将无法正确运行。
-    请在QM 2 图标上右键点击，选择“以管理员身份运行”；
-    及打开Opera PMS。   
-    )", "QM for FrontDesk 2.1.0")
-    ExitApp
-}
 TraySetIcon A_ScriptDir . "\src\assets\QMTray.ico"
 TrayTip "QM 2 运行中…按下 F9 开始使用脚本"
 CoordMode "Mouse", "Screen"
+; globals and states
 today := FormatTime(A_Now, "yyyyMMdd")
 config := A_ScriptDir . "\src\config.ini"
+version := "2.1.0"
+popupTitle := "QM for FrontDesk " . version
 cityLedgerOn := true
 desktopMode := false
 scriptIndex := [
@@ -51,16 +43,28 @@ scriptIndex := [
     ],
     ReportMaster
 ]
+; admin/Opera running detection
+try {
+    WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+} catch {
+    MsgBox("
+    (
+    当前为非管理员状态或未运行Opera PMS，将无法正确运行。
+    请在QM 2 图标上右键点击，选择“以管理员身份运行”；
+    及打开Opera PMS。   
+    )", popupTitle)
+    ExitApp
+}
 ; }
 
 ; { GUI
-QM := Gui("+Resize", "QM for FrontDesk 2.1.0")
+QM := Gui("+Resize", popupTitle)
 QM.AddText(, "
 (
 快捷键及对应功能：
 
 F9:        显示脚本选择窗
-F12:       强制停止脚本
+F12:       强制停止脚本/重载
 Ctrl+F12:  退出
 
 常驻脚本(按下即启动)
@@ -69,7 +73,7 @@ Ctrl+O:    CityLedger挂账
 )")
 QM.AddCheckbox("Checked h25 y+10", "令 CityLedger 挂账保持常驻").OnEvent("Click", cityLedgerKeepAlive)
 
-tab3 := QM.AddTab3("w350 h300", ["基础功能", "Excel辅助", "ReportMaster"])
+tab3 := QM.AddTab3("w350 h280", ["基础功能", "Excel辅助", "ReportMaster"])
 tab3.UseTab(1)
 basic := [
     QM.AddRadio("Checked h20 y+10", "空白InHouse Share"),
@@ -77,8 +81,6 @@ basic := [
     QM.AddRadio("h25 y+10", "旅行团Share + DoNotMove"),
     QM.AddRadio("h25 y+10", "批量DoNotMove Only"),
 ]
-QM.AddButton("Default h25 w70 x30 y420", "启动脚本").OnEvent("Click", runSelectedScript.Bind(1))
-QM.AddButton("h25 w70 x+20", "隐藏窗口").OnEvent("Click", hideWin)
 
 tab3.UseTab(2)
 xldp := [
@@ -116,12 +118,13 @@ coBtn1.OnEvent("Click", getXlPath.Bind("PsbBatchCO", coXl))
 coBtn2.OnEvent("Click", openXlFile.Bind(coXl.Text))
 ; }
 desktopModeCheck := QM.AddCheckbox("vDesktopMode h25 x20 y+15", "使用桌面文件模式").OnEvent("Click", toggleDesktopMode)
-QM.AddButton("Default h25 w70 x30 y420", "启动脚本").OnEvent("Click", runSelectedScript.Bind(2))
-QM.AddButton("h25 w70 x+20", "隐藏窗口").OnEvent("Click", hideWin)
 
 tab3.UseTab(3)
-QM.AddText("h20", "`n点击“启动脚本”打开报表选择器.")
-QM.AddButton("Default h25 w70 x30 y420", "启动脚本").OnEvent("Click", runSelectedScript.Bind(3))
+QM.AddText("h20", "`n点击“启动脚本”打开报表选择器。")
+
+tab3.UseTab() ; end tab
+
+QM.AddButton("Default h25 w70 x30 y420", "启动脚本").OnEvent("Click", runSelectedScript.Bind(tab3.Value))
 QM.AddButton("h25 w70 x+20", "隐藏窗口").OnEvent("Click", hideWin)
 ; }
 
