@@ -1,20 +1,24 @@
 ; { import
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-; #Include "%A_ScriptDir%\src\SharePbPf.ahk"
 ; #Include "%A_ScriptDir%\src\CityLedgerCO.ahk"
-; #Include "%A_ScriptDir%\src\ReportMaster.ahk"
-; #Include "%A_ScriptDir%\src\GroupShareDNM.ahk"
-; #Include "%A_ScriptDir%\src\PsbBatchCO.ahk"
+; #Include "%A_ScriptDir%\src\InhShare.ahk"
+; #Include "%A_ScriptDir%\src\Pbpf.ahk"
+; #Include "%A_ScriptDir%\src\GroupShare.ahk"
+; #Include "%A_ScriptDir%\src\DoNotMove.ahk"
 ; #Include "%A_ScriptDir%\src\GroupKeys.ahk"
 ; #Include "%A_ScriptDir%\src\GroupProfilesModify.ahk"
+; #Include "%A_ScriptDir%\src\PsbBatchCO.ahk"
+; #Include "%A_ScriptDir%\src\ReportMaster.ahk"
 #Include "../src/lib/utils.ahk"
-#Include "../src/SharePbPf.ahk"
 #Include "../src/CityLedgerCO.ahk"
-#Include "../src/ReportMaster.ahk"
-#Include "../src/GroupShareDNM.ahk"
-#Include "../src/PsbBatchCO.ahk"
+#Include "../src/InhShare.ahk"
+#Include "../src/Pbpf.ahk"
+#Include "../src/GroupShare.ahk"
+#Include "../src/DoNotMove.ahk"
 #Include "../src/GroupKeys.ahk"
 #Include "../src/GroupProfilesModify.ahk"
+#Include "../src/PsbBatchCO.ahk"
+#Include "../src/ReportMaster.ahk"
 ;}
 
 ; { setup
@@ -31,10 +35,14 @@ cityLedgerOn := true
 desktopMode := false
 scriptIndex := [
     [
-        SharePbPf.share,
-        SharePbPf.pbpf,
-        GroupShareDNM.dnmShare,
-        GroupShareDNM.dnm
+        ; SharePbPf.share,
+        ; SharePbPf.pbpf,
+        ; GroupShareDNM.dnmShare,
+        ; GroupShareDNM.dnm
+        InhShare,
+        Pbpf,
+        GroupShare,
+        DoNotMove
     ],
     [
         GroupKeys,
@@ -122,7 +130,7 @@ desktopModeCheck := QM.AddCheckbox("vDesktopMode h25 x20 y+15", "使用桌面文
 tab3.UseTab(3)
 QM.AddText("h20", "`n点击“启动脚本”打开报表选择器。")
 
-tab3.UseTab() ; end tab
+tab3.UseTab() ; end tab3
 
 QM.AddButton("Default h25 w70 x30 y420", "启动脚本").OnEvent("Click", runSelectedScript.Bind(tab3.Value))
 QM.AddButton("h25 w70 x+20", "隐藏窗口").OnEvent("Click", hideWin)
@@ -156,15 +164,16 @@ runSelectedScript(currentTab, *) {
         loop basic.Length {
             if (basic[A_Index].Value = 1) {
                 hideWin()
-                if (A_Index = 1) {
-                    SharePbPf.share()
-                } else if (A_Index = 2) {
-                    SharePbPf.pbpf()
-                } else if (A_Index = 3) {
-                    GroupShareDNM.dnmShare()
-                } else if (A_Index = 4) {
-                    GroupShareDNM.dnm()
-                }
+                ; if (A_Index = 1) {
+                ;     SharePbPf.share()
+                ; } else if (A_Index = 2) {
+                ;     SharePbPf.pbpf()
+                ; } else if (A_Index = 3) {
+                ;     GroupShareDNM.dnmShare()
+                ; } else if (A_Index = 4) {
+                ;     GroupShareDNM.dnm()
+                ; }
+                scriptIndex[1][A_Index].Main()
             }
         }
     } else if (currentTab = 2) {
