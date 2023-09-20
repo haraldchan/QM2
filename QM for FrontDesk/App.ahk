@@ -145,15 +145,14 @@ toggleDesktopMode(*) {
 }
 
 runSelectedScript(*) {
-    currentTab := tab3.Value
-    if (currentTab = 1) {
+    if (tab3.Value = 1) {
         loop basic.Length {
             if (basic[A_Index].Value = 1) {
                 hideWin()
                 scriptIndex[1][A_Index].Main()
             }
         }
-    } else if (currentTab = 2) {
+    } else if (tab3.Value = 2) {
         loop xldp.Length {
             if (xldp[A_Index][1].Value = 1) {
                 hideWin()
@@ -207,4 +206,4 @@ F12:: cleanReload()
 ^o::CityLedgerCo.Main()
 #Hotif WinActive("ahk_class AutoHotkeyGUI")
 Esc:: hideWin()
-Enter:: runSelectedScript(tab3.Value)
+Enter:: runSelectedScript()
