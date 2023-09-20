@@ -1,5 +1,5 @@
-; #Include "%A_ScriptDir%\Lib\reports.ahk"
-; #Include "%A_ScriptDir%\Lib\utils.ahk"
+; #Include "%A_ScriptDir%\src\lib\reports.ahk"
+; #Include "%A_ScriptDir%\src\lib\utils.ahk"
 #Include "../Lib/reports.ahk"
 #Include "../Lib/utils.ahk"
 
