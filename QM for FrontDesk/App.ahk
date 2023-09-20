@@ -35,10 +35,6 @@ cityLedgerOn := true
 desktopMode := false
 scriptIndex := [
     [
-        ; SharePbPf.share,
-        ; SharePbPf.pbpf,
-        ; GroupShareDNM.dnmShare,
-        ; GroupShareDNM.dnm
         InhShare,
         Pbpf,
         GroupShare,
@@ -77,11 +73,10 @@ Ctrl+F12:  退出
 
 常驻脚本(按下即启动)
 Ctrl+O:    CityLedger挂账
-
 )")
 QM.AddCheckbox("Checked h25 y+10", "令 CityLedger 挂账保持常驻").OnEvent("Click", cityLedgerKeepAlive)
 
-tab3 := QM.AddTab3("w350 h280", ["基础功能", "Excel辅助", "ReportMaster"])
+tab3 := QM.AddTab3("w350 h270", ["基础功能", "Excel辅助", "ReportMaster"])
 tab3.UseTab(1)
 basic := [
     QM.AddRadio("Checked h20 y+10", "空白InHouse Share"),
@@ -131,9 +126,8 @@ tab3.UseTab(3)
 QM.AddText("h20", "`n点击“启动脚本”打开报表选择器。")
 
 tab3.UseTab() ; end tab3
-
-QM.AddButton("Default h25 w70 x30 y420", "启动脚本").OnEvent("Click", runSelectedScript.Bind(tab3.Value))
-QM.AddButton("h25 w70 x+20", "隐藏窗口").OnEvent("Click", hideWin)
+start:= QM.AddButton("Default h35 w100 x20 y420", "启动脚本").OnEvent("Click", runSelectedScript)
+QM.AddButton("h35 w100 x+20", "隐藏窗口").OnEvent("Click", hideWin)
 ; }
 
 ; { callback funcs
@@ -148,31 +142,15 @@ toggleDesktopMode(*) {
         xldp[A_Index][3].Enabled := !desktopMode
         xldp[A_Index][4].Enabled := !desktopMode
     }
-    ; gkXl.Enabled := !desktopMode
-    ; gkBtn1.Enabled := !desktopMode
-    ; gkBtn2.Enabled := !desktopMode
-    ; gpmXl.Enabled := !desktopMode
-    ; gpmBtn1.Enabled := !desktopMode
-    ; gpmBtn2.Enabled := !desktopMode
-    ; coXl.Enabled := !desktopMode
-    ; coBtn1.Enabled := !desktopMode
-    ; coBtn2.Enabled := !desktopMode
 }
 
-runSelectedScript(currentTab, *) {
+runSelectedScript(*) {
+    currentTab := tab3.Value
+    MsgBox(currentTab)
     if (currentTab = 1) {
         loop basic.Length {
             if (basic[A_Index].Value = 1) {
                 hideWin()
-                ; if (A_Index = 1) {
-                ;     SharePbPf.share()
-                ; } else if (A_Index = 2) {
-                ;     SharePbPf.pbpf()
-                ; } else if (A_Index = 3) {
-                ;     GroupShareDNM.dnmShare()
-                ; } else if (A_Index = 4) {
-                ;     GroupShareDNM.dnm()
-                ; }
                 scriptIndex[1][A_Index].Main()
             }
         }
@@ -222,6 +200,7 @@ hideWin(*) {
 
 ; hotkey setup
 F9:: {
+    getActiveTab()
     QM.Show()
  } 
 F12:: cleanReload()
