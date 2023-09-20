@@ -7,8 +7,6 @@ cleanReload(quit := 0){
     BlockInput false
     SetCapsLockState false
     CoordMode "Mouse", "Screen"
-    ; Excel Quit
-    ComObject("Excel.Application").Quit()
     if (quit = "quit") {
         ExitApp
     }

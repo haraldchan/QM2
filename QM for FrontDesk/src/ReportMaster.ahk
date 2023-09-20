@@ -5,7 +5,7 @@
 
 class ReportMaster {
 	static popupTitle := "Report Master"
-	static overnightReports := [
+	static reportIndex := [
 		; [report name, report saving func]
 		["1  - Guest INH Complimentary", comp],
 		["2  - NA02-Manager Flash", mgrFlash],
@@ -43,35 +43,35 @@ class ReportMaster {
 		其他：
 		garr - 保存当天团单
 		sp - 保存当天水果5（Excel格式）
-		)", this.getReportListStr(this.overnightReports))
+		)", this.getReportListStr(this.reportIndex))
 		reportSelector := InputBox(reportMsg, this.popupTitle, "h600", "666")
 		if (reportSelector.Result = "Cancel") {
 			cleanReload()
 		}
 		try { ; input value is number
-			if (reportSelector.Value > 0 && reportSelector.Value <= this.overnightReports.Length) {
+			if (reportSelector.Value > 0 && reportSelector.Value <= this.reportIndex.Length) {
 				WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
-				reportName := this.overnightReports[reportSelector.Value][1]
-				this.overnightReports[reportSelector.Value][2]()
+				reportName := this.reportIndex[reportSelector.Value][1]
+				this.reportIndex[reportSelector.Value][2]()
 				Sleep 1500
 				WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 				this.openMyDocs(reportName)
 			} else if (reportSelector.Value = 666) {
 				WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
-				loop this.overnightReports.Length {
+				loop this.reportIndex.Length {
 					if (A_Index = 5) {
-						if ((this.dateLast() - A_DD) > 5) {
+						if ((this.getLastDay() - A_DD) > 5) {
 							continue
 						}
 					}
-					this.overnightReports[A_Index][2]()
+					this.reportIndex[A_Index][2]()
 					Sleep 2500
 				}
 				WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 				this.openMyDocs("夜班报表")
 			} else {
 				WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-				MsgBox("请选择表中的指令", ReportMaster.popupTitle)
+				MsgBox("请选择表中的指令", this.popupTitle)
 			}
 		} catch { ; input value is string
 			if (StrLower(reportSelector.Value) = "garr") {
@@ -92,15 +92,15 @@ class ReportMaster {
 					否(N)：手动录入block code保存团单
 					取消：退出脚本
 					)", blockInfoText), this.popupTitle, "YesNoCancel")
-			if (rmListSaver = "Yes") {
-				this.groupArrAuto(blockinfo)
-			} else if (rmListSaver = "No") {
-				this.groupArr()
-			} else {
-			cleanReload()
-			}
-			Sleep 300
-			this.openMyDocs(reportName)
+				if (rmListSaver = "Yes") {
+					this.saveGroupAll(blockinfo)
+				} else if (rmListSaver = "No") {
+					this.saveGroupRmList()
+				} else {
+				cleanReload()
+				}
+				Sleep 300
+				this.openMyDocs(reportName)
 			} else if (StrLower(reportSelector.Value) = "sp") {
 				reportName := today . "水果5"
 				special(today)
@@ -132,7 +132,7 @@ class ReportMaster {
 		}
 	}
 
-	static dateLast() {
+	static getLastDay() {
 		preAuditDate := DateAdd(A_Now, -1, "Days")
 		preAuditMonth := FormatTime(preAuditDate, "MM")
 		preAuditYear := FormatTime(preAuditDate, "yyyy")
@@ -162,7 +162,7 @@ class ReportMaster {
 		return blockInfoMap
 	}
 
-	static groupArr() {
+	static saveGroupRmList() {
 		groups := []
 		Loop {
 			blocks := InputBox("
@@ -177,6 +177,7 @@ class ReportMaster {
 			}
 			groups.push(blocks.Value)
 		}
+		BlockInput true
 		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 		For g in groups {
 			if (InStr(g, "=")) {
@@ -187,9 +188,10 @@ class ReportMaster {
 			}
 		}
 		WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+		BlockInput false
 	}
 
-	static groupArrAuto(blockInfo) {
+	static saveGroupAll(blockInfo) {
 		BlockInput true
 		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 		for blockName, blockCode in blockInfo {
