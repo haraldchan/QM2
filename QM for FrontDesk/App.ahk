@@ -146,7 +146,6 @@ toggleDesktopMode(*) {
 
 runSelectedScript(*) {
     currentTab := tab3.Value
-    MsgBox(currentTab)
     if (currentTab = 1) {
         loop basic.Length {
             if (basic[A_Index].Value = 1) {
@@ -200,7 +199,6 @@ hideWin(*) {
 
 ; hotkey setup
 F9:: {
-    getActiveTab()
     QM.Show()
  } 
 F12:: cleanReload()
