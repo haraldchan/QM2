@@ -61,9 +61,7 @@ class GroupKeys {
         GroupKeysXl := Xl.Workbooks.Open(path)
         groupRooms := GroupKeysXl.Worksheets("Sheet1")
         lastRow := groupRooms.Cells(groupRooms.Rows.Count, "A").End(-4162).Row
-        ; row := 1
 
-        ; { tbt
         roomNums := []
         coDateRead := []
         coTimeRead := []
@@ -127,7 +125,6 @@ class GroupKeys {
                 cleanReload()
             }
         }
-        ; }
         Sleep 500
         MsgBox("已完成团队制卡，请与Opera/蓝豆系统核对是否正确！", this.popupTitle)
     }
