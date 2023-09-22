@@ -120,7 +120,7 @@ coXl.OnEvent("LoseFocus", saveXlPath.Bind("PsbBatchCO", coXl))
 coBtn1.OnEvent("Click", getXlPath.Bind("PsbBatchCO", coXl))
 coBtn2.OnEvent("Click", openXlFile.Bind(coXl.Text))
 ; }
-desktopModeCheck := QM.AddCheckbox("vDesktopMode h25 x20 y+15", "使用桌面文件模式").OnEvent("Click", toggleDesktopMode)
+QM.AddCheckbox("vDesktopMode h25 x20 y+15", "使用桌面文件模式").OnEvent("Click", toggleDesktopMode)
 
 tab3.UseTab(3)
 QM.AddText("h20", "`n点击“启动脚本”打开报表选择器。")
