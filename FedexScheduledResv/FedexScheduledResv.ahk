@@ -2,22 +2,37 @@
 #Include "../utils.ahk"
 
 FsrMain() {
+	WinMaximize "ahk_class SunAwtFrame"
+	WinActivate "ahk_class SunAwtFrame"
+	WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
+
 	sheetIndex := InputBox("请输入需要读入第几个标签", "FedexScheduledReservations")
 	if (sheetIndex.Result = "Cancel") {
 		cleanReload()
 	}
-	WinMaximize "ahk_class SunAwtFrame"
-	WinActivate "ahk_class SunAwtFrame"
-	WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 	; schedule reading prep
 	row := 4
 	path := IniRead(A_ScriptDir . "\config.ini", "FSR", "schedulePath")
 	; TODO: check parse "Z:\" to "10.0.2.13\sm\" <- find out how the path is styled
 	resvOnDayTime := IniRead(A_ScriptDir . "\config.ini", "FSR", "toNextDayTime")
 	bringForwardTime := getBringForwardTime(resvOnDayTime)
+	flightFormat := [
+		"tripNum",
+		"roomQty",
+		"flightIn1",
+		"flightIn2",
+		"ibDate",
+		"ETA",
+		"stayHours",
+		"obDate",
+		"ETD",
+		"flightOut1",
+		"flightOut2"
+	]
+
 	Xl := ComObject("Excel.Application")
 	Xlbook := Xl.Workbooks.Open(path)
-	shcdDay := Xlbook.Worksheets("Sheet%sheetIndex.Value%")
+	shcdDay := Xlbook.Worksheets(Format("Sheet{1}", sheetIndex.Value)) 
 	lastRow := Xlbook.ActiveSheet.Cells(Xlbook.ActiveSheet.Rows.Count, "A").End(-4162).Row
 
 	; filling in pmsreservations
@@ -25,19 +40,6 @@ FsrMain() {
 	loop (lastRow - 4) {
 		; receiving shedule info (row)
 		flightInfo := Map()
-		flightFormat := [
-			"tripNum",
-			"roomQty",
-			"flightIn1",
-			"flightIn2",
-			"ibDate",
-			"ETA",
-			"stayHours",
-			"obDate",
-			"ETD",
-			"flightOut1",
-			"flightOut2"
-		]
 		loop flightFormat.Legnth {
 			flightInfo[flightFormat[A_Index]] := shcdDay.Cells(row, A_Index).Text
 		}
