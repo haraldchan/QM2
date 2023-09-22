@@ -12,6 +12,7 @@ FsrMain() {
 	; schedule reading prep
 	row := 4
 	path := IniRead(A_ScriptDir . "\config.ini", "FSR", "schedulePath")
+	; TODO: check parse "Z:\" to "10.0.2.13\sm\" <- find out how the path is styled
 	resvOnDayTime := IniRead(A_ScriptDir . "\config.ini", "FSR", "toNextDayTime")
 	bringForwardTime := getBringForwardTime(resvOnDayTime)
 	Xl := ComObject("Excel.Application")
