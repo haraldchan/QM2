@@ -90,7 +90,7 @@ FsrMain() {
 			Sleep 300
 			Send "{Backspace}"
 			Sleep 300
-			Send "{Text}" . Format("{1}{2}  {3}", flightInfo["flightIn1"], flightInfo["flightIn2"], flightInfo["tripNum"])
+			Send Format("{Text}{1}{2}  {3}", flightInfo["flightIn1"], flightInfo["flightIn2"], flightInfo["tripNum"])
 			Sleep 300
 			MouseMove 594, 394
 			Sleep 150
@@ -115,7 +115,7 @@ FsrMain() {
 			Click "Up"
 			MouseMove 172, 340
 			Sleep 300
-			Send "{Text}" . pmsCiDate
+			Send Format("{Text}{1}", pmsCiDate)
 			Sleep 100
 			MouseMove 325, 378
 			Sleep 300
@@ -141,7 +141,7 @@ FsrMain() {
 			Click "Up"
 			MouseMove 207, 395
 			Sleep 300
-			Send "{Text}" . pmsCoDate
+			Send Format("{Text}{1}", pmsCoDate)
 			Sleep 300
 			; }
 			Sleep 100
@@ -161,7 +161,7 @@ FsrMain() {
 			Sleep 200
 			Click "Up"
 			Sleep 200
-			Send "{Text}" . flightInfo["ETA"]
+			Send Format("{Text}{1}", flightInfo["ETA"])
 			Sleep 200
 			MouseMove 499, 577
 			Sleep 200
@@ -170,7 +170,7 @@ FsrMain() {
 			Sleep 200
 			Click "Up"
 			Sleep 200
-			Send "{Text}" . flightInfo["ETD"]
+			Send Format("{Text}{1}", flightInfo["ETD"])
 			Sleep 200
 			; }
 			Sleep 100
@@ -182,7 +182,7 @@ FsrMain() {
 			Sleep 200
 			Click "Up"
 			Sleep 200
-			Send "{Text}" . comment
+			Send Format("{Text}{1}", comment)
 			Sleep 200
 			MouseMove 839, 535
 			Sleep 100
@@ -191,7 +191,7 @@ FsrMain() {
 			Sleep 200
 			Click "Up"
 			Sleep 200
-			Send "{Text}" . Format("{1}{2}  {3}", flightInfo["flightIn1"], flightInfo["flightIn2"], flightInfo["tripNum"])
+			Send Format("{Text}{1}{2}  {3}", flightInfo["flightIn1"], flightInfo["flightIn2"], flightInfo["tripNum"])
 			Sleep 1000
 			; }
 			Sleep 100
@@ -207,7 +207,7 @@ FsrMain() {
 			Sleep 342
 			Click "Up"
 			Sleep 100
-			Send "{Text}" . Format("{1}{2}", flightInfo["flightIn1"], flightInfo["flightIn2"])
+			Send Format("{Text}{1}{2}", flightInfo["flightIn1"], flightInfo["flightIn2"])
 			Sleep 100
 			MouseMove 672, 483
 			Sleep 281
@@ -215,7 +215,7 @@ FsrMain() {
 			MouseMove 523, 483
 			Sleep 358
 			Click "Up"
-			Send "{Text}" . schdCiDate
+			Send Format("{Text}{1}", schdCiDate)
 			Sleep 100
 			MouseMove 685, 506
 			Sleep 100
@@ -223,7 +223,7 @@ FsrMain() {
 			MouseMove 422, 501
 			Sleep 100
 			Click "Up"
-			Send "{Text}" . flightInfo["ETA"]
+			Send Format("{Text}{1}", flightInfo["ETA"])
 			Sleep 100
 			MouseMove 922, 441
 			Sleep 100
@@ -231,7 +231,7 @@ FsrMain() {
 			MouseMove 704, 439
 			Sleep 100
 			Click "Up"
-			Send "{Text}" . Format("{1}{2}", flightInfo["flightOut1"], flightInfo["flightOut2"])
+			Send Format("{Text}{1}{2}", flightInfo["flightOut1"], flightInfo["flightOut2"])
 			Sleep 100
 			MouseMove 917, 483
 			Sleep 100
@@ -240,7 +240,7 @@ FsrMain() {
 			Sleep 1000
 			Click "Up"
 			Sleep 100
-			Send "{Text}" . pmsCoDate
+			Send Format("{Text}{1}", pmsCoDate)
 			Sleep 100
 			MouseMove 922, 504
 			Sleep 100
@@ -249,7 +249,7 @@ FsrMain() {
 			Sleep 100
 			Click "Up"
 			Sleep 100
-			Send "{Text}" . flightInfo["ETD"]
+			Send Format("{Text}{1}", flightInfo["ETD"])
 			Sleep 100
 			MouseMove 841, 660
 			Sleep 100
@@ -265,7 +265,7 @@ FsrMain() {
 			Send "!d"
 			Sleep 300
 			loop daysActual {
-				Send "1265"
+				Send "{Text}1265"
 				Send "{Down}"
 				Sleep 200
 			}
@@ -331,7 +331,7 @@ FsrMain() {
 	BlockInput false
 	Xlbook.Close()
 	Xl.Quit()
-	Sleep 500
+	Sleep 1000
 	MsgBox("已完成FedEx 预订修改，请抽检以确保准确！", "FedexScheduledReservations")
 	cleanReload()
 }
