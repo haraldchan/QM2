@@ -125,7 +125,7 @@ class GroupKeys {
                 cleanReload()
             }
         }
-        Sleep 500
+        Sleep 1000
         MsgBox("已完成团队制卡，请与Opera/蓝豆系统核对是否正确！", this.popupTitle)
     }
 }

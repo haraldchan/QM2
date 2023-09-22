@@ -248,7 +248,7 @@ class PsbBatchCO {
         ; CheckOut.Close
         ; Xl.Quit
         IniWrite("null", A_ScriptDir . "\src\config.ini", "PsbBatchCO", "errorQuitAt")
-        Sleep 500
+        Sleep 1000
         MsgBox("PSB 批量拍Out 已完成！", this.popupTitle)
     }
 }

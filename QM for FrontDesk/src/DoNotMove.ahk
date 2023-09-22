@@ -33,7 +33,7 @@ class DoNotMove {
             Sleep 1500
         }
         BlockInput false
-        Sleep 500
+        Sleep 1000
         MsgBox("已完成批量DoNotMove，合共" . roomQty.Value . "房。", this.popupTitle)
     }
 }

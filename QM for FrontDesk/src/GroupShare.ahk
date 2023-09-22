@@ -111,7 +111,7 @@ class GroupShare {
             Sleep 2000
             BlockInput false
         }
-        Sleep 500
+        Sleep 1000
         MsgBox("已完成DNM & Share共 " . roomQty.Value . " 房，请核对有否错漏。", this.popupTitle, "4096")
     }
 }
