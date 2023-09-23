@@ -4,9 +4,14 @@
 FsrMain() {
 	WinMaximize "ahk_class SunAwtFrame"
 	WinActivate "ahk_class SunAwtFrame"
-	WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 
-	sheetIndex := InputBox("请输入需要读入第几个标签", "FedexScheduledReservations")
+	sheetIndex := InputBox("
+	(
+	请输入需要读入的标签页名称。
+
+	如：
+	读取"Sheet1"则填入"1"，读取"Sheet1-2"则填入"1-2"
+	)", "FedexScheduledReservations")
 	if (sheetIndex.Result = "Cancel") {
 		cleanReload()
 	}
@@ -14,7 +19,7 @@ FsrMain() {
 	row := 4
 	path := IniRead(A_ScriptDir . "\config.ini", "FSR", "schedulePath")
 	; TODO: check parse "Z:\" to "10.0.2.13\sm\" <- find out how the path is styled
-	resvOnDayTime := IniRead(A_ScriptDir . "\config.ini", "FSR", "toNextDayTime")
+	resvOnDayTime := IniRead(A_ScriptDir . "\config.ini", "FSR", "resvOnDayTime")
 	bringForwardTime := getBringForwardTime(resvOnDayTime)
 	flightFormat := [
 		"tripNum",
@@ -37,10 +42,11 @@ FsrMain() {
 
 	; filling in pmsreservations
 	BlockInput true
-	loop (lastRow - 4) {
+	WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
+	loop (lastRow - 3) {
 		; receiving shedule info (row)
 		flightInfo := Map()
-		loop flightFormat.Legnth {
+		loop flightFormat.Length {
 			flightInfo[flightFormat[A_Index]] := shcdDay.Cells(row, A_Index).Text
 		}
 		; date reformatting
@@ -60,8 +66,8 @@ FsrMain() {
 			pmsCiDate := schdCiDate
 		}
 		pmsCoDate := schdCoDate
-		pmsNts := DateDiff(pmsCiDate, pmsCoDate, "days")
-		comment := Format("RM INCL 1BBF TO CO,Hours@Hotel:{1}={2}days, ActualStay:{3}-{4}", flightInfo["stayHours"], pmsNts, schdCiDate, schdCoDate)
+		pmsNts := DateDiff(pmsCoDate, pmsCiDate, "days")
+		comment := Format("RM INCL 1BBF TO CO,Hours@Hotel:{1}={2}days, ActualStay:{3}-{4}", flightInfo["stayHours"], daysActual, schdCiDate, schdCoDate)
 		; reformat pms to match pms date format
 		schdCiDate := FormatTime(schdCiDate, "MMddyyyy")
 		schdCoDate := FormatTime(schdCoDate, "MMddyyyy")
@@ -135,7 +141,7 @@ FsrMain() {
 			Click
 			Sleep 300
 			Click
-			Sleep 2000
+			Sleep 300
 			MouseMove 335, 385
 			Sleep 300
 			Click "Down"
@@ -157,10 +163,12 @@ FsrMain() {
 			Sleep 200
 			Send "{Enter}"
 			Sleep 200
-			MouseMove 332, 577
+			Send "{Enter}"
+			Sleep 200
+			MouseMove 320, 577
 			Sleep 200
 			Click "Down"
-			MouseMove 222, 574
+			MouseMove 200, 577
 			Sleep 200
 			Click "Up"
 			Sleep 200
@@ -169,7 +177,7 @@ FsrMain() {
 			MouseMove 499, 577
 			Sleep 200
 			Click "Down"
-			MouseMove 342, 574
+			MouseMove 330, 574
 			Sleep 200
 			Click "Up"
 			Sleep 200
@@ -240,7 +248,7 @@ FsrMain() {
 			Sleep 100
 			Click "Down"
 			MouseMove 637, 487
-			Sleep 1000
+			Sleep 100
 			Click "Up"
 			Sleep 100
 			Send Format("{Text}{1}", pmsCoDate)
@@ -317,24 +325,25 @@ FsrMain() {
 			Sleep 100
 			; { close, save, down to the next one
 			MouseMove 795, 466
+			loop 5 {
 			Sleep 300
 			Send "!o"
-			Sleep 300
-			Send "!o"
-			Sleep 300
-			Send "!o"
+			}
+			Sleep 1000
+			MouseMove 585, 445
+			click
 			Sleep 300
 			Send "{Down}"
-			Sleep 1000
+			Sleep 2000
 			; }
-			row++
-			WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 		}
+		row++
 	}
 	BlockInput false
+	WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 	Xlbook.Close()
 	Xl.Quit()
 	Sleep 1000
-	MsgBox("已完成FedEx 预订修改，请抽检以确保准确！", "FedexScheduledReservations")
+	MsgBox("已完成FedEx 预订录入，请抽检以确保准确！", "FedexScheduledReservations")
 	cleanReload()
 }

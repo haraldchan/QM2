@@ -6,9 +6,7 @@ cleanReload(quit := 0){
     ; Key/Mouse state set default
     BlockInput false
     SetCapsLockState false
-    CoordMode "Mouse", "Screen"
-    ; Excel Quit
-    ComObject("Excel.Application").Quit()
+    ; Quit App
     if (quit = "quit") {
         ExitApp
     }
@@ -28,9 +26,9 @@ getDaysActual(h, m) {
     if (h < 24) {
         return 1
     } else if (Mod(h, 24) = 0 && m = 0) {
-        return h / 24
+        return Integer(h / 24)
     } else if (h >= 24 || m != 0) {
-        return h / 24 + 1
+        return Integer(h / 24 + 1)
     }
 }
 
