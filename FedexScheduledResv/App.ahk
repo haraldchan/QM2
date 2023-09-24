@@ -135,6 +135,6 @@ quit(*) {
 ; }
 ; hotkey setups
 F12:: cleanReload()
-^F12:: quitApp()
 #Hotif WinActive("ahk_class AutoHotkeyGUI")
 Enter:: runFSR()
+Esc:: quitApp()
