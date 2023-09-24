@@ -29,16 +29,17 @@ CoordMode "Mouse", "Screen"
 ; globals and states
 today := FormatTime(A_Now, "yyyyMMdd")
 config := A_ScriptDir . "\src\config.ini"
-version := "2.1.0"
+version := "2.1.1"
 popupTitle := "QM for FrontDesk " . version
 cityLedgerOn := true
 desktopMode := false
+; script classes
 scriptIndex := [
     [
         InhShare,
         Pbpf,
         GroupShare,
-        DoNotMove
+        DoNotMove,
     ],
     [
         GroupKeys,
@@ -76,49 +77,80 @@ Ctrl+O:    CityLedger挂账
 )")
 QM.AddCheckbox("Checked h25 y+10", "令 CityLedger 挂账保持常驻").OnEvent("Click", cityLedgerKeepAlive)
 
-tab3 := QM.AddTab3("w350 h270", ["基础功能", "Excel辅助", "ReportMaster"])
+tab3 := QM.AddTab3("w350", ["基础功能", "Excel辅助", "ReportMaster"])
 tab3.UseTab(1)
-basic := [
-    QM.AddRadio("Checked h20 y+10", "空白InHouse Share"),
-    QM.AddRadio("h25 y+10", "粘贴PayBy PayFor"),
-    QM.AddRadio("h25 y+10", "旅行团Share + DoNotMove"),
-    QM.AddRadio("h25 y+10", "批量DoNotMove Only"),
-]
+; basic := [
+;     QM.AddRadio("Checked h20 y+10", "空白InHouse Share"),
+;     QM.AddRadio("h25 y+10", "粘贴PayBy PayFor"),
+;     QM.AddRadio("h25 y+10", "旅行团Share + DoNotMove"),
+;     QM.AddRadio("h25 y+10", "批量DoNotMove Only"),
+; ]
+basic := []
+loop scriptIndex[1].Length {
+    (A_Index = 1) 
+        ? radioStyle := "Checked h25 y+10"
+        : radioStyle := "h25 y+10"
+    basic.Push(
+        QM.AddRadio(radioStyle, scriptIndex[1][A_Index].description),
+    )
+}
 
 tab3.UseTab(2)
-xldp := [
-    [
-        gk := QM.AddRadio("Checked h20 y+10", "团队房卡制作     - Excel表：GroupKeys.xls"),
-        gkXl := QM.AddEdit("h25 w150 x20 y+10", GroupKeys.path),
-        gkBtn1 := QM.AddButton("h25 w70 x+20", "选择文件"),
-        gkBtn2 := QM.AddButton("h25 w70 x+10", "打开表格"),
-    ],
-    [
-        gpm := QM.AddRadio("h20 x20 y+10", "团队Profile录入  - Excel表：GroupRoomNum.xls"),
-        gpmXl := QM.AddEdit("h25 w150 x20 y+10", GroupProfilesModify.path),
-        gpmBtn1 := QM.AddButton("h25 w70 x+20", "选择文件"),
-        gpmBtn2 := QM.AddButton("h25 w70 x+10", "打开表格"),
-    ],
-    [
-        co := QM.AddRadio("h20 x20 y+10", "旅业系统批量退房 - Excel表：CheckOut.xls"),
-        coXl := QM.AddEdit("h25 w150 x20 y+10", PsbBatchCO.path),
-        coBtn1 := QM.AddButton("h25 w70 x+20", "选择文件"),
-        coBtn2 := QM.AddButton("h25 w70 x+10", "打开表格"),
-    ],
-]
+; xldp := [
+;     [
+;         gk := QM.AddRadio("Checked h20 y+10", "团队房卡制作     - Excel表：GroupKeys.xls"),
+;         gkXl := QM.AddEdit("h25 w150 x20 y+10", GroupKeys.path),
+;         gkBtn1 := QM.AddButton("h25 w70 x+20", "选择文件"),
+;         gkBtn2 := QM.AddButton("h25 w70 x+10", "打开表格"),
+;     ],
+;     [
+;         gpm := QM.AddRadio("h20 x20 y+10", "团队Profile录入  - Excel表：GroupRoomNum.xls"),
+;         gpmXl := QM.AddEdit("h25 w150 x20 y+10", GroupProfilesModify.path),
+;         gpmBtn1 := QM.AddButton("h25 w70 x+20", "选择文件"),
+;         gpmBtn2 := QM.AddButton("h25 w70 x+10", "打开表格"),
+;     ],
+;     [
+;         co := QM.AddRadio("h20 x20 y+10", "旅业系统批量退房 - Excel表：CheckOut.xls"),
+;         coXl := QM.AddEdit("h25 w150 x20 y+10", PsbBatchCO.path),
+;         coBtn1 := QM.AddButton("h25 w70 x+20", "选择文件"),
+;         coBtn2 := QM.AddButton("h25 w70 x+10", "打开表格"),
+;     ],
+; ]
+xldp := []
+loop scriptIndex[2].length {
+    (A_Index = 1) 
+        ? radioStyle := "Checked h20 y+10"
+        : radioStyle := "h20 y+10"
+    xldp.Push(
+        [
+            QM.AddRadio(radioStyle, scriptIndex[2][A_Index].description),
+            QM.AddEdit("h25 w150 x20 y+10", scriptIndex[2][A_Index].path),
+            QM.AddButton("h25 w70 x+20", "选择文件"),
+            QM.AddButton("h25 w70 x+10", "打开表格"),
+        ]
+    )
+}
+; xldp event binding
+loop xldp.Length {
+    xldp[A_Index][1].OnEvent("Click", singleSelect.Bind(xldp[A_Index][1]))
+    xldp[A_Index][2].OnEvent("LoseFocus", saveXlPath.Bind(scriptIndex[2][A_Index].name, xldp[A_Index][2]))
+    xldp[A_Index][3].OnEvent("Click", getXlPath.Bind(scriptIndex[2][A_Index].name, xldp[A_Index][2]))
+    xldp[A_Index][4].OnEvent("Click", openXlFile.Bind(xldp[A_Index][2].Text))
+}
 ; { xldp events
-gk.OnEvent("Click", singleSelect.Bind(gk)),
-gkXl.OnEvent("LoseFocus", saveXlPath.Bind("GroupKeys", gkXl))
-gkBtn1.OnEvent("Click", getXlPath.Bind("GroupKeys", gkXl))
-gkBtn2.OnEvent("Click", openXlFile.Bind(gkXl.Text))
-gpm.OnEvent("Click", singleSelect.Bind(gpm)),
-gpmXl.OnEvent("LoseFocus", saveXlPath.Bind("GroupProfilesModify", gpmXl))
-gpmBtn1.OnEvent("Click", getXlPath.Bind("GroupProfilesModify", gpmXl))
-gpmBtn2.OnEvent("Click", openXlFile.Bind(gpmXl.Text))
-co.OnEvent("Click", singleSelect.Bind(co)),
-coXl.OnEvent("LoseFocus", saveXlPath.Bind("PsbBatchCO", coXl))
-coBtn1.OnEvent("Click", getXlPath.Bind("PsbBatchCO", coXl))
-coBtn2.OnEvent("Click", openXlFile.Bind(coXl.Text))
+; gk.OnEvent("Click", singleSelect.Bind(gk))
+; gkXl.OnEvent("LoseFocus", saveXlPath.Bind("GroupKeys", gkXl))
+; gkBtn1.OnEvent("Click", getXlPath.Bind("GroupKeys", gkXl))
+; gkBtn2.OnEvent("Click", openXlFile.Bind(gkXl.Text))
+
+; gpm.OnEvent("Click", singleSelect.Bind(gpm)),
+; gpmXl.OnEvent("LoseFocus", saveXlPath.Bind("GroupProfilesModify", gpmXl))
+; gpmBtn1.OnEvent("Click", getXlPath.Bind("GroupProfilesModify", gpmXl))
+; gpmBtn2.OnEvent("Click", openXlFile.Bind(gpmXl.Text))
+; co.OnEvent("Click", singleSelect.Bind(co)),
+; coXl.OnEvent("LoseFocus", saveXlPath.Bind("PsbBatchCO", coXl))
+; coBtn1.OnEvent("Click", getXlPath.Bind("PsbBatchCO", coXl))
+; coBtn2.OnEvent("Click", openXlFile.Bind(coXl.Text))
 ; }
 QM.AddCheckbox("vDesktopMode h25 x20 y+15", "使用桌面文件模式").OnEvent("Click", toggleDesktopMode)
 
