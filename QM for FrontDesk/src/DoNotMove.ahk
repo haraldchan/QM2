@@ -2,6 +2,7 @@
 #Include "../lib/utils.ahk"
 
 class DoNotMove {
+    static description := "批量DoNotMove Only"
     static popupTitle := "Do Not Move(batch)"
 
     static Main() {

@@ -2,6 +2,8 @@
 #Include "../lib/utils.ahk"
 
 class GroupProfilesModify {
+    static name := "GroupProfilesModify"
+    static description := "团队Profile录入  - Excel表：GroupRoomNum.xls"
     static popupTitle := "GroupProfilesModify"
     static path := IniRead(A_ScriptDir . "\src\config.ini", "GroupProfilesModify", "xlsPath")
     static wwly := this.getWwlyPath()

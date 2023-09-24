@@ -4,6 +4,8 @@
 #Include "../lib/reports.ahk"
 
 class PsbBatchCO {
+    static name := "PsbBatchCO"
+    static description := "团队Profile录入  - Excel表：GroupRoomNum.xls"
     static popupTitle := "PSB CheckOut(Batch)"
     static path := IniRead(A_ScriptDir . "\src\config.ini", "PsbBatchCO", "xlsPath")
 

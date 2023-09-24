@@ -2,6 +2,8 @@
 #Include "../lib/utils.ahk"
 
 class PbPf {
+	static description := "粘贴PayBy PayFor"
+
 	static Main() {
 		WinMaximize "ahk_class SunAwtFrame"
         WinActivate "ahk_class SunAwtFrame"

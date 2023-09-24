@@ -2,6 +2,8 @@
 #Include "../lib/utils.ahk"
 
 class GroupKeys {
+    static name := "GroupKeys"
+    static description := "团队房卡制作     - Excel表：GroupKeys.xls"
     static popupTitle := "Group Keys"
     static dateDash := "^\d{1,4}-\d{1,2}-\d{1,2}"
     static dateSlash := "\d{4}/\d{2}/\d{2}"
