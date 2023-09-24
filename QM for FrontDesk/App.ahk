@@ -79,12 +79,6 @@ QM.AddCheckbox("Checked h25 y+10", "令 CityLedger 挂账保持常驻").OnEvent(
 
 tab3 := QM.AddTab3("w350", ["基础功能", "Excel辅助", "ReportMaster"])
 tab3.UseTab(1)
-; basic := [
-;     QM.AddRadio("Checked h20 y+10", "空白InHouse Share"),
-;     QM.AddRadio("h25 y+10", "粘贴PayBy PayFor"),
-;     QM.AddRadio("h25 y+10", "旅行团Share + DoNotMove"),
-;     QM.AddRadio("h25 y+10", "批量DoNotMove Only"),
-; ]
 basic := []
 loop scriptIndex[1].Length {
     (A_Index = 1) 
@@ -96,26 +90,6 @@ loop scriptIndex[1].Length {
 }
 
 tab3.UseTab(2)
-; xldp := [
-;     [
-;         gk := QM.AddRadio("Checked h20 y+10", "团队房卡制作     - Excel表：GroupKeys.xls"),
-;         gkXl := QM.AddEdit("h25 w150 x20 y+10", GroupKeys.path),
-;         gkBtn1 := QM.AddButton("h25 w70 x+20", "选择文件"),
-;         gkBtn2 := QM.AddButton("h25 w70 x+10", "打开表格"),
-;     ],
-;     [
-;         gpm := QM.AddRadio("h20 x20 y+10", "团队Profile录入  - Excel表：GroupRoomNum.xls"),
-;         gpmXl := QM.AddEdit("h25 w150 x20 y+10", GroupProfilesModify.path),
-;         gpmBtn1 := QM.AddButton("h25 w70 x+20", "选择文件"),
-;         gpmBtn2 := QM.AddButton("h25 w70 x+10", "打开表格"),
-;     ],
-;     [
-;         co := QM.AddRadio("h20 x20 y+10", "旅业系统批量退房 - Excel表：CheckOut.xls"),
-;         coXl := QM.AddEdit("h25 w150 x20 y+10", PsbBatchCO.path),
-;         coBtn1 := QM.AddButton("h25 w70 x+20", "选择文件"),
-;         coBtn2 := QM.AddButton("h25 w70 x+10", "打开表格"),
-;     ],
-; ]
 xldp := []
 loop scriptIndex[2].length {
     (A_Index = 1) 
@@ -137,25 +111,21 @@ loop xldp.Length {
     xldp[A_Index][3].OnEvent("Click", getXlPath.Bind(scriptIndex[2][A_Index].name, xldp[A_Index][2]))
     xldp[A_Index][4].OnEvent("Click", openXlFile.Bind(xldp[A_Index][2].Text))
 }
-; { xldp events
-; gk.OnEvent("Click", singleSelect.Bind(gk))
-; gkXl.OnEvent("LoseFocus", saveXlPath.Bind("GroupKeys", gkXl))
-; gkBtn1.OnEvent("Click", getXlPath.Bind("GroupKeys", gkXl))
-; gkBtn2.OnEvent("Click", openXlFile.Bind(gkXl.Text))
-
-; gpm.OnEvent("Click", singleSelect.Bind(gpm)),
-; gpmXl.OnEvent("LoseFocus", saveXlPath.Bind("GroupProfilesModify", gpmXl))
-; gpmBtn1.OnEvent("Click", getXlPath.Bind("GroupProfilesModify", gpmXl))
-; gpmBtn2.OnEvent("Click", openXlFile.Bind(gpmXl.Text))
-; co.OnEvent("Click", singleSelect.Bind(co)),
-; coXl.OnEvent("LoseFocus", saveXlPath.Bind("PsbBatchCO", coXl))
-; coBtn1.OnEvent("Click", getXlPath.Bind("PsbBatchCO", coXl))
-; coBtn2.OnEvent("Click", openXlFile.Bind(coXl.Text))
-; }
 QM.AddCheckbox("vDesktopMode h25 x20 y+15", "使用桌面文件模式").OnEvent("Click", toggleDesktopMode)
 
 tab3.UseTab(3)
 QM.AddText("h20", "`n点击“启动脚本”打开报表选择器。")
+QM.AddText("h20", "
+(
+
+常见问题：
+
+因报表保存时出现的弹窗可能会导致中断，建议：
+
+1、使用 IE 浏览器进行操作；
+2、将登录页面最小化；
+3、重启浏览器以及QM 2。
+)")
 
 tab3.UseTab() ; end tab3
 start:= QM.AddButton("Default h35 w100 x20 y420", "启动脚本").OnEvent("Click", runSelectedScript)
