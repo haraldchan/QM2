@@ -90,7 +90,7 @@ loop scriptIndex[1].Length {
 tab3.UseTab(2)
 xldp := []
 loop scriptIndex[2].length {
-    radioStyle := (A_Index = 1) ? "Checked h20 y+10" : "h20 y+10"
+    radioStyle := (A_Index = 1) ? "Checked h20 y+10" : "x20 h20 y+10"
     xldp.Push(
         [
             QM.AddRadio(radioStyle, scriptIndex[2][A_Index].description),
