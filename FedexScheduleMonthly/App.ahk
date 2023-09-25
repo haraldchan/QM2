@@ -4,7 +4,7 @@
 #SingleInstance Force
 TraySetIcon A_ScriptDir . "\assets\FSMTray.ico"
 version := "2.0.0"
-popupTitle := "Fedex Schedule Monthly" . version
+popupTitle := "Fedex Schedule Monthly " . version
 config := A_ScriptDir . "\config.ini"
 path := IniRead(config, "FSM", "schedulePath")
 schdRange := IniRead(config, "FSM", "scheduleRange")
