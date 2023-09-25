@@ -53,8 +53,8 @@ class ReportMaster {
 				WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 				reportName := this.reportIndex[reportSelector.Value][1]
 				this.reportIndex[reportSelector.Value][2]()
-				Sleep 1500
 				WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+				Sleep 1000
 				this.openMyDocs(reportName)
 			} else if (reportSelector.Value = 666) {
 				WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
@@ -65,9 +65,10 @@ class ReportMaster {
 						}
 					}
 					this.reportIndex[A_Index][2]()
-					Sleep 2500
+					Sleep 3000
 				}
 				WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+				Sleep 1000
 				this.openMyDocs("夜班报表")
 			} else {
 				WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
@@ -99,12 +100,12 @@ class ReportMaster {
 				} else {
 				cleanReload()
 				}
-				Sleep 300
+				Sleep 1000
 				this.openMyDocs(reportName)
 			} else if (StrLower(reportSelector.Value) = "sp") {
 				reportName := today . "水果5"
 				special(today)
-				Sleep 300
+				Sleep 1000
 				this.openMyDocs(reportName)
 			} else {
 				WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
