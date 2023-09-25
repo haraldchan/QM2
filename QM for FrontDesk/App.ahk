@@ -81,9 +81,7 @@ tab3 := QM.AddTab3("w350", ["基础功能", "Excel辅助", "ReportMaster"])
 tab3.UseTab(1)
 basic := []
 loop scriptIndex[1].Length {
-    (A_Index = 1) 
-        ? radioStyle := "Checked h25 y+10"
-        : radioStyle := "h25 y+10"
+    radioStyle := (A_Index = 1) ? "Checked h25 y+10" : "h25 y+10"
     basic.Push(
         QM.AddRadio(radioStyle, scriptIndex[1][A_Index].description),
     )
@@ -92,9 +90,7 @@ loop scriptIndex[1].Length {
 tab3.UseTab(2)
 xldp := []
 loop scriptIndex[2].length {
-    (A_Index = 1) 
-        ? radioStyle := "Checked h20 y+10"
-        : radioStyle := "h20 y+10"
+    radioStyle := (A_Index = 1) ? "Checked h20 y+10" : "h20 y+10"
     xldp.Push(
         [
             QM.AddRadio(radioStyle, scriptIndex[2][A_Index].description),
