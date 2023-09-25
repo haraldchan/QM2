@@ -316,14 +316,19 @@ FsrMain() {
 			; }
 			Sleep 100
 			; { close, save, down to the next one
-			MouseMove 795, 466
+			Send "!s"
+			Sleep 300
+			MouseMove 610, 540
+			Sleep 100
+			Click
+			Sleep 300
 			loop 5 {
 			Sleep 300
 			Send "!o"
 			}
-			Sleep 1000
+			Sleep 2000
 			MouseMove 585, 445
-			click
+			Click
 			Sleep 300
 			Send "{Down}"
 			Sleep 2000

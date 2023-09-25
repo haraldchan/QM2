@@ -9,7 +9,7 @@
 #SingleInstance Force
 TraySetIcon A_ScriptDir . "\assets\FSRTray.ico"
 version := "2.0.0"
-popupTitle := "Fedex Scheduled Reservations" . version
+popupTitle := "Fedex Scheduled Reservations " . version
 config := A_ScriptDir . "\config.ini"
 path := IniRead(config, "FSR", "schedulePath")
 resvOnDayTime := IniRead(config, "FSR", "resvOnDayTime")
