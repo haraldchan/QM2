@@ -182,7 +182,7 @@ class GroupProfilesModify {
         loop drive.Length {
             wwlyExe := drive[A_Index] . ":\SQL\ww_ly.exe"
             if (FileExist(wwlyExe))
-                return drive wwlyExe
+                return wwlyExe
         }
     }
 }
