@@ -169,14 +169,20 @@ class GroupProfilesModify {
     }
 
     static getWwlyPath() {
-        if (FileExist("C:\SQL\wwly.exe")) {
-            return "C:\SQL\wwly.exe"
-        } else if (FileExist("D:\SQL\wwly.exe")) {
-            return "D:\SQL\wwly.exe"
-        } else if (FileExist("E:\SQL\wwly.exe")) {
-            return "E:\SQL\wwly.exe"
-        } else if (FileExist("F:\SQL\wwly.exe")) {
-            return "F:\SQL\wwly.exe"
+        ; if (FileExist("C:\SQL\ww_ly.exe")) {
+        ;     return "C:\SQL\ww_ly.exe"
+        ; } else if (FileExist("D:\SQL\ww_ly.exe")) {
+        ;     return "D:\SQL\ww_ly.exe"
+        ; } else if (FileExist("E:\SQL\ww_ly.exe")) {
+        ;     return "E:\SQL\ww_ly.exe"
+        ; } else if (FileExist("F:\SQL\ww_ly.exe")) {
+        ;     return "F:\SQL\ww_ly.exe"
+        ; }
+        drive := ["C", "D", "E", "F"]
+        loop drive.Length {
+            wwlyExe := drive[A_Index] . ":\SQL\ww_ly.exe"
+            if (FileExist(wwlyExe))
+                return drive wwlyExe
         }
     }
 }
