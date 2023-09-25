@@ -181,8 +181,9 @@ class GroupProfilesModify {
         drive := ["C", "D", "E", "F"]
         loop drive.Length {
             wwlyExe := drive[A_Index] . ":\SQL\ww_ly.exe"
-            if (FileExist(wwlyExe))
+            if (FileExist(wwlyExe)) {
                 return wwlyExe
+            }
         }
     }
 }
