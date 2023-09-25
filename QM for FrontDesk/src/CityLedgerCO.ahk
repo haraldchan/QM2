@@ -4,11 +4,9 @@ class CityLedgerCo {
 		WinActivate "ahk_class SunAwtFrame"
 		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 		isBlue := "0x004080"
-		if (PixelGetColor(600, 830) = isBlue) {
-			this.fullWin()
-		} else {
-			this.smallWin()
-		}
+		PixelGetColor(600, 830) = isBlue
+			? this.fullWin()
+			: this.smallWin()
 		WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 	}
 

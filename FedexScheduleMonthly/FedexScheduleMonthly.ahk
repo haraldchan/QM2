@@ -21,17 +21,13 @@ FsmMain() {
 		ciDate := schdData.ActiveSheet.Cells(3, 1).Text
 		lastRow := schdData.ActiveSheet.Cells(schdData.ActiveSheet.Rows.Count, "A").End(-4162).Row
 		if (ciDate = "") {
-			schdData.Close
-			template.Close
+			schdData.Close()
+			template.Close()
 			break
 		}
-		if (StrSplit(ciDate, "/")[1] < A_MM) {
-			fileDate := Format("{1}{2}", A_Year + 1, StrReplace(ciDate, "/", ""))
-		} else {
-			fileDate := Format("{1}{2}", A_Year, StrReplace(ciDate, "/", ""))
-		}
-		TrayTip Format("正在保存：{1} FedEx Sign In Sheet.xlsx", fileDate)
-
+		fileDate := StrSplit(ciDate, "/")[1] < A_MM
+			? fileDate := Format("{1}{2}", A_Year + 1, StrReplace(ciDate, "/", ""))
+			: fileDate := Format("{1}{2}", A_Year, StrReplace(ciDate, "/", ""))
 		loop (lastRow - 3) {
 			loop 11 {
 				template.ActiveSheet.Cells(tempRow, A_Index + 4).Value := schdData.Worksheets(sheetIndex).Cells(schdRow, A_Index).Text
@@ -41,10 +37,11 @@ FsmMain() {
 		}
 		sheet++
 		template.SaveAs(Format("{1}\{2}FedEx Sign In Sheet.xlsx", saveDir, fileDate))
+		TrayTip Format("正在保存：{1} FedEx Sign In Sheet.xlsx", fileDate)
 		schdRow := 4
 		tempRow := 3
 	}
-	Xl.Quit
+	Xl.Quit()
 	checkSavedSchdules := MsgBox("已生成Sign-in Sheet文件。`n是否打开保存所在文件夹查看？", "FedexScheduleMonthly", "OKCancel")
 	if (checkSavedSchdules = "OK") {
 		Run saveDir

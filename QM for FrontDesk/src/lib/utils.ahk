@@ -15,9 +15,5 @@ cleanReload(quit := 0){
 
 quitApp() {
     quitConfirm := MsgBox("是否确定退出QM 2? ", "QM for FrontDesk 2.1.0", "OKCancel 4096")
-    if (quitConfirm = "OK") {
-        cleanReload("quit")
-    } else {
-        cleanReload()
-    }
+    quitConfirm = "OK" ? cleanReload("quit") : cleanReload()
 }
