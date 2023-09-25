@@ -27,9 +27,9 @@ TraySetIcon A_ScriptDir . "\src\assets\QMTray.ico"
 TrayTip "QM 2 运行中…按下 F9 开始使用脚本"
 CoordMode "Mouse", "Screen"
 ; globals and states
+version := "2.0.0"
 today := FormatTime(A_Now, "yyyyMMdd")
 config := A_ScriptDir . "\src\config.ini"
-version := "2.1.1"
 popupTitle := "QM for FrontDesk " . version
 cityLedgerOn := true
 desktopMode := false

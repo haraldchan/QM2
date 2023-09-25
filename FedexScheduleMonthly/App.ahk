@@ -3,12 +3,14 @@
 ; {setup
 #SingleInstance Force
 TraySetIcon A_ScriptDir . "\assets\FSMTray.ico"
+version := "2.0.0"
+popupTitle := "Fedex Schedule Monthly" . version
 config := A_ScriptDir . "\config.ini"
 path := IniRead(config, "FSM", "schedulePath")
 schdRange := IniRead(config, "FSM", "scheduleRange")
 ; }
 ; { GUI
-FSM := Gui("+Resize", "Fedex Schedule Monthly")
+FSM := Gui("+Resize", popupTitle)
 FSM.AddText("x20 y20", "请选择Schedule 文件")
 
 ; schedule path (by input or file select)
