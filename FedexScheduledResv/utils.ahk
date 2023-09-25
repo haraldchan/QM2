@@ -15,14 +15,12 @@ cleanReload(quit := 0){
 
 quitApp() {
     quitConfirm := MsgBox("是否确定退出QM 2? ", "QM for FrontDesk 2.1.0", "OKCancel 4096")
-    if (quitConfirm = "OK") {
-        cleanReload("quit")
-    } else {
-        cleanReload()
-    }
+    quitConfirm = "OK" ? cleanReload("quit") : cleanReload()
 }
 
-getDaysActual(h, m) {
+getDaysActual(hoursAtHotel) {
+    h := StrSplit(hoursAtHotel, ":")[1]
+    m := StrSplit(hoursAtHotel, ":")[2]
     if (h < 24) {
         return 1
     } else if (Mod(h, 24) = 0 && m = 0) {

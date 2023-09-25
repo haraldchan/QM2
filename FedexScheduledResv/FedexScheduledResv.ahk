@@ -50,25 +50,21 @@ FsrMain() {
 			flightInfo[flightFormat[A_Index]] := shcdDay.Cells(row, A_Index).Text
 		}
 		; date reformatting
-		if (StrSplit(flightInfo["ibDate"], "/")[1] < A_MM) {
-			myYear := A_Year + 1
-		} else {
-			myYear := A_Year
-		}
+		myYear := (StrSplit(flightInfo["ibDate"], "/")[1] < A_MM) 
+			? A_Year + 1 
+			: A_Year
 		; schdCi/CoDate format : yyyyMMdd
 		schdCiDate := Format("{1}{2}{3}", myYear, StrSplit(flightInfo["ibDate"], "/")[1], StrSplit(flightInfo["ibDate"], "/")[2])
 		schdCoDate := Format("{1}{2}{3}", myYear, StrSplit(flightInfo["obDate"], "/")[1], StrSplit(flightInfo["obDate"], "/")[2])
-		splitHours := StrSplit(flightInfo["stayHours"], ":")
-		daysActual := getDaysActual(splitHours[1], splitHours[2])
-		if (StrSplit(flightInfo["ETA"], ":")[1]) < bringForwardTime {
-			pmsCiDate := DateAdd(schdCiDate, -1, "days")
-		} else {
-			pmsCiDate := schdCiDate
-		}
+		daysActual := getDaysActual(flightInfo["stayHours"])
+
+		pmsCiDate := (StrSplit(flightInfo["ETA"], ":")[1]) < bringForwardTime 
+			? DateAdd(schdCiDate, -1, "days")
+			: schdCiDate
 		pmsCoDate := schdCoDate
 		pmsNts := DateDiff(pmsCoDate, pmsCiDate, "days")
-		comment := Format("RM INCL 1BBF TO CO,Hours@Hotel:{1}={2}days, ActualStay:{3}-{4}", flightInfo["stayHours"], daysActual, schdCiDate, schdCoDate)
-		; reformat pms to match pms date format
+		comment := Format("RM INCL 1BBF TO CO,Hours@Hotel: {1}={2}days, ActualStay: {3}-{4}", flightInfo["stayHours"], daysActual, schdCiDate, schdCoDate)
+		; reformat to match pms date format
 		schdCiDate := FormatTime(schdCiDate, "MMddyyyy")
 		schdCoDate := FormatTime(schdCoDate, "MMddyyyy")
 		pmsCiDate := FormatTime(pmsCiDate, "MMddyyyy")
@@ -287,24 +283,20 @@ FsrMain() {
 				Sleep 200
 				Send "!e"
 				Sleep 200
-				Send "{Tab}"
-				Sleep 100
-				Send "{Tab}"
-				Sleep 100
-				Send "{Tab}"
-				Sleep 100
-				Send "{Tab}"
-				Sleep 100
+				loop 4 {
+					Send "{Tab}"
+					Sleep 100
+				}
 				Send "{Text}NRR"
 				Sleep 100
 				MouseMove 418, 377
 				Sleep 100
 				Send "!o"
 				Sleep 200
-				Send "{Escape}"
-				Sleep 200
-				Send "{Escape}"
-				Sleep 200
+				loop 3 {
+					Send "{Escape}"
+					Sleep 200
+				}
 				Send "!o"
 				Sleep 1500
 				Send "{Space}"
