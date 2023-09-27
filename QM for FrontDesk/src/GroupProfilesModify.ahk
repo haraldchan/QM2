@@ -9,7 +9,7 @@ class GroupProfilesModify {
     static wwly := this.getWwlyPath()
 
     static Main(desktopMode := 0) {
-        if (desktopMode := true) {
+        if (desktopMode = true) {
             if (FileExist(A_Desktop . "\GroupRoomNum.xls")) {
                 path := A_Desktop . "\GroupRoomNum.xls"
             } else if (FileExist(A_Desktop . "\GroupRoomNum.xlsx")) {
