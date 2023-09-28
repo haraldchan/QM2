@@ -20,7 +20,6 @@
 #Include "../src/PsbBatchCO.ahk"
 #Include "../src/ReportMaster.ahk"
 ;}
-
 ; { setup
 #SingleInstance Force
 TraySetIcon A_ScriptDir . "\src\assets\QMTray.ico"
@@ -124,8 +123,8 @@ QM.AddText("h20", "
 )")
 
 tab3.UseTab() ; end tab3
-start:= QM.AddButton("Default h35 w100 x20 y420", "启动脚本").OnEvent("Click", runSelectedScript)
-QM.AddButton("h35 w100 x+20", "隐藏窗口").OnEvent("Click", hideWin)
+start:= QM.AddButton("Default h40 w165", "启动脚本").OnEvent("Click", runSelectedScript)
+QM.AddButton("h40 w165 x+18", "隐藏窗口").OnEvent("Click", hideWin)
 ; }
 
 ; { callback funcs
