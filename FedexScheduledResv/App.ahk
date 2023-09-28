@@ -93,7 +93,6 @@ FSR.AddButton("h40 w120 x40 Default", "开始录入").OnEvent("Click", runFSR)
 FSR.AddButton("h40 w120 x+50", "退出脚本").OnEvent("Click", quit)
 
 FSR.OnEvent("DropFiles", dropSchd)
-
 FSR.Show()
 ; }
 

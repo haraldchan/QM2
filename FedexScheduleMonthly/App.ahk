@@ -28,6 +28,7 @@ dateRange.OnEvent("LoseFocus", saveRange)
 FSM.AddButton("h25 w70 y+20", "开始生成").OnEvent("Click", genSchd)
 FSM.AddButton("h25 w70 x+20", "退出脚本").OnEvent("Click", quit)
 
+FSM.OnEvent("DropFiles", dropSchd)
 FSM.Show()
 ; }
 
@@ -61,6 +62,14 @@ genSchd(*) {
         return
     }
     FsmMain()
+}
+
+dropSchd(GuiObj, GuiCtrlObj, FileArray, X, Y, *) {
+    if (FileArray.Length > 1) {
+        FileArray.RemoveAt[1]
+    }
+    schdPath.Value := FileArray[1]
+    savePath()
 }
 
 quit(*) {
