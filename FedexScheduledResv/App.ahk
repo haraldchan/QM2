@@ -92,6 +92,8 @@ tab3.UseTab()
 FSR.AddButton("h40 w120 x40 Default", "开始录入").OnEvent("Click", runFSR)
 FSR.AddButton("h40 w120 x+50", "退出脚本").OnEvent("Click", quit)
 
+FSR.OnEvent("DropFiles", dropSchd)
+
 FSR.Show()
 ; }
 
@@ -113,6 +115,14 @@ getSchd(*) {
 
 openSchd(*) {
     Run schdPath.Text
+}
+
+dropSchd(GuiObj, GuiCtrlObj, FileArray, X, Y, *) {
+    if (FileArray.Length > 1) {
+        FileArray.RemoveAt[1]
+    }
+    schdPath.Value := FileArray[1]
+    savePath()
 }
 
 saveTime(*) {
