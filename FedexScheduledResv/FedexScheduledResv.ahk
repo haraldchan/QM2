@@ -39,6 +39,7 @@ FsrMain() {
 	Xlbook := Xl.Workbooks.Open(path)
 	shcdDay := Xlbook.Worksheets(Format("Sheet{1}", sheetIndex.Value)) 
 	lastRow := Xlbook.ActiveSheet.Cells(Xlbook.ActiveSheet.Rows.Count, "A").End(-4162).Row
+	; MsgBox(lastRow)
 
 	; filling in pmsreservations
 	BlockInput true
@@ -110,7 +111,7 @@ FsrMain() {
 			Click
 			Sleep 500
 			; }
-			Sleep 100
+			Sleep 2000
 			; { fill in check-in, check-out fields
 			MouseMove 332, 336
 			Sleep 1000
@@ -149,7 +150,7 @@ FsrMain() {
 			Send Format("{Text}{1}", pmsCoDate)
 			Sleep 300
 			; }
-			Sleep 100
+			Sleep 2000
 			; { fill in ETA & ETD
 			MouseMove 294, 577
 			Sleep 200
@@ -180,7 +181,7 @@ FsrMain() {
 			Send Format("{Text}{1}", flightInfo["ETD"])
 			Sleep 200
 			; }
-			Sleep 100
+			Sleep 200
 			; { fill in comments, Inbound & trip no.(TA REC log field)
 			MouseMove 622, 576
 			Sleep 200
@@ -199,7 +200,7 @@ FsrMain() {
 			Click "Up"
 			Sleep 200
 			Send Format("{Text}{1}{2}  {3}", flightInfo["flightIn1"], flightInfo["flightIn2"], flightInfo["tripNum"])
-			Sleep 1000
+			Sleep 2000
 			; }
 			Sleep 100
 			; { fill in original shcedule info in "More Fields"
@@ -208,10 +209,10 @@ FsrMain() {
 			Click
 			Sleep 100
 			MouseMove 686, 439
-			Sleep 120
+			Sleep 200
 			Click "Down"
 			MouseMove 478, 439
-			Sleep 342
+			Sleep 100
 			Click "Up"
 			Sleep 100
 			Send Format("{Text}{1}{2}", flightInfo["flightIn1"], flightInfo["flightIn2"])
@@ -261,7 +262,7 @@ FsrMain() {
 			MouseMove 841, 660
 			Sleep 100
 			Click
-			Sleep 300
+			Sleep 2000
 			; }
 			Sleep 100
 			; { open "Daily Details", fill in room rates
@@ -314,22 +315,12 @@ FsrMain() {
 			Click
 			Sleep 300
 			; }
-			Sleep 100
-			; { close, save, down to the next one
-			Send "!s"
-			Sleep 300
-			MouseMove 610, 540
-			Sleep 100
-			Click
-			Sleep 300
-			loop 5 {
-			Sleep 300
-			Send "!o"
-			}
 			Sleep 2000
-			MouseMove 585, 445
-			Click
-			Sleep 300
+			; { close, save, down to the next one
+			Send "!o"
+			Sleep 5000
+			Send "!o"
+			Sleep 1000
 			Send "{Down}"
 			Sleep 2000
 			; }
