@@ -5,7 +5,7 @@
 
 class PsbBatchCO {
     static name := "PsbBatchCO"
-    static description := "团队Profile录入  - Excel表：GroupRoomNum.xls"
+    static description := "旅安系统批量退房 - Excel表：CheckOut.xls"
     static popupTitle := "PSB CheckOut(Batch)"
     static path := IniRead(A_ScriptDir . "\src\config.ini", "PsbBatchCO", "xlsPath")
 
@@ -163,7 +163,7 @@ class PsbBatchCO {
 
     static batchOut(path) {
         autoOut := MsgBox("即将开始自动拍Out脚本`n请先打开PSB，进入“旅客退房”界面", PsbBatchCo.popupTitle, "OKCancel")
-        if (autoOut := "Cancel") {
+        if (autoOut = "Cancel") {
             cleanReload()
         }
         Xl := ComObject("Excel.Application")
@@ -173,17 +173,19 @@ class PsbBatchCO {
         ; row := 1
         errorBrown := "0x804000"
         depRoomNums := []
+        TrayTip "读入房号中……"
         loop lastRow {
-            depRoomNums.Push(Integer(depRooms.Cells(A_Index, 1).Value))
+            depRoomNums.Push(Integer(depRooms.Cells(A_Index, 1).Text))
         }
         CheckOut.Close()
         Xl.Quit()
+        TrayTip "读入完成"
 
         loop lastRow {
             A_Clipboard := depRoomNums[A_Index]
-            MouseMove 279, 224
-            Sleep 500
-            Click
+            MouseMove 279, 200
+            Sleep 50
+            Click 
             Sleep 350
             Send "^v"
             Sleep 100
@@ -193,10 +195,11 @@ class PsbBatchCO {
             Sleep 800
             Send "{Enter}"
             Sleep 800
-            MouseMove 279, 224
+            MouseMove 279, 200
             Sleep 800
             Click "Down"
-            MouseMove 160, 224
+            MouseMove 160, 200
+
             Sleep 200
             Click "Up"
             Sleep 50
