@@ -32,7 +32,7 @@ class GroupKeys {
         - 日期格式：yyyy-mm-dd 或 yyyy/mm/dd（具体请先查看VingCard中格式）
         - 时间格式：HH:MM
         3、确保VingCard已经打开处于Check-in界面。
-        )", GroupKeys.popupTitle, "OKCancel 4096")
+        )", this.popupTitle, "OKCancel 4096")
         if (start = "Cancel") {
             cleanReload()
         }
@@ -122,7 +122,7 @@ class GroupKeys {
                 已做房卡：{1}
                 - 是(Y)制作下一个
                 - 否(N)退出制卡
-                )", roomNums[A_Index]), GroupKeys.popupTitle, "OKCancel 4096")
+                )", roomNums[A_Index]), this.popupTitle, "OKCancel 4096")
             if (checkConf = "Cancel") {
                 cleanReload()
             }
