@@ -4,12 +4,15 @@ FsmMain() {
 	schdRange := IniRead(config, "FSM", "scheduleRange")
 	tempPath := "\\10.0.2.13\fd\25-FEDEX\Schedule生成处理工具\FedEx Sign In Sheet temp(空模板).xlsx"
 	saveDir := Format("\\10.0.2.13\fd\25-FEDEX\Sign-In sheet生成({1})", schdRange)
-	DirCreate saveDir
+	try {
+		DirCreate saveDir
+	} catch {
+		MsgBox("指定日期范围内不可包含以下字符: \ / “ * < > | ", "FedexScheduleMonthly")
+	}
 
 	Xl := ComObject("Excel.Application")
 	schdData := Xl.Workbooks.Open(path)
 	schdSheetAmount := schdData.Sheets.Count
-
 	sheet := 1
 	schdRow := 4
 	tempRow := 3
