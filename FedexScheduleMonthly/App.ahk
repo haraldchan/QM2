@@ -19,7 +19,7 @@ schdPath.OnEvent("LoseFocus", savePath)
 FSM.AddButton("h25 w70 x+20", "选择文件").OnEvent("Click", getSchd)
 
 ; determine date range as part of foldername
-FSM.AddText("x20 y+20", "请选择Schedule 覆盖日期区间(将成为文件夹后缀)",)
+FSM.AddText("x20 y+20", "请指定Schedule 覆盖日期区间(将成为文件夹后缀)",)
 dateRange := FSM.AddEdit("h25 w150 x20 y+10", schdRange)
 dateRange.OnEvent("LoseFocus", saveRange)
 
