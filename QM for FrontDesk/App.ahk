@@ -75,6 +75,9 @@ Ctrl+F12:  退出
 Ctrl+O:    CityLedger挂账
 )")
 QM.AddCheckbox("Checked h25 y+10", "令 CityLedger 挂账保持常驻").OnEvent("Click", cityLedgerKeepAlive)
+cityLedgerKeepAlive(*) {
+    global cityLedgerOn := !cityLedgerOn
+}
 
 tab3 := QM.AddTab3("w350", ["基础功能", "Excel辅助", "ReportMaster"])
 tab3.UseTab(1)
@@ -99,14 +102,44 @@ loop scriptIndex[2].length {
         ]
     )
 }
-; xldp event binding
 loop xldp.Length {
     xldp[A_Index][1].OnEvent("Click", singleSelect.Bind(xldp[A_Index][1]))
     xldp[A_Index][2].OnEvent("LoseFocus", saveXlPath.Bind(scriptIndex[2][A_Index].name, xldp[A_Index][2]))
     xldp[A_Index][3].OnEvent("Click", getXlPath.Bind(scriptIndex[2][A_Index].name, xldp[A_Index][2]))
     xldp[A_Index][4].OnEvent("Click", openXlFile.Bind(xldp[A_Index][2].Text))
 }
+singleSelect(ctrlObj, *) {
+    loop xldp.Length {
+        xldp[A_Index][1].Value := 0
+    }
+    ctrlObj.Value := 1
+}
+saveXlPath(script, ctrlObj, *) {
+    IniWrite(ctrlObj.Text, config, script, "xlsPath")
+}
+getXlPath(script, ctrlObj, *) {
+    QM.Opt("+OwnDialogs")
+    selectedFile := FileSelect(3, , "请选择 Excel 文件")
+    if (selectedFile = "") {
+        MsgBox("请选择文件")
+        return
+    }
+    ctrlObj.Value := selectedFile
+    IniWrite(selectedFile, config, script, "xlsPath")
+}
+openXlFile(file, *) {
+    Run file
+}
+
 QM.AddCheckbox("vDesktopMode h25 x20 y+15", "使用桌面文件模式").OnEvent("Click", toggleDesktopMode)
+toggleDesktopMode(*) {
+    global desktopMode := !desktopMode
+    loop xldp.Length {
+        xldp[A_Index][2].Enabled := !desktopMode
+        xldp[A_Index][3].Enabled := !desktopMode
+        xldp[A_Index][4].Enabled := !desktopMode
+    }
+}
 
 tab3.UseTab(3)
 QM.AddText("h20", "`n点击“启动脚本”打开报表选择器。")
@@ -123,24 +156,8 @@ QM.AddText("h20", "
 )")
 
 tab3.UseTab() ; end tab3
-start:= QM.AddButton("Default h40 w165", "启动脚本").OnEvent("Click", runSelectedScript)
-QM.AddButton("h40 w165 x+18", "隐藏窗口").OnEvent("Click", hideWin)
-; }
 
-; { callback funcs
-cityLedgerKeepAlive(*) {
-    global cityLedgerOn := !cityLedgerOn
-}
-
-toggleDesktopMode(*) {
-    global desktopMode := !desktopMode
-    loop xldp.Length {
-        xldp[A_Index][2].Enabled := !desktopMode
-        xldp[A_Index][3].Enabled := !desktopMode
-        xldp[A_Index][4].Enabled := !desktopMode
-    }
-}
-
+QM.AddButton("Default h40 w165", "启动脚本").OnEvent("Click", runSelectedScript)
 runSelectedScript(*) {
     if (tab3.Value = 1) {
         loop basic.Length {
@@ -161,33 +178,7 @@ runSelectedScript(*) {
         scriptIndex[3].Main()
     }
 }
-
-saveXlPath(script, ctrlObj, *) {
-    IniWrite(ctrlObj.Text, config, script, "xlsPath")
-}
-
-getXlPath(script, ctrlObj, *) {
-    QM.Opt("+OwnDialogs")
-    selectedFile := FileSelect(3, , "请选择 Excel 文件")
-    if (selectedFile = "") {
-        MsgBox("请选择文件")
-        return
-    }
-    ctrlObj.Value := selectedFile
-    IniWrite(selectedFile, config, script, "xlsPath")
-}
-
-openXlFile(file, *) {
-    Run file
-}
-
-singleSelect(ctrlObj, *) {
-    loop xldp.Length {
-        xldp[A_Index][1].Value := 0
-    }
-    ctrlObj.Value := 1
-}
-
+QM.AddButton("h40 w165 x+18", "隐藏窗口").OnEvent("Click", hideWin)
 hideWin(*) {
     QM.Hide()
 }
