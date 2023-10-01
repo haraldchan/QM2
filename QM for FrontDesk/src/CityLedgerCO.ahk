@@ -15,17 +15,17 @@ class CityLedgerCo {
 		MouseMove 862, 272
 		Sleep 100
 		Click
-		Sleep 100
+		Sleep 10
 		Send "!o"
-		Sleep 1000
+		Sleep 10
 		Send "{Blind}{Text}CL"
-		Sleep 150
+		Sleep 10
 		Send "!f"
-		Sleep 100
+		Sleep 10
 		Send "!p"
-		Sleep 200
+		Sleep 10
 		Send "{Esc}"
-		Sleep 300
+		Sleep 10
 		MouseMove 894, 722
 		Sleep 100
 		BlockInput false
@@ -34,21 +34,21 @@ class CityLedgerCo {
 	static smallWin() {
 		BlockInput true
 		MouseMove 700, 200
-		Sleep 100
+		Sleep 10
 		Click
-		Sleep 100
+		Sleep 10
 		Send "!o"
-		Sleep 1000
+		Sleep 10
 		Send "{Blind}{Text}CL"
-		Sleep 150
+		Sleep 10
 		Send "!f"
-		Sleep 100
+		Sleep 10
 		Send "!p"
-		Sleep 200
+		Sleep 10
 		Send "{Esc}"
-		Sleep 300
+		Sleep 10
 		BlockInput false
-		Sleep 100
+		Sleep 10
 		WinRestore "ahk_class SunAwtFrame"
 	}
 }

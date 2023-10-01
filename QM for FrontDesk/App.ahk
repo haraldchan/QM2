@@ -192,6 +192,7 @@ F12:: cleanReload()
 ^F12:: quitApp() 
 #HotIf cityLedgerOn
 ^o::CityLedgerCo.Main()
+MButton::CityLedgerCo.Main()
 #Hotif WinActive("ahk_class AutoHotkeyGUI")
 Esc:: hideWin()
 Enter:: runSelectedScript()
