@@ -1,8 +1,10 @@
 ; #Include "%A_ScriptDir%\utils.ahk"
  #Include "../utils.ahk"
+#Include ../PSB.ahk
 
 ; { setup
 #SingleInstance Force
+CoordMode "Mouse", "Screen"
 TraySetIcon A_ScriptDir . "\assets\CFTray.ico"
 version := "0.0.1"
 popupTitle := "ClipFlow " . version
@@ -26,7 +28,7 @@ ClipFlow := Gui(, popupTitle)
 ClipFlow.AddCheckbox("Checked h25 x20", "Keep On Top").OnEvent("Click", keepOnTop)
 ClipFlow.AddButton("h20 w125", "Clear").OnEvent("Click", clearList)
 
-tab3 := ClipFlow.AddTab3("w300 h700", ["ClipHistory", "Flow"])
+tab3 := ClipFlow.AddTab3("w230 h700", ["Clipboard", "Flow", "Profile Flow"])
 tab3.UseTab(1)
 tabFirst := []
 renderHistory()
@@ -35,10 +37,22 @@ tab3.UseTab(2)
 tabSecond := []
 renderFlow()
 
+tab3.UseTab(3)
+info := "
+(
+操作指引：
+
+1、请先打开 PSB 旅客界面，点击“开始复制”；
+2、复制完成后请打开Opera Profile 界面，点击“开始填入”。
+)"
+ClipFlow.AddText("h20", info)
+ClipFlow.AddButton("h25 w75", "开始复制").OnEvent("Click", psbCopy)
+ClipFlow.AddButton("h25 w75 +20", "开始填入").OnEvent("Click", psbPaste)
+
 tab3.UseTab()
 
-ClipFlow.AddButton("h25 w100 x+18", "Flow Start").OnEvent("Click", flowStart)
-ClipFlow.AddButton("h25 w100 x20", "Flow Load").OnEvent("Click", flowLoad)
+ClipFlow.AddButton("h25 w100", "Flow Start").OnEvent("Click", flowStart)
+ClipFlow.AddButton("h25 w100 x+20", "Flow Load").OnEvent("Click", flowLoad)
 ; }
 
 ; { function scripts
@@ -76,7 +90,7 @@ setClb(ctrlObj, *) {
 }
 
 clearList(*) {
-    clipHisArr := []
+    global clipHisArr := []
     renderHistory()
 }
 
@@ -131,6 +145,20 @@ flowFire() {
     global flowPointer++
 }
 
+; PSB to Opera
+psbCopy(*) {
+    ClipFlow.Hide()
+    Sleep 100
+    PSB.Copy()
+    ClipFlow.Show()
+}
+
+psbPaste(*) {
+    ClipFlow.Hide()
+    Sleep 100
+    PSB.Paste()
+    ClipFlow.Show()
+}
 ; }
 
 ; hotkeys
