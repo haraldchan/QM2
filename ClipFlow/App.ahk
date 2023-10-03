@@ -1,5 +1,9 @@
+; #Include "%A_ScriptDir%\utils.ahk"
+ #Include "../utils.ahk"
+
 ; { setup
 #SingleInstance Force
+TraySetIcon A_ScriptDir . "\assets\CFTray.ico"
 version := "0.0.1"
 popupTitle := "ClipFlow " . version
 if (FileExist(A_MyDocuments . "\ClipFlow.ini")) {
@@ -13,14 +17,14 @@ flowArr := strToArr(IniRead(store, "Flow", "flowArr"))
 isFlowCopying := false
 isFlowPasting := false
 flowPointer := 1
-onTop := false
-OnClipboardChange addToHis
+onTop := true
+OnClipboardChange addToHistory
 ; }
 
-; { GUI templaye
+; { GUI template
 ClipFlow := Gui(, popupTitle)
-ClipFlow.AddCheckbox("h25 x20", "Keep On Top").OnEvent("Click", keepOnTop)
-ClipFlow.AddButton("h25 x20", "Load Flow").OnEvent("Click", flowLoad)
+ClipFlow.AddCheckbox("Checked h25 x20", "Keep On Top").OnEvent("Click", keepOnTop)
+ClipFlow.AddButton("h20 w125", "Clear").OnEvent("Click", clearList)
 
 tab3 := ClipFlow.AddTab3("w300 h700", ["ClipHistory", "Flow"])
 tab3.UseTab(1)
@@ -29,39 +33,30 @@ renderHistory()
 
 tab3.UseTab(2)
 tabSecond := []
+renderFlow()
 
 tab3.UseTab()
 
-ClipFlow.AddButton("h20 w125", "Clear").OnEvent("Click", clearList)
-flowBtn := ClipFlow.AddButton("h20 w125 x+18", "Flow!").OnEvent("Click", flowStart)
+ClipFlow.AddButton("h25 w100 x+18", "Flow Start").OnEvent("Click", flowStart)
+ClipFlow.AddButton("h25 w100 x20", "Flow Load").OnEvent("Click", flowLoad)
 ; }
 
-; { util funcs
-strToArr(str) {
-    return StrSplit(str, ",")
-}
-
-arrToStr(arr) {
-    str := ""
-    loop arr.Length {
-        str .= arr[A_Index] . ","
-    }
-    return str
-}
-
-addToHis() {
+; { function scripts
+addToHistory() {
     if (clipHisArr.Length > 10) {
         clipHisArr.Pop()
     }
     clipHisArr.InsertAt(1, A_Clipboard)
     renderHistory()
+    IniWrite(arrToStr(clipHisArr), store, "ClipHistory", "clipHistoryArr")
 }
 
 keepOnTop(*) {
     global onTop := !onTop
-    WinSetAlwaysOnTop !onTop, "ahk_class AutoHotkeyGUI"
+    WinSetAlwaysOnTop !onTop, popupTitle
 }
 
+; render tab1: Clipboard History base on clipHisArr
 renderHistory() {
     global tabFirst := []
     loop clipHisArr.Length {
@@ -72,6 +67,7 @@ renderHistory() {
     loop clipHisArr.Length {
         tabFirst[A_Index].OnEvent("DoubleClick", setClb.Bind(tabFirst[A_Index]))
     }
+    tab3.Redraw()
 }
 
 setClb(ctrlObj, *) {
@@ -85,12 +81,21 @@ clearList(*) {
 }
 
 ; flow related
+; render tab2: Flow base on flowArr. render when complete FlowCoping
+renderFlow() {
+    loop flowArr.Length {
+        tabSecond.Push(
+            ClipFlow.AddEdit("h50 w280 y+3 ReadOnly", flowArr[A_Index])
+        )
+    }
+}
+
 flowStart(*) {
     global isFlowCopying := !isFlowCopying
     bgc := isFlowCopying ? "AEE9FF" : ""
     ClipFlow.BackColor := bgc
     global flowArr := []
-    if (isFlowCopying = true) {
+    if (isFlowCopying) {
         flowing := MsgBox("Flowing! OK to end flow.", popupTitle, "OK 4096")
         if (flowing = "OK") {
             flowLoad()
@@ -108,22 +113,20 @@ flowAdd() {
 flowLoad(*) {
     global isFlowCopying := false
     global isFlowPasting := true
-    ; GUI render
-    tabSecond := []
-    loop flowArr.Length {
-        tabSecond.Push(
-            ClipFlow.AddEdit("h50 w280 y+3 ReadOnly", flowArr[A_Index])
-        )
-    }
+    global tabSecond := []
+    renderFlow()
+    tab3.Redraw()
 }
+
 ; over-ride default ctrl+v behavior
-flowFire(){
+flowFire() {
     if (flowPointer > flowAdd.Length) {
         isFlowPasting := false
+        global flowPointer := 1
         return
     }
     index := flowPointer
-    Send Format("{Text}{1}", flowArr[index]) 
+    Send Format("{Text}{1}", flowArr[index])
     global flowPointer++
 }
 
@@ -132,3 +135,15 @@ flowFire(){
 ^c:: flowAdd()
 #HotIf isFlowPasting
 ~^v:: flowFire()
+; double press Escape to ditch flow
+~Esc::{
+    if(KeyWait("Esc", "D T0.5")) {
+        ditchClip := MsgBox("Ditch Flow Clip?", popupTitle, "OKCancel 4096")
+        if (ditchClip = "OK") {
+            global isFlowPasting := false
+            global flowPointer := 1
+        } else {
+            return
+        }
+    }
+}
