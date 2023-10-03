@@ -61,7 +61,7 @@ try {
 }
 ; }
 
-; { GUI
+; { GUI template
 QM := Gui("+Resize", popupTitle)
 QM.AddText(, "
 (
@@ -108,38 +108,7 @@ loop xldp.Length {
     xldp[A_Index][3].OnEvent("Click", getXlPath.Bind(scriptIndex[2][A_Index].name, xldp[A_Index][2]))
     xldp[A_Index][4].OnEvent("Click", openXlFile.Bind(xldp[A_Index][2].Text))
 }
-singleSelect(ctrlObj, *) {
-    loop xldp.Length {
-        xldp[A_Index][1].Value := 0
-    }
-    ctrlObj.Value := 1
-}
-saveXlPath(script, ctrlObj, *) {
-    IniWrite(ctrlObj.Text, config, script, "xlsPath")
-}
-getXlPath(script, ctrlObj, *) {
-    QM.Opt("+OwnDialogs")
-    selectedFile := FileSelect(3, , "请选择 Excel 文件")
-    if (selectedFile = "") {
-        MsgBox("请选择文件")
-        return
-    }
-    ctrlObj.Value := selectedFile
-    IniWrite(selectedFile, config, script, "xlsPath")
-}
-openXlFile(file, *) {
-    Run file
-}
-
 QM.AddCheckbox("vDesktopMode h25 x20 y+15", "使用桌面文件模式").OnEvent("Click", toggleDesktopMode)
-toggleDesktopMode(*) {
-    global desktopMode := !desktopMode
-    loop xldp.Length {
-        xldp[A_Index][2].Enabled := !desktopMode
-        xldp[A_Index][3].Enabled := !desktopMode
-        xldp[A_Index][4].Enabled := !desktopMode
-    }
-}
 
 tab3.UseTab(3)
 QM.AddText("h20", "`n点击“启动脚本”打开报表选择器。")
@@ -158,6 +127,45 @@ QM.AddText("h20", "
 tab3.UseTab() ; end tab3
 
 QM.AddButton("Default h40 w165", "启动脚本").OnEvent("Click", runSelectedScript)
+QM.AddButton("h40 w165 x+18", "隐藏窗口").OnEvent("Click", hideWin)
+; }
+
+; { function scripts
+singleSelect(ctrlObj, *) {
+    loop xldp.Length {
+        xldp[A_Index][1].Value := 0
+    }
+    ctrlObj.Value := 1
+}
+
+saveXlPath(script, ctrlObj, *) {
+    IniWrite(ctrlObj.Text, config, script, "xlsPath")
+}
+
+getXlPath(script, ctrlObj, *) {
+    QM.Opt("+OwnDialogs")
+    selectedFile := FileSelect(3, , "请选择 Excel 文件")
+    if (selectedFile = "") {
+        MsgBox("请选择文件")
+        return
+    }
+    ctrlObj.Value := selectedFile
+    IniWrite(selectedFile, config, script, "xlsPath")
+}
+
+openXlFile(file, *) {
+    Run file
+}
+
+toggleDesktopMode(*) {
+    global desktopMode := !desktopMode
+    loop xldp.Length {
+        xldp[A_Index][2].Enabled := !desktopMode
+        xldp[A_Index][3].Enabled := !desktopMode
+        xldp[A_Index][4].Enabled := !desktopMode
+    }
+}
+
 runSelectedScript(*) {
     if (tab3.Value = 1) {
         loop basic.Length {
@@ -178,7 +186,7 @@ runSelectedScript(*) {
         scriptIndex[3].Main()
     }
 }
-QM.AddButton("h40 w165 x+18", "隐藏窗口").OnEvent("Click", hideWin)
+
 hideWin(*) {
     QM.Hide()
 }
