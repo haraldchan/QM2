@@ -83,11 +83,13 @@ clearList(*) {
 ; flow related
 ; render tab2: Flow base on flowArr. render when complete FlowCoping
 renderFlow() {
+    global flowArr := strToArr(IniRead(store, "Flow", "flowArr"))
     loop flowArr.Length {
         tabSecond.Push(
             ClipFlow.AddEdit("h50 w280 y+3 ReadOnly", flowArr[A_Index])
         )
     }
+    tab3.Redraw()
 }
 
 flowStart(*) {
@@ -115,7 +117,6 @@ flowLoad(*) {
     global isFlowPasting := true
     global tabSecond := []
     renderFlow()
-    tab3.Redraw()
 }
 
 ; over-ride default ctrl+v behavior
@@ -131,6 +132,8 @@ flowFire() {
 }
 
 ; }
+
+; hotkeys
 #HotIf isFlowCopying
 ^c:: flowAdd()
 #HotIf isFlowPasting
