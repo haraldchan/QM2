@@ -1,10 +1,11 @@
 ; #Include "%A_ScriptDir%\utils.ahk"
 ; #Include "%A_ScriptDir%\pinyin.ahk"
 #Include "../utils.ahk"
-#Include "../pinyin.ahk"
+#Include "../DictIndex.ahk"
 
 class PSB {
     static popupTitle := "ClipFlow - PSB"
+    static guestProfile := Map()
     static profileFormat := [
         "language",
         "lastName",
@@ -19,8 +20,94 @@ class PSB {
         "idNum"
     ]
 
+    static Capture(gType) {
+        capturedInfo := []
+        if (gType = 1) {
+            ; from Mainland
+            ; capture: fullname
+            capturedInfo.Push(A_Clipboard)
+            ; capture: gender
+            capturedInfo.Push(A_Clipboard)
+            ; capture: birthday
+            capturedInfo.Push(A_Clipboard)
+            ; capture: id
+            capturedInfo.Push(A_Clipboard)
+            ; capture: address
+            capturedInfo.Push(A_Clipboard)
+            Sleep 100
+            this.guestProfile["language"] := "C"
+            this.guestProfile["country"] := "CN"
+            this.guestProfile["altName"] := capturedInfo[1]
+            this.guestProfile["lastName"] := getFullnamePinyin(capturedInfo[1])[1]
+            this.guestProfile["firstName"] := getFullnamePinyin(capturedInfo[1])[2]
+            this.guestProfile["gender"] := (capturedInfo[2] = "男") ? "Mr" : "Ms"
+            this.guestProfile["birthday"] := FormatTime(capturedInfo[3], "MMddyyyy")
+            this.guestProfile["idNum"] := capturedInfo[4]
+            if (StrLen(capturedInfo[4]) = 18) {
+                this.guestProfile["idType"] := "IDC"
+            } else if (StrLen(capturedInfo[4]) = 9) {
+                this.guestProfile["idType"] := (SubStr(this.guestProfile["idNum"], 1, 1) = "C") ? "MRP" : "IDP"
+            } else {
+                this.guestProfile["idType"] := ""
+            }
+            this.guestProfile["address"] := capturedInfo[5]
+            this.guestProfile["province"] := getProvince(this.guestProfile["address"])
+        } else if (gType = 2) {
+            ; from HK/MO/TW
+            ; capture: fullname
+            capturedInfo.Push(A_Clipboard)
+            ; capture: lastname
+            capturedInfo.Push(A_Clipboard)
+            ; capture: firstname
+            capturedInfo.Push(A_Clipboard)
+            ; capture: gender
+            capturedInfo.Push(A_Clipboard)
+            ; capture: birthday
+            capturedInfo.Push(A_Clipboard)
+            ; capture: id
+            capturedInfo.Push(A_Clipboard)
+            Sleep 100
+            this.guestProfile["language"] := "E"
+            this.guestProfile["country"] := "CN"
+            this.guestProfile["altName"] := capturedInfo[1]
+            this.guestProfile["lastName"] := capturedInfo[2]
+            this.guestProfile["firstName"] := capturedInfo[3]
+            this.guestProfile["gender"] := (capturedInfo[4] = "男") ? "Mr" : "Ms"
+            this.guestProfile["birthday"] := FormatTime(capturedInfo[5], "MMddyyyy")
+            this.guestProfile["idNum"] := capturedInfo[6]
+            if (SubStr(this.guestProfile["idNum"], 1, 1) = "H" || SubStr(this.guestProfile["idNum"], 1, 1) = "M") {
+                this.guestProfile["idType"] := "HKC"
+            } else {
+                this.guestProfile["idType"] := "TWT"
+            }
+        } else {
+            ; from abroad
+            ; capture: lastname
+            capturedInfo.Push(A_Clipboard)
+            ; capture: firstname
+            capturedInfo.Push(A_Clipboard)
+            ; capture: gender
+            capturedInfo.Push(A_Clipboard)
+            ; capture: birthday
+            capturedInfo.Push(A_Clipboard)
+            ; capture: id
+            capturedInfo.Push(A_Clipboard)
+            ; capture: country
+            capturedInfo.Push(A_Clipboard)
+            Sleep 100
+            this.guestProfile["language"] := "E"
+            this.guestProfile["idType"] := "NOP"
+            this.guestProfile["lastName"] := capturedInfo[1]
+            this.guestProfile["firstName"] := capturedInfo[2]
+            this.guestProfile["gender"] := (capturedInfo[3] = "男") ? "Mr" : "Ms"
+            this.guestProfile["birthday"] := FormatTime(capturedInfo[4], "MMddyyyy")
+            this.guestProfile["idNum"] := capturedInfo[5]
+            this.guestProfile["country"] := getCountryCode(capturedInfo[6])
+        }
+    }
+
     static Copy() {
-        global guestProfile := Map()
+        ; Coord mode needs to be set to Client or Window (guest id info window)
         global guestType := InputBox("
             (
             请输入需要复制的旅客类型：
@@ -32,82 +119,15 @@ class PSB {
         if (guestType.Result = "Cancel") {
             cleanReload()
         }
-        if (guestType.Value = 1) {
-            ; from China Mainland
-            this.guestProfile["language"] := "C"
-            this.guestProfile["Country"] := "CN"
-            ; TODO: mouse action to copy fullname
-            this.guestProfile["altName"] := A_Clipboard
-            this.guestProfile["lastName"] := getFullnamePinyin(A_Clipboard)[1]
-            this.guestProfile["lastName"] := getFullnamePinyin(A_Clipboard)[2]
-            ; TODO: mouse action to copy id
-            this.guestProfile["idNum"] := A_Clipboard
-            if (StrLen(this.guestProfile["idNum"]) = 18) {
-                this.guestProfile["idType"] := "IDC"
-                this.guestProfile["birthday"] := FormatTime(SubStr(this.guestProfile["id"], 7, 8), "MMddyyyy")
-                this.guestProfile["gender"] := (Mod(SubStr(this.guestProfile["id"], 17, 1), 2) = 0) ? "Ms" : "Mr"
-            } else if (StrLen(this.guestProfile["idNum"]) = 9) {
-                this.guestProfile["idType"] := (SubStr(this.guestProfile["idNum"], 1, 1) = "C") ? "MRP" : "IDP"
-                ; TODO: mouse action to copy birthday
-                this.guestProfile["birthday"] := FormatTime(A_Clipboard, "MMddyyyy")
-                ; TODO: mouse action to copy gender
-                this.guestProfile["gender"] := (A_Clipboard = "男") ? "Mr" : "Ms"
-            } else {
-                return
-            }
-            ; mouse action to copy address
-            this.guestProfile["address"] := A_Clipboard
-            this.guestProfile["province"] := getProvince(this.guestProfile["address"])
-        } else if (guestType.Value = 2) {
-            ; from Hongkong/Macau/Taiwan
-            this.guestProfile["language"] := "E"
-            this.guestProfile["country"] := "CN"
-            ; TODO: mouse action to copy id
-            this.guestProfile["idNum"] := A_Clipboard
-            if (SubStr(this.guestProfile["idNum"], 1, 1) = "H" || SubStr(this.guestProfile["idNum"], 1, 1) = "M") {
-                this.guestProfile["idType"] := "HKC"
-            } else {
-                this.guestProfile["idType"] := "TWT"
-            }
-            ; TODO: mouse action to copy last name
-            this.guestProfile["lastName"] := A_Clipboard
-            ; TODO: mouse action to copy first name
-            this.guestProfile["firstName"] := A_Clipboard
-            ; TODO: mouse action to copy full(hanzi) name
-            this.guestProfile["altName"] := A_Clipboard
-            ; TODO: mouse action to copy birthday
-            this.guestProfile["birthday"] := FormatTime(A_Clipboard, "MMddyyyy")
-            ; TODO: mouse action to copy gender
-            this.guestProfile["gender"] := (A_Clipboard = "男") ? "Mr" : "Ms"
-        } else {
-            ; from abroad
-            this.guestProfile["language"] := "E"
-            this.guestProfile["idType"] := "NOP"
-            ; TODO: mouse action to copy id
-            this.guestProfile["idNum"] := A_Clipboard
-            ; TODO: mouse action to copy last name
-            this.guestProfile["lastName"] := A_Clipboard
-            ; TODO: mouse action to copy first name
-            this.guestProfile["firstName"] := A_Clipboard
-            ; TODO: mouse action to copy country 
-            this.guestProfile["country"] := getCountryCode(A_Clipboard)
-            ; TODO: mouse action to copy id
-            this.guestProfile["idNum"] := A_Clipboard
-            ; TODO: mouse action to copy birthday
-            this.guestProfile["birthday"] := FormatTime(A_Clipboard, "MMddyyyy")
-            ; TODO: mouse action to copy gender
-            this.guestProfile["gender"] := (A_Clipboard = "男") ? "Mr" : "Ms"
-        }
-
-
+        this.Capture(guestType.Value)
     }
 
     static Paste() {
         ; TODO: mouse action to paste guest profile info
-        if (guestType.Value = 3) {
-            ; no hanzi name
-        } else {
-            ; has hanzi name
+        ; action: common info: lastName, firstName, language, gender, country, birthday, idType, idNum
+        if (guestType.Value = 1) {
+            ; action: with hanzi name
+            ; province, altName, gender(in altName window)
         }
     }
 }
