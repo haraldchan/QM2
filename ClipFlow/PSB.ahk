@@ -123,6 +123,11 @@ class PSB {
 
     static Paste(guestProfileMap) {
         CoordMode "Mouse", "Screen"
+        ; TODO:(advance feature) try set custom relative coords 
+        ;       1.get profile window image
+        ;       2.use ImageSearch to get initial(anchor) pixel pos
+        ;       3.if it works, try implement it to other scripts
+
         ; TODO: mouse action to send(not paste) guest profile info
         ; action: common info: lastName, firstName, language, gender, country, birthday, idType, idNum
         if (guestProfileMap.Has("altName")) {
