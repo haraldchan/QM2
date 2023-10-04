@@ -179,8 +179,8 @@ psbPaste(*) {
 ; double press Escape to ditch flow
 ~Esc::{
     if(KeyWait("Esc", "D T0.5")) {
-        ditchClip := MsgBox("Ditch Flow Clip?", popupTitle, "OKCancel 4096")
-        if (ditchClip = "OK") {
+        unload := MsgBox("Unload Flow Clip?", popupTitle, "OKCancel 4096")
+        if (unload = "OK") {
             global isFlowPasting := false
             global flowPointer := 1
         } else {
