@@ -1,25 +1,27 @@
-; #Include "%A_ScriptDir%\dict.ahk"
-#Include "../dict.ahk"
+; #Include "%A_ScriptDir%\Dict.ahk"
+#Include "../Dict.ahk"
 
 regionISOMap := Map()
 loop regionISO.Length {
+    ; region : code
     regionISOMap[regionISO[A_Index][1]] := regionISO[A_Index][2]
 }
 
 provinceMap := Map()
 loop province.Length {
+    ; province name : code
     provinceMap[province[A_Index][1]] := province[A_Index][2]
 }
 
 dictionaryMap := Map()
 loop dictionary.Length {
-    ; key: han, value: pinyin
+    ; hanzi : pinyin
     dictionaryMap[dictionary[A_Index][2]] := dictionary[A_Index][1]
 }
 
 doubleLastNameMap := Map()
 loop doubleLastName.Length {
-    ; key: han, value: pinyin
+    ; hanzi : pinyin
     doubleLastNameMap[doubleLastName[A_Index][1]] := doubleLastName[A_Index][2]
 }
 
@@ -27,6 +29,8 @@ getCountryCode(country) {
     for region, code in regionISOMap {
         if (country = region) {
             return code
+        } else {
+            return ""
         }
     }
 }
@@ -35,6 +39,8 @@ getProvince(address) {
     for province, code in provinceMap {
         if (InStr(address, province)) {
             return code
+        } else {
+            return ""
         }
     }
 }
@@ -43,6 +49,8 @@ getPinyin(hanzi) {
     for han, pinyin in dictionaryMap {
         if (InStr(han, hanzi)) {
             return pinyin
+        } else {
+            return ""
         }
     }
 }
