@@ -16,9 +16,9 @@ if (FileExist(A_MyDocuments . "\ClipFlow.ini")) {
 }
 clipHisArr := strToArr(IniRead(store, "clipHistory", "clipHistoryArr"))
 flowArr := strToArr(IniRead(store, "Flow", "flowArr"))
+flowPointer := 1
 isFlowCopying := false
 isFlowPasting := false
-flowPointer := 1
 onTop := true
 OnClipboardChange addToHistory
 ; }
@@ -26,9 +26,11 @@ OnClipboardChange addToHistory
 ; { GUI template
 ClipFlow := Gui(, popupTitle)
 ClipFlow.AddCheckbox("Checked h25 x20", "Keep On Top").OnEvent("Click", keepOnTop)
-ClipFlow.AddButton("h20 w125", "Clear").OnEvent("Click", clearList)
+ClipFlow.AddButton("h25 w80", "Flow Start").OnEvent("Click", flowStart)
+ClipFlow.AddButton("h25 w80 x+8", "Flow Load").OnEvent("Click", flowLoad)
+ClipFlow.AddButton("h25 w80 x+8", "Load History").OnEvent("Click", loadAsFlow)
 
-tab3 := ClipFlow.AddTab3("w230 h700", ["Clipboard", "Flow", "Profile Flow"])
+tab3 := ClipFlow.AddTab3("w230 h700", ["Clipboard", "Flow", "Flow Modes"])
 tab3.UseTab(1)
 tabFirst := []
 renderHistory()
@@ -38,21 +40,24 @@ tabSecond := []
 renderFlow()
 
 tab3.UseTab(3)
-info := "
+PSBinfo := "
 (
-操作指引：
-
-1、请先打开 PSB 旅客界面，点击“开始复制”；
-2、复制完成后请打开Opera Profile 界面，点击“开始填入”。
+    FLow - Profile Mode
+    
+    1、请先打开 PSB 旅客界面，点击“开始复制”；
+    2、复制完成后请打开Opera Profile 界面，点击“开始填入”。
 )"
-ClipFlow.AddText("h20", info)
-ClipFlow.AddButton("h25 w75", "开始复制").OnEvent("Click", psbCopy)
-ClipFlow.AddButton("h25 w75 +20", "开始填入").OnEvent("Click", psbPaste)
+ClipFlow.AddText("h20", PSBinfo)
+ClipFlow.AddButton("h25 w80", "开始复制").OnEvent("Click", psbCopy)
+ClipFlow.AddButton("h25 w80 +20", "开始填入").OnEvent("Click", psbPaste)
+
+; TODO: learn reservation patterns, add it as ResvMode!
 
 tab3.UseTab()
 
-ClipFlow.AddButton("h25 w100", "Flow Start").OnEvent("Click", flowStart)
-ClipFlow.AddButton("h25 w100 x+20", "Flow Load").OnEvent("Click", flowLoad)
+ClipFlow.AddButton("h25 w210", "Clear").OnEvent("Click", clearList)
+
+ClipFlow.Show()
 ; }
 
 ; { function scripts
@@ -115,8 +120,6 @@ flowStart(*) {
         flowing := MsgBox("Flowing! OK to end flow.", popupTitle, "OK 4096")
         if (flowing = "OK") {
             flowLoad()
-            TrayTip "Flow loaded, ready to fire."
-            IniWrite(arrToStr(flowArr), store, "Flow", flowArr)
         }
     }
 }
@@ -130,6 +133,8 @@ flowLoad(*) {
     global isFlowCopying := false
     global isFlowPasting := true
     global tabSecond := []
+    TrayTip "Flow loaded, ready to fire."
+    IniWrite(arrToStr(flowArr), store, "Flow", flowArr)
     renderFlow()
 }
 
@@ -145,18 +150,23 @@ flowFire() {
     global flowPointer++
 }
 
+loadAsFlow(*) {
+    flowArr := clipHisArr
+    flowLoad()
+}
+
 ; PSB to Opera
 psbCopy(*) {
     ClipFlow.Hide()
     Sleep 100
-    PSB.Copy()
+    global profileCache := PSB.Copy()
     ClipFlow.Show()
 }
 
 psbPaste(*) {
     ClipFlow.Hide()
     Sleep 100
-    PSB.Paste()
+    PSB.Paste(profileCache)
     ClipFlow.Show()
 }
 ; }
