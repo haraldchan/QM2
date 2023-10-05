@@ -29,8 +29,6 @@ getCountryCode(country) {
     for region, code in regionISOMap {
         if (country = region) {
             return code
-        } else {
-            return ""
         }
     }
 }
@@ -39,8 +37,6 @@ getProvince(address) {
     for province, code in provinceMap {
         if (InStr(address, province)) {
             return code
-        } else {
-            return ""
         }
     }
 }
@@ -49,8 +45,6 @@ getPinyin(hanzi) {
     for han, pinyin in dictionaryMap {
         if (InStr(han, hanzi)) {
             return pinyin
-        } else {
-            return ""
         }
     }
 }
