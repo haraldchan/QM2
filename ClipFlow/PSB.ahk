@@ -7,7 +7,7 @@ class PSB {
     static popupTitle := "ClipFlow - PSB"
 
     static Copy() {
-        guestType := 0
+        ; guestType := 0
         CoordMode "Mouse", "Window"
         global guestType := InputBox("
             (
@@ -21,7 +21,7 @@ class PSB {
             cleanReload()
         }
         Sleep 500
-        ; TODO: try get guest type with getpixelcolor(get the radio that is selected)
+        ; TODO: try get guest type with getpixelcolor(get the radio that is selected), need more precise pixel
         return this.Capture(guestType.Value)
     }
     ; TODO: record capture actions
@@ -30,31 +30,31 @@ class PSB {
             WinSetAlwaysOnTop true, "旅客信息"
         }
         capturedInfo := []
+        ; capture: birthday
+        MouseMove 755, 147
+        Click "Down"
+        Sleep 100
+        MouseMove 755, 147
+        Click "Up"
+        Sleep 100
+        Send "^c"
+        Sleep 100
+        capturedInfo.Push(A_Clipboard)
+        ; capture: gender
+        MouseMove 565, 147
+        Sleep 100
+        Click 
+        Sleep 100
+        Click "Right"
+        Sleep 200
+        Send "{c}"
+        Sleep 100
+        Send "{Esc}"
+        Sleep 200
+        capturedInfo.Push(A_Clipboard)
         Sleep 500
         if (gType = 1) {
             ; from Mainland
-            ; capture: birthday
-            MouseMove 755, 147
-            Click "Down"
-            Sleep 100
-            MouseMove 755, 147
-            Click "Up"
-            Sleep 100
-            Send "^c"
-            Sleep 100
-            capturedInfo.Push(A_Clipboard)
-            ; capture: gender
-            MouseMove 565, 147
-            Sleep 100
-            Click 
-            Sleep 100
-            Click "Right"
-            Sleep 200
-            Send "{c}"
-            Sleep 100
-            Send "{Esc}"
-            Sleep 200
-            capturedInfo.Push(A_Clipboard)
             ; capture: id
             MouseMove 738, 235
             Click "Down"
@@ -86,29 +86,10 @@ class PSB {
             Sleep 100           
             capturedInfo.Push(A_Clipboard)
             Sleep 100
+            ; capture: province
+            ; TODO: add capture of province
         } else if (gType = 2) {
             ; from HK/MO/TW
-            ; capture: birthday
-            MouseMove 755, 147
-            Click "Down"
-            Sleep 100
-            MouseMove 755, 147
-            Click "Up"
-            Send "^c"
-            Sleep 100
-            capturedInfo.Push(A_Clipboard)
-            ; capture: gender
-            MouseMove 565, 147
-            Sleep 100
-            Click 
-            Sleep 100
-            Click "Right"
-            Sleep 200
-            Send "{c}"
-            Sleep 100
-            Send "{Esc}"
-            Sleep 200
-            capturedInfo.Push(A_Clipboard)
             ; capture: id
             MouseMove 652, 291
             Click "Down"
@@ -152,27 +133,6 @@ class PSB {
 
         } else if (gType = 3) {
             ; from abroad
-            ; capture: birthday
-            MouseMove 755, 147
-            Click "Down"
-            Sleep 100
-            MouseMove 755, 147
-            Click "Up"
-            Send "^c"
-            Sleep 100
-            capturedInfo.Push(A_Clipboard)
-            ; capture: gender
-            MouseMove 565, 147
-            Sleep 100
-            Click 
-            Sleep 100
-            Click "Right"
-            Sleep 200
-            Send "{c}"
-            Sleep 100
-            Send "{Esc}"
-            Sleep 200
-            capturedInfo.Push(A_Clipboard)
             ; capture: id
             MouseMove 652, 291
             Click "Down"
@@ -240,7 +200,7 @@ class PSB {
                 guestProfile["idType"] := ""
             }
             guestProfile["address"] := infoArr[5]
-            guestProfile["province"] := getProvince(guestProfile["address"])
+            guestProfile["province"] := getProvince(infoArr[6])
         } else if (gType = 2) {
             guestProfile["language"] := "E"
             guestProfile["country"] := "CN"
@@ -261,9 +221,16 @@ class PSB {
             guestProfile["country"] :=  getCountryCode(infoArr[6])
         }
 
+        ; debugging infos
         for k, v in guestProfile {
-            MsgBox(Format("{1}:{2}",k,v), "4096")
+            toFill .= Format("{1}：{2}`n", k, v)
         }
+        MsgBox(Format("
+            (	
+            即将填入的信息：
+
+            {1}
+            )", toFill), this.popupTitle, "4096")
 
         return guestProfile
     }
