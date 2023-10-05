@@ -15,6 +15,9 @@ cleanReload(quit := 0){
     if (WinExist("ahk_class SunAwtFrame")) {
         WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
     }
+    if (WinExist("旅客信息")) {
+        WinSetAlwaysOnTop false, "旅客信息"
+    }
     ; Key/Mouse state set default
     BlockInput false
     SetCapsLockState false
@@ -23,4 +26,9 @@ cleanReload(quit := 0){
         ExitApp
     }
     Reload
+}
+
+quitApp() {
+    quitConfirm := MsgBox("是否确定退出QM 2? ", "QM for FrontDesk 2.1.0", "OKCancel 4096")
+    quitConfirm = "OK" ? cleanReload("quit") : cleanReload()
 }
