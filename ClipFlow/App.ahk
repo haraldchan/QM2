@@ -164,6 +164,17 @@ psbCopy(*) {
     Sleep 200
     global profileCache := PSB.Copy()
     ClipFlow.Show()
+    switchToOpera := MsgBox("旅客信息已复制，开始填入？", popupTitle, "OKCancel 4096")
+    if (switchToOpera = "Cancel") {
+        cleanReload()
+    } else {
+        if (WinExist("ahk_class SunAwtFrame")) {
+            WinMaximize "ahk_class SunAwtFrame"
+            WinActivate "ahk_class SunAwtFrame"
+            ; TODO: use ImageSearch to determine if profile win is opened
+            psbPaste()
+        }
+    }
 }
 
 psbPaste(*) {
