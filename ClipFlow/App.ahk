@@ -23,35 +23,14 @@ onTop := true
 OnClipboardChange addToHistory
 ; }
 
-; { setup
-#SingleInstance Force
-CoordMode "Mouse", "Screen"
-TraySetIcon A_ScriptDir . "\assets\CFTray.ico"
-version := "0.0.1"
-popupTitle := "ClipFlow " . version
-if (FileExist(A_MyDocuments . "\ClipFlow.ini")) {
-    store := A_MyDocuments . "\ClipFlow.ini"
-} else {
-    FileCopy "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\ClipFlow.ini", A_MyDocuments
-    store := A_MyDocuments . "\ClipFlow.ini"
-}
-clipHisArr := strToArr(IniRead(store, "ClipHistory", "clipHisArr"))
-flowArr := strToArr(IniRead(store, "Flow", "flowArr"))
-flowPointer := 1
-isFlowCopying := false
-isFlowPasting := false
-onTop := true
-OnClipboardChange addToHistory
-; }
-
 ; { GUI template
 ClipFlow := Gui(, popupTitle)
 ClipFlow.OnEvent("Close", quitApp)
 ClipFlow.AddText(,"~~When Flowing, press Esc to Unflow~~")
 ClipFlow.AddCheckbox("Checked h25 x20", "Keep ClipFlow On Top").OnEvent("Click", keepOnTop)
-ClipFlow.AddButton("h25 w85", "Flow Start").OnEvent("Click", flowStart)
-ClipFlow.AddButton("h25 w85 x+12", "Flow Load").OnEvent("Click", flowLoad)
-ClipFlow.AddButton("h25 w85 x+12", "Load History").OnEvent("Click", loadAsFlow)
+ClipFlow.AddButton("Disabled h25 w85", "Flow Start").OnEvent("Click", flowStart)
+ClipFlow.AddButton("Disabled h25 w85 x+12", "Flow Load").OnEvent("Click", flowLoad)
+ClipFlow.AddButton("Disabled h25 w85 x+12", "Load History").OnEvent("Click", loadAsFlow)
 
 tab3 := ClipFlow.AddTab3("w280 x20", ["Flow Modes", "Flow", "History"])
 
@@ -65,7 +44,7 @@ PSBinfo := "
       点击“开始填入”。
 )"
 ClipFlow.AddText("h20", PSBinfo)
-ClipFlow.AddButton("h25 w80", "开始复制").OnEvent("Click", psbCopy)
+ClipFlow.AddButton("Default h25 w80", "开始复制").OnEvent("Click", psbCopy)
 ClipFlow.AddButton("h25 w80 x+20", "开始填入").OnEvent("Click", psbPaste)
 
 tab3.UseTab(2)
@@ -194,10 +173,14 @@ psbPaste(*) {
     Sleep 200
     PSB.Paste(profileCache)
     ClipFlow.Show()
+    WinActivate "ahk_class SunAwtFrame"
 }
 ; }
 
 ; hotkeys
+Pause::{
+    ClipFlow.Show()
+}
 #HotIf isFlowPasting
 ~^v:: flowFire()
 ; double press Escape to unload flow
