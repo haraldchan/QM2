@@ -23,24 +23,39 @@ onTop := true
 OnClipboardChange addToHistory
 ; }
 
+; { setup
+#SingleInstance Force
+CoordMode "Mouse", "Screen"
+TraySetIcon A_ScriptDir . "\assets\CFTray.ico"
+version := "0.0.1"
+popupTitle := "ClipFlow " . version
+if (FileExist(A_MyDocuments . "\ClipFlow.ini")) {
+    store := A_MyDocuments . "\ClipFlow.ini"
+} else {
+    FileCopy "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\ClipFlow.ini", A_MyDocuments
+    store := A_MyDocuments . "\ClipFlow.ini"
+}
+clipHisArr := strToArr(IniRead(store, "ClipHistory", "clipHisArr"))
+flowArr := strToArr(IniRead(store, "Flow", "flowArr"))
+flowPointer := 1
+isFlowCopying := false
+isFlowPasting := false
+onTop := true
+OnClipboardChange addToHistory
+; }
+
 ; { GUI template
 ClipFlow := Gui(, popupTitle)
+ClipFlow.OnEvent("Close", quitApp)
 ClipFlow.AddText(,"~~When Flowing, press Esc to Unflow~~")
 ClipFlow.AddCheckbox("Checked h25 x20", "Keep ClipFlow On Top").OnEvent("Click", keepOnTop)
 ClipFlow.AddButton("h25 w85", "Flow Start").OnEvent("Click", flowStart)
 ClipFlow.AddButton("h25 w85 x+12", "Flow Load").OnEvent("Click", flowLoad)
 ClipFlow.AddButton("h25 w85 x+12", "Load History").OnEvent("Click", loadAsFlow)
 
-tab3 := ClipFlow.AddTab3("w280 x20", ["Clipboard", "Flow", "Flow Modes"])
+tab3 := ClipFlow.AddTab3("w280 x20", ["Flow Modes", "Flow", "History"])
+
 tab3.UseTab(1)
-tabFirst := []
-renderHistory()
-
-tab3.UseTab(2)
-tabSecond := []
-renderFlow()
-
-tab3.UseTab(3)
 PSBinfo := "
 (
     Flow - Profile Mode
@@ -52,6 +67,14 @@ PSBinfo := "
 ClipFlow.AddText("h20", PSBinfo)
 ClipFlow.AddButton("h25 w80", "开始复制").OnEvent("Click", psbCopy)
 ClipFlow.AddButton("h25 w80 x+20", "开始填入").OnEvent("Click", psbPaste)
+
+tab3.UseTab(2)
+tabFlow := []
+renderFlow()
+
+tab3.UseTab(3)
+tabHistory := []
+renderHistory()
 
 ; TODO: learn reservation patterns, add it as ResvMode!
 
@@ -86,12 +109,12 @@ addToHistory(*) {
 
 ; render tab1: Clipboard History base on clipHisArr
 renderHistory() {
-    global tabFirst := []
+    global tabHistory := []
     if (clipHisArr.Length = 0) {
         return
     }
     loop clipHisArr.Length {
-        tabFirst.Push(
+        tabHistory.Push(
             ClipFlow.AddEdit("h30 w250 y+10 ReadOnly", clipHisArr[A_Index])
         )
     }
@@ -111,7 +134,7 @@ refresh(*) {
 renderFlow() {
     global flowArr := strToArr(IniRead(store, "Flow", "flowArr"))
     loop flowArr.Length {
-        tabSecond.Push(
+        tabFlow.Push(
             ClipFlow.AddEdit("h30 w250 y+10 ReadOnly", flowArr[A_Index])
         )
     }
@@ -164,17 +187,6 @@ psbCopy(*) {
     Sleep 200
     global profileCache := PSB.Copy()
     ClipFlow.Show()
-    switchToOpera := MsgBox("旅客信息已复制，开始填入？", popupTitle, "OKCancel 4096")
-    if (switchToOpera = "Cancel") {
-        cleanReload()
-    } else {
-        if (WinExist("ahk_class SunAwtFrame")) {
-            WinMaximize "ahk_class SunAwtFrame"
-            WinActivate "ahk_class SunAwtFrame"
-            ; TODO: use ImageSearch to determine if profile win is opened
-            psbPaste()
-        }
-    }
 }
 
 psbPaste(*) {
@@ -188,7 +200,7 @@ psbPaste(*) {
 ; hotkeys
 #HotIf isFlowPasting
 ~^v:: flowFire()
-; double press Escape to ditch flow
+; double press Escape to unload flow
 ~Esc::{
     if(KeyWait("Esc", "D T0.5")) {
         unload := MsgBox("Stop Flowing?", popupTitle, "OKCancel 4096")
