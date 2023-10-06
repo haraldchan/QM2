@@ -24,8 +24,9 @@ class PSB {
         ; TODO: try get guest type with getpixelcolor(get the radio that is selected), need more precise pixel
         return this.Capture(guestType.Value)
     }
-    ; TODO: record capture actions
+
     static Capture(gType) {
+        BlockInput true
         if (WinExist("旅客信息")){
             WinSetAlwaysOnTop true, "旅客信息"
         }
@@ -58,36 +59,48 @@ class PSB {
             ; capture: id
             MouseMove 738, 235
             Click "Down"
-            Sleep 100
+            Sleep 10
             MouseMove 483, 235
             Click "Up"
-            Sleep 100
+            Sleep 10
             Send "^c"
-            Sleep 100
+            Sleep 10
             capturedInfo.Push(A_Clipboard)
             ; capture: fullname
             MouseMove 658, 116
             Click "Down"
-            Sleep 100
+            Sleep 10
             MouseMove 498, 116
             Click "Up"
-            Sleep 100
+            Sleep 10
             Send "^c"
-            Sleep 100
+            Sleep 10
             capturedInfo.Push(A_Clipboard)
             ; capture: address
             MouseMove 750, 262
             Click "Down"
-            Sleep 100
+            Sleep 10
             MouseMove 498, 262
             Click "Up"
-            Sleep 100
+            Sleep 10
             Send "^c"
-            Sleep 100           
+            Sleep 10           
             capturedInfo.Push(A_Clipboard)
-            Sleep 100
+            Sleep 10
             ; capture: province
             ; TODO: add capture of province
+            MouseMove 587, 292
+            Sleep 10
+            Click 
+            Sleep 10
+            Click "Right"
+            Sleep 10
+            Send "c"
+            Sleep 10
+            Send "{Esc}"
+            Sleep 20
+            capturedInfo.Push(A_Clipboard)
+
         } else if (gType = 2) {
             ; from HK/MO/TW
             ; capture: id
@@ -134,11 +147,15 @@ class PSB {
         } else if (gType = 3) {
             ; from abroad
             ; capture: id
-            MouseMove 652, 291
-            Click "Down"
+            ; MouseMove 652, 291
+            ; Click "Down"
+            ; Sleep 100
+            ; MouseMove 759, 291
+            ; Click "Up"
+            MouseMove 666, 290
             Sleep 100
-            MouseMove 759, 291
-            Click "Up"
+            Click 2
+            Sleep 100
             Send "^c"
             Sleep 100
             capturedInfo.Push(A_Clipboard)
@@ -163,7 +180,7 @@ class PSB {
             Sleep 100
             capturedInfo.Push(A_Clipboard)
             ; capture: country
-            MouseMove 537, 319
+            MouseMove 670, 322
             Sleep 100
             Click 
             Sleep 100
@@ -177,6 +194,7 @@ class PSB {
             Sleep 100
         }
         WinSetAlwaysOnTop false, "旅客信息"
+        BlockInput false
         return this.parseGuestInfo(gType, capturedInfo)
     }
 
@@ -207,10 +225,16 @@ class PSB {
             guestProfile["altName"] := infoArr[4]
             guestProfile["lastName"] := infoArr[5]
             guestProfile["firstName"] := infoArr[6]
-            if (SubStr(guestProfile["idNum"], 1, 1) = "H" || SubStr(guestProfile["idNum"], 1, 1) = "M") {
+            guestProfile["address"] := ""
+            if (SubStr(guestProfile["idNum"], 1, 1) = "H") {
                 guestProfile["idType"] := "HKC"
+                guestProfile["province"] := "HK"
+            } else if (SubStr(guestProfile["idNum"], 1, 1) = "M") {
+                guestProfile["idType"] := "HKC"
+                guestProfile["province"] := "MO"
             } else {
                 guestProfile["idType"] := "TWT"
+                guestProfile["province"] := "TW"
             }
         } else if (gType = 3)  {
             ; from abroad
@@ -221,33 +245,100 @@ class PSB {
             guestProfile["country"] :=  getCountryCode(infoArr[6])
         }
 
-        ; debugging infos
+        ; debugging popup
         for k, v in guestProfile {
             toFill .= Format("{1}：{2}`n", k, v)
         }
         MsgBox(Format("
-            (	
+            (   
             即将填入的信息：
 
             {1}
-            )", toFill), this.popupTitle, "4096")
+            )", toFill), this.popupTitle, "OKCancel 4096")
 
         return guestProfile
     }
 
-
     static Paste(guestProfileMap) {
         CoordMode "Mouse", "Screen"
+        BlockInput true
         ; TODO:(advance feature) try set custom relative coords 
         ;       1.get profile window image
         ;       2.use ImageSearch to get initial(anchor) pixel pos
         ;       3.if it works, try implement it to other scripts
 
         ; TODO: mouse action to send(not paste) guest profile info
-        ; action: common info: lastName, firstName, language, gender, country, birthday, idType, idNum
+        ; { action: common info: lastName, firstName, language, gender, country, birthday, idType, idNum
+        MouseMove 433, 286
+        Click 3
+        Sleep 10
+        Send Format("{Text}{1}", guestProfileMap["lastName"])
+        Sleep 10
+        MouseMove 384, 313
+        Click 3
+        Sleep 10
+        Send Format("{Text}{1}", guestProfileMap["firstName"])
+        Sleep 10
+        MouseMove 350, 341
+        Click 3
+        Sleep 10
+        Send Format("{Text}{1}", guestProfileMap["language"])
+        Sleep 10
+        MouseMove 435, 339
+        Click 3
+        Sleep 10
+        Send Format("{Text}{1}", guestProfileMap["gender"])
+        Sleep 10
+        MouseMove 346, 494
+        Click 3
+        Sleep 10
+        Send Format("{Text}{1}", guestProfileMap["country"])
+        Sleep 10
+        MouseMove 843, 285
+        Click 3
+        Sleep 10
+        Send Format("{Text}{1}", guestProfileMap["birthday"])
+        Sleep 10
+        MouseMove 829, 306
+        Click 3
+        Sleep 10
+        Send Format("{Text}{1}", guestProfileMap["idType"])
+        Sleep 100
+        MouseMove 867, 326
+        Click 3
+        Sleep 10
+        Send Format("{Text}{1}", guestProfileMap["idNum"])
+        Sleep 100
+        ; }
+
         if (guestProfileMap.Has("altName")) {
             ; action: with hanzi name
-            ; province, altName, gender(in altName window)
+            ; address, province, altName, gender(in altName window)
+        MouseMove 439, 370
+        Click 3
+        Sleep 10
+        Send Format("{Text}{1}", guestProfileMap["address"])
+        Sleep 10
+        MouseMove 434, 492
+        Click 3
+        Sleep 10
+        Send Format("{Text}{1}", guestProfileMap["province"])
+        Sleep 10
+
+        MouseMove 458, 282 ; open alt name win
+        Click 1
+        Sleep 4000
+        MouseMove 712, 377
+        Click 3
+        Sleep 10
+        Send Format("{Text}{1}", guestProfileMap["altName"])
+        Sleep 10
+        MouseMove 738, 464
+        Click 3
+        Sleep 10
+        Send Format("{Text}{1}", guestProfileMap["gender"])
+        Sleep 1000
         }
+        BlockInput false
     }
 }
