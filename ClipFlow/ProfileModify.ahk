@@ -20,14 +20,14 @@ class ProfileModify {
         psbCopy(*) {
             App.Hide()
             Sleep 200
-            global profileCache := PSB.Copy()
+            global profileCache := this.Copy()
             App.Show()
         }
         
         psbPaste(*) {
             App.Hide()
             Sleep 200
-            PSB.Paste(profileCache)
+            this.Paste(profileCache)
             App.Show()
             WinActivate "ahk_class SunAwtFrame"
         }
