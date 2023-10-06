@@ -1,6 +1,6 @@
 ; #Include "%A_ScriptDir%\utils.ahk"
  #Include "../utils.ahk"
-#Include ../PSB.ahk
+#Include "../ProfileModify.ahk"
 
 ; { setup
 #SingleInstance Force
@@ -46,7 +46,7 @@ PSBinfo := "
 ClipFlow.AddText("h20", PSBinfo)
 ClipFlow.AddButton("Default h25 w80", "开始复制").OnEvent("Click", psbCopy)
 ClipFlow.AddButton("h25 w80 x+20", "开始填入").OnEvent("Click", psbPaste)
-PSB.USE(ClipFlow)
+ProfileModify.USE(ClipFlow)
 
 tab3.UseTab(2)
 tabFlow := []
@@ -165,14 +165,14 @@ loadAsFlow(*) {
 psbCopy(*) {
     ClipFlow.Hide()
     Sleep 200
-    global profileCache := PSB.Copy()
+    global profileCache := ProfileModify.Copy()
     ClipFlow.Show()
 }
 
 psbPaste(*) {
     ClipFlow.Hide()
     Sleep 200
-    PSB.Paste(profileCache)
+    ProfileModify.Paste(profileCache)
     ClipFlow.Show()
     WinActivate "ahk_class SunAwtFrame"
 }
