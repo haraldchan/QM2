@@ -3,13 +3,13 @@
 #Include "../utils.ahk"
 #Include "../DictIndex.ahk"
 
-class PSB {
+class ProfileModify {
     static USE(App) {
         PSBinfo := "
         (
             Flow - Profile Mode
             
-            1、请先打开 PSB 旅客界面，点击“开始复制”；
+            1、请先打开“旅客信息”界面，点击“开始复制”；
             2、复制完成后请打开Opera Profile 界面，
               点击“开始填入”。
         )"
@@ -33,7 +33,7 @@ class PSB {
         }
     }
 
-    static popupTitle := "ClipFlow - PSB"
+    static popupTitle := "ClipFlow - Profile Mode"
 
     static Copy() {
         ; guestType := 0
