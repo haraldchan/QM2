@@ -4,28 +4,66 @@
 #Include "../DictIndex.ahk"
 
 class PSB {
+    static USE(App) {
+        PSBinfo := "
+        (
+            Flow - Profile Mode
+            
+            1、请先打开 PSB 旅客界面，点击“开始复制”；
+            2、复制完成后请打开Opera Profile 界面，
+              点击“开始填入”。
+        )"
+        App.AddText("h20", PSBinfo)
+        App.AddButton("Default h25 w80", "开始复制").OnEvent("Click", psbCopy)
+        App.AddButton("h25 w80 x+20", "开始填入").OnEvent("Click", psbPaste)
+
+        psbCopy(*) {
+            App.Hide()
+            Sleep 200
+            global profileCache := PSB.Copy()
+            App.Show()
+        }
+        
+        psbPaste(*) {
+            App.Hide()
+            Sleep 200
+            PSB.Paste(profileCache)
+            App.Show()
+            WinActivate "ahk_class SunAwtFrame"
+        }
+    }
+
     static popupTitle := "ClipFlow - PSB"
 
     static Copy() {
         ; guestType := 0
-        CoordMode "Mouse", "Window"
         global guestType := InputBox("
-            (
+        (
             请输入需要复制的旅客类型：
-
+            
             1 - 内地旅客
             2 - 港澳台旅客
             3 - 国外旅客
-            )", this.popupTitle)
+        )", this.popupTitle)
         if (guestType.Result = "Cancel") {
             cleanReload()
         }
-        Sleep 500
         ; TODO: try get guest type with getpixelcolor(get the radio that is selected), need more precise pixel
-        return this.Capture(guestType.Value)
-    }
+        ; CoordMode "Pixel", "Window"
+        ; checkGuestType := [PixelGetColor(1,1), PixelGetColor(2,2), PixelGetColor(3,3)]
+        ; loop checkGuestType.Length {
+        ;     if (checkGuestType[A_Index] = "0x000000")
+        ;         gType := A_Index
+        ;         break
+        ; }
 
+        Sleep 500
+        return this.Capture(guestType.Value)
+        ; return this.Capture(gType)
+    }
+    
     static Capture(gType) {
+        CoordMode "Mouse", "Window"
         BlockInput true
         if (WinExist("旅客信息")){
             WinSetAlwaysOnTop true, "旅客信息"
@@ -337,7 +375,7 @@ class PSB {
         Click 3
         Sleep 10
         Send Format("{Text}{1}", guestProfileMap["gender"])
-        Sleep 1000
+        Sleep 100
         }
         BlockInput false
     }

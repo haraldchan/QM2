@@ -20,7 +20,7 @@ flowPointer := 1
 isFlowCopying := false
 isFlowPasting := false
 onTop := true
-OnClipboardChange addToHistory
+OnClipboardChange addToHistory()
 ; }
 
 ; { GUI template
@@ -46,6 +46,7 @@ PSBinfo := "
 ClipFlow.AddText("h20", PSBinfo)
 ClipFlow.AddButton("Default h25 w80", "开始复制").OnEvent("Click", psbCopy)
 ClipFlow.AddButton("h25 w80 x+20", "开始填入").OnEvent("Click", psbPaste)
+PSB.USE(ClipFlow)
 
 tab3.UseTab(2)
 tabFlow := []
@@ -102,10 +103,10 @@ renderHistory() {
 clearList(*) {
     FileDelete(store)
     FileCopy("\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\ClipFlow.ini", A_MyDocuments)
-    Reload
+    cleanReload()
 }
 refresh(*) {
-    Reload
+    cleanReload()
 }
 
 ; flow related
