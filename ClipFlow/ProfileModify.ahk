@@ -4,7 +4,9 @@
 #Include "../DictIndex.ahk"
 
 class ProfileModify {
+    ; template {
     static USE(App) {
+        App.AddGroupBox("Section","Flow Mode - ProfileModify")
         PSBinfo := "
         (
             Flow - Profile Mode
@@ -13,9 +15,9 @@ class ProfileModify {
             2、复制完成后请打开Opera Profile 界面，
               点击“开始填入”。
         )"
-        App.AddText("h20", PSBinfo)
-        App.AddButton("Default h25 w80", "开始复制").OnEvent("Click", psbCopy)
-        App.AddButton("h25 w80 x+20", "开始填入").OnEvent("Click", psbPaste)
+        App.AddText("xs h20", PSBinfo)
+        App.AddButton("xs Default h25 w80", "开始复制").OnEvent("Click", psbCopy)
+        App.AddButton("xs h25 w80 x+20", "开始填入").OnEvent("Click", psbPaste)
 
         psbCopy(*) {
             App.Hide()
@@ -32,6 +34,7 @@ class ProfileModify {
             WinActivate "ahk_class SunAwtFrame"
         }
     }
+    ; } 
 
     static popupTitle := "ClipFlow - Profile Mode"
 
