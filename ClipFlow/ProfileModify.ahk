@@ -6,18 +6,21 @@
 class ProfileModify {
     ; template {
     static USE(App) {
-        App.AddGroupBox("Section","Flow Mode - ProfileModify")
+        App.AddGroupBox("R6 w250","Flow Mode - ProfileModify")
         PSBinfo := "
         (
             Flow - Profile Mode
             
-            1、请先打开“旅客信息”界面，点击“开始复制”；
+            1、请先打开“旅客信息”界面，点击
+              “开始复制”；
+
             2、复制完成后请打开Opera Profile 界面，
               点击“开始填入”。
         )"
-        App.AddText("xs h20", PSBinfo)
-        App.AddButton("xs Default h25 w80", "开始复制").OnEvent("Click", psbCopy)
-        App.AddButton("xs h25 w80 x+20", "开始填入").OnEvent("Click", psbPaste)
+
+        App.AddText("xp+10", PSBinfo)
+        App.AddButton("Default h30 w80 y+15", "开始复制").OnEvent("Click", psbCopy)
+        App.AddButton("h30 w80 x+20 ", "开始填入").OnEvent("Click", psbPaste)
 
         psbCopy(*) {
             App.Hide()
@@ -29,6 +32,11 @@ class ProfileModify {
         psbPaste(*) {
             App.Hide()
             Sleep 200
+            if (!isSet(profileCache)) {
+                MsgBox("当前没有旅客信息。请先复制", this.popupTitle)
+                App.Show()
+                return
+            }
             this.Paste(profileCache)
             App.Show()
             WinActivate "ahk_class SunAwtFrame"
@@ -39,30 +47,21 @@ class ProfileModify {
     static popupTitle := "ClipFlow - Profile Mode"
 
     static Copy() {
-        ; guestType := 0
-        global guestType := InputBox("
-        (
-            请输入需要复制的旅客类型：
-            
-            1 - 内地旅客
-            2 - 港澳台旅客
-            3 - 国外旅客
-        )", this.popupTitle)
-        if (guestType.Result = "Cancel") {
-            cleanReload()
+        CoordMode "Pixel", "Window"
+        try {
+            WinActivate "旅客信息"
+        } catch {
+            MsgBox("请先打开 旅客信息 窗口", this.popupTitle)
+            return
         }
-        ; TODO: try get guest type with getpixelcolor(get the radio that is selected), need more precise pixel
-        ; CoordMode "Pixel", "Window"
-        ; checkGuestType := [PixelGetColor(1,1), PixelGetColor(2,2), PixelGetColor(3,3)]
-        ; loop checkGuestType.Length {
-        ;     if (checkGuestType[A_Index] = "0x000000")
-        ;         gType := A_Index
-        ;         break
-        ; }
-
-        Sleep 500
-        return this.Capture(guestType.Value)
-        ; return this.Capture(gType)
+        checkGuestType := [PixelGetColor(464, 87), PixelGetColor(553, 87), PixelGetColor(649, 87)]
+        loop checkGuestType.Length {
+            if (checkGuestType[A_Index] = "0x000000") {
+                gType := A_Index
+                break
+            }
+        }
+        return this.Capture(gType)
     }
     
     static Capture(gType) {
@@ -301,51 +300,53 @@ class ProfileModify {
     }
 
     static Paste(guestProfileMap) {
+        CoordMode "Pixel", "Screen"
+        if(ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenWidth, "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\assets\ProfileAnchor.PNG"))  {
+            anchorX := FoundX
+            anchorY := FoundY
+        } else {
+            msgbox("请先打开Profile界面", this.popupTitle)
+            return
+        }
         CoordMode "Mouse", "Screen"
         BlockInput true
-        ; TODO:(advance feature) try set custom relative coords 
-        ;       1.get profile window image
-        ;       2.use ImageSearch to get initial(anchor) pixel pos
-        ;       3.if it works, try implement it to other scripts
-
-        ; TODO: mouse action to send(not paste) guest profile info
         ; { action: common info: lastName, firstName, language, gender, country, birthday, idType, idNum
-        MouseMove 433, 286
+        MouseMove anchorX+236, anchorY+92
         Click 3
         Sleep 10
         Send Format("{Text}{1}", guestProfileMap["lastName"])
         Sleep 10
-        MouseMove 384, 313
+        MouseMove anchorX+201, anchorY+114
         Click 3
         Sleep 10
         Send Format("{Text}{1}", guestProfileMap["firstName"])
         Sleep 10
-        MouseMove 350, 341
+        MouseMove anchorX+158, anchorY+142
         Click 3
         Sleep 10
         Send Format("{Text}{1}", guestProfileMap["language"])
         Sleep 10
-        MouseMove 435, 339
+        MouseMove anchorX+238, anchorY+143
         Click 3
         Sleep 10
         Send Format("{Text}{1}", guestProfileMap["gender"])
         Sleep 10
-        MouseMove 346, 494
+        MouseMove anchorX+162, anchorY+294
         Click 3
         Sleep 10
         Send Format("{Text}{1}", guestProfileMap["country"])
         Sleep 10
-        MouseMove 843, 285
+        MouseMove anchorX+647, anchorY+85
         Click 3
         Sleep 10
         Send Format("{Text}{1}", guestProfileMap["birthday"])
         Sleep 10
-        MouseMove 829, 306
+        MouseMove anchorX+649, anchorY+109
         Click 3
         Sleep 10
         Send Format("{Text}{1}", guestProfileMap["idType"])
         Sleep 100
-        MouseMove 867, 326
+        MouseMove anchorX+670, anchorY+129
         Click 3
         Sleep 10
         Send Format("{Text}{1}", guestProfileMap["idNum"])
@@ -355,18 +356,18 @@ class ProfileModify {
         if (guestProfileMap.Has("altName")) {
             ; action: with hanzi name
             ; address, province, altName, gender(in altName window)
-        MouseMove 439, 370
+        MouseMove anchorX+230, anchorY+173
         Click 3
         Sleep 10
         Send Format("{Text}{1}", guestProfileMap["address"])
         Sleep 10
-        MouseMove 434, 492
+        MouseMove anchorX+239, anchorY+294
         Click 3
         Sleep 10
         Send Format("{Text}{1}", guestProfileMap["province"])
         Sleep 10
 
-        MouseMove 458, 282 ; open alt name win
+        MouseMove anchorX+257, anchorY+88 ; open alt name win
         Click 1
         Sleep 4000
         MouseMove 712, 377
