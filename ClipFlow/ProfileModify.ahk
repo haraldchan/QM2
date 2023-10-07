@@ -370,12 +370,16 @@ class ProfileModify {
         MouseMove anchorX+257, anchorY+88 ; open alt name win
         Click 1
         Sleep 4000
-        MouseMove 712, 377
+
+        ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenWidth, "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\assets\altAnchor.PNG")
+            altX := FoundX
+            altY := FoundY
+        MouseMove altX+345, altY+74
         Click 3
         Sleep 10
         Send Format("{Text}{1}", guestProfileMap["altName"])
         Sleep 10
-        MouseMove 738, 464
+        MouseMove altX+384, altY+164
         Click 3
         Sleep 10
         Send Format("{Text}{1}", guestProfileMap["gender"])
