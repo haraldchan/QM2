@@ -1,5 +1,5 @@
 ; #Include "%A_ScriptDir%\utils.ahk"
- #Include "../utils.ahk"
+#Include "../utils.ahk"
 #Include "../ProfileModify.ahk"
 
 ; { setup
@@ -20,7 +20,7 @@ flowPointer := 1
 isFlowCopying := false
 isFlowPasting := false
 onTop := true
-OnClipboardChange addToHistory()
+OnClipboardChange addToHistory
 ; }
 
 ; { GUI template
@@ -35,17 +35,6 @@ ClipFlow.AddButton("Disabled h25 w85 x+12", "Load History").OnEvent("Click", loa
 tab3 := ClipFlow.AddTab3("w280 x20", ["Flow Modes", "Flow", "History"])
 
 tab3.UseTab(1)
-; PSBinfo := "
-; (
-;     Flow - Profile Mode
-    
-;     1、请先打开 PSB 旅客界面，点击“开始复制”；
-;     2、复制完成后请打开Opera Profile 界面，
-;       点击“开始填入”。
-; )"
-; ClipFlow.AddText("h20", PSBinfo)
-; ClipFlow.AddButton("Default h25 w80", "开始复制").OnEvent("Click", psbCopy)
-; ClipFlow.AddButton("h25 w80 x+20", "开始填入").OnEvent("Click", psbPaste)
 ProfileModify.USE(ClipFlow)
 
 tab3.UseTab(2)
@@ -60,8 +49,8 @@ renderHistory()
 
 tab3.UseTab()
 
-ClipFlow.AddButton("h25 w130", "Clear").OnEvent("Click", clearList)
-ClipFlow.AddButton("h25 w130 x+20", "Refresh").OnEvent("Click", refresh)
+ClipFlow.AddButton("h30 w130", "Clear").OnEvent("Click", clearList)
+ClipFlow.AddButton("h30 w130 x+20", "Refresh").OnEvent("Click", refresh)
 
 ClipFlow.Show()
 WinSetAlwaysOnTop onTop, popupTitle
@@ -179,9 +168,8 @@ psbPaste(*) {
 ; }
 
 ; hotkeys
-Pause::{
-    ClipFlow.Show()
-}
+F12::cleanReload()
+Pause::ClipFlow.Show()
 #HotIf isFlowPasting
 ~^v:: flowFire()
 ; double press Escape to unload flow
