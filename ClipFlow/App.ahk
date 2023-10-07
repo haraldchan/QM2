@@ -35,17 +35,17 @@ ClipFlow.AddButton("Disabled h25 w85 x+12", "Load History").OnEvent("Click", loa
 tab3 := ClipFlow.AddTab3("w280 x20", ["Flow Modes", "Flow", "History"])
 
 tab3.UseTab(1)
-PSBinfo := "
-(
-    Flow - Profile Mode
+; PSBinfo := "
+; (
+;     Flow - Profile Mode
     
-    1、请先打开 PSB 旅客界面，点击“开始复制”；
-    2、复制完成后请打开Opera Profile 界面，
-      点击“开始填入”。
-)"
-ClipFlow.AddText("h20", PSBinfo)
-ClipFlow.AddButton("Default h25 w80", "开始复制").OnEvent("Click", psbCopy)
-ClipFlow.AddButton("h25 w80 x+20", "开始填入").OnEvent("Click", psbPaste)
+;     1、请先打开 PSB 旅客界面，点击“开始复制”；
+;     2、复制完成后请打开Opera Profile 界面，
+;       点击“开始填入”。
+; )"
+; ClipFlow.AddText("h20", PSBinfo)
+; ClipFlow.AddButton("Default h25 w80", "开始复制").OnEvent("Click", psbCopy)
+; ClipFlow.AddButton("h25 w80 x+20", "开始填入").OnEvent("Click", psbPaste)
 ProfileModify.USE(ClipFlow)
 
 tab3.UseTab(2)
