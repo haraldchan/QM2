@@ -38,6 +38,7 @@ class ProfileModify {
                 return
             }
             this.Paste(profileCache)
+            Sleep 200
             App.Show()
             WinActivate "ahk_class SunAwtFrame"
         }
@@ -137,7 +138,6 @@ class ProfileModify {
             Send "{Esc}"
             Sleep 20
             capturedInfo.Push(A_Clipboard)
-
         } else if (gType = 2) {
             ; from HK/MO/TW
             ; capture: id
@@ -180,7 +180,6 @@ class ProfileModify {
             Sleep 10
             capturedInfo.Push(A_Clipboard)
             Sleep 10
-
         } else if (gType = 3) {
             ; from abroad
             ; capture: id
@@ -277,17 +276,22 @@ class ProfileModify {
             guestProfile["country"] :=  getCountryCode(infoArr[6])
         }
 
-        ; debugging popup
         for k, v in guestProfile {
-            toFill .= Format("{1}：{2}`n", k, v)
+            popupInfo .= Format("{1}：{2}`n", k, v)
         }
-        MsgBox(Format("
+        toOpera := MsgBox(Format("
             (   
             即将填入的信息：
 
             {1}
-            )", toFill), this.popupTitle, "OKCancel 4096")
-
+            )", popupInfo), this.popupTitle, "OKCancel")
+        if (toOpera = "OK") {
+            try {
+                WinActivate "ahk_class SunAwtFrame"
+            } catch {
+                MsgBox("请先打开 Opera 窗口。", this.popupTitle)
+            }
+        }
         return guestProfile
     }
 
@@ -300,6 +304,7 @@ class ProfileModify {
             msgbox("请先打开Profile界面", this.popupTitle)
             return
         }
+        WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
         CoordMode "Mouse", "Screen"
         BlockInput true
         ; { fillin common info: nameLast, nameFirst, language, gender, country, birthday, idType, idNum
@@ -378,5 +383,6 @@ class ProfileModify {
             ; }
         }
         BlockInput false
+        WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
     }
 }
