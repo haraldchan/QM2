@@ -16,6 +16,9 @@ cleanReload(quit := 0){
     if (WinExist("ahk_class SunAwtFrame")) {
         WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
     }
+    if (WinExist("旅客信息")) {
+        WinSetAlwaysOnTop false, "旅客信息"
+    }
     ; Key/Mouse state set default
     BlockInput false
     SetCapsLockState false
