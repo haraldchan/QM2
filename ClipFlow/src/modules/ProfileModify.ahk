@@ -162,7 +162,7 @@ class ProfileModify {
             Send "^c"
             Sleep 100
             capturedInfo.Push(A_Clipboard)
-            ; capture: lastname
+            ; capture: nameLast
             MouseMove 759, 203
             Click "Down"
             Sleep 100
@@ -172,7 +172,7 @@ class ProfileModify {
             Send "^c"
             Sleep 100
             capturedInfo.Push(A_Clipboard)
-            ; capture: firstname
+            ; capture: nameFirst
             MouseMove 759, 233
             Click "Down"
             Sleep 100
@@ -199,7 +199,7 @@ class ProfileModify {
             Send "^c"
             Sleep 100
             capturedInfo.Push(A_Clipboard)
-            ; capture: lastname
+            ; capture: nameLast
             MouseMove 759, 203
             Click "Down"
             Sleep 100
@@ -209,7 +209,7 @@ class ProfileModify {
             Send "^c"
             Sleep 100
             capturedInfo.Push(A_Clipboard)
-            ; capture: firstname
+            ; capture: nameFirst
             MouseMove 759, 233
             Click "Down"
             Sleep 100
@@ -247,9 +247,9 @@ class ProfileModify {
             ; from Mainland
             guestProfile["language"] := "C"
             guestProfile["country"] := "CN"
-            guestProfile["altName"] := infoArr[4]
-            guestProfile["lastName"] := getFullnamePinyin(infoArr[4])[1]
-            guestProfile["firstName"] := getFullnamePinyin(infoArr[4])[2]
+            guestProfile["nameAlt"] := infoArr[4]
+            guestProfile["nameLast"] := getFullnamePinyin(infoArr[4])[1]
+            guestProfile["nameFirst"] := getFullnamePinyin(infoArr[4])[2]
             if (StrLen(infoArr[3]) = 18) {
                 guestProfile["idType"] := "IDC"
             } else if (StrLen(infoArr[3]) = 9) {
@@ -262,9 +262,9 @@ class ProfileModify {
         } else if (gType = 2) {
             guestProfile["language"] := "E"
             guestProfile["country"] := "CN"
-            guestProfile["altName"] := infoArr[4]
-            guestProfile["lastName"] := infoArr[5]
-            guestProfile["firstName"] := infoArr[6]
+            guestProfile["nameAlt"] := infoArr[4]
+            guestProfile["nameLast"] := infoArr[5]
+            guestProfile["nameFirst"] := infoArr[6]
             guestProfile["address"] := ""
             if (SubStr(guestProfile["idNum"], 1, 1) = "H") {
                 guestProfile["idType"] := "HKC"
@@ -280,8 +280,8 @@ class ProfileModify {
             ; from abroad
             guestProfile["language"] := "E"
             guestProfile["idType"] := "NOP"
-            guestProfile["lastName"] := infoArr[4]
-            guestProfile["firstName"] := infoArr[5]
+            guestProfile["nameLast"] := infoArr[4]
+            guestProfile["nameFirst"] := infoArr[5]
             guestProfile["country"] :=  getCountryCode(infoArr[6])
         }
 
@@ -310,16 +310,16 @@ class ProfileModify {
         }
         CoordMode "Mouse", "Screen"
         BlockInput true
-        ; { action: common info: lastName, firstName, language, gender, country, birthday, idType, idNum
+        ; { action: common info: nameLast, nameFirst, language, gender, country, birthday, idType, idNum
         MouseMove anchorX+236, anchorY+92
         Click 3
         Sleep 10
-        Send Format("{Text}{1}", guestProfileMap["lastName"])
+        Send Format("{Text}{1}", guestProfileMap["nameLast"])
         Sleep 10
         MouseMove anchorX+201, anchorY+114
         Click 3
         Sleep 10
-        Send Format("{Text}{1}", guestProfileMap["firstName"])
+        Send Format("{Text}{1}", guestProfileMap["nameFirst"])
         Sleep 10
         MouseMove anchorX+158, anchorY+142
         Click 3
@@ -353,9 +353,9 @@ class ProfileModify {
         Sleep 100
         ; }
 
-        if (guestProfileMap.Has("altName")) {
+        if (guestProfileMap.Has("nameAlt")) {
             ; action: with hanzi name
-            ; address, province, altName, gender(in altName window)
+            ; address, province, nameAlt, gender(in nameAlt window)
         MouseMove anchorX+230, anchorY+173
         Click 3
         Sleep 10
@@ -377,7 +377,7 @@ class ProfileModify {
         MouseMove altX+345, altY+74
         Click 3
         Sleep 10
-        Send Format("{Text}{1}", guestProfileMap["altName"])
+        Send Format("{Text}{1}", guestProfileMap["nameAlt"])
         Sleep 10
         MouseMove altX+384, altY+164
         Click 3
