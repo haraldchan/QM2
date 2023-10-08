@@ -1,17 +1,18 @@
-; #Include "%A_ScriptDir%\utils.ahk"
-#Include "../utils.ahk"
-#Include "../ProfileModify.ahk"
+; #Include "%A_ScriptDir%\src\lib\utils.ahk"
+; #Include "%A_ScriptDir%\src\modules\ProfileModify.ahk"
+#Include "../src/lib/utils.ahk"
+#Include "../src/modules/ProfileModify.ahk"
 
 ; { setup
 #SingleInstance Force
 CoordMode "Mouse", "Screen"
-TraySetIcon A_ScriptDir . "\assets\CFTray.ico"
+TraySetIcon A_ScriptDir . "\src\assets\CFTray.ico"
 version := "0.0.1"
 popupTitle := "ClipFlow " . version
 if (FileExist(A_MyDocuments . "\ClipFlow.ini")) {
     store := A_MyDocuments . "\ClipFlow.ini"
 } else {
-    FileCopy "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\ClipFlow.ini", A_MyDocuments
+    FileCopy A_ScriptDir . "\src\lib\ClipFlow.ini", A_MyDocuments
     store := A_MyDocuments . "\ClipFlow.ini"
 }
 clipHisArr := strToArr(IniRead(store, "ClipHistory", "clipHisArr"))
@@ -76,6 +77,16 @@ addToHistory(*) {
     }
 }
 
+clearList(*) {
+    FileDelete(store)
+    FileCopy(A_ScriptDir . "\src\lib\ClipFlow.ini", A_MyDocuments)
+    cleanReload()
+}
+
+refresh(*) {
+    cleanReload()
+}
+
 ; render tab1: Clipboard History base on clipHisArr
 renderHistory() {
     global tabHistory := []
@@ -87,15 +98,6 @@ renderHistory() {
             ClipFlow.AddEdit("h30 w250 y+10 ReadOnly", clipHisArr[A_Index])
         )
     }
-}
-
-clearList(*) {
-    FileDelete(store)
-    FileCopy("\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\ClipFlow.ini", A_MyDocuments)
-    cleanReload()
-}
-refresh(*) {
-    cleanReload()
 }
 
 ; flow related
@@ -149,27 +151,12 @@ loadAsFlow(*) {
     global flowArr := clipHisArr
     flowLoad()
 }
-
-; PSB to Opera
-psbCopy(*) {
-    ClipFlow.Hide()
-    Sleep 200
-    global profileCache := ProfileModify.Copy()
-    ClipFlow.Show()
-}
-
-psbPaste(*) {
-    ClipFlow.Hide()
-    Sleep 200
-    ProfileModify.Paste(profileCache)
-    ClipFlow.Show()
-    WinActivate "ahk_class SunAwtFrame"
-}
 ; }
 
 ; hotkeys
 F12::cleanReload()
 Pause::ClipFlow.Show()
+
 #HotIf isFlowPasting
 ~^v:: flowFire()
 ; double press Escape to unload flow
