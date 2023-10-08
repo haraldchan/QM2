@@ -7,7 +7,7 @@ class ProfileModify {
     ; template {
     static USE(App) {
         App.AddGroupBox("R6 w250","Flow Mode - ProfileModify")
-        PSBinfo := "
+        desc := "
         (
             Flow - Profile Mode
             
@@ -18,7 +18,7 @@ class ProfileModify {
               点击“开始填入”。
         )"
 
-        App.AddText("xp+10", PSBinfo)
+        App.AddText("xp+10", desc)
         App.AddButton("Default h30 w80 y+15", "开始复制").OnEvent("Click", psbCopy)
         App.AddButton("h30 w80 x+20 ", "开始填入").OnEvent("Click", psbPaste)
 
@@ -73,25 +73,22 @@ class ProfileModify {
         capturedInfo := []
         ; capture: birthday
         MouseMove 755, 147
-        Click "Down"
-        Sleep 100
-        MouseMove 755, 147
-        Click "Up"
-        Sleep 100
+        click 1
+        Sleep 10
         Send "^c"
         Sleep 100
         capturedInfo.Push(A_Clipboard)
         ; capture: gender
         MouseMove 565, 147
-        Sleep 100
+        Sleep 10
         Click 
-        Sleep 100
+        Sleep 10
         Click "Right"
         Sleep 200
         Send "{c}"
-        Sleep 100
+        Sleep 10
         Send "{Esc}"
-        Sleep 200
+        Sleep 10
         capturedInfo.Push(A_Clipboard)
         Sleep 500
         if (gType = 1) {
@@ -146,92 +143,87 @@ class ProfileModify {
             ; capture: id
             MouseMove 652, 291
             Click "Down"
-            Sleep 100
+            Sleep 10
             MouseMove 506, 291
             Click "Up"
             Send "^c"
-            Sleep 100
+            Sleep 10
             capturedInfo.Push(A_Clipboard)
             ; capture: fullname
             MouseMove 658, 116
             Click "Down"
-            Sleep 100
+            Sleep 10
             MouseMove 498, 116
             Click "Up"
-            Sleep 100
+            Sleep 10
             Send "^c"
             Sleep 100
             capturedInfo.Push(A_Clipboard)
             ; capture: nameLast
             MouseMove 759, 203
             Click "Down"
-            Sleep 100
+            Sleep 10
             MouseMove 500, 203
             Click "Up"
-            Sleep 100
+            Sleep 10
             Send "^c"
-            Sleep 100
+            Sleep 10
             capturedInfo.Push(A_Clipboard)
             ; capture: nameFirst
             MouseMove 759, 233
             Click "Down"
-            Sleep 100
+            Sleep 10
             MouseMove 500, 233
             Click "Up"
-            Sleep 100
+            Sleep 10
             Send "^c"
-            Sleep 100
+            Sleep 10
             capturedInfo.Push(A_Clipboard)
-            Sleep 100
+            Sleep 10
 
         } else if (gType = 3) {
             ; from abroad
             ; capture: id
-            ; MouseMove 652, 291
-            ; Click "Down"
-            ; Sleep 100
-            ; MouseMove 759, 291
-            ; Click "Up"
             MouseMove 666, 290
-            Sleep 100
+            Sleep 10
             Click 2
-            Sleep 100
+            Sleep 10
             Send "^c"
-            Sleep 100
+            Sleep 10
             capturedInfo.Push(A_Clipboard)
             ; capture: nameLast
             MouseMove 759, 203
             Click "Down"
-            Sleep 100
+            Sleep 10
             MouseMove 500, 203
             Click "Up"
-            Sleep 100
+            Sleep 10
             Send "^c"
-            Sleep 100
+            Sleep 10
             capturedInfo.Push(A_Clipboard)
             ; capture: nameFirst
             MouseMove 759, 233
             Click "Down"
-            Sleep 100
+            Sleep 10
             MouseMove 500, 233
             Click "Up"
-            Sleep 100
+            Sleep 10
             Send "^c"
-            Sleep 100
+            Sleep 10
             capturedInfo.Push(A_Clipboard)
             ; capture: country
             MouseMove 670, 322
-            Sleep 100
+            Sleep 10
             Click 
-            Sleep 100
+            Sleep 10
             Click "Right"
-            Sleep 100
+            Sleep 10
             Send "c"
-            Sleep 100
+            Sleep 10
             Send "{Esc}"
-            Sleep 200
+            Sleep 10
             capturedInfo.Push(A_Clipboard)
-            Sleep 100
+            Sleep 10
         }
         WinSetAlwaysOnTop false, "旅客信息"
         BlockInput false
@@ -301,7 +293,7 @@ class ProfileModify {
 
     static Paste(guestProfileMap) {
         CoordMode "Pixel", "Screen"
-        if(ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenWidth, "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\assets\ProfileAnchor.PNG"))  {
+        if(ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenWidth, A_ScriptDir . "\src\assets\ProfileAnchor.PNG"))  {
             anchorX := FoundX
             anchorY := FoundY
         } else {
@@ -310,7 +302,7 @@ class ProfileModify {
         }
         CoordMode "Mouse", "Screen"
         BlockInput true
-        ; { action: common info: nameLast, nameFirst, language, gender, country, birthday, idType, idNum
+        ; { fillin common info: nameLast, nameFirst, language, gender, country, birthday, idType, idNum
         MouseMove anchorX+236, anchorY+92
         Click 3
         Sleep 10
@@ -350,40 +342,40 @@ class ProfileModify {
         Click 3
         Sleep 10
         Send Format("{Text}{1}", guestProfileMap["idNum"])
-        Sleep 100
+        Sleep 10
         ; }
-
         if (guestProfileMap.Has("nameAlt")) {
-            ; action: with hanzi name
-            ; address, province, nameAlt, gender(in nameAlt window)
-        MouseMove anchorX+230, anchorY+173
-        Click 3
-        Sleep 10
-        Send Format("{Text}{1}", guestProfileMap["address"])
-        Sleep 10
-        MouseMove anchorX+239, anchorY+294
-        Click 3
-        Sleep 10
-        Send Format("{Text}{1}", guestProfileMap["province"])
-        Sleep 10
+            ; { with hanzi name
+            ; fillin: address, province, nameAlt, gender(in nameAlt window)
+            MouseMove anchorX+230, anchorY+173
+            Click 3
+            Sleep 10
+            Send Format("{Text}{1}", guestProfileMap["address"])
+            Sleep 10
+            MouseMove anchorX+239, anchorY+294
+            Click 3
+            Sleep 10
+            Send Format("{Text}{1}", guestProfileMap["province"])
+            Sleep 10
 
-        MouseMove anchorX+257, anchorY+88 ; open alt name win
-        Click 1
-        Sleep 4000
+            MouseMove anchorX+257, anchorY+88 ; open alt name win
+            Click 1
+            Sleep 4000
 
-        ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenWidth, "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\assets\altAnchor.PNG")
-            altX := FoundX
-            altY := FoundY
-        MouseMove altX+345, altY+74
-        Click 3
-        Sleep 10
-        Send Format("{Text}{1}", guestProfileMap["nameAlt"])
-        Sleep 10
-        MouseMove altX+384, altY+164
-        Click 3
-        Sleep 10
-        Send Format("{Text}{1}", guestProfileMap["gender"])
-        Sleep 100
+            ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenWidth, A_ScriptDir . "\src\assets\altAnchor.PNG")
+                altX := FoundX
+                altY := FoundY
+            MouseMove altX+345, altY+74
+            Click 3
+            Sleep 10
+            Send Format("{Text}{1}", guestProfileMap["nameAlt"])
+            Sleep 10
+            MouseMove altX+384, altY+164
+            Click 3
+            Sleep 10
+            Send Format("{Text}{1}", guestProfileMap["gender"])
+            Sleep 100
+            ; }
         }
         BlockInput false
     }
