@@ -10,7 +10,7 @@ class PbPf {
 		WinSetAlwaysOnTop true, this.popupTitle
 		; GUI
 		Main := Gui(, this.popupTitle)
-		Main.AddGroupBox("", "P/F房(支付人)")
+		Main.AddGroupBox("w130 h200", "P/F房(支付人)")
 		Main.AddText("xp+10", "房号")
 		pfRoom := Main.AddEdit("x+10 w50", "")
 		Main.AddText("xp+10", "姓名/确认号")
@@ -21,7 +21,7 @@ class PbPf {
 		roomQty := Main.AddEdit("x+10 w50", "")
 		pfCopy := Main.AddButton("xp+10 w50", "复制Pay For信息")
 
-		Main.AddGroupBox("", "P/B房(被支付人)")
+		Main.AddGroupBox("x+10 w130 h200", "P/B房(被支付人)")
 		Main.AddText("xp+10", "房号")
 		pbRoom := Main.AddEdit("x+10 w50", "")
 		Main.AddText("xp+10", "姓名/确认号")
@@ -57,10 +57,10 @@ class PbPf {
 		}
 
 		getPayFor(*) {
-			relations[6] := IsNumber(relations[6]) ? "#" . relations[6] : relations[6]
+			nameConf := IsNumber(relations[6]) ? "#" . relations[6] : relations[6]
 			if (relations[3] = "" || relations[4] = "") {
 				; 2-room party
-				A_Clipboard := Format("P/F Rm{1}{2}", relations[5], relations[6])
+				A_Clipboard := Format("P/F Rm{1}{2}", relations[5], nameConf)
 			} else {
 				; 3 or more room party
 				A_Clipboard := Format("P/F Party#{1}, total {2}-rooms", relations[3], relations[4])
@@ -68,8 +68,8 @@ class PbPf {
 		}
 
 		getPayBy(*) {
-			relations[2] := IsNumber(relations[2]) ? "#" . relations[2] : relations[2]
-			A_Clipboard := Format("P/B Rm{1}{2}", relations[1], relations[2])
+			nameConf := IsNumber(relations[2]) ? "#" . relations[2] : relations[2]
+			A_Clipboard := Format("P/B Rm{1}{2}", relations[1], nameConf)
 		}
 	}
 

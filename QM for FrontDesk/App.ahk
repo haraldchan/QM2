@@ -28,7 +28,7 @@ TraySetIcon A_ScriptDir . "\src\assets\QMTray.ico"
 TrayTip "QM 2 运行中…按下 F9 开始使用脚本"
 CoordMode "Mouse", "Screen"
 ; globals and states
-version := "2.0.0"
+version := "2.1.0"
 today := FormatTime(A_Now, "yyyyMMdd")
 config := A_ScriptDir . "\src\config.ini"
 popupTitle := "QM for FrontDesk " . version
@@ -41,7 +41,7 @@ scriptIndex := [
         Pbpf,
         GroupShare,
         DoNotMove,
-        ReportMaster
+        ReportMaster,
     ],
     [
         GroupKeys,
@@ -64,7 +64,7 @@ try {
 ; }
 
 ; { GUI template
-QM := Gui("+Resize", popupTitle)
+QM := Gui("", popupTitle)
 QM.AddText(, "
 (
 快捷键及对应功能：
