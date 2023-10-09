@@ -1,5 +1,6 @@
 class Phrases {
-    ; template {
+    static gbWidth := "w250"
+    
     static USE(App) {
         this.Rush(App)
         this.Upsell(App)
@@ -7,24 +8,24 @@ class Phrases {
     }
 
     static Rush(App) {
-        App.AddGroupBox("w250", "Rush - 赶房与Key Keep")
+        App.AddGroupBox(this.gbWidth, "RushRoom - 赶房与Key Keep")
         App.AddText("xp+10", "赶房时间")
         rushTime := App.AddEdit("x+10 w50", "14:00")
-        status := [
+        keyMade := [
             App.AddRadio("Checked", "已做卡")
             App.AddRadio("x+10", "未做卡")
         ]
         App.AddButton("w80", "复制Comment/Alert").OnEvent("Click", copy)
 
         copy(*) {
-            A_Clipboard := (status[1].Value = 1)
+            A_Clipboard := (keyMade[1].Value = 1)
                 ? Format("赶房 {1}, Key Keep L10", rushTime.Text)
                 : Format("赶房 {1}, 未做房卡", rushTime.Text)
         }
     }
 
     static Upsell(App) {
-        App.AddGroupBox("w250", "Upsell - 房间升级")
+        App.AddGroupBox(this.gbWidth, "Upselling - 房间升级")
         App.AddText("xp+10", "升级房型")
         roomType := App.AddEdit("x+10 w50", "")
         App.AddText("xp+10", "每晚差价")
@@ -47,7 +48,7 @@ class Phrases {
     }
 
     static TableReserve(App) {
-        App.AddGroupBox("w250", "Table - 餐饮预订")
+        App.AddGroupBox(this.gbWidth, "TableResv - 餐饮预订")
         App.AddText("xp+10", "餐厅")
         restaurant := App.AddComboBox("x+10", ["宏图府", "玉堂春暖", "风味餐厅", "流浮阁"])
         App.AddText("xp+10", "日期")
