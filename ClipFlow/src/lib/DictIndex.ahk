@@ -50,15 +50,10 @@ getPinyin(hanzi) {
 }
 
 getFullnamePinyin(fullname) {
-    ; is a double hanzi last name
-    for han, pinyin in doubleLastNameMap {
-        if (SubStr(fullname, 1, 2) = han) {
-            ; return [lastname, name]
-            return [SubStr(fullname, 1, 2), SubStr(fullname, 3)]
-        }
-    }
-    ; one hanzi last name
-    lastname := getPinyin(SubStr(fullname, 1, 1))
+    lastname := (doubleLastName.Has(SubStr(fullname, 1, 2)))
+        ? doubleLastName[SubStr(fullname, 1, 2)]
+        : getPinyin(SubStr(fullname, 1, 1))
+
     firstnameSplit := StrSplit(SubStr(fullname, 2), "")
     firstname := ""
     loop firstnameSplit.Length {
