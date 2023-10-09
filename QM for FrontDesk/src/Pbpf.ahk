@@ -11,7 +11,7 @@ class PbPf {
 		; GUI
 		Main := Gui(, this.popupTitle)
 		Main.AddGroupBox("w130 h200", "P/F房(支付人)")
-		Main.AddText("xp+10", "房号")
+		Main.AddText("xp+10 y+15", "房号")
 		pfRoom := Main.AddEdit("x+10 w50", "")
 		Main.AddText("xp+10", "姓名/确认号")
 		pfName := Main.AddEdit("x+10 w50", "")
@@ -22,7 +22,7 @@ class PbPf {
 		pfCopy := Main.AddButton("xp+10 w50", "复制Pay For信息")
 
 		Main.AddGroupBox("x+10 w130 h200", "P/B房(被支付人)")
-		Main.AddText("xp+10", "房号")
+		Main.AddText("xp+10 y+15", "房号")
 		pbRoom := Main.AddEdit("x+10 w50", "")
 		Main.AddText("xp+10", "姓名/确认号")
 		pbName := Main.AddEdit("x+10 w50", "")
