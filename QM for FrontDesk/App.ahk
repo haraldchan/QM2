@@ -5,20 +5,22 @@
 ; #Include "%A_ScriptDir%\src\Pbpf.ahk"
 ; #Include "%A_ScriptDir%\src\GroupShare.ahk"
 ; #Include "%A_ScriptDir%\src\DoNotMove.ahk"
+; #Include "%A_ScriptDir%\src\ReportMaster.ahk"
 ; #Include "%A_ScriptDir%\src\GroupKeys.ahk"
 ; #Include "%A_ScriptDir%\src\GroupProfilesModify.ahk"
 ; #Include "%A_ScriptDir%\src\PsbBatchCO.ahk"
-; #Include "%A_ScriptDir%\src\ReportMaster.ahk"
+; #Include "%A_ScriptDir%\src\Phrases.ahk"
 #Include "../src/lib/utils.ahk"
 #Include "../src/CityLedgerCO.ahk"
 #Include "../src/InhShare.ahk"
 #Include "../src/Pbpf.ahk"
 #Include "../src/GroupShare.ahk"
 #Include "../src/DoNotMove.ahk"
+#Include "../src/ReportMaster.ahk"
 #Include "../src/GroupKeys.ahk"
 #Include "../src/GroupProfilesModify.ahk"
 #Include "../src/PsbBatchCO.ahk"
-#Include "../src/ReportMaster.ahk"
+#Include "../src/Phrases.ahk"
 ;}
 ; { setup
 #SingleInstance Force
@@ -39,13 +41,13 @@ scriptIndex := [
         Pbpf,
         GroupShare,
         DoNotMove,
+        ReportMaster
     ],
     [
         GroupKeys,
         GroupProfilesModify,
         PsbBatchCO,
     ],
-    ReportMaster
 ]
 ; admin/Opera running detection
 try {
@@ -79,7 +81,7 @@ cityLedgerKeepAlive(*) {
     global cityLedgerOn := !cityLedgerOn
 }
 
-tab3 := QM.AddTab3("w350", ["基础功能", "Excel辅助", "ReportMaster"])
+tab3 := QM.AddTab3("w350", ["一键运行", "Excel辅助", "常用语句"])
 tab3.UseTab(1)
 basic := []
 loop scriptIndex[1].Length {
@@ -111,18 +113,7 @@ loop xldp.Length {
 QM.AddCheckbox("vDesktopMode h25 x20 y+15", "使用桌面文件模式").OnEvent("Click", toggleDesktopMode)
 
 tab3.UseTab(3)
-QM.AddText("h20", "`n点击“启动脚本”打开报表选择器。")
-QM.AddText("h20", "
-(
-
-常见问题：
-
-因报表保存时出现的弹窗可能会导致中断，建议：
-
-1、使用 IE 浏览器进行操作；
-2、将登录页面最小化；
-3、重启浏览器以及QM 2。
-)")
+Phrases.USE(QM)
 
 tab3.UseTab() ; end tab3
 
