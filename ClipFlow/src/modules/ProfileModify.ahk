@@ -126,7 +126,6 @@ class ProfileModify {
             capturedInfo.Push(A_Clipboard)
             Sleep 10
             ; capture: province
-            ; TODO: add capture of province
             MouseMove 587, 292
             Sleep 10
             Click 
