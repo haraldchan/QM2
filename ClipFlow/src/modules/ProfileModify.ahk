@@ -4,7 +4,8 @@
 #Include "../../lib/DictIndex.ahk"
 
 class ProfileModify {
-    ; template {
+    static popupTitle := "ClipFlow - Profile Mode"
+
     static USE(App) {
         App.AddGroupBox("R6 w250","Flow Mode - ProfileModify")
         desc := "
@@ -43,9 +44,6 @@ class ProfileModify {
             WinActivate "ahk_class SunAwtFrame"
         }
     }
-    ; } 
-
-    static popupTitle := "ClipFlow - Profile Mode"
 
     static Copy() {
         CoordMode "Pixel", "Window"
