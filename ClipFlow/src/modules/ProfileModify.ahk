@@ -5,6 +5,12 @@
 
 class ProfileModify {
     static popupTitle := "ClipFlow - Profile Mode"
+    static profileAnchor := (A_OSVersion = "6.1.7601")
+            ? "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\assets\ProfileAnchorWin7.PNG"
+            : "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\assets\ProfileAnchor.PNG"
+    static altAnchor := (A_OSVersion = "6.1.7601")
+            ? "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\assets\AltAnchorWin7.PNG"
+            : "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\assets\AltAnchor.PNG"
 
     static USE(App) {
         App.AddGroupBox("R6 w250","Flow Mode - ProfileModify")
@@ -294,7 +300,7 @@ class ProfileModify {
 
     static Paste(guestProfileMap) {
         CoordMode "Pixel", "Screen"
-        if(ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenWidth, A_ScriptDir . "\src\assets\ProfileAnchor.PNG"))  {
+        if (ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenWidth, this.profileAnchor))  {
             anchorX := FoundX
             anchorY := FoundY
         } else {
@@ -305,81 +311,81 @@ class ProfileModify {
         CoordMode "Mouse", "Screen"
         BlockInput true
         ; { fillin common info: nameLast, nameFirst, language, gender, country, birthday, idType, idNum
-        MouseMove anchorX+236, anchorY+92
+        MouseMove anchorX+228, anchorY+80
         Click 3
-        Sleep 10
+        Sleep 100
         Send Format("{Text}{1}", guestProfileMap["nameLast"])
-        Sleep 10
-        MouseMove anchorX+201, anchorY+114
+        Sleep 100
+        MouseMove anchorX+188, anchorY+104
         Click 3
-        Sleep 10
+        Sleep 100
         Send Format("{Text}{1}", guestProfileMap["nameFirst"])
-        Sleep 10
-        MouseMove anchorX+158, anchorY+142
+        Sleep 100
+        MouseMove anchorX+155, anchorY+134
         Click 3
-        Sleep 10
+        Sleep 100
         Send Format("{Text}{1}", guestProfileMap["language"])
-        Sleep 10
-        MouseMove anchorX+238, anchorY+143
+        Sleep 100
+        MouseMove anchorX+230, anchorY+133
         Click 3
-        Sleep 10
+        Sleep 100
         Send Format("{Text}{1}", guestProfileMap["gender"])
-        Sleep 10
-        MouseMove anchorX+162, anchorY+294
+        Sleep 100
+        MouseMove anchorX+150, anchorY+284
         Click 3
-        Sleep 10
+        Sleep 100
         Send Format("{Text}{1}", guestProfileMap["country"])
-        Sleep 10
-        MouseMove anchorX+647, anchorY+85
+        Sleep 100
+        MouseMove anchorX+635, anchorY+78
         Click 3
-        Sleep 10
+        Sleep 100
         Send Format("{Text}{1}", guestProfileMap["birthday"])
-        Sleep 10
-        MouseMove anchorX+649, anchorY+109
+        Sleep 100
+        MouseMove anchorX+633, anchorY+99
         Click 3
-        Sleep 10
+        Sleep 100
         Send Format("{Text}{1}", guestProfileMap["idType"])
         Sleep 100
-        MouseMove anchorX+670, anchorY+129
+        MouseMove anchorX+658, anchorY+121
         Click 3
-        Sleep 10
+        Sleep 100
         Send Format("{Text}{1}", guestProfileMap["idNum"])
-        Sleep 10
+        Sleep 100
         ; }
         if (guestProfileMap.Has("nameAlt")) {
             ; { with hanzi name
             ; fillin: address, province, nameAlt, gender(in nameAlt window)
-            MouseMove anchorX+230, anchorY+173
+            MouseMove anchorX+227, anchorY+161
             Click 3
-            Sleep 10
+            Sleep 100
             Send Format("{Text}{1}", guestProfileMap["address"])
-            Sleep 10
-            MouseMove anchorX+239, anchorY+294
+            Sleep 100
+            MouseMove anchorX+233, anchorY+282
             Click 3
-            Sleep 10
+            Sleep 100
             Send Format("{Text}{1}", guestProfileMap["province"])
-            Sleep 10
+            Sleep 100
 
-            MouseMove anchorX+257, anchorY+88 ; open alt name win
+            MouseMove anchorX+247, anchorY+76 ; open alt name win
             Click 1
             Sleep 4000
 
-            ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenWidth, A_ScriptDir . "\src\assets\altAnchor.PNG")
-                altX := FoundX
-                altY := FoundY
-            MouseMove altX+345, altY+74
+            ImageSearch &FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenWidth, this.AltAnchor
+            altX := FoundX
+            altY := FoundY
+
+            MouseMove FoundX+224, FoundY+11
             Click 3
-            Sleep 10
+            Sleep 100
             Send Format("{Text}{1}", guestProfileMap["nameAlt"])
-            Sleep 10
-            MouseMove altX+384, altY+164
+            Sleep 100
+            MouseMove FoundX+319, FoundY+101
             Click 3
-            Sleep 10
+            Sleep 100
             Send Format("{Text}{1}", guestProfileMap["gender"])
             Sleep 100
-            ; }
-        }
+            }
         BlockInput false
         WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-    }
+    }   
 }
