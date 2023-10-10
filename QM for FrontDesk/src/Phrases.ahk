@@ -8,14 +8,14 @@ class Phrases {
     }
 
     static Rush(App) {
-        App.AddGroupBox(this.gbWidth . "r4", "RushRoom - 赶房与Key Keep")
+        App.AddGroupBox(this.gbWidth . "r3", "RushRoom - 赶房与Key Keep")
         App.AddText("xp+10 yp+20 h20", "赶房时间")
         rushTime := App.AddEdit("x+10 w150 h20", "14:00")
         keyMade := [
             App.AddRadio("x35 yp+30 Checked", "已做卡"),
             App.AddRadio("x+10", "未做卡"),
         ]
-        App.AddButton("w120 xp-75 y+10", "复制Comment/Alert").OnEvent("Click", copy)
+        App.AddButton("xp w80 h50 x250 y195", "复制`nComment`nAlert").OnEvent("Click", copy)
 
         copy(*) {
             if (rushTime.Text = "" ) {
@@ -29,8 +29,8 @@ class Phrases {
     }
 
     static Upsell(App) {
-        App.AddGroupBox(this.gbWidth . "r7 x25 y+20", "Upselling - 房间升级")
-        App.AddText("xp+10 yp+20", "升级房型")
+        App.AddGroupBox(this.gbWidth . "r6 x25 y+20", "Upselling - 房间升级")
+        App.AddText("xp+10 yp+25", "升级房型")
         roomType := App.AddEdit("x+10 w150", "")
         App.AddText("x35 y+10", "每晚差价")
         rateDiff := App.AddEdit("x+10 w150", "")
@@ -42,7 +42,7 @@ class Phrases {
             App.AddRadio("x+10", "英文"),
         ]
 
-        App.AddButton("xp-130 y+10 w120", "复制Comment/Alert").OnEvent("Click", copy)
+        App.AddButton("xp w80 h50 x250 y285", "复制`nComment`nAlert").OnEvent("Click", copy)
 
         copy(*) {
             if (
@@ -60,7 +60,7 @@ class Phrases {
     }
 
     static TableReserve(App) {
-        App.AddGroupBox(this.gbWidth . "r9 x25 y+20", "TableResv - 餐饮预订")
+        App.AddGroupBox(this.gbWidth . "r7 x25 y+85", "TableResv - 餐饮预订")
         App.AddText("xp+10 yp+20", "预订餐厅")
         restaurant := App.AddComboBox("w150 x+10", ["宏图府", "玉堂春暖", "风味餐厅", "流浮阁"])
         App.AddText("x35 y+10", "预订日期")
@@ -72,7 +72,7 @@ class Phrases {
         App.AddText("x35 y+10", "对方工号")
         staff := App.AddEdit("x+10 w150", "")
 
-        App.AddButton("xp-60 y+10 w120", "复制Comment/Alert").OnEvent("Click", copy)
+        App.AddButton("xp w80 h50 x250 y440", "复制`nComment`nAlert").OnEvent("Click", copy)
 
         copy(*) {
             if (
