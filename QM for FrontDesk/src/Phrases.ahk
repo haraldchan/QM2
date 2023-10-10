@@ -8,14 +8,14 @@ class Phrases {
     }
 
     static Rush(App) {
-        App.AddGroupBox(this.gbWidth . "r3", "RushRoom - 赶房与Key Keep")
+        App.AddGroupBox(this.gbWidth . "r3", "Rush Room - 赶房与Key Keep")
         App.AddText("xp+10 yp+20 h20", "赶房时间")
         rushTime := App.AddEdit("x+10 w150 h20", "14:00")
         keyMade := [
-            App.AddRadio("x35 yp+30 Checked", "已做卡"),
-            App.AddRadio("x+10", "未做卡"),
+            App.AddRadio("h25 x35 y+10 Checked", "已做卡"),
+            App.AddRadio("h25 x+10", "未做卡"),
         ]
-        App.AddButton("xp w80 h50 x250 y195", "复制`nComment`nAlert").OnEvent("Click", copy)
+        App.AddButton("xp w80 h50 x250 y192", "复制`nComment`nAlert").OnEvent("Click", copy)
 
         copy(*) {
             if (rushTime.Text = "" ) {
@@ -36,10 +36,9 @@ class Phrases {
         rateDiff := App.AddEdit("x+10 w150", "")
         App.AddText("x35 y+10", "升级晚数")
         nts := App.AddEdit("x+10 w150", "")
-        App.AddText("x35 y+10", "语言版本")
         lang := [
-            App.AddRadio("x+20 Checked", "中文"),
-            App.AddRadio("x+10", "英文"),
+            App.AddRadio("h20 x35 y+10 Checked", "中文"),
+            App.AddRadio("h20 x+10", "英文"),
         ]
 
         App.AddButton("xp w80 h50 x250 y285", "复制`nComment`nAlert").OnEvent("Click", copy)
@@ -60,7 +59,7 @@ class Phrases {
     }
 
     static TableReserve(App) {
-        App.AddGroupBox(this.gbWidth . "r7 x25 y+85", "TableResv - 餐饮预订")
+        App.AddGroupBox(this.gbWidth . "r7 x25 y+85", "Table Resv - 餐饮预订")
         App.AddText("xp+10 yp+20", "预订餐厅")
         restaurant := App.AddComboBox("w150 x+10", ["宏图府", "玉堂春暖", "风味餐厅", "流浮阁"])
         App.AddText("x35 y+10", "预订日期")

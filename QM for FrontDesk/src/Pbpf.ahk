@@ -7,7 +7,6 @@ class PbPf {
 
 	static Main() {
 		static relations := []
-
 		; GUI
 		Main := Gui(, this.popupTitle)
 		Main.AddGroupBox("w180 h190", "P/F房(支付人)")
@@ -78,11 +77,15 @@ class PbPf {
 	}
 
 	static Run(*) {
+		commentPos := (A_OSVersion = "6.1.7601")
+			? "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM for FrontDesk\src\assets\commentWin7.PNG"
+			: "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM for FrontDesk\src\assets\comment.PNG"
+
 		WinMaximize "ahk_class SunAwtFrame"
 		WinActivate "ahk_class SunAwtFrame"
 		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 		BlockInput true
-		ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenHeight, A_ScriptDir . "\src\assets\comment.PNG")
+		ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenHeight, commentPos)
 		anchorX := FoundX
 		anchorY := FoundY
 		MouseMove anchorX + 20, anchorY + 20
