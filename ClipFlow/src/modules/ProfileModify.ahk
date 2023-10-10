@@ -6,11 +6,11 @@
 class ProfileModify {
     static popupTitle := "ClipFlow - Profile Mode"
     static profileAnchor := (A_OSVersion = "6.1.7601")
-            ? "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\assets\ProfileAnchorWin7.PNG"
-            : "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\assets\ProfileAnchor.PNG"
+            ? "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\assets\ProfileAnchorWin7.PNG"
+            : "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\assets\ProfileAnchor.PNG"
     static altAnchor := (A_OSVersion = "6.1.7601")
-            ? "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\assets\AltAnchorWin7.PNG"
-            : "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\assets\AltAnchor.PNG"
+            ? "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\assets\AltAnchorWin7.PNG"
+            : "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\assets\AltAnchor.PNG"
 
     static USE(App) {
         App.AddGroupBox("R6 w250","Flow Mode - ProfileModify")
@@ -119,10 +119,10 @@ class ProfileModify {
             Sleep 10
             capturedInfo.Push(A_Clipboard)
             ; capture: address
-            MouseMove 750, 262
+            MouseMove 519, 262
             Click "Down"
             Sleep 10
-            MouseMove 498, 262
+            MouseMove 789, 262
             Click "Up"
             Sleep 10
             Send "^c"
@@ -387,5 +387,7 @@ class ProfileModify {
             }
         BlockInput false
         WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-    }   
+    }
+
+    
 }
