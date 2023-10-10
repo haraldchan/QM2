@@ -2,7 +2,6 @@
 ; #Include "%A_ScriptDir%\src\modules\ProfileModify.ahk"
 #Include "../src/lib/utils.ahk"
 #Include "../src/modules/ProfileModify.ahk"
-
 ; { setup
 #SingleInstance Force
 CoordMode "Mouse", "Screen"
