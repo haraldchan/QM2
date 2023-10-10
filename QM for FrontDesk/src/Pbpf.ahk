@@ -7,37 +7,38 @@ class PbPf {
 
 	static Main() {
 		static relations := []
-		WinSetAlwaysOnTop true, this.popupTitle
+
 		; GUI
 		Main := Gui(, this.popupTitle)
-		Main.AddGroupBox("w130 h200", "P/F房(支付人)")
-		Main.AddText("xp+10 y+15", "房号")
-		pfRoom := Main.AddEdit("x+10 w50", "")
-		Main.AddText("xp+10", "姓名/确认号")
-		pfName := Main.AddEdit("x+10 w50", "")
-		Main.AddText("xp+10", "Party号")
-		party := Main.AddEdit("x+10 w50", "")
-		Main.AddText("xp+10", "Total房数")
-		roomQty := Main.AddEdit("x+10 w50", "")
-		pfCopy := Main.AddButton("xp+10 w50", "复制Pay For信息")
+		Main.AddGroupBox("w180 h190", "P/F房(支付人)")
+		Main.AddText("xp+10 yp+25", "房号       ")
+		pfRoom := Main.AddEdit("x+10 w80", "")
+		Main.AddText("x20 y+10", "姓名/确认号")
+		pfName := Main.AddEdit("x+10 w80", "")
+		Main.AddText("x20 y+10", "Party号    ")
+		party := Main.AddEdit("x+10 w80", "")
+		Main.AddText("x20 y+10", "Total房数  ")
+		roomQty := Main.AddEdit("x+10 w80", "")
+		pfCopy := Main.AddButton("x20 y+10 h30 w160", "复制Pay For信息")
 
-		Main.AddGroupBox("x+10 w130 h200", "P/B房(被支付人)")
-		Main.AddText("xp+10 y+15", "房号")
-		pbRoom := Main.AddEdit("x+10 w50", "")
-		Main.AddText("xp+10", "姓名/确认号")
-		pbName := Main.AddEdit("x+10 w50", "")
-		pbCopy := Main.AddButton("xp+10 w50", "复制Pay By信息")
+		Main.AddGroupBox("x+20 y8 w180 h190", "P/B房(被支付人)")
+		Main.AddText("xp+10 yp+25", "房号       ")
+		pbRoom := Main.AddEdit("x+10 w80", "")
+		Main.AddText("xp-75 y+10", "姓名/确认号")
+		pbName := Main.AddEdit("x+10 w80", "")
+		pbCopy := Main.AddButton("xp-75 y+70 h30 w160", "复制Pay By信息")
 
-		Main.AddButton("w200", "开始粘贴").OnEvent("Click", this.Run)
+		Main.AddButton("w370 x10 y+20 h35", "开始粘贴").OnEvent("Click", this.Run)
 
 		pbpfCtrls := [pfRoom, pfName, party, roomQty, pbRoom, pbName]
 		loop pbpfCtrls.Length {
 			pbpfCtrls[A_Index].OnEvent("Change", update)
 		}
 		pfCopy.OnEvent("Click", getPayFor)
-		pfCopy.OnEvent("Click", getPayBy)
+		pbCopy.OnEvent("Click", getPayBy)
 
 		Main.Show()
+		WinSetAlwaysOnTop true, this.popupTitle
 		Main.OnEvent("Close", close)
 
 		; callbacks
@@ -47,12 +48,12 @@ class PbPf {
 
 		update(*) {
 			relations := [
-				pfRoom.Text,
-				pfName.Text,
-				party.Text,
-				roomQty.Text,
-				pbRoom.Text,
-				pbName.Text,
+				pfRoom.Value,
+				pfName.Value,
+				party.Value,
+				roomQty.Value,
+				pbRoom.Value,
+				pbName.Value,
 			]
 		}
 
@@ -60,16 +61,19 @@ class PbPf {
 			nameConf := IsNumber(relations[6]) ? "#" . relations[6] : relations[6]
 			if (relations[3] = "" || relations[4] = "") {
 				; 2-room party
-				A_Clipboard := Format("P/F Rm{1}{2}", relations[5], nameConf)
+				A_Clipboard := Format("P/F Rm{1}{2}  ", relations[5], nameConf)
 			} else {
 				; 3 or more room party
-				A_Clipboard := Format("P/F Party#{1}, total {2}-rooms", relations[3], relations[4])
+				A_Clipboard := Format("P/F Party#{1}, total {2}-rooms  ", relations[3], relations[4])
+
 			}
+			MsgBox(A_Clipboard, "已复制信息", "4096 T1")
 		}
 
 		getPayBy(*) {
 			nameConf := IsNumber(relations[2]) ? "#" . relations[2] : relations[2]
-			A_Clipboard := Format("P/B Rm{1}{2}", relations[1], nameConf)
+			A_Clipboard := Format("P/B Rm{1}{2}  ", relations[1], nameConf)
+			MsgBox(A_Clipboard, "已复制信息", "4096 T1")
 		}
 	}
 
@@ -81,7 +85,7 @@ class PbPf {
 		ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenHeight, A_ScriptDir . "\src\assets\comment.PNG")
 		anchorX := FoundX
 		anchorY := FoundY
-		MouseMove anchorX + 10, anchorY + 10
+		MouseMove anchorX + 20, anchorY + 20
 		Click
 		Sleep 100
 		MouseMove 316, 699
