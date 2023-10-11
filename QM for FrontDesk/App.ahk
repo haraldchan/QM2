@@ -85,11 +85,25 @@ tab3 := QM.AddTab3("w350", ["一键运行", "Excel辅助", "常用语句"])
 tab3.UseTab(1)
 basic := []
 loop scriptIndex[1].Length {
-    radioStyle := (A_Index = 1) ? "Checked h25 y+10" : "h25 y+10"
+    radioStyle := (A_Index = 1) ? "Checked h25" : "h25 y+10"
     basic.Push(
         QM.AddRadio(radioStyle, scriptIndex[1][A_Index].description),
     )
 }
+reportMasterInfo := "
+(
+Report Master 常见问题：
+
+
+因报表保存过程中出现弹窗可能会导致中断，建议：
+
+1、 使用 IE 浏览器进行操作；
+
+2、 将登陆页面最小化；
+
+3、 重启浏览器以及 QM 2
+)"
+QM.AddText("y+25", reportMasterInfo)
 
 tab3.UseTab(2)
 xldp := []
@@ -110,7 +124,23 @@ loop xldp.Length {
     xldp[A_Index][3].OnEvent("Click", getXlPath.Bind(scriptIndex[2][A_Index].name, xldp[A_Index][2]))
     xldp[A_Index][4].OnEvent("Click", openXlFile.Bind(xldp[A_Index][2].Text))
 }
-QM.AddCheckbox("vDesktopMode h25 x20 y+15", "使用桌面文件模式").OnEvent("Click", toggleDesktopMode)
+QM.AddCheckbox("vDesktopMode h25 x20 y+10", "使用桌面文件模式").OnEvent("Click", toggleDesktopMode)
+xldpInfo := "
+(
+功能说明：
+
+启动脚本前，必须先将对应的数据从 Opera PMS 导出的报
+
+表中复制到 Excel 表中，才能实现功能。
+
+
+桌面文件模式：
+
+选中“使用桌面文件模式”后，脚本将只会从本机桌面读取相
+
+应文件名的 Excel 表。 请直接在桌面操作所需 Excel 表。
+)"
+QM.AddText("y+25", xldpInfo)
 
 tab3.UseTab(3)
 Phrases.USE(QM)
@@ -173,8 +203,7 @@ runSelectedScript(*) {
             }
         }
     } else {
-        hideWin()
-        scriptIndex[3].Main()
+        return
     }
 }
 
