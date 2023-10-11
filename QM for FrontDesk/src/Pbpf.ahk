@@ -85,10 +85,12 @@ class PbPf {
 		WinActivate "ahk_class SunAwtFrame"
 		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 		BlockInput true
+		CoordMode "Pixel", "Screen"
+		CoordMode "Mouse", "Screen"
 		ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenHeight, commentPos)
 		anchorX := FoundX
 		anchorY := FoundY
-		MouseMove anchorX + 20, anchorY + 20
+		MouseMove anchorX + 1, anchorY + 1
 		Click
 		Sleep 100
 		MouseMove 316, 699
