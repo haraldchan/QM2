@@ -5,6 +5,16 @@
 
 class ProfileModify {
     static popupTitle := "ClipFlow - Profile Mode"
+    static desc := "
+    (
+        Flow - Profile Mode
+        
+        1、请先打开“旅客信息”界面，点击
+          “开始复制”；
+
+        2、复制完成后请打开Opera Profile 界面，
+          点击“开始填入”。
+    )"
     static profileAnchor := (A_OSVersion = "6.1.7601")
             ? "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\assets\ProfileAnchorWin7.PNG"
             : "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\assets\ProfileAnchor.PNG"
@@ -13,29 +23,24 @@ class ProfileModify {
             : "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\assets\AltAnchor.PNG"
 
     static USE(App) {
+        ; GUI
         App.AddGroupBox("R6 w250","Flow Mode - ProfileModify")
-        desc := "
-        (
-            Flow - Profile Mode
-            
-            1、请先打开“旅客信息”界面，点击
-              “开始复制”；
+        App.AddText("xp+10", this.desc)
+        copyBtn := App.AddButton("h30 w80 y+15", "开始复制")
+        pasteBtn := App.AddButton("Disabled h30 w80 x+20 ", "开始填入")
 
-            2、复制完成后请打开Opera Profile 界面，
-              点击“开始填入”。
-        )"
-
-        App.AddText("xp+10", desc)
-        App.AddButton("Default h30 w80 y+15", "开始复制").OnEvent("Click", psbCopy)
-        App.AddButton("h30 w80 x+20 ", "开始填入").OnEvent("Click", psbPaste)
-
+        ; function
+        copyBtn.OnEvent("Click", psbCopy)
         psbCopy(*) {
             App.Hide()
             Sleep 200
             global profileCache := this.Copy()
+            copyBtn.Enabled := false
+            pasteBtn.Enabled := true
             App.Show()
         }
         
+        pasteBtn.OnEvent("Click", psbPaste)
         psbPaste(*) {
             App.Hide()
             Sleep 200
@@ -46,6 +51,8 @@ class ProfileModify {
             }
             this.Paste(profileCache)
             Sleep 200
+            copyBtn.Enabled := true
+            pasteBtn.Enabled := false
             App.Show()
         }
     }
