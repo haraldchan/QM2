@@ -313,58 +313,58 @@ class ProfileModify {
         ; { fillin common info: nameLast, nameFirst, language, gender, country, birthday, idType, idNum
         MouseMove anchorX+228, anchorY+80
         Click 3
-        Sleep 100
+        Sleep 10
         Send Format("{Text}{1}", guestProfileMap["nameLast"])
-        Sleep 100
+        Sleep 10
         MouseMove anchorX+188, anchorY+104
         Click 3
-        Sleep 100
+        Sleep 10
         Send Format("{Text}{1}", guestProfileMap["nameFirst"])
-        Sleep 100
+        Sleep 10
         MouseMove anchorX+155, anchorY+134
         Click 3
-        Sleep 100
+        Sleep 10
         Send Format("{Text}{1}", guestProfileMap["language"])
-        Sleep 100
+        Sleep 10
         MouseMove anchorX+230, anchorY+133
         Click 3
-        Sleep 100
+        Sleep 10
         Send Format("{Text}{1}", guestProfileMap["gender"])
-        Sleep 100
+        Sleep 10
         MouseMove anchorX+150, anchorY+284
         Click 3
-        Sleep 100
+        Sleep 10
         Send Format("{Text}{1}", guestProfileMap["country"])
-        Sleep 100
+        Sleep 10
         MouseMove anchorX+635, anchorY+78
         Click 3
-        Sleep 100
+        Sleep 10
         Send Format("{Text}{1}", guestProfileMap["birthday"])
-        Sleep 100
+        Sleep 10
         MouseMove anchorX+633, anchorY+99
         Click 3
-        Sleep 100
+        Sleep 10
         Send Format("{Text}{1}", guestProfileMap["idType"])
-        Sleep 100
+        Sleep 10
         MouseMove anchorX+658, anchorY+121
         Click 3
-        Sleep 100
+        Sleep 10
         Send Format("{Text}{1}", guestProfileMap["idNum"])
-        Sleep 100
+        Sleep 10
         ; }
         if (guestProfileMap.Has("nameAlt")) {
             ; { with hanzi name
             ; fillin: address, province, nameAlt, gender(in nameAlt window)
             MouseMove anchorX+227, anchorY+161
             Click 3
-            Sleep 100
+            Sleep 10
             Send Format("{Text}{1}", guestProfileMap["address"])
-            Sleep 100
+            Sleep 10
             MouseMove anchorX+233, anchorY+282
             Click 3
-            Sleep 100
+            Sleep 10
             Send Format("{Text}{1}", guestProfileMap["province"])
-            Sleep 100
+            Sleep 10
 
             MouseMove anchorX+247, anchorY+76 ; open alt name win
             Click 1
@@ -376,14 +376,14 @@ class ProfileModify {
 
             MouseMove FoundX+224, FoundY+11
             Click 3
-            Sleep 100
+            Sleep 10
             Send Format("{Text}{1}", guestProfileMap["nameAlt"])
-            Sleep 100
+            Sleep 10
             MouseMove FoundX+319, FoundY+101
             Click 3
-            Sleep 100
+            Sleep 10
             Send Format("{Text}{1}", guestProfileMap["gender"])
-            Sleep 100
+            Sleep 10
             }
         BlockInput false
         WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
