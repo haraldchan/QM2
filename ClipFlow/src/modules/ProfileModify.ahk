@@ -47,7 +47,6 @@ class ProfileModify {
             this.Paste(profileCache)
             Sleep 200
             App.Show()
-            WinActivate "ahk_class SunAwtFrame"
         }
     }
 
@@ -287,6 +286,9 @@ class ProfileModify {
             即将填入的信息：
 
             {1}
+
+            确定：     打开 Opera
+            取消：     留在 旅客信息
             )", popupInfo), this.popupTitle, "OKCancel")
         if (toOpera = "OK") {
             try {
@@ -384,10 +386,23 @@ class ProfileModify {
             Sleep 10
             Send Format("{Text}{1}", guestProfileMap["gender"])
             Sleep 10
+            Send "{Enter}"
+            Sleep 100
+            Send "!o"
+            Sleep 200
             }
         BlockInput false
         WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-    }
 
-    
+        backToPsb := MsgBox("
+            (
+                已完成Modify！
+
+                确定：    回到 旅客信息
+                取消：    留在 Opera
+            )", this.popupTitle, "OKCancel 4096")
+        if (backToPsb = "OK") {
+            WinActivate "ahk_exe hotel.exe"
+        } 
+    }
 }
