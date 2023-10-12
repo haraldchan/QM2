@@ -26,7 +26,7 @@ class ProfileModify {
         ; GUI
         App.AddGroupBox("R6 w250","Flow Mode - ProfileModify")
         App.AddText("xp+10", this.desc)
-        copyBtn := App.AddButton("h30 w80 y+15", "开始复制")
+        copyBtn := App.AddButton("Default h30 w80 y+15", "开始复制")
         pasteBtn := App.AddButton("Disabled h30 w80 x+20 ", "开始填入")
 
         ; function
@@ -38,6 +38,7 @@ class ProfileModify {
             copyBtn.Enabled := false
             pasteBtn.Enabled := true
             App.Show()
+            pasteBtn.Focus()
         }
         
         pasteBtn.OnEvent("Click", psbPaste)
@@ -54,6 +55,7 @@ class ProfileModify {
             copyBtn.Enabled := true
             pasteBtn.Enabled := false
             App.Show()
+            copyBtn.Focus()
         }
     }
 
