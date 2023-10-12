@@ -153,7 +153,7 @@ loadAsFlow(*) {
 ; }
 
 ; hotkeys
-F12::cleanReload()
+; F12::cleanReload()
 Pause::ClipFlow.Show()
 
 #HotIf isFlowPasting
