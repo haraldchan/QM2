@@ -4,6 +4,8 @@
 #Include "../../lib/DictIndex.ahk"
 
 class ProfileModify {
+    static name := "Profile Modify"
+    static title := "Flow Mode - ProfileModify"
     static popupTitle := "ClipFlow - Profile Mode"
     static desc := "
     (
@@ -24,7 +26,7 @@ class ProfileModify {
 
     static USE(App) {
         ; GUI
-        App.AddGroupBox("R6 w250","Flow Mode - ProfileModify")
+        App.AddGroupBox("R6 w250", this.title)
         App.AddText("xp+10", this.desc)
         copyBtn := App.AddButton("Default h30 w80 y+15", "开始复制")
         pasteBtn := App.AddButton("Disabled h30 w80 x+20 ", "开始填入")
