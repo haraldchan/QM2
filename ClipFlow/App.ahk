@@ -2,10 +2,13 @@
 ; #Include "%A_ScriptDir%\src\modules\ProfileModify.ahk"
 #Include "../src/lib/utils.ahk"
 #Include "../src/modules/ProfileModify.ahk"
+#Include ../src/modules/InvoiceWechat.ahk
 ; { setup
 #SingleInstance Force
 CoordMode "Mouse", "Screen"
 TraySetIcon A_ScriptDir . "\src\assets\CFTray.ico"
+OnClipboardChange addToHistory
+modules := [ProfileModify, InvoiceWechat]
 version := "0.0.1"
 popupTitle := "ClipFlow " . version
 if (FileExist(A_MyDocuments . "\ClipFlow.ini")) {
@@ -20,13 +23,12 @@ flowPointer := 1
 isFlowCopying := false
 isFlowPasting := false
 onTop := true
-OnClipboardChange addToHistory
 ; }
 
 ; { GUI template
 ClipFlow := Gui(, popupTitle)
 ClipFlow.OnEvent("Close", quitApp)
-ClipFlow.AddText(,"~~When Flowing, press Esc to Unflow~~")
+ClipFlow.AddText(, "~~When Flowing, press Esc to Unflow~~")
 ClipFlow.AddCheckbox("Checked h25 x20", "Keep ClipFlow On Top").OnEvent("Click", keepOnTop)
 ClipFlow.AddButton("Disabled h25 w85", "Flow Start").OnEvent("Click", flowStart)
 ClipFlow.AddButton("Disabled h25 w85 x+12", "Flow Load").OnEvent("Click", flowLoad)
@@ -35,7 +37,7 @@ ClipFlow.AddButton("Disabled h25 w85 x+12", "Load History").OnEvent("Click", loa
 tab3 := ClipFlow.AddTab3("w280 x20", ["Flow Modes", "Flow", "History"])
 
 tab3.UseTab(1)
-ProfileModify.USE(ClipFlow)
+moduleLoader(ClipFlow)
 
 tab3.UseTab(2)
 tabFlow := []
@@ -84,6 +86,33 @@ clearList(*) {
 
 refresh(*) {
     cleanReload()
+}
+
+moduleLoader(App) {
+    moduleSelected := IniRead(store, "Module", "moduleSelected")
+    loadedModules := []
+    ; create module select radio
+    loop modules.Length {
+        moduleRadioStyle := (A_Index = 1) ? "h20 x20 y+10 Check" : "h20 x20 y+10"
+        loadedModules.Push(App.AddRadio(moduleRadioStyle, modules[A_Index].name))
+    }
+    ; add event
+    loop loadedModules.Length {
+        loadedModules[A_Index].OnEvent("Click", saveSelect)
+    }
+    ; load selected module
+    modules[moduleSelected].USE(App)
+    ; check which module is selected, save it to ini, reload (swap to seleced module)
+    saveSelect(*) {
+        loop loadedModules.Length {
+            if (loadedModules[A_Index].Value = 1) {
+                IniWrite(A_Index, store, "Module", "ModuleSelected")
+                cleanReload()
+            } else {
+                return
+            }
+        }
+    }
 }
 
 ; render tab1: Clipboard History base on clipHisArr
@@ -154,13 +183,13 @@ loadAsFlow(*) {
 
 ; hotkeys
 ; F12::cleanReload()
-Pause::ClipFlow.Show()
+Pause:: ClipFlow.Show()
 
 #HotIf isFlowPasting
 ~^v:: flowFire()
 ; double press Escape to unload flow
-~Esc::{
-    if(KeyWait("Esc", "D T0.5")) {
+~Esc:: {
+    if (KeyWait("Esc", "D T0.5")) {
         unload := MsgBox("Stop Flowing?", popupTitle, "OKCancel 4096")
         if (unload = "OK") {
             global isFlowPasting := false
