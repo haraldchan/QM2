@@ -34,7 +34,7 @@ class ProfileModify {
         psbCopy(*) {
             App.Hide()
             Sleep 200
-            global profileCache := this.Copy()
+            global profileCache := this.copy()
             copyBtn.Enabled := false
             pasteBtn.Enabled := true
             App.Show()
@@ -50,7 +50,7 @@ class ProfileModify {
                 App.Show()
                 return
             }
-            this.Paste(profileCache)
+            this.paste(profileCache)
             Sleep 200
             copyBtn.Enabled := true
             pasteBtn.Enabled := false
@@ -59,7 +59,7 @@ class ProfileModify {
         }
     }
 
-    static Copy() {
+    static copy() {
         CoordMode "Pixel", "Window"
         try {
             WinActivate "旅客信息"
@@ -74,10 +74,10 @@ class ProfileModify {
                 break
             }
         }
-        return this.Capture(gType)
+        return this.capture(gType)
     }
     
-    static Capture(gType) {
+    static capture(gType) {
         CoordMode "Mouse", "Window"
         BlockInput true
         if (WinExist("旅客信息")){
@@ -309,7 +309,7 @@ class ProfileModify {
         return guestProfile
     }
 
-    static Paste(guestProfileMap) {
+    static paste(guestProfileMap) {
         CoordMode "Pixel", "Screen"
         if (ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenWidth, this.profileAnchor))  {
             anchorX := FoundX
