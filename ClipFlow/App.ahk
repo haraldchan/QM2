@@ -93,7 +93,7 @@ moduleLoader(App) {
     loadedModules := []
     ; create module select radio
     loop modules.Length {
-        moduleRadioStyle := (A_Index = 1) ? "h20 x20 y+10 Check" : "h20 x20 y+10"
+        moduleRadioStyle := (A_Index = moduleSelected) ? "h20 x20 y+10 Checked" : "h20 x20 y+10"
         loadedModules.Push(App.AddRadio(moduleRadioStyle, modules[A_Index].name))
     }
     ; add event
