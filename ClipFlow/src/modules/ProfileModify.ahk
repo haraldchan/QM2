@@ -296,8 +296,8 @@ class ProfileModify {
 
             {1}
 
-            确定：     打开 Opera
-            取消：     留在 旅客信息
+            确定(Enter)：     打开 Opera
+            取消(Esc)：       留在 旅客信息
             )", popupInfo), this.popupTitle, "OKCancel")
         if (toOpera = "OK") {
             try {
@@ -407,8 +407,8 @@ class ProfileModify {
             (
                 已完成Modify！
 
-                确定：    回到 旅客信息
-                取消：    留在 Opera
+                确定(Enter)：    回到 旅客信息
+                取消(Esc)：      留在 Opera
             )", this.popupTitle, "OKCancel 4096")
         if (backToPsb = "OK") {
             WinActivate "ahk_exe hotel.exe"
