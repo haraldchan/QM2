@@ -1,5 +1,5 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-#Include "../lib/utils.ahk"
+#Include "../../lib/utils.ahk"
 
 class GroupKeys {
     static name := "GroupKeys"
@@ -7,7 +7,7 @@ class GroupKeys {
     static popupTitle := "Group Keys"
     static dateDash := "^\d{1,4}-\d{1,2}-\d{1,2}"
     static dateSlash := "\d{4}/\d{2}/\d{2}"
-    static path := IniRead(A_ScriptDir . "\src\config.ini", "GroupKeys", "xlsPath")
+    static path := IniRead(A_ScriptDir . "\src\lib\config.ini", "GroupKeys", "xlsPath")
 
     static Main(desktopMode := 0) {
         if (desktopMode = true) {

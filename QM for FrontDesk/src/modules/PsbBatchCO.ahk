@@ -1,13 +1,13 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
 ; #Include "%A_ScriptDir%\src\lib\reports.ahk"
-#Include "../lib/utils.ahk"
-#Include "../lib/reports.ahk"
+#Include "../../lib/utils.ahk"
+#Include "../../lib/reports.ahk"
 
 class PsbBatchCO {
     static name := "PsbBatchCO"
     static description := "旅安系统批量退房 - Excel表：CheckOut.xls"
     static popupTitle := "PSB CheckOut(Batch)"
-    static path := IniRead(A_ScriptDir . "\src\config.ini", "PsbBatchCO", "xlsPath")
+    static path := IniRead(A_ScriptDir . "\src\lib\config.ini", "PsbBatchCO", "xlsPath")
 
     static Main(desktopMode := 0) {
         if (desktopMode = true) {
@@ -22,7 +22,7 @@ class PsbBatchCO {
         } else {
             path := this.path
         }
-        quitOnRoom := IniRead(A_ScriptDir . "\src\config.ini", "PsbBatchCO", "errorQuitAt")
+        quitOnRoom := IniRead(A_ScriptDir . "\src\lib\config.ini", "PsbBatchCO", "errorQuitAt")
         if (quitOnRoom != "null") {
             MsgBox(Format("上次拍Out为出错停止，已拍至：{1}`n请先更新CheckOut.xls", quitOnRoom))
         }
@@ -209,7 +209,7 @@ class PsbBatchCO {
             if (PixelGetColor(251, 196) = errorBrown) {
                 MsgBox("PSB系统出错，脚本已终止`n`n已拍Out到：" . depRoomNums[A_Index], PsbBatchCo.popupTitle)
                 quitOnRoom := depRoomNums[A_Index]
-                IniWrite(quitOnRoom, A_ScriptDir . "\src\config.ini", "PsbBatchCO", "errorQuitAt")
+                IniWrite(quitOnRoom, A_ScriptDir . "\src\lib\config.ini", "PsbBatchCO", "errorQuitAt")
                 cleanReload()
             }
         }
@@ -252,7 +252,7 @@ class PsbBatchCO {
         ; ; BlockInput false
         ; CheckOut.Close
         ; Xl.Quit
-        IniWrite("null", A_ScriptDir . "\src\config.ini", "PsbBatchCO", "errorQuitAt")
+        IniWrite("null", A_ScriptDir . "\src\lib\config.ini", "PsbBatchCO", "errorQuitAt")
         Sleep 1000
         MsgBox("PSB 批量拍Out 已完成！", this.popupTitle)
     }

@@ -1,5 +1,5 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-#Include "../lib/utils.ahk"
+#Include "../../lib/utils.ahk"
 
 class GroupShare {
     static description := "旅行团Share + DoNotMove"
