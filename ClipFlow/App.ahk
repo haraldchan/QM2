@@ -3,6 +3,7 @@
 #Include "../src/lib/utils.ahk"
 #Include "../src/modules/ProfileModify.ahk"
 #Include ../src/modules/InvoiceWechat.ahk
+#Include ../src/modules/RsvnHandler.ahk
 ; { setup
 #SingleInstance Force
 CoordMode "Mouse", "Screen"
