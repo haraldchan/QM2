@@ -26,7 +26,7 @@ class ProfileModify {
 
     static USE(App) {
         ; GUI
-        App.AddGroupBox("R6 w250", this.title)
+        App.AddGroupBox("R6 w250 y+20", this.title)
         App.AddText("xp+10", this.desc)
         copyBtn := App.AddButton("Default h30 w80 y+15", "开始复制")
         pasteBtn := App.AddButton("Disabled h30 w80 x+20 ", "开始填入")
@@ -56,7 +56,6 @@ class ProfileModify {
             Sleep 200
             copyBtn.Enabled := true
             pasteBtn.Enabled := false
-            App.Show()
             copyBtn.Focus()
         }
     }
@@ -317,8 +316,10 @@ class ProfileModify {
             anchorX := FoundX
             anchorY := FoundY
         } else {
-            msgbox("请先打开Profile界面", this.popupTitle)
-            return
+            ; msgbox("请先打开Profile界面", this.popupTitle)
+            WinMaximize "ahk_class SunAwtFrame"
+            anchorX := 205
+            anchorY := 203           
         }
         WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
         CoordMode "Mouse", "Screen"
@@ -381,18 +382,21 @@ class ProfileModify {
 
             MouseMove anchorX+247, anchorY+76 ; open alt name win
             Click 1
-            Sleep 4000
+            Sleep 5000
 
-            ImageSearch &FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenWidth, this.AltAnchor
-            altX := FoundX
-            altY := FoundY
-
-            MouseMove FoundX+224, FoundY+11
+            if (ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenWidth, this.AltAnchor)) {
+                altX := FoundX
+                altY := FoundY 
+            } else {
+                altX := 419
+                altY := 369                 
+            }
+            MouseMove altX+224, altY+11
             Click 3
             Sleep 10
             Send Format("{Text}{1}", guestProfileMap["nameAlt"])
             Sleep 10
-            MouseMove FoundX+319, FoundY+101
+            MouseMove altX+319, altY+101
             Click 3
             Sleep 10
             Send Format("{Text}{1}", guestProfileMap["gender"])
@@ -411,7 +415,7 @@ class ProfileModify {
 
                 确定(Enter)：    回到 旅客信息
                 取消(Esc)：      留在 Opera
-            )", this.popupTitle, "OKCancel 4096")
+            )", this.popupTitle, "OKCancel T2 4096")
         if (backToPsb = "OK") {
             WinActivate "ahk_exe hotel.exe"
         } 
