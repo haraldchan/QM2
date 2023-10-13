@@ -49,6 +49,26 @@ class InvoiceWechat {
                 invoiceInfoMap["length"] := 2
             }
             this.invoiceCache := invoiceInfoMap
+            for k, v in invoiceInfoMap {
+                popupInfo .= Format("{1}：{2}`n", k, v)
+            }
+            toIssue := MsgBox(Format("
+                (   
+                即将填入的信息：
+    
+                {1}
+    
+                确定(Enter)：     打开 Opera
+                取消(Esc)：       留在 旅客信息
+                )", popupInfo), this.popupTitle, "OKCancel")
+            if (toIssue = "OK") {
+                try {
+                    ; TODO: change this to 一键开票
+                    WinActivate "ahk_class SunAwtFrame"
+                } catch {
+                    MsgBox("请先打开 一键开票。", this.popupTitle)
+                }
+            }
         } else {
             return
         }
