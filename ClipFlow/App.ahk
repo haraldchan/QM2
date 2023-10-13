@@ -23,14 +23,14 @@ flowArr := strToArr(IniRead(store, "Flow", "flowArr"))
 flowPointer := 1
 isFlowCopying := false
 isFlowPasting := false
-onTop := true
+onTop := false
 ; }
 
 ; { GUI template
 ClipFlow := Gui(, popupTitle)
 ClipFlow.OnEvent("Close", quitApp)
 ClipFlow.AddText(, "~~When Flowing, press Esc to Unflow~~")
-ClipFlow.AddCheckbox("Checked h25 x20", "Keep ClipFlow On Top").OnEvent("Click", keepOnTop)
+ClipFlow.AddCheckbox("h25 x20", "Keep ClipFlow On Top").OnEvent("Click", keepOnTop)
 ClipFlow.AddButton("Disabled h25 w85", "Flow Start").OnEvent("Click", flowStart)
 ClipFlow.AddButton("Disabled h25 w85 x+12", "Flow Load").OnEvent("Click", flowLoad)
 ClipFlow.AddButton("Disabled h25 w85 x+12", "Load History").OnEvent("Click", loadAsFlow)
@@ -94,9 +94,9 @@ moduleLoader(App) {
     loadedModules := []
     ; create module select radio
     loop modules.Length {
-        moduleRadioStyle := (A_Index = moduleSelected) ? "h20 x20 y+10 Checked" : "h20 x20 y+10"
+        moduleRadioStyle := (A_Index = moduleSelected) ? "h15 x30 y+10 Checked" : "h15 x30 y+10"
         loadedModules.Push(App.AddRadio(moduleRadioStyle, modules[A_Index].name))
-    }
+    }  
     ; add event
     loop loadedModules.Length {
         loadedModules[A_Index].OnEvent("Click", saveSelect)
@@ -109,8 +109,6 @@ moduleLoader(App) {
             if (loadedModules[A_Index].Value = 1) {
                 IniWrite(A_Index, store, "Module", "ModuleSelected")
                 cleanReload()
-            } else {
-                return
             }
         }
     }
