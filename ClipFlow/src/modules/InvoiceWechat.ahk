@@ -1,7 +1,5 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-; #Include "%A_ScriptDir%\src\libDictIndex\.ahk"
 #Include "../../lib/utils.ahk"
-#Include "../../lib/DictIndex.ahk"
 
 class InvoiceWechat {
     static name := "Invoice Fill-in(Wechat)"
