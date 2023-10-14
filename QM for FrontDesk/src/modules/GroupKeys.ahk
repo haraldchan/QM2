@@ -27,17 +27,20 @@ class GroupKeys {
         即将进行批量团卡制作，启动前请先完成以下准备工作：
 
         1、请先保存需要制卡的团Rooming List；
+
         2、将Rooming List的房号录入“GroupKeys.xls”文件的第一列；
+
         - 如需单独修改某个房间的退房日期、时间，请分别填入GroupKeys.xls的第二、第三列
         - 日期格式：yyyy-mm-dd 或 yyyy/mm/dd（具体请先查看VingCard中格式）
         - 时间格式：HH:MM
+
         3、确保VingCard已经打开处于Check-in界面。
         )", this.popupTitle, "OKCancel 4096")
         if (start = "Cancel") {
             cleanReload()
         }
         loop {
-            coDateInput := InputBox("请输入退房日期：", this.popupTitle).Value
+            coDateInput := InputBox("请输入退房日期：`n(格式为yyyy-mm-dd或yyyy/mm/dd)", this.popupTitle).Value
             if (RegExMatch(coDateInput, this.dateDash) > 0
                 || RegExMatch(coDateInput, this.dateSlash)
                 || coDateInput = "") {
@@ -47,7 +50,7 @@ class GroupKeys {
                 continue
             }
         }
-        coTimeInput := InputBox("请输入退房时间：", this.popupTitle, , "13:00").Value
+        coTimeInput := InputBox("请输入退房时间：`n(格式为HH:MM)", this.popupTitle, , "13:00").Value
 
         infoConfirm := MsgBox(Format("
             (

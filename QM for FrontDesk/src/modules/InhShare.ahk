@@ -2,7 +2,7 @@
 #Include "../../lib/utils.ahk"
 
 class InhShare {
-	static description := "空白InHouse Share"
+	static description := "生成空白 In-House Share"
 
 	static Main() {
 		WinMaximize "ahk_class SunAwtFrame"

@@ -4,7 +4,7 @@
 #Include "../../Lib/utils.ahk"
 
 class ReportMaster {
-    static description := "Report Master"
+    static description := "报表保存 - Report Master"
 	static popupTitle := "Report Master"
 	static reportIndex := [
 		; [report name, report saving func]

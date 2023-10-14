@@ -2,7 +2,7 @@
 #Include "../../lib/utils.ahk"
 
 class GroupShare {
-    static description := "旅行团Share + DoNotMove"
+    static description := "旅行团房Share + DoNotMove"
     static popupTitle := "Group Share & DoNotMove"
 
     static Main() {
