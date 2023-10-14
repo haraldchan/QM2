@@ -183,7 +183,8 @@ loadAsFlow(*) {
 ; hotkeys
 ; F12::cleanReload()
 Pause:: ClipFlow.Show()
-
+#Hotif WinActive(popupTitle)
+Esc:: ClipFlow.Hide()
 #HotIf isFlowPasting
 ~^v:: flowFire()
 ; double press Escape to unload flow

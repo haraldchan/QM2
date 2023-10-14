@@ -221,6 +221,6 @@ F12:: cleanReload()
 #HotIf cityLedgerOn
 ^o::CityLedgerCo.Main()
 MButton::CityLedgerCo.Main()
-#Hotif WinActive("ahk_class AutoHotkeyGUI")
+#Hotif WinActive(popupTitle)
 Esc:: hideWin()
 Enter:: runSelectedScript()
