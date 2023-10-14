@@ -61,7 +61,7 @@ class InvoiceWechat {
             try {
                 WinActivate "ahk_exe VATIssue Terminal.exe"
             } catch {
-                MsgBox("请先打开 一键开票。", this.popupTitle)
+                MsgBox("请先打开 一键开票。", InvoiceWechat.popupTitle)
             }
             return invoiceInfoMap
         } else {
