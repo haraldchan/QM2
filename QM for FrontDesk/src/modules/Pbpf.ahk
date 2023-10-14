@@ -87,14 +87,17 @@ class PbPf {
 		BlockInput true
 		CoordMode "Pixel", "Screen"
 		CoordMode "Mouse", "Screen"
-		ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenHeight, commentPos)
-		anchorX := FoundX
-		anchorY := FoundY
-		MouseMove anchorX + 1, anchorY + 1
-		Click
+		if (ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenHeight, commentPos)){
+			anchorX := FoundX
+			anchorY := FoundY
+			MouseMove anchorX + 1, anchorY + 1
+			Click
+		} else {
+			BlockInput false
+			MsgBox("请先点击打开Comment。", Pbpf.popupTitle, "4096")
+			BlockInput true
+		}
 		Sleep 100
-		MouseMove 316, 699
-		Sleep 300
 		Send "!e"
 		Sleep 200
 		Send "^v"
