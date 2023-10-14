@@ -27,11 +27,11 @@ class InvoiceWechat {
         fillInBtn.OnEvent("Click", fillInfo)
 
         fillInfo(*){
-            this.fillInfo(this.parseInvoiceInfo())
+            this.fillInfo(this.parseInvoiceInfo(true))
         }
     }
 
-    static parseInvoiceInfo() {
+    static parseInvoiceInfo(showMsg := 0) {
         if (InStr(A_Clipboard, "名称：") && InStr(A_Clipboard, "税号：")) {
             invoiceInfo := StrSplit(A_Clipboard, "`n")
             ; MsgBox(invoiceInfo[1])
@@ -47,10 +47,21 @@ class InvoiceWechat {
                 invoiceInfoMap["company"] := SubStr(invoiceInfo[1], 4)
                 invoiceInfoMap["taxNum"] := StrReplace(SubStr(invoiceInfo[2], 4), " ", "")
             }
+            for k, v in invoiceInfoMap {
+                popupInfo .= Format("{1}：{2}`n", k, v)
+            }
+            if (showMsg = true) {
+                MsgBox(Format("
+                (   
+                已复制信息：
+    
+                {1}
+                )", popupInfo), InvoiceWechat.popupTitle, "T2")
+            }
             try {
                 WinActivate "ahk_exe VATIssue Terminal.exe"
             } catch {
-                MsgBox("请先打开 一键开票", InvoiceWechat.popupTitle)
+                MsgBox("请先打开 一键开票。", this.popupTitle)
             }
             return invoiceInfoMap
         } else {
