@@ -31,7 +31,7 @@ class InvoiceWechat {
         }
     }
 
-    static parseInvoiceInfo(showMsg := 0) {
+    static parseInvoiceInfo(showMsg?) {
         if (InStr(A_Clipboard, "名称：") && InStr(A_Clipboard, "税号：")) {
             invoiceInfo := StrSplit(A_Clipboard, "`n")
             ; MsgBox(invoiceInfo[1])
@@ -50,7 +50,7 @@ class InvoiceWechat {
             for k, v in invoiceInfoMap {
                 popupInfo .= Format("{1}：{2}`n", k, v)
             }
-            if (showMsg = true) {
+            if (!IsSet(showMsg)) {
                 MsgBox(Format("
                 (   
                 已复制信息：
