@@ -17,7 +17,7 @@ class InvoiceWechat {
     )"
 
     static USE(App) {
-        OnClipboardChange this.parseInvoiceInfo
+        OnClipboardChange this.clipWithMsg
         ; GUI
         App.AddGroupBox("R6 w250 y+20", this.title)
         App.AddText("xp+10", this.desc)
@@ -25,8 +25,7 @@ class InvoiceWechat {
 
         ; functions
         fillInBtn.OnEvent("Click", fillInfo)
-
-        fillInfo(*){
+        fillInfo(*) {
             this.fillInfo(this.parseInvoiceInfo())
         }
     }
@@ -47,17 +46,37 @@ class InvoiceWechat {
                 invoiceInfoMap["company"] := SubStr(invoiceInfo[1], 4)
                 invoiceInfoMap["taxNum"] := StrReplace(SubStr(invoiceInfo[2], 4), " ", "")
             }
-            try {
-                WinActivate "ahk_exe VATIssue Terminal.exe"
-            } catch {
-                MsgBox("请先打开 一键开票。", InvoiceWechat.popupTitle)
-            }
             return invoiceInfoMap
         } else {
             return
         }
     }
 
+    static clipWithMsg() {
+        msgMap := this.parseInvoiceInfo()
+        if (msgMap.Capacity = 0) {
+            return
+        }
+        for k, v in msgMap {
+            popupInfo .= Format("{1}：{2}`n", k, v)
+        }
+        toIssue := MsgBox(Format("
+            (   
+            即将填入的信息：
+
+            {1}
+
+            确定(Enter)：     打开 Opera
+            取消(Esc)：       留在 旅客信息
+            )", popupInfo), InvoiceWechat.popupTitle, "4096 T1")
+        if (toIssue = "OK") {
+            try {
+                WinActivate "ahk_exe VATIssue Terminal.exe"
+            } catch {
+                MsgBox("请先打开 一键开票。", InvoiceWechat.popupTitle)
+            }
+        }
+    }
     static fillInfo(infoMap) {
         CoordMode "Mouse", "Screen"
         CoordMode "Pixel", "Screen"
