@@ -25,7 +25,8 @@ class InvoiceWechat {
 
         ; functions
         fillInBtn.OnEvent("Click", fillInfo)
-        fillInfo(*) {
+
+        fillInfo(*){
             this.fillInfo(this.parseInvoiceInfo())
         }
     }
@@ -33,7 +34,6 @@ class InvoiceWechat {
     static parseInvoiceInfo() {
         if (InStr(A_Clipboard, "名称：") && InStr(A_Clipboard, "税号：")) {
             invoiceInfo := StrSplit(A_Clipboard, "`n")
-            ; MsgBox(invoiceInfo[1])
             invoiceInfoMap := Map()
             if (invoiceInfo.Length = 7) { ; probably is 6, check it
                 invoiceInfoMap["company"] := SubStr(invoiceInfo[1], 4)
@@ -53,30 +53,31 @@ class InvoiceWechat {
     }
 
     static clipWithMsg() {
-        msgMap := this.parseInvoiceInfo()
+        msgMap := InvoiceWechat.parseInvoiceInfo()
         if (msgMap.Capacity = 0) {
             return
         }
         for k, v in msgMap {
-            popupInfo .= Format("{1}：{2}`n", k, v)
+            popupInfo .= Format("{1} : {2}`n", k, v)
         }
         toIssue := MsgBox(Format("
-            (   
+            (
             即将填入的信息：
 
             {1}
 
-            确定(Enter)：     打开 Opera
-            取消(Esc)：       留在 旅客信息
-            )", popupInfo), InvoiceWechat.popupTitle, "4096 T1")
+            确定(Enter):   打开 一键开票
+            取消(Esc):     取消
+            )", popupInfo), InvoiceWechat.popupTitle, "OKCancel")
         if (toIssue = "OK") {
             try {
                 WinActivate "ahk_exe VATIssue Terminal.exe"
             } catch {
-                MsgBox("请先打开 一键开票。", InvoiceWechat.popupTitle)
+                MsgBox("请先打开 一键开票", InvoiceWechat.popupTitle)
             }
         }
     }
+
     static fillInfo(infoMap) {
         CoordMode "Mouse", "Screen"
         CoordMode "Pixel", "Screen"
@@ -97,14 +98,16 @@ class InvoiceWechat {
             Click
             Send "^a"
             Sleep 10
-            Send Format("{Text}{1} {2}", infoMap["address"], infoMap["tel"])
-            Sleep 10
-            MouseMove 735, 272
-            Click
-            Send "^a"
-            Sleep 10
-            Send Format("{Text}{1} {2}", infoMap["bank"], infoMap["account"])
-            Sleep 10
+            if (infoMap.Has("address")) {
+                Send Format("{Text}{1} {2}", infoMap["address"], infoMap["tel"])
+                Sleep 10
+                MouseMove 735, 272
+                Click
+                Send "^a"
+                Sleep 10
+                Send Format("{Text}{1} {2}", infoMap["bank"], infoMap["account"])
+                Sleep 10                
+            }
         } else if (PixelGetColor(667, 163) = "0xCCFFFF") {
             MouseMove 730, 230
             Click
@@ -122,14 +125,16 @@ class InvoiceWechat {
             Click
             Send "^a"
             Sleep 10
-            Send Format("{Text}{1} {2}", infoMap["address"], infoMap["tel"])
-            Sleep 10
-            MouseMove 730, 319
-            Click
-            Send "^a"
-            Sleep 10
-            Send Format("{Text}{1} {2}", infoMap["bank"], infoMap["account"])
-            Sleep 10
+            if (infoMap.Has("address")) {
+                Send Format("{Text}{1} {2}", infoMap["address"], infoMap["tel"])
+                Sleep 10
+                MouseMove 730, 319
+                Click
+                Send "^a"
+                Sleep 10
+                Send Format("{Text}{1} {2}", infoMap["bank"], infoMap["account"])
+                Sleep 10
+            }
         }
     }
 }
