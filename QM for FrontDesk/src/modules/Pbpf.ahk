@@ -89,7 +89,7 @@ class PbPf {
 
 		WinMaximize "ahk_class SunAwtFrame"
 		WinActivate "ahk_class SunAwtFrame"
-		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
+		; WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 		BlockInput true
 		CoordMode "Pixel", "Screen"
 		CoordMode "Mouse", "Screen"
@@ -100,7 +100,10 @@ class PbPf {
 			Click
 		} else {
 			BlockInput false
-			MsgBox("请先点击打开Comment。", Pbpf.popupTitle, "4096")
+			manualClick := MsgBox("请先点击打开Comment。", Pbpf.popupTitle, "OKCancel 4096")
+			if (manualClick = "Cancel") {
+				return
+			}
 			BlockInput true
 		}
 		Sleep 100
@@ -141,6 +144,6 @@ class PbPf {
 		Send "!c"
 		Sleep 200
 		BlockInput false
-		WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+		; WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 	}
 }
