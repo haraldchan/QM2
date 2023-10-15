@@ -57,6 +57,9 @@ class PbPf {
 		}
 
 		getPayFor(*) {
+			if (relations.Length = 0) {
+				return
+			}
 			nameConf := IsNumber(relations[6]) ? "#" . relations[6] : relations[6]
 			if (relations[3] = "" || relations[4] = "") {
 				; 2-room party
@@ -70,6 +73,9 @@ class PbPf {
 		}
 
 		getPayBy(*) {
+			if (relations.Length = 0) {
+				return
+			}
 			nameConf := IsNumber(relations[2]) ? "#" . relations[2] : relations[2]
 			A_Clipboard := Format("P/B Rm{1}{2}  ", relations[1], nameConf)
 			MsgBox(A_Clipboard, "已复制信息", "4096 T1")
