@@ -9,7 +9,7 @@ class PsbBatchCO {
     static popupTitle := "PSB CheckOut(Batch)"
     static path := IniRead(A_ScriptDir . "\src\lib\config.ini", "PsbBatchCO", "xlsPath")
 
-    static Main(desktopMode := 0) {
+    static USE(desktopMode := 0) {
         if (desktopMode = true) {
             if (FileExist(A_Desktop . "\CheckOut.xls")) {
                 path := A_Desktop . "\CheckOut.xls"

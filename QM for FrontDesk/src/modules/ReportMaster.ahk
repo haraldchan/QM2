@@ -29,7 +29,7 @@ class ReportMaster {
 		["19 - Guest In House w/o Due Out(VIP INH) ", vipInh]
 	]
 
-	static Main() {
+	static USE() {
 		WinMaximize "ahk_class SunAwtFrame"
 		WinActivate "ahk_class SunAwtFrame"
 		reportMsg := Format("

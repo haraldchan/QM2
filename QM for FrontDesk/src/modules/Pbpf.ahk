@@ -5,7 +5,7 @@ class PbPf {
 	static description := "生成 PayBy PayFor 信息"
 	static popupTitle := "PayBy PayFor"
 
-	static Main() {
+	static USE() {
 		static relations := []
 		; GUI
 		Main := Gui(, this.popupTitle)

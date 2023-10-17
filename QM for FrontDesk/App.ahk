@@ -192,14 +192,14 @@ runSelectedScript(*) {
         loop basic.Length {
             if (basic[A_Index].Value = 1) {
                 hideWin()
-                scriptIndex[1][A_Index].Main()
+                scriptIndex[1][A_Index].USE()
             }
         }
     } else if (tab3.Value = 2) {
         loop xldp.Length {
             if (xldp[A_Index][1].Value = 1) {
                 hideWin()
-                scriptIndex[2][A_Index].Main(desktopMode)
+                scriptIndex[2][A_Index].USE(desktopMode)
             }
         }
     } else {
@@ -219,8 +219,8 @@ F9:: {
 F12:: cleanReload()
 ^F12:: quitApp() 
 #HotIf cityLedgerOn
-^o::CityLedgerCo.Main()
-MButton::CityLedgerCo.Main()
+^o::CityLedgerCo.USE()
+MButton::CityLedgerCo.USE()
 #Hotif WinActive(popupTitle)
 Esc:: hideWin()
 Enter:: runSelectedScript()

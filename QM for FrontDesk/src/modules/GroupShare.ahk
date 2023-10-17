@@ -5,7 +5,7 @@ class GroupShare {
     static description := "旅行团房Share + DoNotMove"
     static popupTitle := "Group Share & DoNotMove"
 
-    static Main() {
+    static USE() {
         WinMaximize "ahk_class SunAwtFrame"
         WinActivate "ahk_class SunAwtFrame"
         Sleep 500

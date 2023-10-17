@@ -9,7 +9,7 @@ class GroupKeys {
     static dateSlash := "\d{4}/\d{2}/\d{2}"
     static path := IniRead(A_ScriptDir . "\src\lib\config.ini", "GroupKeys", "xlsPath")
 
-    static Main(desktopMode := 0) {
+    static USE(desktopMode := 0) {
         if (desktopMode = true) {
             if (FileExist(A_Desktop . "\GroupKeys.xls")) {
                 path := A_Desktop . "\GroupKeys.xls"

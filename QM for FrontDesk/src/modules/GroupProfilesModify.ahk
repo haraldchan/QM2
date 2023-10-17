@@ -8,7 +8,7 @@ class GroupProfilesModify {
     static path := IniRead(A_ScriptDir . "\src\lib\config.ini", "GroupProfilesModify", "xlsPath")
     static wwly := this.getWwlyPath()
 
-    static Main(desktopMode := 0) {
+    static USE(desktopMode := 0) {
         if (desktopMode = true) {
             if (FileExist(A_Desktop . "\GroupRoomNum.xls")) {
                 path := A_Desktop . "\GroupRoomNum.xls"

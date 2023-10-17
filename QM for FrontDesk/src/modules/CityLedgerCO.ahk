@@ -1,5 +1,5 @@
 class CityLedgerCo {
-	static Main() {
+	static USE() {
 		WinMaximize "ahk_class SunAwtFrame"
 		WinActivate "ahk_class SunAwtFrame"
 		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
