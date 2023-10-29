@@ -5,29 +5,40 @@ class PbPf {
 	static description := "生成 PayBy PayFor 信息"
 	static popupTitle := "PayBy PayFor"
 
-	static Main() {
+	static USE() {
 		static relations := []
 		; GUI
-		Main := Gui(, this.popupTitle)
-		Main.AddGroupBox("w180 h190", "P/F房(支付人)")
-		Main.AddText("xp+10 yp+25", "房号       ")
-		pfRoom := Main.AddEdit("x+10 w80", "")
-		Main.AddText("x20 y+10", "姓名/确认号")
-		pfName := Main.AddEdit("x+10 w80", "")
-		Main.AddText("x20 y+10", "Party号    ")
-		party := Main.AddEdit("x+10 w80", "")
-		Main.AddText("x20 y+10", "Total房数  ")
-		roomQty := Main.AddEdit("x+10 w80", "")
-		pfCopy := Main.AddButton("x20 y+10 h30 w160", "复制Pay For信息")
+		Pbpf := Gui(, this.popupTitle)
+		interface := [
+			Pbpf.AddGroupBox("w180 h190", "P/F房(支付人)"),
+			Pbpf.AddText("xp+10 yp+25", "房号       "),
+			Pbpf.AddEdit("x+10 w80", ""),
+			Pbpf.AddText("x20 y+10", "姓名/确认号"),
+			Pbpf.AddEdit("x+10 w80", ""),
+			Pbpf.AddText("x20 y+10", "Party号    "),
+			Pbpf.AddEdit("x+10 w80", ""),
+			Pbpf.AddText("x20 y+10", "Total房数  "),
+			Pbpf.AddEdit("x+10 w80", ""),
+			Pbpf.AddButton("x20 y+10 h30 w160", "复制Pay For信息"),
 
-		Main.AddGroupBox("x+20 y8 w180 h190", "P/B房(被支付人)")
-		Main.AddText("xp+10 yp+25", "房号       ")
-		pbRoom := Main.AddEdit("x+10 w80", "")
-		Main.AddText("xp-75 y+10", "姓名/确认号")
-		pbName := Main.AddEdit("x+10 w80", "")
-		pbCopy := Main.AddButton("xp-75 y+70 h30 w160", "复制Pay By信息")
+			Pbpf.AddGroupBox("x+20 y8 w180 h190", "P/B房(被支付人)"),
+			Pbpf.AddText("xp+10 yp+25", "房号       "),
+			Pbpf.AddEdit("x+10 w80", ""),
+			Pbpf.AddText("xp-75 y+10", "姓名/确认号"),
+			Pbpf.AddEdit("x+10 w80", ""),
+			Pbpf.AddButton("xp-75 y+70 h30 w160", "复制Pay By信息"),
 
-		Main.AddButton("w370 x10 y+20 h35", "开始粘贴").OnEvent("Click", this.Run)
+			Pbpf.AddButton("w370 x10 y+20 h35", "开始粘贴").OnEvent("Click", this.Run),
+		]
+
+		pfRoom := interface[3]
+		pfName := interface[5]
+		party := interface[7]
+		roomQty := interface[9]
+		pfCopy := interface[10]
+		pbRoom := interface[13]
+		pbName := interface[15]
+		pbCopy := interface[16]
 
 		pbpfCtrls := [pfRoom, pfName, party, roomQty, pbRoom, pbName]
 		loop pbpfCtrls.Length {
@@ -36,13 +47,13 @@ class PbPf {
 		pfCopy.OnEvent("Click", getPayFor)
 		pbCopy.OnEvent("Click", getPayBy)
 
-		Main.Show()
+		Pbpf.Show()
 		WinSetAlwaysOnTop true, this.popupTitle
-		Main.OnEvent("Close", close)
+		Pbpf.OnEvent("Close", close)
 
 		; callbacks
 		close(*) {
-			Main.Destroy()
+			Pbpf.Destroy()
 		}
 
 		update(*) {

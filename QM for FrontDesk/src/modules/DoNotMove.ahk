@@ -5,7 +5,7 @@ class DoNotMove {
     static description := "预到房间批量 DoNotMove"
     static popupTitle := "Do Not Move(batch)"
 
-    static Main() {
+    static USE() {
         WinMaximize "ahk_class SunAwtFrame"
         WinActivate "ahk_class SunAwtFrame"
         Sleep 500

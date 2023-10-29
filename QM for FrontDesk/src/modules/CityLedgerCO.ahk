@@ -1,5 +1,5 @@
 class CityLedgerCo {
-	static Main() {
+	static USE() {
 		WinMaximize "ahk_class SunAwtFrame"
 		WinActivate "ahk_class SunAwtFrame"
 		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
@@ -26,7 +26,12 @@ class CityLedgerCo {
 		Sleep 10
 		Send "{Esc}"
 		Sleep 10
-		MouseMove 894, 722
+		
+		; Move to Close button
+		; MouseMove 894, 722
+		; Move to Win.1
+		MouseMove 345, 269
+
 		Sleep 100
 		BlockInput false
 	}

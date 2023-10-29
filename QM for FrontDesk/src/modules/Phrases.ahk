@@ -59,9 +59,9 @@ class Phrases {
     }
 
     static TableReserve(App) {
-        App.AddGroupBox(this.gbWidth . "r7 x25 y+85", "Table Resv - 餐饮预订")
+        App.AddGroupBox(this.gbWidth . "r7 x25 y+80", "Table Resv - 餐饮预订")
         App.AddText("xp+10 yp+20", "预订餐厅")
-        restaurant := App.AddComboBox("w150 x+10", ["宏图府", "玉堂春暖", "风味餐厅", "流浮阁"])
+        restaurant := App.AddComboBox("w150 x+10 Choose1", ["宏图府", "玉堂春暖", "风味餐厅", "流浮阁"])
         App.AddText("x35 y+10", "预订日期")
         date := App.AddDateTime("w150 x+10", "LongDate")
         App.AddText("x35 y+10", "预订时间")

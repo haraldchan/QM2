@@ -4,7 +4,7 @@
 class InhShare {
 	static description := "生成空白 In-House Share"
 
-	static Main() {
+	static USE() {
 		WinMaximize "ahk_class SunAwtFrame"
         WinActivate "ahk_class SunAwtFrame"
         Sleep 1000
