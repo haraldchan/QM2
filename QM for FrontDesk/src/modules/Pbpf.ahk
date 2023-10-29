@@ -9,7 +9,7 @@ class PbPf {
 		static relations := []
 		; GUI
 		Pbpf := Gui(, this.popupTitle)
-		interface := [
+		ui := [
 			Pbpf.AddGroupBox("w180 h190", "P/F房(支付人)"),
 			Pbpf.AddText("xp+10 yp+25", "房号       "),
 			Pbpf.AddEdit("x+10 w80", ""),
@@ -31,14 +31,14 @@ class PbPf {
 			Pbpf.AddButton("w370 x10 y+20 h35", "开始粘贴").OnEvent("Click", paste),
 		]
 
-		pfRoom := interface[3]
-		pfName := interface[5]
-		party := interface[7]
-		roomQty := interface[9]
-		pfCopy := interface[10]
-		pbRoom := interface[13]
-		pbName := interface[15]
-		pbCopy := interface[16]
+		pfRoom := ui[3]
+		pfName := ui[5]
+		party := ui[7]
+		roomQty := ui[9]
+		pfCopy := ui[10]
+		pbRoom := ui[13]
+		pbName := ui[15]
+		pbCopy := ui[16]
 
 		pbpfCtrls := [pfRoom, pfName, party, roomQty, pbRoom, pbName]
 		loop pbpfCtrls.Length {
