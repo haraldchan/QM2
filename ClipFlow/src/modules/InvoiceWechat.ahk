@@ -81,60 +81,69 @@ class InvoiceWechat {
     static fillInfo(infoMap) {
         CoordMode "Mouse", "Screen"
         CoordMode "Pixel", "Screen"
-        if (PixelGetColor(667, 163) = "0xFFFFCC") {
-            MouseMove 735, 182
-            Click
-            Send "^a"
-            Sleep 10
+
+        checkColor := [PixelGetColor(826, 837), PixelGetColor(1067, 453)]
+        if (checkColor[1] = "0xFFFFCC" && checkColor[2] = "0xCCFFFF") {
+            invoiceType := "split"
+        } else if (checkColor[1] = "0xCCFFFF" && checkColor[2] = "0xCCFFFF") {
+            invoiceType := "blue"
+        } else {
+            invoiceType := "yellow"
+        }
+
+        if (invoiceType = "blue") {
+            MouseMove 729, 233
+            click
             Send Format("{Text}{1}", infoMap["company"])
-            Sleep 10
-            MouseMove 735, 214
-            Click
-            Send "^a"
-            Sleep 10
+            sleep 10
+            MouseMove 716, 262
+            click
             Send Format("{Text}{1}", infoMap["taxNum"])
-            Sleep 10
-            MouseMove 735, 242
-            Click
-            Send "^a"
-            Sleep 10
+            sleep 10
             if (infoMap.Has("address")) {
+                MouseMove 728, 290
+                click
                 Send Format("{Text}{1} {2}", infoMap["address"], infoMap["tel"])
-                Sleep 10
-                MouseMove 735, 272
-                Click
-                Send "^a"
-                Sleep 10
+                sleep 10
+                MouseMove 725, 319
+                click
                 Send Format("{Text}{1} {2}", infoMap["bank"], infoMap["account"])
-                Sleep 10                
+                sleep 10
             }
-        } else if (PixelGetColor(667, 163) = "0xCCFFFF") {
-            MouseMove 730, 230
-            Click
-            Send "^a"
-            Sleep 10
+        } else if (invoiceType = "yellow") {
+            MouseMove 733, 185
+            click
             Send Format("{Text}{1}", infoMap["company"])
-            Sleep 10
-            MouseMove 730, 263
-            Click
-            Send "^a"
-            Sleep 10
+            sleep 10
+            MouseMove 740, 215
+            click
             Send Format("{Text}{1}", infoMap["taxNum"])
-            Sleep 10
-            MouseMove 730, 292
-            Click
-            Send "^a"
-            Sleep 10
-            if (infoMap.Has("address")) {
-                Send Format("{Text}{1} {2}", infoMap["address"], infoMap["tel"])
-                Sleep 10
-                MouseMove 730, 319
-                Click
-                Send "^a"
-                Sleep 10
-                Send Format("{Text}{1} {2}", infoMap["bank"], infoMap["account"])
-                Sleep 10
-            }
+            sleep 10
+            MouseMove 755, 243
+            click
+            Send Format("{Text}{1} {2}", infoMap["address"], infoMap["tel"])
+            sleep 10
+            MouseMove 749, 272
+            click
+            Send Format("{Text}{1} {2}", infoMap["bank"], infoMap["account"])
+            sleep 10
+        } else if (invoiceType = "split"){
+            MouseMove 738, 199
+            click
+            Send Format("{Text}{1}", infoMap["company"])
+            sleep 10
+            MouseMove 738, 233
+            click
+            Send Format("{Text}{1}", infoMap["taxNum"])
+            sleep 10
+            MouseMove 739, 259
+            click
+            Send Format("{Text}{1} {2}", infoMap["address"], infoMap["tel"])
+            sleep 10
+            MouseMove 732, 290
+            click
+            Send Format("{Text}{1} {2}", infoMap["bank"], infoMap["account"])
+            sleep 10
         }
     }
 }

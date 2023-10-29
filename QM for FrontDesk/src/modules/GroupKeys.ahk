@@ -33,7 +33,7 @@ class GroupKeys {
         - 如需单独修改某个房间的退房日期、时间，请分别填入GroupKeys.xls的第二、第三列
         - 日期格式：yyyy-mm-dd 或 yyyy/mm/dd（具体请先查看VingCard中格式）
         - 时间格式：HH:MM
-
+        
         3、确保VingCard已经打开处于Check-in界面。
         )", this.popupTitle, "OKCancel 4096")
         if (start = "Cancel") {

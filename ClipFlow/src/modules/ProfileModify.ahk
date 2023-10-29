@@ -28,8 +28,8 @@ class ProfileModify {
         ; GUI
         App.AddGroupBox("R6 w250 y+20", this.title)
         App.AddText("xp+10", this.desc)
-        copyBtn := App.AddButton("Default h30 w80 y+15", "开始复制")
-        pasteBtn := App.AddButton("Disabled h30 w80 x+20 ", "开始填入")
+        copyBtn := App.AddButton("Default xp h35 w110 y+15", "开始复制")
+        pasteBtn := App.AddButton("Disabled xp+10 h35 w110 x+10 ", "开始填入")
 
         ; function
         copyBtn.OnEvent("Click", psbCopy)
@@ -39,19 +39,13 @@ class ProfileModify {
             global profileCache := this.copy()
             copyBtn.Enabled := false
             pasteBtn.Enabled := true
-            App.Show()
+            ; App.Show()
             pasteBtn.Focus()
         }
         
         pasteBtn.OnEvent("Click", psbPaste)
         psbPaste(*) {
             App.Hide()
-            Sleep 200
-            if (!isSet(profileCache)) {
-                MsgBox("当前没有旅客信息。请先复制", this.popupTitle)
-                App.Show()
-                return
-            }
             this.paste(profileCache)
             Sleep 200
             copyBtn.Enabled := true
@@ -66,7 +60,7 @@ class ProfileModify {
             WinActivate "旅客信息"
         } catch {
             MsgBox("请先打开 旅客信息 窗口", this.popupTitle)
-            return
+            cleanReload()
         }
         checkGuestType := [PixelGetColor(464, 87), PixelGetColor(553, 87), PixelGetColor(649, 87)]
         loop checkGuestType.Length {
@@ -299,7 +293,7 @@ class ProfileModify {
 
             确定(Enter)：     打开 Opera
             取消(Esc)：       留在 旅客信息
-            )", popupInfo), this.popupTitle, "OKCancel")
+            )", popupInfo), this.popupTitle, "OKCancel 4096")
         if (toOpera = "OK") {
             try {
                 WinActivate "ahk_class SunAwtFrame"
@@ -417,6 +411,8 @@ class ProfileModify {
                 取消(Esc)：      留在 Opera
             )", this.popupTitle, "OKCancel T2 4096")
         if (backToPsb = "OK") {
+            Send "!o"
+            Sleep 1500
             WinActivate "ahk_exe hotel.exe"
         } 
     }

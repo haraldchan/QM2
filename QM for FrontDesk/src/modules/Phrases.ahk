@@ -8,14 +8,17 @@ class Phrases {
     }
 
     static Rush(App) {
-        App.AddGroupBox(this.gbWidth . "r3", "Rush Room - 赶房与Key Keep")
-        App.AddText("xp+10 yp+20 h20", "赶房时间")
-        rushTime := App.AddEdit("x+10 w150 h20", "14:00")
-        keyMade := [
+        ui := [
+            App.AddGroupBox(this.gbWidth . "r3", "Rush Room - 赶房与Key Keep"),
+            App.AddText("xp+10 yp+20 h20", "赶房时间"),
+            App.AddEdit("x+10 w150 h20", "14:00"),
             App.AddRadio("h25 x35 y+10 Checked", "已做卡"),
             App.AddRadio("h25 x+10", "未做卡"),
+            App.AddButton("xp w80 h50 x250 y192", "复制`nComment`nAlert").OnEvent("Click", copy),
         ]
-        App.AddButton("xp w80 h50 x250 y192", "复制`nComment`nAlert").OnEvent("Click", copy)
+
+        rushTime := ui[3]
+        keyMade := [ui[4], ui[5]]
 
         copy(*) {
             if (rushTime.Text = "" ) {
@@ -29,19 +32,23 @@ class Phrases {
     }
 
     static Upsell(App) {
-        App.AddGroupBox(this.gbWidth . "r6 x25 y+20", "Upselling - 房间升级")
-        App.AddText("xp+10 yp+25", "升级房型")
-        roomType := App.AddEdit("x+10 w150", "")
-        App.AddText("x35 y+10", "每晚差价")
-        rateDiff := App.AddEdit("x+10 w150", "")
-        App.AddText("x35 y+10", "升级晚数")
-        nts := App.AddEdit("x+10 w150", "")
-        lang := [
+        ui := [
+            App.AddGroupBox(this.gbWidth . "r6 x25 y+20", "Upselling - 房间升级"),
+            App.AddText("xp+10 yp+25", "升级房型"),
+            App.AddEdit("x+10 w150", ""),
+            App.AddText("x35 y+10", "每晚差价"),
+            App.AddEdit("x+10 w150", ""),
+            App.AddText("x35 y+10", "升级晚数"),
+            App.AddEdit("x+10 w150", ""),
             App.AddRadio("h20 x35 y+10 Checked", "中文"),
             App.AddRadio("h20 x+10", "英文"),
+            App.AddButton("xp w80 h50 x250 y285", "复制`nComment`nAlert").OnEvent("Click", copy),
         ]
 
-        App.AddButton("xp w80 h50 x250 y285", "复制`nComment`nAlert").OnEvent("Click", copy)
+        roomType := ui[3]
+        rateDiff := ui[5]
+        nts := ui[7]
+        lang := [ui[8], ui[9]]
 
         copy(*) {
             if (
@@ -59,19 +66,26 @@ class Phrases {
     }
 
     static TableReserve(App) {
-        App.AddGroupBox(this.gbWidth . "r7 x25 y+85", "Table Resv - 餐饮预订")
-        App.AddText("xp+10 yp+20", "预订餐厅")
-        restaurant := App.AddComboBox("w150 x+10", ["宏图府", "玉堂春暖", "风味餐厅", "流浮阁"])
-        App.AddText("x35 y+10", "预订日期")
-        date := App.AddDateTime("w150 x+10", "LongDate")
-        App.AddText("x35 y+10", "预订时间")
-        time := App.AddEdit("x+10  w150", "")
-        App.AddText("x35 y+10", "用餐人数")
-        guests := App.AddEdit("x+10 w150", "")
-        App.AddText("x35 y+10", "对方工号")
-        staff := App.AddEdit("x+10 w150", "")
+        ui := [
+            App.AddGroupBox(this.gbWidth . "r7 x25 y+80", "Table Resv - 餐饮预订"),
+            App.AddText("xp+10 yp+20", "预订餐厅"),
+            App.AddComboBox("w150 x+10 Choose1", ["宏图府", "玉堂春暖", "风味餐厅", "流浮阁"]),
+            App.AddText("x35 y+10", "预订日期"),
+            App.AddDateTime("w150 x+10", "LongDate"),
+            App.AddText("x35 y+10", "预订时间"),
+            App.AddEdit("x+10  w150", ""),
+            App.AddText("x35 y+10", "用餐人数"),
+            App.AddEdit("x+10 w150", ""),
+            App.AddText("x35 y+10", "对方工号"),
+            App.AddEdit("x+10 w150", ""),
+            App.AddButton("xp w80 h50 x250 y440", "复制`nComment`nAlert").OnEvent("Click", copy),
+        ]
 
-        App.AddButton("xp w80 h50 x250 y440", "复制`nComment`nAlert").OnEvent("Click", copy)
+        restaurant := ui[3]
+        date := ui[5]
+        time := ui[7]
+        guests := ui[9]
+        staff := ui[11]
 
         copy(*) {
             if (

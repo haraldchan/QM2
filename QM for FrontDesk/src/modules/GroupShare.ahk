@@ -109,7 +109,7 @@ class GroupShare {
             Send "!c"
             Sleep 300
             Send "!c"
-            Sleep 2000
+            Sleep 5000
             BlockInput false
         }
         Sleep 1000

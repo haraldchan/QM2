@@ -105,7 +105,7 @@ class GroupProfilesModify {
             if (PixelGetColor(698, 306) = errorRed) {
                 MsgBox("Modify出错，脚本已终止`n`n已Modify到：" . roomNums[A_Index], this.popupTitle)
                 quitOnRoom := A_Clipboard
-                IniWrite(quitOnRoom, A_ScriptDir . "\config.ini", "PsbBatchCO", "errorQuitAt")
+                IniWrite(quitOnRoom, A_ScriptDir . "\lib\lib\config.ini", "PsbBatchCO", "errorQuitAt")
                 cleanReload()
             }
         }
@@ -156,7 +156,7 @@ class GroupProfilesModify {
         ;     if (PixelGetColor(698, 306) = errorRed) {
         ;         MsgBox("Modify出错，脚本已终止`n`n已Modify到：" . roomNum, this.popupTitle)
         ;         quitOnRoom := roomNum
-        ;         IniWrite(quitOnRoom, "%A_ScriptDir%\config.ini", "PsbBatchCO", "errorQuitAt")
+        ;         IniWrite(quitOnRoom, "%A_ScriptDir%\lib\lib\config.ini", "PsbBatchCO", "errorQuitAt")
         ;         cleanReload()
         ;     }
         ;     row++

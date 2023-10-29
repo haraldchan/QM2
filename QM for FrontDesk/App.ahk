@@ -77,9 +77,6 @@ Ctrl+F12:  退出
 Ctrl+O:    CityLedger挂账
 )")
 QM.AddCheckbox("Checked h25 y+10", "令 CityLedger 挂账保持常驻").OnEvent("Click", cityLedgerKeepAlive)
-cityLedgerKeepAlive(*) {
-    global cityLedgerOn := !cityLedgerOn
-}
 
 tab3 := QM.AddTab3("w350", ["一键运行", "Excel辅助", "常用语句"])
 tab3.UseTab(1)
@@ -124,7 +121,7 @@ loop xldp.Length {
     xldp[A_Index][3].OnEvent("Click", getXlPath.Bind(scriptIndex[2][A_Index].name, xldp[A_Index][2]))
     xldp[A_Index][4].OnEvent("Click", openXlFile.Bind(xldp[A_Index][2].Text))
 }
-QM.AddCheckbox("vDesktopMode h25 x20 y+10", "使用桌面文件模式").OnEvent("Click", toggleDesktopMode)
+QM.AddCheckbox("h25 x20 y+10", "使用桌面文件模式").OnEvent("Click", toggleDesktopMode)
 xldpInfo := "
 (
 功能说明：
@@ -148,10 +145,14 @@ Phrases.USE(QM)
 tab3.UseTab() ; end tab3
 
 QM.AddButton("Default h40 w165", "启动脚本").OnEvent("Click", runSelectedScript)
-QM.AddButton("h40 w165 x+18", "隐藏窗口").OnEvent("Click", hideWin)
+QM.AddButton("h40 w165 x+18", "隐藏窗口").OnEvent("Click", (*) => QM.Hide())
 ; }
 
 ; { function scripts
+cityLedgerKeepAlive(*) {
+    global cityLedgerOn := !cityLedgerOn
+}
+
 singleSelect(ctrlObj, *) {
     loop xldp.Length {
         xldp[A_Index][1].Value := 0
@@ -191,24 +192,28 @@ runSelectedScript(*) {
     if (tab3.Value = 1) {
         loop basic.Length {
             if (basic[A_Index].Value = 1) {
+<<<<<<< HEAD
                 hideWin()
+=======
+                QM.Hide()
+>>>>>>> 6cd6a0819c76e7970796b0b80f421a2453314f19
                 scriptIndex[1][A_Index].USE()
             }
         }
     } else if (tab3.Value = 2) {
         loop xldp.Length {
             if (xldp[A_Index][1].Value = 1) {
+<<<<<<< HEAD
                 hideWin()
+=======
+                QM.Hide()
+>>>>>>> 6cd6a0819c76e7970796b0b80f421a2453314f19
                 scriptIndex[2][A_Index].USE(desktopMode)
             }
         }
     } else {
         return
     }
-}
-
-hideWin(*) {
-    QM.Hide()
 }
 ; }
 
@@ -218,9 +223,12 @@ F9:: {
  } 
 F12:: cleanReload()
 ^F12:: quitApp() 
+
 #HotIf cityLedgerOn
 ^o::CityLedgerCo.USE()
 MButton::CityLedgerCo.USE()
 #Hotif WinActive(popupTitle)
-Esc:: hideWin()
+Esc:: {
+    QM.Hide()
+}
 Enter:: runSelectedScript()
