@@ -18,14 +18,15 @@ class InvoiceWechat {
 
     static USE(App) {
         OnClipboardChange this.clipWithMsg
-        ; GUI
-        App.AddGroupBox("R6 w250 y+20", this.title)
-        App.AddText("xp+10", this.desc)
-        fillInBtn := App.AddButton("Default h35 w230 y+15", "开始填入")
+        ui := [
+            App.AddGroupBox("R6 w250 y+20", this.title)
+            App.AddText("xp+10", this.desc)
+            App.AddButton("Default h35 w230 y+15", "开始填入")
+        ]
 
-        ; functions
+        fillInBtn := ui[3]
+
         fillInBtn.OnEvent("Click", fillInfo)
-
         fillInfo(*){
             this.fillInfo(this.parseInvoiceInfo())
         }
@@ -81,7 +82,7 @@ class InvoiceWechat {
     static fillInfo(infoMap) {
         CoordMode "Mouse", "Screen"
         CoordMode "Pixel", "Screen"
-
+        ; determine current issue type
         checkColor := [PixelGetColor(826, 837), PixelGetColor(1067, 453)]
         if (checkColor[1] = "0xFFFFCC" && checkColor[2] = "0xCCFFFF") {
             invoiceType := "split"
@@ -91,59 +92,87 @@ class InvoiceWechat {
             invoiceType := "yellow"
         }
 
-        if (invoiceType = "blue") {
-            MouseMove 729, 233
+        handleFill(coords){
+            MouseMove coords[1][1], coords[1][2]
             click
             Send Format("{Text}{1}", infoMap["company"])
             sleep 10
-            MouseMove 716, 262
+            MouseMove coords[2][1], coords[2][2]
             click
             Send Format("{Text}{1}", infoMap["taxNum"])
             sleep 10
-            if (infoMap.Has("address")) {
-                MouseMove 728, 290
+            try {
+                MouseMove coords[3][1], coords[3][2]
                 click
                 Send Format("{Text}{1} {2}", infoMap["address"], infoMap["tel"])
                 sleep 10
-                MouseMove 725, 319
+                MouseMove coords[4][1], coords[4][2]
                 click
                 Send Format("{Text}{1} {2}", infoMap["bank"], infoMap["account"])
                 sleep 10
             }
+        }
+
+        if (invoiceType = "blue") {
+            handleFill([[729, 233],[716, 262],[728, 290],[725, 319]])
+            ; MouseMove 729, 233
+            ; click
+            ; Send Format("{Text}{1}", infoMap["company"])
+            ; sleep 10
+            ; MouseMove 716, 262
+            ; click
+            ; Send Format("{Text}{1}", infoMap["taxNum"])
+            ; sleep 10
+            ; try {
+            ;     MouseMove 728, 290
+            ;     click
+            ;     Send Format("{Text}{1} {2}", infoMap["address"], infoMap["tel"])
+            ;     sleep 10
+            ;     MouseMove 725, 319
+            ;     click
+            ;     Send Format("{Text}{1} {2}", infoMap["bank"], infoMap["account"])
+            ;     sleep 10
+            ; }
         } else if (invoiceType = "yellow") {
-            MouseMove 733, 185
-            click
-            Send Format("{Text}{1}", infoMap["company"])
-            sleep 10
-            MouseMove 740, 215
-            click
-            Send Format("{Text}{1}", infoMap["taxNum"])
-            sleep 10
-            MouseMove 755, 243
-            click
-            Send Format("{Text}{1} {2}", infoMap["address"], infoMap["tel"])
-            sleep 10
-            MouseMove 749, 272
-            click
-            Send Format("{Text}{1} {2}", infoMap["bank"], infoMap["account"])
-            sleep 10
+            handleFill([[733, 185],[740, 215],[755, 243],[749, 272]])
+            ; MouseMove 733, 185
+            ; click
+            ; Send Format("{Text}{1}", infoMap["company"])
+            ; sleep 10
+            ; MouseMove 740, 215
+            ; click
+            ; Send Format("{Text}{1}", infoMap["taxNum"])
+            ; sleep 10
+            ; try {
+            ;     MouseMove 755, 243
+            ;     click
+            ;     Send Format("{Text}{1} {2}", infoMap["address"], infoMap["tel"])
+            ;     sleep 10
+            ;     MouseMove 749, 272
+            ;     click
+            ;     Send Format("{Text}{1} {2}", infoMap["bank"], infoMap["account"])
+            ;     sleep 10
+            ; }
         } else if (invoiceType = "split"){
-            MouseMove 738, 199
-            click
-            Send Format("{Text}{1}", infoMap["company"])
-            sleep 10
-            MouseMove 738, 233
-            click
-            Send Format("{Text}{1}", infoMap["taxNum"])
-            sleep 10
-            MouseMove 739, 259
-            click
-            Send Format("{Text}{1} {2}", infoMap["address"], infoMap["tel"])
-            sleep 10
-            MouseMove 732, 290
-            click
-            Send Format("{Text}{1} {2}", infoMap["bank"], infoMap["account"])
-            sleep 10
+            handleFill([[738, 199],[738, 233],[739, 259],[732, 290]])
+            ; MouseMove 738, 199
+            ; click
+            ; Send Format("{Text}{1}", infoMap["company"])
+            ; sleep 10
+            ; MouseMove 738, 233
+            ; click
+            ; Send Format("{Text}{1}", infoMap["taxNum"])
+            ; sleep 10
+            ; try {
+            ;     MouseMove 739, 259
+            ;     click
+            ;     Send Format("{Text}{1} {2}", infoMap["address"], infoMap["tel"])
+            ;     sleep 10
+            ;     MouseMove 732, 290
+            ;     click
+            ;     Send Format("{Text}{1} {2}", infoMap["bank"], infoMap["account"])
+            ;     sleep 10
+            ; }
         }
     }
 }
