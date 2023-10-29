@@ -25,13 +25,16 @@ class ProfileModify {
             : "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\assets\AltAnchor.PNG"
 
     static USE(App) {
-        ; GUI
-        App.AddGroupBox("R6 w250 y+20", this.title)
-        App.AddText("xp+10", this.desc)
-        copyBtn := App.AddButton("Default xp h35 w110 y+15", "开始复制")
-        pasteBtn := App.AddButton("Disabled xp+10 h35 w110 x+10 ", "开始填入")
+        ui := [
+            App.AddGroupBox("R6 w250 y+20", this.title)
+            App.AddText("xp+10", this.desc)
+            App.AddButton("Default xp h35 w110 y+15", "开始复制")
+            App.AddButton("Disabled xp+10 h35 w110 x+10 ", "开始填入")
+        ]
 
-        ; function
+        copyBtn := ui[3]
+        pasteBtn := ui[4]
+
         copyBtn.OnEvent("Click", psbCopy)
         psbCopy(*) {
             App.Hide()
