@@ -91,22 +91,22 @@ refresh(*) {
 
 moduleLoader(App) {
     moduleSelected := IniRead(store, "Module", "moduleSelected")
-    loadedModules := []
+    moduleSelector := []
     ; create module select radio
-    loop modules.Length {
+    loop moduleSelector.Length {
         moduleRadioStyle := (A_Index = moduleSelected) ? "h15 x30 y+10 Checked" : "h15 x30 y+10"
-        loadedModules.Push(App.AddRadio(moduleRadioStyle, modules[A_Index].name))
+        moduleSelector.Push(App.AddRadio(moduleRadioStyle, moduleSelector[A_Index].name))
     }  
     ; add event
-    loop loadedModules.Length {
-        loadedModules[A_Index].OnEvent("Click", saveSelect)
+    loop moduleSelector.Length {
+        moduleSelector[A_Index].OnEvent("Click", saveSelect)
     }
     ; load selected module
-    modules[moduleSelected].USE(App)
+    moduleSelector[moduleSelected].USE(App)
     ; check which module is selected, save it to ini, reload (swap to seleced module)
     saveSelect(*) {
-        loop loadedModules.Length {
-            if (loadedModules[A_Index].Value = 1) {
+        loop moduleSelector.Length {
+            if (moduleSelector[A_Index].Value = 1) {
                 IniWrite(A_Index, store, "Module", "ModuleSelected")
                 cleanReload()
             }
