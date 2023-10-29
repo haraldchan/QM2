@@ -192,22 +192,14 @@ runSelectedScript(*) {
     if (tab3.Value = 1) {
         loop basic.Length {
             if (basic[A_Index].Value = 1) {
-<<<<<<< HEAD
-                hideWin()
-=======
                 QM.Hide()
->>>>>>> 6cd6a0819c76e7970796b0b80f421a2453314f19
                 scriptIndex[1][A_Index].USE()
             }
         }
     } else if (tab3.Value = 2) {
         loop xldp.Length {
             if (xldp[A_Index][1].Value = 1) {
-<<<<<<< HEAD
-                hideWin()
-=======
                 QM.Hide()
->>>>>>> 6cd6a0819c76e7970796b0b80f421a2453314f19
                 scriptIndex[2][A_Index].USE(desktopMode)
             }
         }
