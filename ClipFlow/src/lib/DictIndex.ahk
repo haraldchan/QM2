@@ -50,11 +50,15 @@ getPinyin(hanzi) {
 }
 
 getFullnamePinyin(fullname) {
-    lastname := (doubleLastName.Has(SubStr(fullname, 1, 2)))
-        ? doubleLastName[SubStr(fullname, 1, 2)]
-        : getPinyin(SubStr(fullname, 1, 1))
+    if (doubleLastNameMap.Has(SubStr(fullname, 1, 2))) {
+        lastname := doubleLastNameMap[SubStr(fullname, 1, 2)]
+        lastnameLength := 2
+    } else {
+        lastname := getPinyin(SubStr(fullname, 1, 1))
+        lastnameLength := 1
+    }
 
-    firstnameSplit := StrSplit(SubStr(fullname, 2), "")
+    firstnameSplit := StrSplit(SubStr(fullname, lastnameLength+1), "")
     firstname := ""
     loop firstnameSplit.Length {
         firstname .= getPinyin(firstnameSplit[A_Index]) . " "
