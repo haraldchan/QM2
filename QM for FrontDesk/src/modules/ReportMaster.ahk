@@ -29,7 +29,7 @@ class ReportMaster {
 		["19 - Guest In House w/o Due Out(VIP INH) ", vipInh]
 	]
 
-	static Main() {
+	static USE() {
 		WinMaximize "ahk_class SunAwtFrame"
 		WinActivate "ahk_class SunAwtFrame"
 		reportMsg := Format("
@@ -49,7 +49,7 @@ class ReportMaster {
 		if (reportSelector.Result = "Cancel") {
 			cleanReload()
 		}
-		try { ; input value is number
+		if (isNumber(reportSelector.Value)) {
 			if (reportSelector.Value > 0 && reportSelector.Value <= this.reportIndex.Length) {
 				WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 				reportName := this.reportIndex[reportSelector.Value][1]
@@ -75,7 +75,7 @@ class ReportMaster {
 				WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 				MsgBox("请选择表中的指令", this.popupTitle)
 			}
-		} catch { ; input value is string
+		} else {
 			if (StrLower(reportSelector.Value) = "garr") {
 				reportName := "当天 Arrival 团单"
 				onDayGroup := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{2}\{2}{3}\{1}Group ARR&DEP.xlsx", today, A_Year, A_MM)
