@@ -28,7 +28,7 @@ class PbPf {
 			Pbpf.AddEdit("x+10 w80", ""),
 			Pbpf.AddButton("xp-75 y+70 h30 w160", "复制Pay By信息"),
 
-			Pbpf.AddButton("w370 x10 y+20 h35", "开始粘贴").OnEvent("Click", this.Run),
+			Pbpf.AddButton("w370 x10 y+20 h35", "开始粘贴").OnEvent("Click", paste),
 		]
 
 		pfRoom := interface[3]
@@ -91,9 +91,20 @@ class PbPf {
 			A_Clipboard := Format("P/B Rm{1}{2}  ", relations[1], nameConf)
 			MsgBox(A_Clipboard, "已复制信息", "4096 T1")
 		}
+
+		paste(*) {
+			if (!relations.Length) {
+				return 
+			} else {
+				Pbpf.Hide()
+				this.Run()
+				Sleep 500
+				Pbpf.Show()
+			}
+		}
 	}
 
-	static Run(*) {
+	static Run() {
 		commentPos := (A_OSVersion = "6.1.7601")
 			? "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM for FrontDesk\src\assets\commentWin7.PNG"
 			: "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM for FrontDesk\src\assets\comment.PNG"
