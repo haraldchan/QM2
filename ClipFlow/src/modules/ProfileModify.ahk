@@ -25,16 +25,13 @@ class ProfileModify {
             : "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\assets\AltAnchor.PNG"
 
     static USE(App) {
-        ui := [
-            App.AddGroupBox("R6 w250 y+20", this.title)
-            App.AddText("xp+10", this.desc)
-            App.AddButton("Default xp h35 w110 y+15", "开始复制")
-            App.AddButton("Disabled xp+10 h35 w110 x+10 ", "开始填入")
-        ]
+        ; GUI
+        App.AddGroupBox("R6 w250 y+20", this.title)
+        App.AddText("xp+10", this.desc)
+        copyBtn := App.AddButton("Default xp h35 w110 y+15", "开始复制")
+        pasteBtn := App.AddButton("Disabled xp+10 h35 w110 x+10 ", "开始填入")
 
-        copyBtn := ui[3]
-        pasteBtn := ui[4]
-
+        ; function
         copyBtn.OnEvent("Click", psbCopy)
         psbCopy(*) {
             App.Hide()
@@ -379,7 +376,7 @@ class ProfileModify {
 
             MouseMove anchorX+247, anchorY+76 ; open alt name win
             Click 1
-            Sleep 5000
+            Sleep 3500
 
             if (ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenWidth, this.AltAnchor)) {
                 altX := FoundX
@@ -416,7 +413,11 @@ class ProfileModify {
         if (backToPsb = "OK") {
             Send "!o"
             Sleep 1500
+            if (WinExist("旅客信息")) {
+                WinActivate "旅客信息"
+            } else {
             WinActivate "ahk_exe hotel.exe"
+            }
         } 
     }
 }
