@@ -30,12 +30,12 @@ onTop := false
 ClipFlow := Gui(, popupTitle)
 ClipFlow.OnEvent("Close", quitApp)
 ClipFlow.AddText(, "~~When Flowing, press Esc to Unflow~~")
-ClipFlow.AddCheckbox("h25 x20", "Keep ClipFlow On Top").OnEvent("Click", keepOnTop)
+ClipFlow.AddCheckbox("h25 x15", "Keep ClipFlow On Top").OnEvent("Click", keepOnTop)
 ClipFlow.AddButton("Disabled h25 w85", "Flow Start").OnEvent("Click", flowStart)
 ClipFlow.AddButton("Disabled h25 w85 x+12", "Flow Load").OnEvent("Click", flowLoad)
 ClipFlow.AddButton("Disabled h25 w85 x+12", "Load History").OnEvent("Click", loadAsFlow)
 
-tab3 := ClipFlow.AddTab3("w280 x20", ["Flow Modes", "Flow", "History"])
+tab3 := ClipFlow.AddTab3("w280 x15", ["Flow Modes", "Flow", "History"])
 
 tab3.UseTab(1)
 moduleLoader(ClipFlow)
@@ -91,22 +91,23 @@ refresh(*) {
 
 moduleLoader(App) {
     moduleSelected := IniRead(store, "Module", "moduleSelected")
-    moduleSelector := []
+    loadedModules := []
     ; create module select radio
-    loop moduleSelector.Length {
+    loop modules.Length {
         moduleRadioStyle := (A_Index = moduleSelected) ? "h15 x30 y+10 Checked" : "h15 x30 y+10"
-        moduleSelector.Push(App.AddRadio(moduleRadioStyle, moduleSelector[A_Index].name))
-    }  
+        loadedModules.Push(App.AddRadio(moduleRadioStyle, modules[A_Index].name))
+    }
     ; add event
-    loop moduleSelector.Length {
-        moduleSelector[A_Index].OnEvent("Click", saveSelect)
+    loop loadedModules.Length {
+        loadedModules[A_Index].OnEvent("Click", saveSelect)
     }
     ; load selected module
-    moduleSelector[moduleSelected].USE(App)
+    modules[moduleSelected].USE(App)
+    
     ; check which module is selected, save it to ini, reload (swap to seleced module)
     saveSelect(*) {
-        loop moduleSelector.Length {
-            if (moduleSelector[A_Index].Value = 1) {
+        loop loadedModules.Length {
+            if (loadedModules[A_Index].Value = 1) {
                 IniWrite(A_Index, store, "Module", "ModuleSelected")
                 cleanReload()
             }
