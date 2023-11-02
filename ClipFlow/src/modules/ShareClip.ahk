@@ -6,8 +6,8 @@ class ShareClip {
     static name := "Share Clip"
     static title := "Flow Mode - " . this.name
     static popupTitle := "ClipFlow - " . this.name
-    static shareTxt := Format("\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\lib\ShareClip-{1}.txt", FormatTime(A_Now, "yyyyMMdd"))
-    static shareTxtMinusFive := Format("\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\lib\ShareClip-{1}.txt", FormatTime(DateAdd(A_Now, -5, "days"), "yyyyMMdd"))
+    static shareClipFolder := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\lib\SharedClips"
+    static shareTxt := Format("{1}\{2}.txt", this.shareClipFolder, FormatTime(A_Now, "yyyyMMdd"))
     static clipHisArr := strToArr(IniRead(A_MyDocuments . "\ClipFlow.ini", "ClipHistory", "clipHisArr"))
 
     static USE(App) {
@@ -22,8 +22,10 @@ class ShareClip {
             App.AddButton("h35 w230 y+10", "打开 剪贴板"),
         ]
         ; cleanup txts older than 5 days.
-        if (FileExist(this.shareTxtMinusFive)) {
-            FileDelete this.shareTxtMinusFive
+        loop files this.shareClipFolder "*.txt" {
+            if (DateDiff(FormatTime(A_Now, "yyyyMMdd"), SubStr(A_LoopFileName, -4, 4), "days") >= 5) {
+                FileDelete this.shareClipFolder . A_LoopFileName
+            }
         }
 
         ; get controls
@@ -33,17 +35,17 @@ class ShareClip {
         showShareClipboardBtn := ui[8]
 
         ; add events
-        sendHistoryBtn.OnEvent("Click", (*) => sendHistory(this.clipHisArr))
-        sendTextBtn.OnEvent("Click", (*) => sendUserInputText(userInputText.Text))
+        sendHistoryBtn.OnEvent("Click", (*) => sendHistory)
+        sendTextBtn.OnEvent("Click", (*) => sendUserInputText)
         showShareClipboardBtn.OnEvent("Click", (*) => this.showShareClipboard)
 
         ; callbacks
-        sendHistory(clipHisArr) {
-            this.sendHistory(clipHisArr)
+        sendHistory() {
+            this.sendHistory(this.clipHisArr)
         }
 
-        sendUserInputText(userInput) {
-            this.sendUserInputText(userInput)
+        sendUserInputText() {
+            this.sendUserInputText(userInputText.Text)
         }
     }
 
@@ -65,13 +67,13 @@ class ShareClip {
 
         shareCLB := Gui(, "Share 剪贴板")
         ui := [
-            shareCLB.AddEdit("w500 h600 ReadOnly", sharedText)    
+            shareCLB.AddEdit("w500 h600 ReadOnly", sharedText)
             shareCLB.AddButton("w80 h30 x420", "打开剪贴板文件")
         ]
         shareCLB.Show()
 
         openShareClbBtn := ui[2]
-        
+
         openShareClbBtn.OnEvent("Click", (*) => Run(this.shareTxt))
     }
 }
