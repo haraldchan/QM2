@@ -5,11 +5,11 @@
 
 class ProfileModify {
     static name := "Profile Modify"
-    static title := "Flow Mode - ProfileModify"
-    static popupTitle := "ClipFlow - Profile Mode"
+    static title := "Flow Mode - " . this.name
+    static popupTitle := "ClipFlow - " . this.name
     static desc := "
     (
-        Flow - Profile Mode
+        Flow - Profile Modify
         
         1、请先打开“旅客信息”界面，点击
           “开始复制”；

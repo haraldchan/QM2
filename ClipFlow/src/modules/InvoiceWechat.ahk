@@ -3,8 +3,8 @@
 
 class InvoiceWechat {
     static name := "Invoice Fill-in(Wechat)"
-    static title := "Flow Mode - Invoice Fill-in(Wechat)"
-    static popupTitle := "ClipFlow - Invoice Mode(Wechat)"
+    static title := "Flow Mode - " . this.name
+    static popupTitle := "ClipFlow - " . this.name
     static desc := "
     (
         Flow - Invoice Mode(Wechat)
