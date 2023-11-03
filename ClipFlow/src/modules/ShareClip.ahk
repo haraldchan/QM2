@@ -8,7 +8,6 @@ class ShareClip {
     static popupTitle := "ClipFlow - " . this.name
     static shareClipFolder := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\lib\SharedClips"
     static shareTxt := Format("{1}\{2}.txt", this.shareClipFolder, FormatTime(A_Now, "yyyyMMdd"))
-    static clipHisArr := strToArr(IniRead(A_MyDocuments . "\ClipFlow.ini", "ClipHistory", "clipHisArr"))
 
     static USE(App) {
         ui := [
@@ -41,11 +40,15 @@ class ShareClip {
 
         ; callbacks
         sendHistory() {
-            this.sendHistory(this.clipHisArr)
+            clipHistory := strToArr(IniRead(A_MyDocuments . "\ClipFlow.ini", "ClipHistory", "clipHisArr"))
+            text := this.sendHistory(clipHistory)
+            MsgBox(Format("已发送：`n`n{1}", text), this.popupTitle, "4096 T1")
         }
-
+        
         sendUserInputText() {
-            this.sendUserInputText(userInputText.Text)
+            text := this.sendUserInputText(userInputText.Text)
+            userInputText.Value := ""
+            MsgBox(Format("已发送：`n`n{1}", text), this.popupTitle, "4096 T1")
         }
     }
 
@@ -55,11 +58,13 @@ class ShareClip {
             text .= clipHisArr[A_Index] . "`n"
         }
         FileAppend text . "`n`n", this.shareTxt
+        return text
     }
 
     static sendUserInputText(userInput) {
         text := Format("发送自: {1}, {2}`n", A_UserName, FormatTime(A_Now))
         FileAppend text . userInput . "`n`n", this.shareTxt
+        return text . userInput
     }
 
     static showShareClipboard() {
