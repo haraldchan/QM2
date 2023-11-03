@@ -8,6 +8,7 @@ class ShareClip {
     static popupTitle := "ClipFlow - " . this.name
     static shareClipFolder := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\lib\SharedClips"
     static shareTxt := Format("{1}\{2}.txt", this.shareClipFolder, FormatTime(A_Now, "yyyyMMdd"))
+    static store := store
 
     static USE(App) {
         ui := [
@@ -22,7 +23,7 @@ class ShareClip {
         ]
         ; cleanup txts older than 5 days.
         loop files this.shareClipFolder "*.txt" {
-            if (DateDiff(FormatTime(A_Now, "yyyyMMdd"), SubStr(A_LoopFileName, -4, 4), "days") >= 5) {
+            if (DateDiff(FormatTime(A_Now, "yyyyMMdd"), SubStr(A_LoopFileName, 1, 6), "days") >= 5) {
                 FileDelete this.shareClipFolder . A_LoopFileName
             }
         }
@@ -40,7 +41,7 @@ class ShareClip {
 
         ; callbacks
         sendHistory() {
-            clipHistory := strToArr(IniRead(A_MyDocuments . "\ClipFlow.ini", "ClipHistory", "clipHisArr"))
+            clipHistory := strToArr(IniRead(this.store, "ClipHistory", "clipHisArr"))
             text := this.sendHistory(clipHistory)
             MsgBox(Format("已发送：`n`n{1}", text), this.popupTitle, "4096 T1")
         }
