@@ -8,18 +8,22 @@ class ShareClip {
     static popupTitle := "ClipFlow - " . this.name
     static shareClipFolder := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\lib\SharedClips"
     static shareTxt := Format("{1}\{2}.txt", this.shareClipFolder, FormatTime(A_Now, "yyyyMMdd"))
-    static store := store
+    
 
     static USE(App) {
+        if (!FileExist(this.shareTxt)) {
+            FileCopy(A_ScriptDir . "\src\lib\shareTemplate.txt" , this.shareTxt)
+        }
+
         ui := [
-            App.AddGroupBox("R6 w250 y+20", this.title),
-            App.AddText("xp+10", "1、发送剪贴板History"),
-            App.AddButton("h35 w230 y+15", "发送 History"),
-            App.AddText("xp+10 y+20", "2、发送一段文字"),
-            App.AddEdit("h50 w230 y+15", ""),
-            App.AddButton("h35 w230 y+10", "发送 文字"),
-            App.AddText("xp+10 y+20", "3、查看 Share 剪贴板内容"),
-            App.AddButton("h35 w230 y+10", "打开 剪贴板"),
+            App.AddGroupBox("R13 w250 y+20", this.title),
+            App.AddText("xp+10 yp+20", "1、发送剪贴板History"),
+            App.AddButton("h35 w230 y+10", "发送 History"),
+            App.AddText("xp y+15", "2、发送一段文字"),
+            App.AddEdit("xp h50 w230 y+10", ""),
+            App.AddButton("xp h35 w230 y+10", "发送 文字"),
+            App.AddText("xp y+15", "3、查看 Share 剪贴板内容"),
+            App.AddButton("xp h35 w230 y+10", "打开 剪贴板"),
         ]
         ; cleanup txts older than 5 days.
         loop files this.shareClipFolder "*.txt" {
@@ -35,21 +39,25 @@ class ShareClip {
         showShareClipboardBtn := ui[8]
 
         ; add events
-        sendHistoryBtn.OnEvent("Click", (*) => sendHistory)
-        sendTextBtn.OnEvent("Click", (*) => sendUserInputText)
-        showShareClipboardBtn.OnEvent("Click", (*) => this.showShareClipboard)
+        sendHistoryBtn.OnEvent("Click", sendHistory)
+        sendTextBtn.OnEvent("Click", sendUserInputText)
+        showShareClipboardBtn.OnEvent("Click", showShareClipboard)
 
         ; callbacks
-        sendHistory() {
-            clipHistory := strToArr(IniRead(this.store, "ClipHistory", "clipHisArr"))
+        sendHistory(*) {
+            clipHistory := strToArr(IniRead(store, "ClipHistory", "clipHisArr"))
             text := this.sendHistory(clipHistory)
             MsgBox(Format("已发送：`n`n{1}", text), this.popupTitle, "4096 T1")
         }
         
-        sendUserInputText() {
+        sendUserInputText(*) {
             text := this.sendUserInputText(userInputText.Text)
             userInputText.Value := ""
             MsgBox(Format("已发送：`n`n{1}", text), this.popupTitle, "4096 T1")
+        }
+
+        showShareClipboard(*){
+            this.showShareClipboard()
         }
     }
 
@@ -73,8 +81,8 @@ class ShareClip {
 
         shareCLB := Gui(, "Share 剪贴板")
         ui := [
-            shareCLB.AddEdit("w500 h600 ReadOnly", sharedText)
-            shareCLB.AddButton("w80 h30 x420", "打开剪贴板文件")
+            shareCLB.AddEdit("w300 h480 ReadOnly", sharedText),
+            shareCLB.AddButton("w120 h40 y+10", "打开剪贴板文件")
         ]
         shareCLB.Show()
 
