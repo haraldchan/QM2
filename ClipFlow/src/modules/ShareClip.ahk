@@ -71,7 +71,7 @@ class ShareClip {
         }
 
         sendUserInputText(*) {
-            if (!userInputText.Value) {
+            if (!readyToSend) {
                 return
             }
             text := this.sendUserInputText(userInputText.Text)
