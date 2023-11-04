@@ -20,7 +20,7 @@ class ShareClip {
             App.AddText("xp+10 yp+20", "1、发送剪贴板History"),
             App.AddButton("h35 w230 y+10", "发送 History"),
             App.AddText("xp y+15", "2、发送一段文字"),
-            App.AddEdit("xp h50 w230 y+10", ""),
+            App.AddEdit("Default xp h50 w230 y+10", ""),
             App.AddButton("xp h35 w230 y+10", "发送 文字"),
             App.AddText("xp y+15", "3、查看 Share 剪贴板内容"),
             App.AddButton("xp h35 w230 y+10", "打开 剪贴板"),
@@ -47,13 +47,13 @@ class ShareClip {
         sendHistory(*) {
             clipHistory := strToArr(IniRead(store, "ClipHistory", "clipHisArr"))
             text := this.sendHistory(clipHistory)
-            MsgBox(Format("已发送：`n`n{1}", text), this.popupTitle, "4096 T1")
+            MsgBox(Format("已发送：`r`n{1}", text), this.popupTitle, "4096 T1")
         }
         
         sendUserInputText(*) {
             text := this.sendUserInputText(userInputText.Text)
             userInputText.Value := ""
-            MsgBox(Format("已发送：`n`n{1}", text), this.popupTitle, "4096 T1")
+            MsgBox(Format("已发送：`r`n{1}", text), this.popupTitle, "4096 T1")
         }
 
         showShareClipboard(*){
@@ -62,17 +62,17 @@ class ShareClip {
     }
 
     static sendHistory(clipHisArr) {
-        text := Format("发送自: {1}, {2}`n", A_UserName, FormatTime(A_Now))
+        text := Format("发送自: {1}, {2} `r`n", A_UserName, FormatTime(A_Now))
         loop clipHisArr.Length {
-            text .= clipHisArr[A_Index] . "`n"
+            text .= clipHisArr[A_Index] . "`r`n"
         }
-        FileAppend text . "`n`n", this.shareTxt
+        FileAppend text . "`r`n`r`n", this.shareTxt
         return text
     }
 
     static sendUserInputText(userInput) {
-        text := Format("发送自: {1}, {2}`n", A_UserName, FormatTime(A_Now))
-        FileAppend text . userInput . "`n`n", this.shareTxt
+        text := Format("发送自: {1}, {2} `r`n", A_UserName, FormatTime(A_Now))
+        FileAppend text . userInput . "`r`n`r`n", this.shareTxt
         return text . userInput
     }
 
