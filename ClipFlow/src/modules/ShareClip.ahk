@@ -20,7 +20,7 @@ class ShareClip {
             App.AddText("xp+10 yp+20", "1、发送剪贴板History"),
             App.AddButton("h35 w230 y+10", "发送 History"),
             App.AddText("xp y+15", "2、发送一段文字"),
-            App.AddEdit("xp h50 w230 y+10", ""),
+            App.AddEdit("xp h100 w230 y+10", ""),
             App.AddButton("Default xp h35 w230 y+10", "发送 文字"),
             App.AddText("xp y+15", "3、查看 Share 剪贴板内容"),
             App.AddButton("xp h35 w230 y+10", "打开 剪贴板"),
