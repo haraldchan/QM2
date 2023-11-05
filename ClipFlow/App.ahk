@@ -9,7 +9,7 @@
 CoordMode "Mouse", "Screen"
 TraySetIcon A_ScriptDir . "\src\assets\CFTray.ico"
 OnClipboardChange addToHistory
-modules := [ProfileModify, InvoiceWechat]
+modules := [ProfileModify, InvoiceWechat, ShareClip]
 version := "0.0.1"
 popupTitle := "ClipFlow " . version
 if (FileExist(A_MyDocuments . "\ClipFlow.ini")) {
@@ -29,22 +29,22 @@ onTop := false
 ; { GUI template
 ClipFlow := Gui(, popupTitle)
 ClipFlow.OnEvent("Close", quitApp)
-ClipFlow.AddText(, "~~When Flowing, press Esc to Unflow~~")
+; ClipFlow.AddText(, "~~When Flowing, press Esc to Unflow~~")
 ClipFlow.AddCheckbox("h25 x15", "Keep ClipFlow On Top").OnEvent("Click", keepOnTop)
-ClipFlow.AddButton("Disabled h25 w85", "Flow Start").OnEvent("Click", flowStart)
-ClipFlow.AddButton("Disabled h25 w85 x+12", "Flow Load").OnEvent("Click", flowLoad)
-ClipFlow.AddButton("Disabled h25 w85 x+12", "Load History").OnEvent("Click", loadAsFlow)
+; ClipFlow.AddButton("Disabled h25 w85", "Flow Start").OnEvent("Click", flowStart)
+; ClipFlow.AddButton("Disabled h25 w85 x+12", "Flow Load").OnEvent("Click", flowLoad)
+; ClipFlow.AddButton("Disabled h25 w85 x+12", "Load History").OnEvent("Click", loadAsFlow)
 
-tab3 := ClipFlow.AddTab3("w280 x15", ["Flow Modes", "Flow", "History"])
+tab3 := ClipFlow.AddTab3("w280 x15", ["Flow Modes", "History"])
 
 tab3.UseTab(1)
 moduleLoader(ClipFlow)
 
-tab3.UseTab(2)
-tabFlow := []
-renderFlow()
+; tab3.UseTab(2)
+; tabFlow := []
+; renderFlow()
 
-tab3.UseTab(3)
+tab3.UseTab(2)
 tabHistory := []
 renderHistory()
 
@@ -115,7 +115,7 @@ moduleLoader(App) {
     }
 }
 
-; render tab1: Clipboard History base on clipHisArr
+; render tab: Clipboard History base on clipHisArr
 renderHistory() {
     global tabHistory := []
     if (clipHisArr.Length = 0) {
@@ -129,15 +129,15 @@ renderHistory() {
 }
 
 ; flow related
-; render tab2: Flow base on flowArr. render when complete FlowCoping
-renderFlow() {
-    global flowArr := strToArr(IniRead(store, "Flow", "flowArr"))
-    loop flowArr.Length {
-        tabFlow.Push(
-            ClipFlow.AddEdit("h30 w250 y+10 ReadOnly", flowArr[A_Index])
-        )
-    }
-}
+; render tab: Flow base on flowArr. render when complete FlowCoping
+; renderFlow() {
+;     global flowArr := strToArr(IniRead(store, "Flow", "flowArr"))
+;     loop flowArr.Length {
+;         tabFlow.Push(
+;             ClipFlow.AddEdit("h30 w250 y+10 ReadOnly", flowArr[A_Index])
+;         )
+;     }
+; }
 
 flowStart(*) {
     global isFlowCopying := !isFlowCopying
@@ -186,18 +186,18 @@ loadAsFlow(*) {
 Pause:: ClipFlow.Show()
 #Hotif WinActive(popupTitle)
 Esc:: ClipFlow.Hide()
-#HotIf isFlowPasting
-~^v:: flowFire()
-; double press Escape to unload flow
-~Esc:: {
-    if (KeyWait("Esc", "D T0.5")) {
-        unload := MsgBox("Stop Flowing?", popupTitle, "OKCancel 4096")
-        if (unload = "OK") {
-            global isFlowPasting := false
-            global flowPointer := 1
-            ClipFlow.BackColor := ""
-        } else {
-            return
-        }
-    }
-}
+; #HotIf isFlowPasting
+; ~^v:: flowFire()
+; ; double press Escape to unload flow
+; ~Esc:: {
+;     if (KeyWait("Esc", "D T0.5")) {
+;         unload := MsgBox("Stop Flowing?", popupTitle, "OKCancel 4096")
+;         if (unload = "OK") {
+;             global isFlowPasting := false
+;             global flowPointer := 1
+;             ClipFlow.BackColor := ""
+;         } else {
+;             return
+;         }
+;     }
+; }
