@@ -17,16 +17,16 @@ class ShareClip {
         }
 
         ;states
-        global isListening := false
+        global isListening := true
         global readyToSend := false
 
         ui := [
-            App.AddGroupBox("R16 w250 y+20", this.title),
-            App.AddCheckbox("xp+10 yp+20", "监听剪贴板")
-            App.AddText("xp y+20", "1、发送剪贴板History"),
+            App.AddGroupBox("R15.5 w250 y+20", this.title),
+            App.AddCheckbox("Checked xp+10 yp+20 h15", "监听剪贴板"),
+            App.AddText("xp y+15", "1、发送剪贴板History"),
             App.AddButton("xp h32 w230 y+10", "发送 History"),
             App.AddText("xp y+15", "2、发送一段文字"),
-            App.AddEdit("xp h100 w230 y+10", ""),
+            App.AddEdit("xp h80 w230 y+10", ""),
             App.AddButton("xp h32 w230 y+10", "发送 文字"),
             App.AddText("xp y+15", "3、查看 Share 剪贴板内容"),
             App.AddButton("xp h32 w230 y+10", "打开 剪贴板"),
@@ -86,9 +86,10 @@ class ShareClip {
     }
 
     static listenAndSend(){
-        if (isListening) {
+        if (isListening = 1) {
             text := Format("发送自: {1}, {2} `r`n", A_UserName, FormatTime(A_Now))
-            FileAppend text . A_Clipboard . "`r`n`r`n", this.shareTxt
+            FileAppend text . A_Clipboard . "`r`n`r`n", ShareClip.shareTxt
+            MsgBox(text . A_Clipboard, ShareClip.popupTitle, "4096 T1")
         } else {
             return
         }
@@ -115,14 +116,14 @@ class ShareClip {
         shareCLB := Gui(, "Share 剪贴板")
         ui := [
             shareCLB.AddEdit("w300 h480 ReadOnly", sharedText),
-            shareCLB.AddButton("w120 h40 y+10", "打开剪贴板文件")
+            shareCLB.AddButton("w100 h30 y+10", "打开源文件"),
         ]
         shareCLB.Show()
 
         openShareClbBtn := ui[2]
 
         openShareClbBtn.OnEvent("Click", (*) => Run(this.shareTxt))
-        sharedText.OnEvent("Close", closeShareClipboardWin)
+        shareCLB.OnEvent("Close", closeShareClipboardWin)
 
         closeShareClipboardWin(*) {
             showShareClipboardBtn.Enabled := true
