@@ -17,12 +17,12 @@ class ShareClip {
         }
 
         ;states
-        global isListening := true
+        global isListening := false
         global readyToSend := false
 
         ui := [
             App.AddGroupBox("R15.5 w250 y+20", this.title),
-            App.AddCheckbox("Checked xp+10 yp+20 h15", "监听剪贴板"),
+            App.AddCheckbox("xp+10 yp+20 h15", "监听剪贴板"),
             App.AddText("xp y+15", "1、发送剪贴板History"),
             App.AddButton("xp h32 w230 y+10", "发送 History"),
             App.AddText("xp y+15", "2、发送一段文字"),
@@ -32,9 +32,9 @@ class ShareClip {
             App.AddButton("xp h32 w230 y+10", "打开 剪贴板"),
         ]
         ; cleanup txts older than 5 days.
-        loop files this.shareClipFolder "*.txt" {
+        loop files this.shareClipFolder "\*.txt" {
             if (DateDiff(FormatTime(A_Now, "yyyyMMdd"), SubStr(A_LoopFileName, 1, 6), "days") >= 5) {
-                FileDelete this.shareClipFolder . A_LoopFileName
+                FileDelete this.shareClipFolder . "\" . A_LoopFileName
             }
         }
 
@@ -86,7 +86,7 @@ class ShareClip {
     }
 
     static listenAndSend(){
-        if (isListening = 1) {
+        if (isListening = true) {
             text := Format("发送自: {1}, {2} `r`n", A_UserName, FormatTime(A_Now))
             FileAppend text . A_Clipboard . "`r`n`r`n", ShareClip.shareTxt
             MsgBox(text . A_Clipboard, ShareClip.popupTitle, "4096 T1")
