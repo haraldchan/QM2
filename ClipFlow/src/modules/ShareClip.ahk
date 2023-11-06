@@ -8,14 +8,21 @@ class ShareClip {
     static popupTitle := "ClipFlow - " . this.name
     static shareClipFolder := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\lib\SharedClips"
     static shareTxt := Format("{1}\{2}.txt", this.shareClipFolder, FormatTime(A_Now, "yyyyMMdd"))
+    static prefix := Format("发送自: {1}, {2} `r`n", A_UserName, FormatTime(A_Now))
+    static archiveDays := 5
 
     static USE(App) {
         OnClipboardChange this.listenAndSend
-
+        ; create new txt
         if (!FileExist(this.shareTxt)) {
             FileCopy(A_ScriptDir . "\src\lib\shareTemplate.txt", this.shareTxt)
         }
-
+        ; cleanup txts older than x days.
+        loop files this.shareClipFolder "\*.txt" {
+            if (DateDiff(FormatTime(A_Now, "yyyyMMdd"), SubStr(A_LoopFileName, 1, 6), "days") > this.archiveDays) {
+                FileDelete this.shareClipFolder . "\" . A_LoopFileName
+            }
+        }
         ;states
         global isListening := false
         global readyToSend := false
@@ -31,13 +38,6 @@ class ShareClip {
             App.AddText("xp y+15", "3、查看 Share 剪贴板内容"),
             App.AddButton("xp h32 w230 y+10", "打开 剪贴板"),
         ]
-        ; cleanup txts older than 5 days.
-        loop files this.shareClipFolder "\*.txt" {
-            if (DateDiff(FormatTime(A_Now, "yyyyMMdd"), SubStr(A_LoopFileName, 1, 6), "days") >= 5) {
-                FileDelete this.shareClipFolder . "\" . A_LoopFileName
-            }
-        }
-
         ; get controls
         clbListener := ui[2]
         sendHistoryBtn := ui[4]
@@ -85,18 +85,18 @@ class ShareClip {
         }
     }
 
-    static listenAndSend(){
+    static listenAndSend() {
+        this := ShareClip
         if (isListening = true) {
-            text := Format("发送自: {1}, {2} `r`n", A_UserName, FormatTime(A_Now))
-            FileAppend text . A_Clipboard . "`r`n`r`n", ShareClip.shareTxt
-            MsgBox(text . A_Clipboard, ShareClip.popupTitle, "4096 T1")
+            FileAppend this.prefix . A_Clipboard . "`r`n`r`n", this.shareTxt
+            MsgBox(this.prefix . A_Clipboard, this.popupTitle, "4096 T1")
         } else {
             return
         }
     }
 
     static sendHistory(clipHisArr) {
-        text := Format("发送自: {1}, {2} `r`n", A_UserName, FormatTime(A_Now))
+        text := this.prefix
         loop clipHisArr.Length {
             text .= clipHisArr[A_Index] . "`r`n"
         }
@@ -105,9 +105,8 @@ class ShareClip {
     }
 
     static sendUserInputText(userInput) {
-        text := Format("发送自: {1}, {2} `r`n", A_UserName, FormatTime(A_Now))
-        FileAppend text . userInput . "`r`n`r`n", this.shareTxt
-        return text . userInput
+        FileAppend this.prefix . userInput . "`r`n`r`n", this.shareTxt
+        return this.prefix . userInput
     }
 
     static showShareClipboard(showShareClipboardBtn) {
@@ -119,6 +118,7 @@ class ShareClip {
             shareCLB.AddButton("w100 h30 y+10", "打开源文件"),
         ]
         shareCLB.Show()
+        WinSetAlwaysOnTop true, "Share 剪贴板"
 
         openShareClbBtn := ui[2]
 
