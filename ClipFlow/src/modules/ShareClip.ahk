@@ -29,21 +29,27 @@ class ShareClip {
 
         ui := [
             App.AddGroupBox("R15.5 w250 y+20", this.title),
-            App.AddCheckbox("xp+10 yp+20 h15", "监听剪贴板"),
+            App.AddCheckbox("vclbListener " . "xp+10 yp+20 h15", "监听剪贴板"),
             App.AddText("xp y+15", "1、发送剪贴板History"),
-            App.AddButton("xp h32 w230 y+10", "发送 History"),
+            App.AddButton("vsendHistoryBtn " . "xp h32 w230 y+10", "发送 History"),
             App.AddText("xp y+15", "2、发送一段文字"),
-            App.AddEdit("xp h80 w230 y+10", ""),
-            App.AddButton("xp h32 w230 y+10", "发送 文字"),
+            App.AddEdit("vuserInputText " . "xp h80 w230 y+10", ""),
+            App.AddButton("vsendTextBtn" . "xp h32 w230 y+10", "发送 文字"),
             App.AddText("xp y+15", "3、查看 Share 剪贴板内容"),
-            App.AddButton("xp h32 w230 y+10", "打开 剪贴板"),
+            App.AddButton("vshowShareClipboardBtn" . "xp h32 w230 y+10", "打开 剪贴板"),
         ]
         ; get controls
-        clbListener := ui[2]
-        sendHistoryBtn := ui[4]
-        userInputText := ui[6]
-        sendTextBtn := ui[7]
-        showShareClipboardBtn := ui[9]
+        ; clbListener := ui[2]
+        ; sendHistoryBtn := ui[4]
+        ; userInputText := ui[6]
+        ; sendTextBtn := ui[7]
+        ; showShareClipboardBtn := ui[9]
+
+        clbListener := getCtrlByName("clbListener" , ui)
+        sendHistoryBtn := getCtrlByName("sendHistoryBtn", ui)
+        userInputText := getCtrlByName("userInputText", ui)
+        sendTextBtn := getCtrlByName("sendTextBtn", ui)
+        showShareClipboardBtn := getCtrlByName("showShareClipboardBtn", ui)
 
         ; add events
         clbListener.OnEvent("Click", toggleListen)
@@ -111,6 +117,7 @@ class ShareClip {
 
     static showShareClipboard(showShareClipboardBtn) {
         sharedText := FileRead(this.shareTxt)
+        SetTimer(getUpdateSharedText, 2000)
 
         shareCLB := Gui(, "Share 剪贴板")
         ui := [
@@ -120,13 +127,20 @@ class ShareClip {
         shareCLB.Show()
         WinSetAlwaysOnTop true, "Share 剪贴板"
 
+        shareClipboard := ui[1]
         openShareClbBtn := ui[2]
 
         openShareClbBtn.OnEvent("Click", (*) => Run(this.shareTxt))
         shareCLB.OnEvent("Close", closeShareClipboardWin)
 
+        getUpdateSharedText() {
+            updatedText := FileRead(this.shareTxt)
+            shareClipboard.Value := updatedText
+        }
+
         closeShareClipboardWin(*) {
             showShareClipboardBtn.Enabled := true
+            SetTimer(, 0)
         }
     }
 }

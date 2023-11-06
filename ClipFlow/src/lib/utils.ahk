@@ -11,6 +11,14 @@ arrToStr(arr) {
     return str
 }
 
+getCtrlByName(vName, ctrlArray){
+    loop ctrlArray.Length {
+        if (vName = ctrlArray[A_Index].Name) {
+            return ctrlArray[A_Index]
+        }
+    }
+}
+
 cleanReload(quit := 0){
     ; Windows set default
     if (WinExist("ahk_class SunAwtFrame")) {
