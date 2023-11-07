@@ -88,7 +88,8 @@ class ShareClip {
     static listenAndSend() {
         this := ShareClip
         if (isListening = true) {
-            FileAppend this.prefix . A_Clipboard . "`r`n`r`n", this.shareTxt
+            ; FileAppend this.prefix . A_Clipboard . "`r`n`r`n", this.shareTxt
+            filePrepend(this.prefix . A_Clipboard . "`r`n`r`n", this.shareTxt)
             MsgBox(this.prefix . A_Clipboard, this.popupTitle, "4096 T1")
         } else {
             return
@@ -100,34 +101,51 @@ class ShareClip {
         loop clipHisArr.Length {
             text .= clipHisArr[A_Index] . "`r`n"
         }
-        FileAppend text . "`r`n`r`n", this.shareTxt
+        ; FileAppend text . "`r`n`r`n", this.shareTxt
+        filePrepend(text . "`r`n`r`n", this.shareTxt)
         return text
     }
 
     static sendUserInputText(userInput) {
-        FileAppend this.prefix . userInput . "`r`n`r`n", this.shareTxt
+        ; FileAppend this.prefix . userInput . "`r`n`r`n", this.shareTxt
+        filePrepend(this.prefix . userInput . "`r`n`r`n", this.shareTxt)
         return this.prefix . userInput
     }
 
     static showShareClipboard(showShareClipboardBtn) {
-        sharedText := FileRead(ShareClip.shareTxt)
-        SetTimer(getUpdateSharedText, 2000)
+        sharedText := FileRead(this.shareTxt)
+        isAutoRefresh := false
 
         shareCLB := Gui(, "Share 剪贴板")
         ui := [
-            shareCLB.AddEdit("w300 h480 ReadOnly", sharedText),
-            shareCLB.AddButton("w100 h30 y+10", "打开源文件"),
+            shareCLB.AddEdit("vshareClipboard w300 h500 ReadOnly", sharedText),
+            shareCLB.AddCheckbox("vautoRefresher h30 y+10 ", "自动刷新"),
+            shareCLB.AddButton("vrefreshBtn w90 h30 x+20", "刷  新"),
+            shareCLB.AddButton("vopenShareClbBtn w90 h30 x+20", "打开源文件"),
         ]
         shareCLB.Show()
         WinSetAlwaysOnTop true, "Share 剪贴板"
 
-        shareClipboard := ui[1]
-        openShareClbBtn := ui[2]
+        autoRefresher := getCtrlByName("autoRefresher", ui)
+        shareClipboard := getCtrlByName("shareClipboard", ui)
+        refreshBtn := getCtrlByName("refreshBtn", ui)
+        openShareClbBtn := getCtrlByName("openShareClbBtn", ui)
 
+        autoRefresher.OnEvent("Click", toggleAutoRefresh)
+        refreshBtn.OnEvent("Click", getUpdateSharedText)
         openShareClbBtn.OnEvent("Click", (*) => Run(this.shareTxt))
         shareCLB.OnEvent("Close", closeShareClipboardWin)
 
-        getUpdateSharedText() {
+        toggleAutoRefresh(*){
+            isAutoRefresh := !isAutoRefresh
+            if (isAutoRefresh = true) {
+                SetTimer(getUpdateSharedText, 3000)
+            } else {
+                SetTimer(getUpdateSharedText, 0)
+            }
+        }
+
+        getUpdateSharedText(*) {
             updatedText := FileRead(this.shareTxt)
             shareClipboard.Value := updatedText
         }
