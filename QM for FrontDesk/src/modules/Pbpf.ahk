@@ -12,33 +12,33 @@ class PbPf {
 		ui := [
 			Pbpf.AddGroupBox("w180 h190", "P/F房(支付人)"),
 			Pbpf.AddText("xp+10 yp+25", "房号       "),
-			Pbpf.AddEdit("x+10 w80", ""),
+			Pbpf.AddEdit("vpfRoom Number x+10 w80", ""),
 			Pbpf.AddText("x20 y+10", "姓名/确认号"),
-			Pbpf.AddEdit("x+10 w80", ""),
+			Pbpf.AddEdit("vpfName x+10 w80", ""),
 			Pbpf.AddText("x20 y+10", "Party号    "),
-			Pbpf.AddEdit("x+10 w80", ""),
+			Pbpf.AddEdit("vparty Number x+10 w80", ""),
 			Pbpf.AddText("x20 y+10", "Total房数  "),
-			Pbpf.AddEdit("x+10 w80", ""),
-			Pbpf.AddButton("x20 y+10 h30 w160", "复制Pay For信息"),
+			Pbpf.AddEdit("vroomQty Number x+10 w80", ""),
+			Pbpf.AddButton("vpfCopy x20 y+10 h30 w160", "复制Pay For信息"),
 
 			Pbpf.AddGroupBox("x+20 y8 w180 h190", "P/B房(被支付人)"),
 			Pbpf.AddText("xp+10 yp+25", "房号       "),
-			Pbpf.AddEdit("x+10 w80", ""),
+			Pbpf.AddEdit("vpbRoom Number x+10 w80", ""),
 			Pbpf.AddText("xp-75 y+10", "姓名/确认号"),
-			Pbpf.AddEdit("x+10 w80", ""),
-			Pbpf.AddButton("xp-75 y+70 h30 w160", "复制Pay By信息"),
+			Pbpf.AddEdit("vpbName x+10 w80", ""),
+			Pbpf.AddButton("vpbCopy xp-75 y+70 h30 w160", "复制Pay By信息"),
 
 			Pbpf.AddButton("w370 x10 y+20 h35", "开始粘贴").OnEvent("Click", paste),
 		]
 
-		pfRoom := ui[3]
-		pfName := ui[5]
-		party := ui[7]
-		roomQty := ui[9]
-		pfCopy := ui[10]
-		pbRoom := ui[13]
-		pbName := ui[15]
-		pbCopy := ui[16]
+		pfRoom := getCtrlByName("pfRoom", ui)
+		pfName := getCtrlByName("pfName", ui)
+		party := getCtrlByName("party", ui)
+		roomQty := getCtrlByName("roomQty", ui)
+		pfCopy := getCtrlByName("pfCopy", ui)
+		pbRoom := getCtrlByName("pbRoom", ui)
+		pbName := getCtrlByName("pbName", ui)
+		pbCopy := getCtrlByName("pbCopy", ui)
 
 		pbpfCtrls := [pfRoom, pfName, party, roomQty, pbRoom, pbName]
 		loop pbpfCtrls.Length {
@@ -74,7 +74,7 @@ class PbPf {
 			nameConf := IsNumber(relations[6]) ? "#" . relations[6] : relations[6]
 			if (relations[3] = "" || relations[4] = "") {
 				; 2-room party
-				A_Clipboard := Format("P/F Rm{1}{2}  ", relations[5], nameConf)
+				A_Clipboard := Format("P/F Rm{1} {2}  ", relations[5], nameConf)
 			} else {
 				; 3 or more room party
 				A_Clipboard := Format("P/F Party#{1}, total {2}-rooms  ", relations[3], relations[4])
@@ -88,7 +88,7 @@ class PbPf {
 				return
 			}
 			nameConf := IsNumber(relations[2]) ? "#" . relations[2] : relations[2]
-			A_Clipboard := Format("P/B Rm{1}{2}  ", relations[1], nameConf)
+			A_Clipboard := Format("P/B Rm{1} {2}  ", relations[1], nameConf)
 			MsgBox(A_Clipboard, "已复制信息", "4096 T1")
 		}
 
