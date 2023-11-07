@@ -88,7 +88,6 @@ class ShareClip {
     static listenAndSend() {
         this := ShareClip
         if (isListening = true) {
-            ; FileAppend this.prefix . A_Clipboard . "`r`n`r`n", this.shareTxt
             filePrepend(this.prefix . A_Clipboard . "`r`n`r`n", this.shareTxt)
             MsgBox(this.prefix . A_Clipboard, this.popupTitle, "4096 T1")
         } else {
@@ -101,13 +100,11 @@ class ShareClip {
         loop clipHisArr.Length {
             text .= clipHisArr[A_Index] . "`r`n"
         }
-        ; FileAppend text . "`r`n`r`n", this.shareTxt
         filePrepend(text . "`r`n`r`n", this.shareTxt)
         return text
     }
 
     static sendUserInputText(userInput) {
-        ; FileAppend this.prefix . userInput . "`r`n`r`n", this.shareTxt
         filePrepend(this.prefix . userInput . "`r`n`r`n", this.shareTxt)
         return this.prefix . userInput
     }
