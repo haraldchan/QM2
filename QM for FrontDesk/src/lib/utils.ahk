@@ -12,8 +12,15 @@ cleanReload(quit := 0){
     }
     Reload
 }
-
 quitApp() {
     quitConfirm := MsgBox("是否确定退出QM 2? ", "QM for FrontDesk 2.1.0", "OKCancel 4096")
     quitConfirm = "OK" ? cleanReload("quit") : cleanReload()
+}
+
+getCtrlByName(vName, ctrlArray){
+    loop ctrlArray.Length {
+        if (vName = ctrlArray[A_Index].Name) {
+            return ctrlArray[A_Index]
+        }
+    }
 }
