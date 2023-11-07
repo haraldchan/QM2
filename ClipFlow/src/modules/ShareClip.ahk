@@ -19,7 +19,7 @@ class ShareClip {
         }
         ; cleanup txts older than x days.
         loop files this.shareClipFolder "\*.txt" {
-            if (DateDiff(FormatTime(A_Now, "yyyyMMdd"), SubStr(A_LoopFileName, 1, 6), "days") > this.archiveDays) {
+            if (DateDiff(FormatTime(A_Now, "yyyyMMdd"), SubStr(A_LoopFileName, 1, 8), "days") > this.archiveDays) {
                 FileDelete this.shareClipFolder . "\" . A_LoopFileName
             }
         }
@@ -34,17 +34,11 @@ class ShareClip {
             App.AddButton("vsendHistoryBtn " . "xp h32 w230 y+10", "发送 History"),
             App.AddText("xp y+15", "2、发送一段文字"),
             App.AddEdit("vuserInputText " . "xp h80 w230 y+10", ""),
-            App.AddButton("vsendTextBtn" . "xp h32 w230 y+10", "发送 文字"),
+            App.AddButton("vsendTextBtn " . "xp h32 w230 y+10", "发送 文字"),
             App.AddText("xp y+15", "3、查看 Share 剪贴板内容"),
-            App.AddButton("vshowShareClipboardBtn" . "xp h32 w230 y+10", "打开 剪贴板"),
+            App.AddButton("vshowShareClipboardBtn " . "xp h32 w230 y+10", "打开 剪贴板"),
         ]
         ; get controls
-        ; clbListener := ui[2]
-        ; sendHistoryBtn := ui[4]
-        ; userInputText := ui[6]
-        ; sendTextBtn := ui[7]
-        ; showShareClipboardBtn := ui[9]
-
         clbListener := getCtrlByName("clbListener" , ui)
         sendHistoryBtn := getCtrlByName("sendHistoryBtn", ui)
         userInputText := getCtrlByName("userInputText", ui)
@@ -116,7 +110,7 @@ class ShareClip {
     }
 
     static showShareClipboard(showShareClipboardBtn) {
-        sharedText := FileRead(this.shareTxt)
+        sharedText := FileRead(ShareClip.shareTxt)
         SetTimer(getUpdateSharedText, 2000)
 
         shareCLB := Gui(, "Share 剪贴板")
@@ -140,7 +134,7 @@ class ShareClip {
 
         closeShareClipboardWin(*) {
             showShareClipboardBtn.Enabled := true
-            SetTimer(, 0)
+            SetTimer(getUpdateSharedText, 0)
         }
     }
 }
