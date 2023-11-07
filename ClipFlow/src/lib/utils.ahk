@@ -11,6 +11,13 @@ arrToStr(arr) {
     return str
 }
 
+filePrepend(textToInsert, fileToPrepend){
+    textOrigin := FileRead(fileToPrepend)
+    FileDelete fileToPrepend
+    FileAppend textToInsert . textOrigin, fileToPrepend
+}
+
+
 getCtrlByName(vName, ctrlArray){
     loop ctrlArray.Length {
         if (vName = ctrlArray[A_Index].Name) {
