@@ -25,7 +25,7 @@ cleanReload(quit := 0){
 }
 
 quitApp(*) {
-    quitConfirm := MsgBox("是否确定退出ClipFlow? ", popupTitle, "OKCancel 4096")
+    quitConfirm := MsgBox("是否确定退出Fedex Amendment Handler? ", popupTitle, "OKCancel 4096")
     if (quitConfirm = "OK") {
         cleanReload("quit")
     } else {
@@ -34,7 +34,6 @@ quitApp(*) {
 }
 
 ; FAH functions
-
 getReformatDate(fedexDate){
     monthMap := Map(
         "Jan", "01",
@@ -70,19 +69,21 @@ get24Hr(time, meridiem){
 
 getStaffNames(staffInfo){
     if (InStr(staffInfo, ", ")) {
+        ; two staffs
         staffNames := []
         staffInfoSplit := StrSplit(staffInfo, ", ")
         loop staffInfoSplit.Length {
             staffInfoArr := StrSplit(staffInfoSplit[A_Index], " ")
-            staffName := [StrSplit(staffInfoArr[4], "(")[1], staffInfoArr[3]]
+            staffName := staffInfoArr[3] . " " . StrSplit(staffInfoArr[4], "(")[1]
             staffNames.Push(staffName)
         }
-        return staffNames
     } else {
+        ; one staff
         staffInfoArr := StrSplit(staffInfo, " ")
-        staffName := [StrSplit(staffInfoArr[4], "(")[1], staffInfoArr[3]]
-        return staffName
+        staffName := , staffInfoArr[3] . " " . StrSplit(staffInfoArr[4], "(")[1]
+        staffNames.Push(staffName)
     }
+    return staffNames
 }
 
 getStayHours(inboundDate, inboundTime, outboundDate, outboundTime){
@@ -106,22 +107,5 @@ getDaysActual(hoursAtHotel) {
         return Integer(h / 24)
     } else if (h >= 24 || m != 0) {
         return Integer(h / 24 + 1)
-    }
-}
-
-getBringForwardTime(timeString) {
-    switch timeString {
-        case "09:00":
-            return 9
-        case "10:00":
-            return 10
-        case "11:00":
-            return 11
-        case "12:00":
-            return 12
-        case "13:00":
-            return 13
-        default:
-            return 10
     }
 }
