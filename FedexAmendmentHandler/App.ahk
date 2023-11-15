@@ -1,5 +1,7 @@
-#Include "%A_ScriptDir%\src\utils.ahk"
-#Include "%A_ScriptDir%\src\FedexAmendmentHandler.ahk"
+; #Include "%A_ScriptDir%\src\utils.ahk"
+; #Include "%A_ScriptDir%\src\FedexAmendmentHandler.ahk"
+#Include "../../FedexAmendmentHandler/src/utils.ahk"
+#Include "../../FedexAmendmentHandler/src/FedexAmendmentHandler.ahk"
 
 #SingleInstance Force
 CoordMode "Mouse", "Screen"
@@ -22,7 +24,7 @@ ui := [
 
 FAH.Show()
 
-; get trls
+; get ctrls
 showTemplate := getCtrlByName("showTemplate", ui)
 templatePath := getCtrlByName("templatePath", ui)
 startBtn := getCtrlByName("startBtn", ui)
