@@ -9,8 +9,6 @@ class ProfileModify {
     static popupTitle := "ClipFlow - " . this.name
     static desc := "
     (
-        Flow - Profile Modify
-        
         1、请先打开“旅客信息”界面，点击
           “开始复制”；
 

@@ -7,8 +7,6 @@ class InvoiceWechat {
     static popupTitle := "ClipFlow - " . this.name
     static desc := "
     (
-        Flow - Invoice Mode(Wechat)
-        
         1、请先打开小程序“微信发票助手”界面，
           点击 “复制全部资料”。
 
