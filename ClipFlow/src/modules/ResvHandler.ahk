@@ -1,7 +1,8 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
+#Include "../../App.ahk"
 #Include "../lib/utils.ahk"
 #Include "../lib/_JXON.ahk"
-#Include "../../App.ahk"
+#Include "./RH_Macros.ahk"
 
 class ResvHandler {
     static name := 'Resv Handler'
@@ -17,6 +18,8 @@ class ResvHandler {
         ui := [
             App.AddGroupBox("R6 w250 y+20", this.title),
             App.AddText("xp+10", this.desc),
+            ; TODO: add template reservations and its setting here
+            ; list view or just text+edit?
             App.AddButton("Default h35 w230 y+15", "开始填入"),
         ]
     }
@@ -51,5 +54,10 @@ class ResvHandler {
     static parseReceivedInfo() {
         bookingInfo := IniRead(store, "ResvHandler", "JSON")
         bookingInfoObj := Jxon_Load(&bookingInfo)
+        switch bookingInfoObj["agent"]{
+            case "agoda":
+                RH_Agoda(bookingInfoObj)
+            default:
+        }
     }
 }
