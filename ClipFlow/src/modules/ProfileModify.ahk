@@ -1,7 +1,7 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
 ; #Include "%A_ScriptDir%\src\libDictIndex\.ahk"
-#Include "../../lib/utils.ahk"
-#Include "../../lib/DictIndex.ahk"
+#Include "../lib/utils.ahk"
+#Include "../lib/DictIndex.ahk"
 
 class ProfileModify {
     static name := "Profile Modify"

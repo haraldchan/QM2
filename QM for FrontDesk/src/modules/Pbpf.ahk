@@ -1,5 +1,5 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-#Include "../../lib/utils.ahk"
+#Include "../lib/utils.ahk"
 
 class PbPf {
 	static description := "生成 PayBy PayFor 信息"

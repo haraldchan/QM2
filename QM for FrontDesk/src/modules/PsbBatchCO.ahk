@@ -1,7 +1,7 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
 ; #Include "%A_ScriptDir%\src\lib\reports.ahk"
-#Include "../../lib/utils.ahk"
-#Include "../../lib/reports.ahk"
+#Include "../lib/utils.ahk"
+#Include "../lib/reports.ahk"
 
 class PsbBatchCO {
     static name := "PsbBatchCO"

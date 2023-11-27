@@ -1,6 +1,6 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-#Include "../../lib/utils.ahk"
-#Include "../../../App.ahk"
+#Include "../lib/utils.ahk"
+#Include "../../App.ahk"
 
 class ShareClip {
     static name := "Share Clip"

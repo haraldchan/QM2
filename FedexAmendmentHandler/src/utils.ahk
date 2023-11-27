@@ -89,7 +89,7 @@ getStaffNames(staffInfo){
 getStayHours(inboundDate, inboundTime, outboundDate, outboundTime){
     ib := inboundDate . StrSplit(inboundTime, ":")[1] . StrSplit(inboundTime, ":")[2]
     ob := outboundDate . StrSplit(outboundTime, ":")[1] . StrSplit(outboundTime, ":")[2]
-    stayMinutes := DateDiff(ob, ib, "M")
+    stayMinutes := DateDiff(ob, ib, "Minutes")
     ; return stayMinutes
     hour := Floor(stayMinutes / 60)
     minute := Integer((stayMinutes / 60 - hour) * 60)

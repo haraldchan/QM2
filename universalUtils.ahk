@@ -30,7 +30,15 @@ getCtrlByName(vName, ctrlArray){
     }
 }
 
-getCtrlByType(type, ctrlArray){
+getCtrlByType(ctrlType, ctrlArray){
+    loop  ctrlArray.Length {
+        if (type = ctrlArray[A_Index].Type) {
+            return ctrlArray[A_Index]
+        }
+    }
+}
+
+getCtrlByTypeAll(type, ctrlArray){
     controls := []
     loop ctrlArray.Length {
         if (type = ctrlArray[A_Index].Type) {
@@ -45,3 +53,4 @@ filePrepend(textToInsert, fileToPrepend){
     FileDelete fileToPrepend
     FileAppend textToInsert . textOrigin, fileToPrepend
 }
+

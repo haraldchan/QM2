@@ -1,5 +1,5 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-#Include "../../lib/utils.ahk"
+#Include "../lib/utils.ahk"
 
 class InhShare {
 	static description := "生成空白 In-House Share"

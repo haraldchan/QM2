@@ -1,5 +1,5 @@
 ; #Include "%A_ScriptDir%\src\utils.ahk"
-#Include "../../src/utils.ahk"
+#Include "../src/utils.ahk"
 
 class FedexAmendmentHandler {
 	static path := A_ScriptDir . "\src\FedExPasteTemplate.xls"
@@ -53,28 +53,31 @@ class FedexAmendmentHandler {
 
 		;callbacks
 		start(*) {
-			if (isObject(confNumInput)) {
+			; handle CHANGE confirmation numbers
+			if (amendmentInfoMap["resvType"] = "CHANGE") {
 				if (InStr(confNumInput.Text, " ")) {
+					; type array
 					confNum := StrSplit(Trim(confNumInput.Text, " "), " ")
+					extendedInfoMap := this.addPmsRequiredInfo(amendmentInfoMap, confNum)
+
 				} else {
+					; type string
 					confNum := Trim(confNumInput.Text, " ")
+					extendedInfoMap := this.addPmsRequiredInfo(amendmentInfoMap)
 				}
 			}
-			if (amendmentInfoMap["resvType"] = "CHANGE") {
-				extendedInfoMap := this.addPmsRequiredInfo(amendmentInfoMap, confNum)
-			} else {
-				extendedInfoMap := this.addPmsRequiredInfo(amendmentInfoMap)
-			}
 
-			loop extendedInfoMap["roomQty"] {
-				this.determineChangeAdd(extendedInfoMap)
+			loop amendmentInfoMap["roomQty"] {
+				amendmentInfoMap["resvType"] = "CHANGE"
+				? this.handleChange(extendedInfoMap)
+				: this.handleAdd(extendedInfoMap)
 			}
 		}
 	}
 
 	static getAmendmentInfo() {
 		amendmentMap := Map()
-		; {
+
 		Xl := ComObject("Excel.Application")
 		Xlbook := Xl.Workbooks.Open(this.path)
 		amendment := Xlbook.Worksheets("Sheet1")
@@ -127,19 +130,262 @@ class FedexAmendmentHandler {
 		amendmentInfo["pmsCoDate"] := FormatTime(pmsCoDate, "MMddyyyy")
 	}
 
-	static determineChangeAdd(extendedInfoMap) {
-		if (extendedInfoMap["resvType"] = "CHANGE") {
-			;TODO: find exist reservations, and modify it
-			this.resvInfoEntry(extendedInfoMap)
-		} else {
-			;TODO: add-on new reservations from PM, then modify it
-			this.resvInfoEntry(extendedInfoMap)
+	static handleChange(extendedInfoMap) {
+		loop extendedInfoMap["roomQty"] {
+			WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
+			; TODO: find the reservation needs to be update through "Update Reservation"
+			
 		}
 	}
 
-	static resvInfoEntry(extendedInfoMap) {
-		;TODO: actions to fill in
+	static handleAdd(extendedInfoMap) {
+		loop extendedInfoMap["roomQty"] {
+			WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
+			; { opening a booking
+			; TODO: adding a booking from PM
+			; }
+			Sleep 100
+			; { opening Profile, fill in inbound flight info & trip no.
+			MouseMove 467, 201
+			Sleep 300
+			Click
+			Sleep 1000
+			MouseMove 442, 264
+			Sleep 300
+			Click "Down"
+			MouseMove 214, 269
+			Sleep 300
+			Click "Up"
+			Sleep 300
+			Send "{Backspace}"
+			Sleep 300
+			; entry: last name
+			Send Format("{Text}{1}", StrSplit(extendedInfoMap["staffInfo"][A_Index], " ")[2])
+			Sleep 300
+			; TODO: entry first name action
+			MouseMove 594, 394
+			Sleep 150
+			Send "!c"
+			Sleep 300
+			MouseMove 576, 521
+			Sleep 150
+			Click
+			Sleep 300
+			MouseMove 798, 480
+			Sleep 500
+			Click
+			Sleep 500
+			; }
+			Sleep 2000
+			; { fill in check-in, check-out fields
+			MouseMove 332, 336
+			Sleep 1000
+			Click "Down"
+			MouseMove 178, 340
+			Sleep 300
+			Click "Up"
+			MouseMove 172, 340
+			Sleep 300
+			Send Format("{Text}{1}", extendedInfoMap["pmsCiDate"])
+			Sleep 100
+			MouseMove 325, 378
+			Sleep 300
+			Click
+			Sleep 300
+			MouseMove 661, 523
+			Sleep 300
+			Click
+			MouseMove 636, 523
+			Sleep 300
+			Click
+			MouseMove 635, 523
+			Sleep 300
+			Click
+			Sleep 300
+			Click
+			Sleep 300
+			MouseMove 335, 385
+			Sleep 300
+			Click "Down"
+			MouseMove 182, 389
+			Sleep 300
+			Click "Up"
+			MouseMove 207, 395
+			Sleep 300
+			Send Format("{Text}{1}", extendedInfoMap["pmsCoDate"])
+			Sleep 300
+			; }
+			Sleep 2000
+			; { fill in ETA & ETD
+			MouseMove 294, 577
+			Sleep 200
+			Click
+			Sleep 200
+			Send "{Enter}"
+			Sleep 200
+			Send "{Enter}"
+			Sleep 200
+			Send "{Enter}"
+			Sleep 200
+			MouseMove 320, 577
+			Sleep 200
+			Click "Down"
+			MouseMove 200, 577
+			Sleep 200
+			Click "Up"
+			Sleep 200
+			Send Format("{Text}{1}", extendedInfoMap["ETA"])
+			Sleep 200
+			MouseMove 499, 577
+			Sleep 200
+			Click "Down"
+			MouseMove 330, 574
+			Sleep 200
+			Click "Up"
+			Sleep 200
+			Send Format("{Text}{1}", extendedInfoMap["ETD"])
+			Sleep 200
+			; }
+			Sleep 200
+			; { fill in comments, Inbound & trip no.(TA REC log field)
+			MouseMove 622, 576
+			Sleep 200
+			Click "Down"
+			MouseMove 1140, 585
+			Sleep 200
+			Click "Up"
+			Sleep 200
+			Send Format("{Text}{1}", extendedInfoMap["comment"])
+			Sleep 200
+			MouseMove 839, 535
+			Sleep 100
+			Click "Down"
+			MouseMove 1107, 543
+			Sleep 200
+			Click "Up"
+			Sleep 200
+			Send Format("{Text}{1}  {2}", extendedInfoMap["flightIn"], extendedInfoMap["tripNum"])
+			Sleep 2000
+			; }
+			Sleep 100
+			; { fill in original shcedule info in "More Fields"
+			MouseMove 236, 313
+			Sleep 100
+			Click
+			Sleep 100
+			MouseMove 686, 439
+			Sleep 200
+			Click "Down"
+			MouseMove 478, 439
+			Sleep 100
+			Click "Up"
+			Sleep 100
+			Send Format("{Text}{1}", extendedInfoMap["flightIn"])
+			Sleep 100
+			MouseMove 672, 483
+			Sleep 281
+			Click "Down"
+			MouseMove 523, 483
+			Sleep 358
+			Click "Up"
+			Send Format("{Text}{1}", extendedInfoMap["amCiDate"])
+			Sleep 100
+			MouseMove 685, 506
+			Sleep 100
+			Click "Down"
+			MouseMove 422, 501
+			Sleep 100
+			Click "Up"
+			Send Format("{Text}{1}", extendedInfoMap["ETA"])
+			Sleep 100
+			MouseMove 922, 441
+			Sleep 100
+			Click "Down"
+			MouseMove 704, 439
+			Sleep 100
+			Click "Up"
+			Send Format("{Text}{1}", extendedInfoMap["flightOut"])
+			Sleep 100
+			MouseMove 917, 483
+			Sleep 100
+			Click "Down"
+			MouseMove 637, 487
+			Sleep 100
+			Click "Up"
+			Sleep 100
+			Send Format("{Text}{1}", extendedInfoMap["amCoDate"])
+			Sleep 100
+			MouseMove 922, 504
+			Sleep 100
+			Click "Down"
+			MouseMove 640, 503
+			Sleep 100
+			Click "Up"
+			Sleep 100
+			Send Format("{Text}{1}", extendedInfoMap["ETD"])
+			Sleep 100
+			MouseMove 841, 660
+			Sleep 100
+			Click
+			Sleep 2000
+			; }
+			Sleep 100
+			; { open "Daily Details", fill in room rates
+			MouseMove 372, 504
+			Sleep 300
+			Click
+			Sleep 300
+			Send "!d"
+			Sleep 300
+			loop extendedInfoMap["daysActual"] {
+				Send "{Text}1265"
+				Send "{Down}"
+				Sleep 200
+			}
+			if (extendedInfoMap["daysActual"] != extendedInfoMap["pmsNts"]) {
+				Send "0"
+				Sleep 200
+				MouseMove 618, 485
+				Sleep 200
+				Send "!e"
+				Sleep 200
+				loop 4 {
+					Send "{Tab}"
+					Sleep 100
+				}
+				Send "{Text}NRR"
+				Sleep 100
+				MouseMove 418, 377
+				Sleep 100
+				Send "!o"
+				Sleep 200
+				loop 3 {
+					Send "{Escape}"
+					Sleep 200
+				}
+				Send "!o"
+				Sleep 1500
+				Send "{Space}"
+				Sleep 200
+			}
+			; TODO: MIND THE MSGBOXES!!!!
+			MouseMove 728, 548
+			Sleep 300
+			Send "!o"
+			Sleep 300
+			MouseMove 542, 453
+			Sleep 300
+			Click
+			MouseMove 644, 523
+			Sleep 300
+			Click
+			Sleep 300
+			; }
+			Sleep 2000
+			; { close, save, down to the next one
+
+			; }
+
+		}
 	}
-
-
 }

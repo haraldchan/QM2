@@ -1,5 +1,5 @@
 ; #Include "%A_ScriptDir%\src\lib\Dict.ahk"
-#Include "../Dict.ahk"
+#Include "./dict.ahk"
 
 regionISOMap := Map()
 loop regionISO.Length {

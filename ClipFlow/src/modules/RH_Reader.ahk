@@ -1,5 +1,5 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-#Include "../../lib/utils.ahk"
+#Include "../lib/utils.ahk"
 
 RH_Jielv(source) {
     ; source is the sheet to read

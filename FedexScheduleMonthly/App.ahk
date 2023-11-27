@@ -1,5 +1,5 @@
 ; #Include "%A_ScriptDir%\FedexScheduleMonthly.ahk"
-#Include ../FedexScheduleMonthly.ahk
+#Include ./FedexScheduleMonthly.ahk
 ; {setup
 #SingleInstance Force
 TraySetIcon A_ScriptDir . "\assets\FSMTray.ico"

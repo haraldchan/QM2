@@ -1,7 +1,7 @@
 ; #Include "%A_ScriptDir%\src\utils.ahk"
 ; #Include "%A_ScriptDir%\src\FedexAmendmentHandler.ahk"
-#Include "../../FedexAmendmentHandler/src/utils.ahk"
-#Include "../../FedexAmendmentHandler/src/FedexAmendmentHandler.ahk"
+#Include "../FedexAmendmentHandler/src/utils.ahk"
+#Include "../FedexAmendmentHandler/src/FedexAmendmentHandler.ahk"
 
 #SingleInstance Force
 CoordMode "Mouse", "Screen"
@@ -33,7 +33,7 @@ confNum := getCtrlByName("confNum", ui)
 ; add events
 FAH.OnEvent("DropFiles", dropAmendment)
 showTemplate.OnEvent("Click", openTemplate)
-startBtn.OnEvent("Click", (*) => FedexAmendmentHandler.getAmendmentInfo())
+startBtn.OnEvent("Click", (*) => FedexAmendmentHandler.USE())
 
 ; callbacks
 dropAmendment(GuiObj, GuiCtrlObj, FileArray, X, Y, *) {

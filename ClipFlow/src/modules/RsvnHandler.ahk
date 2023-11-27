@@ -1,7 +1,7 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
 ; #Include "%A_ScriptDir%\src\modules\RH_Reader.ahk"
-#Include "../../lib/utils.ahk"
-#Include "../../modules/RH_Reader.ahk"
+#Include "../lib/utils.ahk"
+#Include "../modules/RH_Reader.ahk"
 
 class RsvnHandler {
     static name := "Reservation Handler"
@@ -103,6 +103,6 @@ class RsvnHandler {
 
     static modifyRsvn(infoMap) {
         ; TODO: record actions for filling in fields.
-        ; can borrow some actions from FSR maybe? 
+        ; can borrow some actions from FSR maybe?
     }
 }
