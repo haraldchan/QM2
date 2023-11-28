@@ -20,7 +20,7 @@ class ResvHandler {
             App.AddText("xp+10", this.desc),
             ; TODO: add template reservations and its setting here
             ; list view or just text+edit?
-            App.AddButton("Default h35 w230 y+15", "开始填入"),
+            App.AddButton("Default h35 w230 y+15", "开始录入预订"),
         ]
     }
 
@@ -31,7 +31,8 @@ class ResvHandler {
         IniWrite(A_Clipboard, store, "ResvHandler", "JSON")
         bookingInfoObj := Jxon_Load(&A_Clipboard)
         for k, v in bookingInfoObj {
-            popupInfo .= Format("{1}：{2}`n", k, v)
+            outputVal := IsObject(v) ? arrToStr(v) : v
+            popupInfo .= Format("{1}：{2}`n", k, outputVal)
         }
         toOpera := MsgBox(Format("
         (   

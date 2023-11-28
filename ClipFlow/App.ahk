@@ -10,7 +10,7 @@
 CoordMode "Mouse", "Screen"
 TraySetIcon A_ScriptDir . "\src\assets\CFTray.ico"
 OnClipboardChange addToHistory
-modules := [ProfileModify, InvoiceWechat, ShareClip]
+modules := [ProfileModify, InvoiceWechat, ShareClip, ResvHandler]
 version := "0.0.1"
 popupTitle := "ClipFlow " . version
 if (FileExist(A_MyDocuments . "\ClipFlow.ini")) {
