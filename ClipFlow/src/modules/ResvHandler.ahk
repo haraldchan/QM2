@@ -29,9 +29,18 @@ class ResvHandler {
             return
         }
         IniWrite(A_Clipboard, store, "ResvHandler", "JSON")
-        bookingInfoObj := Jxon_Load(&A_Clipboard)
+        clb := A_Clipboard
+        bookingInfoObj := Jxon_Load(&clb)
         for k, v in bookingInfoObj {
-            outputVal := IsObject(v) ? arrToStr(v) : v
+            if (IsObject(v)) {
+                if (k = "contacts") {
+                    outputVal := "电话：" . v["phone"] . " " . "邮箱：" . v["email"]
+                } else {
+                    outputVal := arrToStr(v)
+                }
+            } else {
+                outputVal := v
+            }
             popupInfo .= Format("{1}：{2}`n", k, outputVal)
         }
         toOpera := MsgBox(Format("
@@ -42,12 +51,12 @@ class ResvHandler {
 
         确定(Enter)：     打开 Opera
         取消(Esc)：       留在 当前页面
-        )", popupInfo), this.popupTitle, "OKCancel 4096")
+        )", popupInfo), ResvHandler.popupTitle, "OKCancel 4096")
         if (toOpera = "OK") {
             try {
                 WinActivate "ahk_class SunAwtFrame"
             } catch {
-                MsgBox("请先打开 Opera 窗口。", this.popupTitle)
+                MsgBox("请先打开 Opera 窗口。", ResvHandler.popupTitle)
             }
         }
     }
