@@ -34,7 +34,11 @@ class ResvHandler {
         for k, v in bookingInfoObj {
             if (IsObject(v)) {
                 if (k = "contacts") {
-                    outputVal := "电话：" . v["phone"] . " " . "邮箱：" . v["email"]
+                    try { 
+                        outputVal := "电话：" . v["phone"] . " " . "邮箱：" . v["email"] 
+                        } catch {
+                            outputVal := ""
+                        }
                 } else {
                     outputVal := arrToStr(v)
                 }
