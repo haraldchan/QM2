@@ -1,22 +1,314 @@
-RH_Jielv(infoObj) {
-
-}
-
-RH_Kingsley(infoObj) {
-}
-
-RH_Ctrip(infoObj) {
-
-}
-
-RH_Meituan(infoObj) {
-
-}
-
-RH_Agoda(infoObj) {
-    
-}
-
 RH_Fedex(infoObj) {
+    pmsCiDate := (StrSplit(infoObj["ETA"], ":")[1]) < 10
+        ? DateAdd(infoObj["ciDate"], -1, "days")
+        : infoObj["ciDate"]
+    pmsCoDate := infoObj["coDate"]
+    pmsNts := DateDiff(pmsCoDate, pmsCiDate, "days")
+    ; reformat to match pms date format
+    schdCiDate := FormatTime(infoObj["ciDate"], "MMddyyyy")
+    schdCoDate := FormatTime(infoObj["ciDate"], "MMddyyyy")
+    pmsCiDate := FormatTime(pmsCiDate, "MMddyyyy")
+    pmsCoDate := FormatTime(pmsCoDate, "MMddyyyy")
 
+
+    profileEntry(infoObj) {
+        crewName := StrSplit(infoObj["crewNames"][A_Index], " ")
+        ;TODO: action: open profile, new profile, fill-in first and last name, then save
+    }
+
+    dateTimeEntry(infoObj) {
+        MouseMove 332, 336
+        Sleep 1000
+        Click "Down"
+        MouseMove 178, 340
+        Sleep 300
+        Click "Up"
+        MouseMove 172, 340
+        Sleep 300
+        Send Format("{Text}{1}", pmsCiDate)
+        Sleep 100
+        MouseMove 325, 378
+        Sleep 300
+        Click
+        Sleep 300
+        MouseMove 661, 523
+        Sleep 300
+        Click
+        MouseMove 636, 523
+        Sleep 300
+        Click
+        MouseMove 635, 523
+        Sleep 300
+        Click
+        Sleep 300
+        Click
+        Sleep 300
+        MouseMove 335, 385
+        Sleep 300
+        Click "Down"
+        MouseMove 182, 389
+        Sleep 300
+        Click "Up"
+        MouseMove 207, 395
+        Sleep 300
+        Send Format("{Text}{1}", pmsCoDate)
+        Sleep 300
+        ; }
+        Sleep 2000
+        ; { fill in ETA & ETD
+        MouseMove 294, 577
+        Sleep 200
+        Click
+        Sleep 200
+        Send "{Enter}"
+        Sleep 200
+        Send "{Enter}"
+        Sleep 200
+        Send "{Enter}"
+        Sleep 200
+        MouseMove 320, 577
+        Sleep 200
+        Click "Down"
+        MouseMove 200, 577
+        Sleep 200
+        Click "Up"
+        Sleep 200
+        Send Format("{Text}{1}", infoObj["ETA"])
+        Sleep 200
+        MouseMove 499, 577
+        Sleep 200
+        Click "Down"
+        MouseMove 330, 574
+        Sleep 200
+        Click "Up"
+        Sleep 200
+        Send Format("{Text}{1}", infoObj["ETD"])
+        Sleep 200
+        ; }
+        Sleep 200
+    }
+
+    commentEntry(infoObj) {
+        ; set comment
+        comment := ""
+        if (infoObj["resvType"] = "ADD") {
+            comment := Format("RM INCL 1BBF TO CO,Hours@Hotel: {1}={2}day(s), ActualStay: {3}-{4}", infoObj["stayHours"], infoObj["daysActual"], infoObj["ciDate"], infoObj["coDate"])
+        } else {
+            ; TODO: action: copy
+            MouseMove 622, 576
+            Sleep 200
+            Click "Down"
+            MouseMove 1140, 585
+            Sleep 200
+            Click "Up"
+            Sleep 200
+            Send "^c"
+            prevComment := A_Clipboard
+            comment := Format("Changed to {1}={2}day(s), New Stay:{3}-{4} `n Before Update:{5}", infoObj["stayHours"], infoObj["daysActual"], infoObj["ciDate"], infoObj["coDate"], prevComment)
+        }
+        ; fill-in comment
+        Sleep 100
+        MouseMove 622, 576
+        Sleep 200
+        Click "Down"
+        MouseMove 1140, 585
+        Sleep 200
+        Click "Up"
+        Sleep 200
+        Send Format("{Text}{1}", comment)
+        Sleep 200
+        ; fill-in new flight and trip
+        Sleep 200
+        MouseMove 839, 535
+        Sleep 100
+        Click "Down"
+        MouseMove 1107, 543
+        Sleep 200
+        Click "Up"
+        Sleep 200
+        Send Format("{Text}{1}  {2}", infoObj["flightIn"], infoObj["tripNum"])
+    }
+
+    moreFieldsEntry(infoObj) {
+        MouseMove 236, 313
+        Sleep 100
+        Click
+        Sleep 100
+        MouseMove 686, 439
+        Sleep 200
+        Click "Down"
+        MouseMove 478, 439
+        Sleep 100
+        Click "Up"
+        Sleep 100
+        Send Format("{Text}{1}", infoObj["flightIn"])
+        Sleep 100
+        MouseMove 672, 483
+        Sleep 281
+        Click "Down"
+        MouseMove 523, 483
+        Sleep 358
+        Click "Up"
+        Send Format("{Text}{1}", schdCiDate)
+        Sleep 100
+        MouseMove 685, 506
+        Sleep 100
+        Click "Down"
+        MouseMove 422, 501
+        Sleep 100
+        Click "Up"
+        Send Format("{Text}{1}", infoObj["ETA"])
+        Sleep 100
+        MouseMove 922, 441
+        Sleep 100
+        Click "Down"
+        MouseMove 704, 439
+        Sleep 100
+        Click "Up"
+        Send Format("{Text}{1}", infoObj["flightOut"])
+        Sleep 100
+        MouseMove 917, 483
+        Sleep 100
+        Click "Down"
+        MouseMove 637, 487
+        Sleep 100
+        Click "Up"
+        Sleep 100
+        Send Format("{Text}{1}", schdCoDate)
+        Sleep 100
+        MouseMove 922, 504
+        Sleep 100
+        Click "Down"
+        MouseMove 640, 503
+        Sleep 100
+        Click "Up"
+        Sleep 100
+        Send Format("{Text}{1}", infoObj["ETD"])
+        Sleep 100
+        MouseMove 841, 660
+        Sleep 100
+        Click
+        Sleep 2000
+    }
+
+    dailyDetailsEntry(infoObj) {
+        MouseMove 372, 504
+        Sleep 300
+        Click
+        Sleep 300
+        Send "!d"
+        Sleep 300
+        loop infoObj["daysActual"] {
+            Send Format("{Text}{1}", infoObj["roomRate"][1])
+            Send "{Down}"
+            Sleep 200
+        }
+        if (infoObj["daysActual"] != pmsNts) {
+            Send "0"
+            Sleep 200
+            MouseMove 618, 485
+            Sleep 200
+            Send "!e"
+            Sleep 200
+            loop 4 {
+                Send "{Tab}"
+                Sleep 100
+            }
+            Send "{Text}NRR"
+            Sleep 100
+            MouseMove 418, 377
+            Sleep 100
+            Send "!o"
+            Sleep 200
+            loop 3 {
+                Send "{Escape}"
+                Sleep 200
+            }
+            Send "!o"
+            Sleep 1500
+            Send "{Space}"
+            Sleep 200
+        }
+        MouseMove 728, 548
+        Sleep 300
+        Send "!o"
+        Sleep 300
+        MouseMove 542, 453
+        Sleep 300
+        Click
+        MouseMove 644, 523
+        Sleep 300
+        Click
+        Sleep 300
+        ; }
+        Sleep 2000
+        ; { close, save, down to the next one
+        Send "!o"
+        Sleep 5000
+        Send "!o"
+        Sleep 1000
+        Send "{Down}"
+        Sleep 2000
+    }
+
+    addModification(infoObj) {
+        addFrom := InputBox("请指定需要从哪个 Block Add-On? (请输入 BlockCode )", "Reservation Handler", , A_Year . A_MM . A_MDay . "FEDEX")
+        if (addFrom.Result = "Cancel") {
+            cleanReload()
+        }
+
+        loop infoObj["roomQty"] {
+            if (A_Index = infoObj["roomQty"]) {
+                MsgBox("已完成所有新增。")
+                return
+            }
+            ; TODO: action: adds on from a block pm(by using addFrom.Value), then open it.
+            profileEntry(infoObj)
+            Sleep 1000
+            dateTimeEntry(infoObj)
+            Sleep 1000
+            commentEntry(infoObj)
+            Sleep 1000
+            moreFieldsEntry(infoObj)
+            Sleep 1000
+            dailyDetailsEntry(infoObj)
+            Sleep 1000
+            ; TODO: action: close and save the reservation.
+            Sleep 1000
+        }
+    }
+
+    changeModification(infoObj) {
+        loop infoObj["roomQty"] {
+            if (A_Index = infoObj["roomQty"]) {
+                MsgBox("已完成所有修改。")
+                return
+            }
+            nofitier := Format("待修改订单数量：{1}, 已完成{2}个。`n`n 请先打开需要修改的 Fedex 预订。", infoObj["roomQty"], A_Index)
+            changeFrom := MsgBox(nofitier, "Reservation Handler", "OKCancel 4096")
+            if (changeFrom.Result = "Cancel") {
+                cleanReload()
+            }
+            profileEntry(infoObj)
+            Sleep 1000
+            dateTimeEntry(infoObj)
+            Sleep 1000
+            commentEntry(infoObj)
+            Sleep 1000
+            moreFieldsEntry(infoObj)
+            Sleep 1000
+            dailyDetailsEntry(infoObj)
+            Sleep 1000
+            ; TODO: action close and save the reservation.
+            Sleep 1000
+
+        }
+    }
+
+    ; starter
+    if (infoObj["resvType"] = "CHANGE") {
+        changeModification(infoObj)
+    } else {
+        addModification(infoObj)
+    }
 }

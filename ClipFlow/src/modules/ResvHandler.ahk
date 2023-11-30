@@ -10,7 +10,7 @@ class ResvHandler {
     static popupTitle := "ClipFlow - " . this.name
     static desc := "
     (
-        
+        点击按键开始
     )"
 
     static USE(App) {
@@ -20,8 +20,12 @@ class ResvHandler {
             App.AddText("xp+10", this.desc),
             ; TODO: add template reservations and its setting here
             ; list view or just text+edit?
-            App.AddButton("Default h35 w230 y+15", "开始录入预订"),
+            App.AddButton("vstartBtn Default h35 w230 y+15", "开始录入预订"),
         ]
+
+        startBtn := getCtrlByName("start", ui)
+
+        startBtn.OnEvent("Click", this.modifyReservation)
     }
 
     static saveAddOnJson() {
@@ -65,12 +69,12 @@ class ResvHandler {
         }
     }
 
-    static parseReceivedInfo() {
+    static modifyReservation() {
         bookingInfo := IniRead(store, "ResvHandler", "JSON")
         bookingInfoObj := Jxon_Load(&bookingInfo)
         switch bookingInfoObj["agent"]{
-            case "agoda":
-                RH_Agoda(bookingInfoObj)
+            case "fedex":
+                RH_Fedex(bookingInfoObj)
             default:
         }
     }
