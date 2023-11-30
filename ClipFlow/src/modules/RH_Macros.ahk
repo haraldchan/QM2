@@ -435,7 +435,7 @@ commonEntries(infoObj, roomTypeModded, comment) {
         Send "!d"
         Sleep 300
         loop roomRates.Length {
-            Send Format("{Text}{1}", infoObj["roomRate"][A_Index])
+            Send Format("{Text}{1}", roomRates[A_Index])
             Send "{Down}"
             Sleep 200
             ; TODO: action: set bbf if included
@@ -461,6 +461,13 @@ commonEntries(infoObj, roomTypeModded, comment) {
         Send "{Down}"
         Sleep 2000
     }
+
+    dateTimeEntry()
+    Sleep 1000
+    commentOrderIdEntry(infoObj["orderId"], comment)
+    Sleep 1000
+    roomRatesEntry(infoObj["roomRates"], infoObj["bbf"])
+    Sleep 1000
 }
 
 
