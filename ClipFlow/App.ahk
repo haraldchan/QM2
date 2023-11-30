@@ -19,6 +19,7 @@ if (FileExist(A_MyDocuments . "\ClipFlow.ini")) {
     FileCopy A_ScriptDir . "\src\lib\ClipFlow.ini", A_MyDocuments
     store := A_MyDocuments . "\ClipFlow.ini"
 }
+Sleep 100 ;wait for store
 clipHisArr := strToArr(IniRead(store, "ClipHistory", "clipHisArr"))
 flowArr := strToArr(IniRead(store, "Flow", "flowArr"))
 flowPointer := 1
