@@ -325,6 +325,7 @@ RH_Agoda(infoObj, addFromConf) {
         "Club Deluxe River View Room", "CKR",
         "Club Premier Suite", "CPK",
     ])
+
     roomType := ""
     for k, v in roomTypeRef {
         if (infoObj["roomType"] = k) {
@@ -332,11 +333,18 @@ RH_Agoda(infoObj, addFromConf) {
         }
     }
 
-    profileEntry(infoObj) {
+    bbf := (roomType = "CKC" || roomType = "CKR") ? "CBF" : "BBF"
+    comment := Format("ROOM INCL {1}{2} PAY BY AGODA", infoObj["bbf"][1], bbf)
+
+    profileEntry(lastName, firstName) {
         ;TODO: action: open profile, new profile, fill-in first and last name, then save
     }
 
-
+    loop infoObj["roomQty"] {
+        profileEntry(infoObj["guestLastName"], infoObj["guestFirstName"])
+        Sleep 1000
+        commonEntries(infoObj, roomType, comment)
+    }
 }
 
 commonEntries(infoObj, roomTypeModded, comment) {
@@ -464,7 +472,7 @@ commonEntries(infoObj, roomTypeModded, comment) {
 ;         if (infoObj["roomType"] = k) {
 ;             roomType := v
 ;         }
-;     } 
+;     }
 ;     addFrom := "" ; add from which template pms booking(get from module ui)
 ;     comment := "" ; varies depends on agents, roomtypes and bbfs.
 
