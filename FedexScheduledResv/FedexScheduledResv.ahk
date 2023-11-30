@@ -1,5 +1,5 @@
 ; #Include "%A_ScriptDir\utils.ahk%"
-#Include "../utils.ahk"
+#Include "./utils.ahk"
 
 FsrMain() {
 	WinMaximize "ahk_class SunAwtFrame"
