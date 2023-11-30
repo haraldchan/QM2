@@ -349,7 +349,7 @@ RH_Agoda(infoObj, addFromConf) {
 
 commonEntries(infoObj, roomTypeModded, comment) {
     pmsCiDate := FormatTime(infoObj["ciDate"], "MMddyyyy")
-    pmsCoDate := FormatTime(infoObj["ciDate"], "MMddyyyy")
+    pmsCoDate := FormatTime(infoObj["coDate"], "MMddyyyy")
 
     dateTimeEntry() {
         MouseMove 332, 336
