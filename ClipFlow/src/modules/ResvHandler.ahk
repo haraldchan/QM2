@@ -77,5 +77,7 @@ class ResvHandler {
                 RH_Fedex(bookingInfoObj)
             default:
         }
+        Sleep 500
+        MsgBox("已完成录入，请核对。", ResvHandler.popupTitle, "T3 4096")
     }
 }
