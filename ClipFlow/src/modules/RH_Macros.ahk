@@ -95,7 +95,7 @@ RH_Fedex(infoObj) {
         if (infoObj["resvType"] = "ADD") {
             comment := Format("RM INCL 1BBF TO CO,Hours@Hotel: {1}={2}day(s), ActualStay: {3}-{4}", infoObj["stayHours"], infoObj["daysActual"], infoObj["ciDate"], infoObj["coDate"])
         } else {
-            ; TODO: action: copy
+            ; TODO: action: copy current comment
             MouseMove 622, 576
             Sleep 200
             Click "Down"
