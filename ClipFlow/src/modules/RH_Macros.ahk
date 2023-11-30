@@ -1,3 +1,4 @@
+; FedEx WIP
 RH_Fedex(infoObj) {
     pmsCiDate := (StrSplit(infoObj["ETA"], ":")[1]) < 10
         ? DateAdd(infoObj["ciDate"], -1, "days")
@@ -313,6 +314,59 @@ RH_Fedex(infoObj) {
     }
 }
 
+; Kingsley WIP
+RH_Kingsley(infoObj, addFromConf) {
+    roomTypeRef := Map([
+        "标准大床房", "SKC",
+        "标准双床房", "STC",
+        "豪华城景大床房", "DKC",
+        "豪华城景双床房", "DTC",
+        "豪华江景大床房", "DKR",
+        "豪华江景双床房", "DTR"
+        "行政豪华城景大床房", "CKC",
+        "行政豪华城景双床房", "CTC",
+        "行政豪华江景大床房", "CKR",
+        "行政豪华江景双床房", "CTR"
+        "行政尊贵套房", "CSK"
+    ])
+    roomType := ""
+    for k, v in roomTypeRef {
+        if (infoObj["roomType"] = k) {
+            roomType := v
+        }
+    }
+    addFrom := addFromConf
+    breakfastType := (SubStr(roomType, 1, 1) = "C") ? "CBF" : "BBF"
+    breakfastQty := infoObj["bbf"][1]
+    comment := (breakfastQty = 0)
+        ? "RM TO TA"
+        : Format("RM INCL {1}{2} TO TA", breakfastQty, breakfastType)
+    pmsGuestNames := []
+    loop infoObj["guestNames"] {
+        curGuestName := infoObj["guestNames"][A_Index]
+        if (RegExMatch(curGuestName, "^[a-zA-Z/]+$") > 0) {
+            ; if it only includes English alphabet, push [lastName, firstName]
+            pmsGuestNames.Push(StrSplit(curGuestName, "/"))
+        } else {
+            pmsGuestNames.Push([
+                getFullnamePinyin(curGuestName)[1], ; lastName pinyin
+                getFullnamePinyin(curGuestName)[2], ; firstName pinyin
+                curGuestName, ; hanzi-name
+            ])
+        }
+    }
+
+    ; TODO: add-on new booking from addFrom booking
+    ; TODO: open the booking, fill-in profile
+    profileEntry(pmsGuestNames[1])
+    Sleep 1000
+    commonEntries(infoObj, roomType, comment)
+    Sleep 1000
+    ; TODO: close and save
+    ; TODO: if roomQty > 1, split and fill-in other names
+}
+
+; Agoda WIP
 RH_Agoda(infoObj, addFromConf) {
     roomTypeRef := Map([
         "Standard Room - Queen bed", "SKC",
@@ -333,8 +387,8 @@ RH_Agoda(infoObj, addFromConf) {
         }
     }
 
-    bbf := (roomType = "CKC" || roomType = "CKR") ? "CBF" : "BBF"
-    comment := Format("ROOM INCL {1}{2} PAY BY AGODA", infoObj["bbf"][1], bbf)
+    breakfastType := (roomType = "CKC" || roomType = "CKR") ? "CBF" : "BBF"
+    comment := Format("ROOM INCL {1}{2} PAY BY AGODA", infoObj["bbf"][1], breakfastType)
 
     profileEntry(lastName, firstName) {
         ;TODO: action: open profile, new profile, fill-in first and last name, then save
@@ -347,9 +401,37 @@ RH_Agoda(infoObj, addFromConf) {
     }
 }
 
+profileEntry(guestName) {
+    WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
+    CoordMode "Mouse", "Screen"
+    BlockInput true
+    ; TODO: action: new profile.
+    MouseMove 433, 283
+    Click 3
+    Send Format("{Text}{1}", guestName[1])
+    Sleep 10
+    MouseMove 393, 307
+    Click 3
+    Send Format("{Text}{1}", guestName[2])
+    Sleep 10
+    if (guestName.Length = 3) {
+        MouseMove 429, 214
+        Click 3
+        Sleep 10
+        Send Format("{Text}{1}", guestName[3])
+        Sleep 10
+    }
+    ; TODO: action: save this profile.
+}
+
+; commonEntries WIP
 commonEntries(infoObj, roomTypeModded, comment) {
     pmsCiDate := FormatTime(infoObj["ciDate"], "MMddyyyy")
     pmsCoDate := FormatTime(infoObj["coDate"], "MMddyyyy")
+
+    roomQtyEntry(roomQty) {
+        ; TODO: fill-in roomQty
+    }
 
     dateTimeEntry() {
         MouseMove 332, 336
@@ -463,6 +545,8 @@ commonEntries(infoObj, roomTypeModded, comment) {
     }
 
     dateTimeEntry()
+    Sleep 1000
+    roomQtyEntry(infoObj["roomQty"])
     Sleep 1000
     commentOrderIdEntry(infoObj["orderId"], comment)
     Sleep 1000
