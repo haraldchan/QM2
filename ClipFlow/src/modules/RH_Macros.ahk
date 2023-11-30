@@ -312,3 +312,169 @@ RH_Fedex(infoObj) {
         addModification(infoObj)
     }
 }
+
+RH_Agoda(infoObj, addFromConf) {
+    roomTypeRef := Map([
+        "Standard Room - Queen bed", "SKC",
+        "Standard Room - Twin Bed", "STC",
+        "Deluxe City View with King Bed", "DKC",
+        "Deluxe City View Twin Bed", "DTC",
+        "Deluxe River View King Bed", "DKR"
+        "Deluxe River View Twin Bed", "DTR",
+        "Club Deluxe City View", "CKC",
+        "Club Deluxe River View Room", "CKR",
+        "Club Premier Suite", "CPK",
+    ])
+    roomType := ""
+    for k, v in roomTypeRef {
+        if (infoObj["roomType"] = k) {
+            roomType := v
+        }
+    }
+
+    profileEntry(infoObj) {
+        ;TODO: action: open profile, new profile, fill-in first and last name, then save
+    }
+
+
+}
+
+commonEntries(infoObj, roomTypeModded, comment) {
+    pmsCiDate := FormatTime(infoObj["ciDate"], "MMddyyyy")
+    pmsCoDate := FormatTime(infoObj["ciDate"], "MMddyyyy")
+
+    dateTimeEntry() {
+        MouseMove 332, 336
+        Sleep 1000
+        Click "Down"
+        MouseMove 178, 340
+        Sleep 300
+        Click "Up"
+        MouseMove 172, 340
+        Sleep 300
+        Send Format("{Text}{1}", pmsCiDate)
+        Sleep 100
+        MouseMove 325, 378
+        Sleep 300
+        Click
+        Sleep 300
+        MouseMove 661, 523
+        Sleep 300
+        Click
+        MouseMove 636, 523
+        Sleep 300
+        Click
+        MouseMove 635, 523
+        Sleep 300
+        Click
+        Sleep 300
+        Click
+        Sleep 300
+        MouseMove 335, 385
+        Sleep 300
+        Click "Down"
+        MouseMove 182, 389
+        Sleep 300
+        Click "Up"
+        MouseMove 207, 395
+        Sleep 300
+        Send Format("{Text}{1}", pmsCoDate)
+        Sleep 300
+        ; }
+        MouseMove 294, 577
+        Sleep 200
+        Click
+        Sleep 200
+        Send "{Enter}"
+        Sleep 200
+        Send "{Enter}"
+        Sleep 200
+        Send "{Enter}"
+        Sleep 200
+        MouseMove 320, 577
+        Sleep 2000
+    }
+
+    commentOrderIdEntry(orderId, comment) {
+        ; fill-in comment
+        Sleep 100
+        MouseMove 622, 576
+        Sleep 200
+        Click "Down"
+        MouseMove 1140, 585
+        Sleep 200
+        Click "Up"
+        Sleep 200
+        Send Format("{Text}{1}", comment)
+        Sleep 200
+        ; fill-in orderId
+        Sleep 200
+        MouseMove 839, 535
+        Sleep 100
+        Click "Down"
+        MouseMove 1107, 543
+        Sleep 200
+        Click "Up"
+        Sleep 200
+        Send Format("{Text}{1}", orderId)
+    }
+
+    roomRatesEntry(roomRates, bbf) {
+        MouseMove 372, 504
+        Sleep 300
+        Click
+        Sleep 300
+        Send "!d"
+        Sleep 300
+        loop roomRates.Length {
+            Send Format("{Text}{1}", infoObj["roomRate"][A_Index])
+            Send "{Down}"
+            Sleep 200
+            ; TODO: action: set bbf if included
+        }
+        MouseMove 728, 548
+        Sleep 300
+        Send "!o"
+        Sleep 300
+        MouseMove 542, 453
+        Sleep 300
+        Click
+        MouseMove 644, 523
+        Sleep 300
+        Click
+        Sleep 300
+        ; }
+        Sleep 2000
+        ; { close, save, down to the next one
+        Send "!o"
+        Sleep 5000
+        Send "!o"
+        Sleep 1000
+        Send "{Down}"
+        Sleep 2000
+    }
+}
+
+
+; standard RH_Macros template:
+; RH_Agent(infoObj, addFromConf) {
+;     roomTypeRef := Map([])
+;     roomType := ""
+;     for k, v in roomTypeRef {
+;         if (infoObj["roomType"] = k) {
+;             roomType := v
+;         }
+;     } 
+;     addFrom := "" ; add from which template pms booking(get from module ui)
+;     comment := "" ; varies depends on agents, roomtypes and bbfs.
+
+;     ; private guest names handler
+;     ; should return something like [lastName, firstName, hanziName]
+;     ; regex : ^[\u4e00-\u9fa5，。；：“”‘’！？、《》（）&#8203;``【oaicite:1】``&#8203;]+$
+
+
+;     loop infoObj["roomQty"] {
+;         Sleep 1000
+;         commonEntries(infoObj, roomType, comment)
+;     }
+; }
