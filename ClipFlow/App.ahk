@@ -186,7 +186,7 @@ loadAsFlow(*) {
 ; }
 
 ; hotkeys
-; F12::cleanReload()
+F12::cleanReload()
 Pause:: ClipFlow.Show()
 #Hotif WinActive(popupTitle)
 Esc:: ClipFlow.Hide()
