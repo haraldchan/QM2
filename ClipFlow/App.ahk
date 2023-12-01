@@ -10,7 +10,7 @@
 CoordMode "Mouse", "Screen"
 TraySetIcon A_ScriptDir . "\src\assets\CFTray.ico"
 OnClipboardChange addToHistory
-modules := [ProfileModify, InvoiceWechat, ShareClip, ResvHandler]
+modules := [ProfileModify, InvoiceWechat, ShareClip,ResvHandler]
 version := "0.0.1"
 popupTitle := "ClipFlow " . version
 if (FileExist(A_MyDocuments . "\ClipFlow.ini")) {
@@ -19,10 +19,14 @@ if (FileExist(A_MyDocuments . "\ClipFlow.ini")) {
     FileCopy A_ScriptDir . "\src\lib\ClipFlow.ini", A_MyDocuments
     store := A_MyDocuments . "\ClipFlow.ini"
 }
-Sleep 100 ;wait for store
-clipHisArr := strToArr(IniRead(store, "ClipHistory", "clipHisArr"))
-flowArr := strToArr(IniRead(store, "Flow", "flowArr"))
-flowPointer := 1
+Sleep 100
+; clipHisArr := strToArr(IniRead(store, "ClipHistory", "clipHisArr"))
+; flowArr := strToArr(IniRead(store, "Flow", "flowArr"))
+
+clipHisObj := IniRead(store, "ClipHistory", "clipHisArr")
+clipHisArr := Jxon_Load(&clipHisObj)
+
+; flowPointer := 1
 isFlowCopying := false
 isFlowPasting := false
 onTop := false
@@ -31,6 +35,7 @@ onTop := false
 ; { GUI template
 ClipFlow := Gui(, popupTitle)
 ClipFlow.OnEvent("Close", quitApp)
+
 ; ClipFlow.AddText(, "~~When Flowing, press Esc to Unflow~~")
 ClipFlow.AddCheckbox("h25 x15", "Keep ClipFlow On Top").OnEvent("Click", keepOnTop)
 ; ClipFlow.AddButton("Disabled h25 w85", "Flow Start").OnEvent("Click", flowStart)
@@ -67,7 +72,7 @@ keepOnTop(*) {
     WinSetAlwaysOnTop onTop, popupTitle
 }
 
-addToHistory(*) {
+addToHistory(*){
     if (A_Clipboard = "") {
         return
     }
@@ -75,10 +80,7 @@ addToHistory(*) {
         clipHisArr.Pop()
     }
     clipHisArr.InsertAt(1, A_Clipboard)
-    IniWrite(arrToStr(clipHisArr), store, "ClipHistory", "clipHisArr")
-    if (isFlowCopying) {
-        flowAdd()
-    }
+    IniWrite(Jxon_Dump(clipHisArr), store, "ClipHistory", "clipHisArr")
 }
 
 clearList(*) {
