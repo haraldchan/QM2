@@ -2,7 +2,8 @@
 #Include "../../App.ahk"
 #Include "../lib/utils.ahk"
 #Include "../lib/_JXON.ahk"
-#Include "./RH_Macros.ahk"
+#Include "./RH_Macros/RH_Fedex.ahk"
+#Include "./RH_Macros/RH_OTA.ahk"
 
 class ResvHandler {
     static name := 'Resv Handler'
