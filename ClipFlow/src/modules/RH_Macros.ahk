@@ -1,4 +1,6 @@
 ; FedEx WIP
+;KNOWN ISSUE: when modifying daily detail, error popup needs to handle
+; WIP: CHANGE
 RH_Fedex(infoObj) {
     pmsCiDate := (StrSplit(infoObj["ETA"], ":")[1]) < 10
         ? DateAdd(infoObj["ciDate"], -1, "days")
@@ -10,54 +12,80 @@ RH_Fedex(infoObj) {
     schdCoDate := FormatTime(infoObj["ciDate"], "MMddyyyy")
     pmsCiDate := FormatTime(pmsCiDate, "MMddyyyy")
     pmsCoDate := FormatTime(pmsCoDate, "MMddyyyy")
-
-
+    ; worked
     profileEntry(infoObj) {
         crewName := StrSplit(infoObj["crewNames"][A_Index], " ")
         ;TODO: action: open profile, new profile, fill-in first and last name, then save
+        Sleep 2000
+        MouseMove 471, 217
+        Click
+        Sleep 3000
+        Send "!n"
+        Sleep 100
+        MouseMove 432, 285
+        Sleep 10
+        Click 3
+        Sleep 10
+        Send Format("{Text}{1}", crewName[2])
+        MouseMove 399, 312
+        Sleep 10
+        Click 3
+        Sleep 10
+        Send Format("{Text}{1}", crewName[1])
+        Sleep 10
+        Send "!o"
+        Sleep 10000
     }
-
-    dateTimeEntry(infoObj) {
-        MouseMove 332, 336
+    ; worked
+    dateTimeRateCodeEntry(infoObj) {
+        MouseMove 323, 506
+        Sleep 100
+        Click
+        Sleep 100
+        Send "{Text}FEDEXN"
+        Sleep 100
+        Send "{Tab}"
+        Sleep 100
+        MouseMove 332, 356
         Sleep 1000
         Click "Down"
-        MouseMove 178, 340
+        MouseMove 178, 360
         Sleep 300
         Click "Up"
-        MouseMove 172, 340
+        MouseMove 172, 360
         Sleep 300
         Send Format("{Text}{1}", pmsCiDate)
         Sleep 100
-        MouseMove 325, 378
+        MouseMove 325, 398
         Sleep 300
         Click
         Sleep 300
-        MouseMove 661, 523
+        MouseMove 661, 543
         Sleep 300
         Click
-        MouseMove 636, 523
+        MouseMove 636, 543
         Sleep 300
         Click
-        MouseMove 635, 523
-        Sleep 300
-        Click
+        MouseMove 635, 543
         Sleep 300
         Click
         Sleep 300
-        MouseMove 335, 385
+        Click
+        Sleep 300
+        MouseMove 335, 405
         Sleep 300
         Click "Down"
-        MouseMove 182, 389
+        MouseMove 182, 409
         Sleep 300
         Click "Up"
-        MouseMove 207, 395
+        MouseMove 207, 415
         Sleep 300
         Send Format("{Text}{1}", pmsCoDate)
         Sleep 300
         ; }
         Sleep 2000
         ; { fill in ETA & ETD
-        MouseMove 294, 577
+        MouseMove 294, 597
         Sleep 200
         Click
         Sleep 200
@@ -67,19 +95,19 @@ RH_Fedex(infoObj) {
         Sleep 200
         Send "{Enter}"
         Sleep 200
-        MouseMove 320, 577
+        MouseMove 320, 597
         Sleep 200
         Click "Down"
-        MouseMove 200, 577
+        MouseMove 200, 597
         Sleep 200
         Click "Up"
         Sleep 200
         Send Format("{Text}{1}", infoObj["ETA"])
         Sleep 200
-        MouseMove 499, 577
+        MouseMove 499, 597
         Sleep 200
         Click "Down"
-        MouseMove 330, 574
+        MouseMove 330, 594
         Sleep 200
         Click "Up"
         Sleep 200
@@ -88,18 +116,18 @@ RH_Fedex(infoObj) {
         ; }
         Sleep 200
     }
-
-    commentEntry(infoObj) {
+    ; worked
+    commentTripNumEntry(infoObj) {
         ; set comment
         comment := ""
         if (infoObj["resvType"] = "ADD") {
             comment := Format("RM INCL 1BBF TO CO,Hours@Hotel: {1}={2}day(s), ActualStay: {3}-{4}", infoObj["stayHours"], infoObj["daysActual"], infoObj["ciDate"], infoObj["coDate"])
         } else {
             ; TODO: action: copy current comment
-            MouseMove 622, 576
+            MouseMove 622, 596
             Sleep 200
             Click "Down"
-            MouseMove 1140, 585
+            MouseMove 1140, 605
             Sleep 200
             Click "Up"
             Sleep 200
@@ -109,10 +137,10 @@ RH_Fedex(infoObj) {
         }
         ; fill-in comment
         Sleep 100
-        MouseMove 622, 576
+        MouseMove 622, 596
         Sleep 200
         Click "Down"
-        MouseMove 1140, 585
+        MouseMove 1140, 605
         Sleep 200
         Click "Up"
         Sleep 200
@@ -120,162 +148,207 @@ RH_Fedex(infoObj) {
         Sleep 200
         ; fill-in new flight and trip
         Sleep 200
-        MouseMove 839, 535
+        MouseMove 839, 555
         Sleep 100
         Click "Down"
-        MouseMove 1107, 543
+        MouseMove 1107, 563
         Sleep 200
         Click "Up"
         Sleep 200
         Send Format("{Text}{1}  {2}", infoObj["flightIn"], infoObj["tripNum"])
+        Sleep 200
+        ; fill-in tracking
+        MouseMove 930, 506
+        Sleep 200
+        Click 3
+        Sleep 200
+        Send Format("{Text}{1}", infoObj["tracking"])
     }
-
+    ; worked
     moreFieldsEntry(infoObj) {
-        MouseMove 236, 313
+        MouseMove 236, 333
         Sleep 100
         Click
         Sleep 100
-        MouseMove 686, 439
+        MouseMove 686, 459
         Sleep 200
         Click "Down"
-        MouseMove 478, 439
+        MouseMove 478, 459
         Sleep 100
         Click "Up"
         Sleep 100
         Send Format("{Text}{1}", infoObj["flightIn"])
         Sleep 100
-        MouseMove 672, 483
+        MouseMove 672, 503
         Sleep 281
         Click "Down"
-        MouseMove 523, 483
+        MouseMove 523, 503
         Sleep 358
         Click "Up"
         Send Format("{Text}{1}", schdCiDate)
         Sleep 100
-        MouseMove 685, 506
+        MouseMove 685, 526
         Sleep 100
         Click "Down"
-        MouseMove 422, 501
+        MouseMove 422, 521
         Sleep 100
         Click "Up"
         Send Format("{Text}{1}", infoObj["ETA"])
         Sleep 100
-        MouseMove 922, 441
+        MouseMove 922, 461
         Sleep 100
         Click "Down"
-        MouseMove 704, 439
+        MouseMove 704, 459
         Sleep 100
         Click "Up"
         Send Format("{Text}{1}", infoObj["flightOut"])
         Sleep 100
-        MouseMove 917, 483
+        MouseMove 917, 503
         Sleep 100
         Click "Down"
-        MouseMove 637, 487
+        MouseMove 637, 507
         Sleep 100
         Click "Up"
         Sleep 100
         Send Format("{Text}{1}", schdCoDate)
         Sleep 100
-        MouseMove 922, 504
+        MouseMove 922, 524
         Sleep 100
         Click "Down"
-        MouseMove 640, 503
+        MouseMove 640, 523
         Sleep 100
         Click "Up"
         Sleep 100
         Send Format("{Text}{1}", infoObj["ETD"])
         Sleep 100
-        MouseMove 841, 660
+        MouseMove 841, 680
         Sleep 100
         Click
         Sleep 2000
     }
-
+    ; WIP
     dailyDetailsEntry(infoObj) {
-        MouseMove 372, 504
+        MouseMove 372, 524
         Sleep 300
         Click
-        Sleep 300
+        Sleep 1000
         Send "!d"
-        Sleep 300
+        Sleep 3000
         loop infoObj["daysActual"] {
-            Send Format("{Text}{1}", infoObj["roomRate"][1])
             Send "{Down}"
             Sleep 200
         }
-        if (infoObj["daysActual"] != pmsNts) {
-            Send "0"
-            Sleep 200
-            MouseMove 618, 485
-            Sleep 200
-            Send "!e"
-            Sleep 200
-            loop 4 {
-                Send "{Tab}"
-                Sleep 100
-            }
-            Send "{Text}NRR"
-            Sleep 100
-            MouseMove 418, 377
-            Sleep 100
-            Send "!o"
-            Sleep 200
-            loop 3 {
-                Send "{Escape}"
-                Sleep 200
-            }
-            Send "!o"
-            Sleep 1500
-            Send "{Space}"
-            Sleep 200
+        Send "0"
+        Sleep 200
+        MouseMove 618, 505
+        Sleep 200
+        Send "!e"
+        Sleep 200
+        loop 4 {
+            Send "{Tab}"
+            Sleep 500
         }
-        MouseMove 728, 548
+        Send "{Text}NRR"
+        Sleep 500
+        MouseMove 418, 397
+        Sleep 500
+        Send "!o"
+        Sleep 500
+        loop 3 {
+            Send "{Escape}"
+            Sleep 500
+        }
+        Send "!o"
+        Sleep 1500
+        Send "{Space}"
+        Sleep 500
+
+        MouseMove 728, 568
         Sleep 300
         Send "!o"
         Sleep 300
-        MouseMove 542, 453
+        MouseMove 542, 473
         Sleep 300
         Click
-        MouseMove 644, 523
+        MouseMove 644, 543
         Sleep 300
         Click
         Sleep 300
         ; }
         Sleep 2000
-        ; { close, save, down to the next one
-        Send "!o"
-        Sleep 5000
-        Send "!o"
-        Sleep 1000
-        Send "{Down}"
-        Sleep 2000
     }
-
+    ; worked
     addModification(infoObj) {
-        addFrom := InputBox("请指定需要从哪个 Block Add-On? (请输入 BlockCode )", "Reservation Handler", , A_Year . A_MM . A_MDay . "FEDEX")
+        addFrom := InputBox("请指定需要从哪个 Block Add-On? (请输入 BlockCode )", "Reservation Handler", , SubStr(A_YYYY, 3, 4) . A_MM . A_MDay . "FEDEX")
         if (addFrom.Result = "Cancel") {
             cleanReload()
         }
 
         loop infoObj["roomQty"] {
-            if (A_Index = infoObj["roomQty"]) {
+            if (A_Index > infoObj["roomQty"]) {
                 MsgBox("已完成所有新增。")
                 return
+            } else {
+                ; TODO: action: adds on from a block pm(by using addFrom.Value), then open it.
+                Sleep 1000
+                Send "!r"
+                Sleep 100
+                Send "u"
+                Sleep 3000
+                Loop 8 {
+                    Send "{Tab}"
+                    Sleep 100
+                }
+                Send addFrom.Value
+                Sleep 100
+                Loop 4 {
+                    Send "{Tab}"
+                    Sleep 100
+                }
+                Send "{Delete}"
+                Sleep 10
+                Send "!h"
+                Sleep 10
+                Send "!t"
+                Sleep 10
+                Send "!o"
+                Send "{Text}DKC"
+                Sleep 10
+                Send "!o"
+                Sleep 10
+                Send "{Left}"
+                Sleep 10
+                Send "{Enter}"
+                Sleep 4000
+                Send "{Esc}"
+                Sleep 2500
+
+                profileEntry(infoObj)
+                Sleep 1000
+                dateTimeRateCodeEntry(infoObj)
+                Sleep 1000
+                commentTripNumEntry(infoObj)
+                Sleep 1000
+                moreFieldsEntry(infoObj)
+                Sleep 1000
+                if (infoObj["daysActual"] != pmsNts) {
+                    dailyDetailsEntry(infoObj)
+                    Sleep 1000
+                }
+                Send "!o"
+                Sleep 5000
+                Send "{Enter}"
+                ; TODO: action: close and save the reservation.
+                Sleep 5000
+                Loop 5 {
+                    Send "!c"
+                    Sleep 100
+                }
+                Loop 2 {
+                    Send "{Esc}"
+                    Sleep 100
+                }            
             }
-            ; TODO: action: adds on from a block pm(by using addFrom.Value), then open it.
-            profileEntry(infoObj)
-            Sleep 1000
-            dateTimeEntry(infoObj)
-            Sleep 1000
-            commentEntry(infoObj)
-            Sleep 1000
-            moreFieldsEntry(infoObj)
-            Sleep 1000
-            dailyDetailsEntry(infoObj)
-            Sleep 1000
-            ; TODO: action: close and save the reservation.
-            Sleep 1000
         }
     }
 
@@ -292,9 +365,9 @@ RH_Fedex(infoObj) {
             }
             profileEntry(infoObj)
             Sleep 1000
-            dateTimeEntry(infoObj)
+            dateTimeRateCodeEntry(infoObj)
             Sleep 1000
-            commentEntry(infoObj)
+            commentTripNumEntry(infoObj)
             Sleep 1000
             moreFieldsEntry(infoObj)
             Sleep 1000
@@ -302,7 +375,6 @@ RH_Fedex(infoObj) {
             Sleep 1000
             ; TODO: action close and save the reservation.
             Sleep 1000
-
         }
     }
 
