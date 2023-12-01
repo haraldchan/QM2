@@ -15,10 +15,10 @@ class ResvHandler {
     )"
 
     static USE(App) {
-        OnClipboardChange this.saveAddOnJson
+        OnClipboardChange(() => this.saveAddOnJson(App))
         ui := [
             App.AddGroupBox("R6 w250 y+20", this.title),
-            App.AddText("xp+10", this.desc),
+            ; App.AddText("xp+10", this.desc),
             ; TODO: add template reservations and its setting here
             ; list view or just text+edit?
             App.AddButton("vstartBtn Default h35 w230 y+15", "开始录入预订"),
@@ -26,10 +26,10 @@ class ResvHandler {
 
         startBtn := getCtrlByName("start", ui)
 
-        startBtn.OnEvent("Click", this.modifyReservation)
+        startBtn.OnEvent("Click", (*) => this.modifyReservation())
     }
 
-    static saveAddOnJson() {
+    static saveAddOnJson(App) {
         if (!InStr(A_Clipboard, '"header":"RH"')) {
             return
         }
@@ -39,11 +39,11 @@ class ResvHandler {
         for k, v in bookingInfoObj {
             if (IsObject(v)) {
                 if (k = "contacts") {
-                    try { 
-                        outputVal := "电话：" . v["phone"] . " " . "邮箱：" . v["email"] 
-                        } catch {
-                            outputVal := ""
-                        }
+                    try {
+                        outputVal := "电话：" . v["phone"] . " " . "邮箱：" . v["email"]
+                    } catch {
+                        outputVal := ""
+                    }
                 } else {
                     outputVal := arrToStr(v)
                 }
@@ -64,6 +64,8 @@ class ResvHandler {
         if (toOpera = "OK") {
             try {
                 WinActivate "ahk_class SunAwtFrame"
+                App.Hide()
+                ResvHandler.modifyReservation()
             } catch {
                 MsgBox("请先打开 Opera 窗口。", ResvHandler.popupTitle)
             }
@@ -73,7 +75,7 @@ class ResvHandler {
     static modifyReservation() {
         bookingInfo := IniRead(store, "ResvHandler", "JSON")
         bookingInfoObj := Jxon_Load(&bookingInfo)
-        switch bookingInfoObj["agent"]{
+        switch bookingInfoObj["agent"] {
             case "fedex":
                 RH_Fedex(bookingInfoObj)
             default:
