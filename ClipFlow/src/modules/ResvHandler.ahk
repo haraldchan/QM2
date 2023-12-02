@@ -30,11 +30,11 @@ class ResvHandler {
             App.AddEdit("vagoda x+10 h20", this.resvTempObj.agoda),
             App.AddButton("vstartBtn Default h35 w230 y+15", "开始录入预订"),
         ]
-        
-        startBtn := getCtrlByName("start", ui)
-        kingsley := getCtrlByName("kingsley", ui)
-        agoda := getCtrlByName("agoda", ui)
-        tempEdits := getCtrlByTypeAll("Edit", ui)
+
+        startBtn := Interface.getCtrlByName("start", ui)
+        kingsley := Interface.getCtrlByName("kingsley", ui)
+        agoda := Interface.getCtrlByName("agoda", ui)
+        tempEdits := Interface.getCtrlByTypeAll("Edit", ui)
 
         startBtn.OnEvent("Click", (*) => this.modifyReservation())
         for edit in tempEdits {
@@ -64,14 +64,15 @@ class ResvHandler {
                         outputVal := ""
                     }
                 } else {
-                    outputVal := arrToStr(v)
+                    outputVal := Jxon_Dump(&v)
                 }
             } else {
-                outputVal := ""
-                loop v.Length {
-                    outputVal .= v[A_Index] . "，"
-                }
-                outputVal := SubStr(outputVal, 1, StrLen(outputVal)-1)
+                ; outputVal := ""
+                ; loop v.Length {
+                ;     outputVal .= v[A_Index] . "，"
+                ; }
+                ; outputVal := SubStr(outputVal, 1, StrLen(outputVal) - 1)
+                outputVal := v
             }
             popupInfo .= Format("{1}：{2}`n", k, outputVal)
         }
