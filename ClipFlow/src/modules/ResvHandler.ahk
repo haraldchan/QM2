@@ -1,18 +1,21 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-#Include "../../App.ahk"
+; #Include "%A_ScriptDir%\src\lib\_JXON.ahk"
+; #Include "%A_ScriptDir%\src\lib\RH_Macros\RH_Fedex.ahk"
+; #Include "%A_ScriptDir%\src\lib\RH_Macros\RH_OTA.ahk"
+; #Include "../../App.ahk"
 #Include "../lib/utils.ahk"
 #Include "../lib/_JXON.ahk"
 #Include "./RH_Macros/RH_Fedex.ahk"
 #Include "./RH_Macros/RH_OTA.ahk"
 
 class ResvHandler {
-    static name := 'Resv Handler'
+    static name := 'Reservation Handler'
     static title := "Flow Mode - " . this.name
     static popupTitle := "ClipFlow - " . this.name
-    static desc := "
-    (
-        点击按键开始
-    )"
+    static desc := ""
+
+    resvTemp := IniRead(store, "ResvHandler", "ResvTemplates")
+    static resvTempObj := Jxon_Load(&resvTemp)
 
     static USE(App) {
         OnClipboardChange(() => this.saveAddOnJson(App))
@@ -20,13 +23,28 @@ class ResvHandler {
             App.AddGroupBox("R6 w250 y+20", this.title),
             ; App.AddText("xp+10", this.desc),
             ; TODO: add template reservations and its setting here
-            ; list view or just text+edit?
+            App.AddText("xp10 yp+10 h20", "奇利模板"),
+            App.AddEdit("vkingsley x+10 h20", this.resvTempObj.kingsley),
+            App.AddText("xp10 yp+10 h20", "Agoda模板"),
+            App.AddEdit("vagoda x+10 h20", this.resvTempObj.agoda),
             App.AddButton("vstartBtn Default h35 w230 y+15", "开始录入预订"),
         ]
 
         startBtn := getCtrlByName("start", ui)
+        kingsley := getCtrlByName("kingsley", ui)
+        agoda := getCtrlByName("agoda", ui)
+        tempEdits := getCtrlByTypeAll("Edit", ui)
 
+        for edit in tempEdits {
+            edit.OnEvent("Change", (*) => saveTempConfirmation(edit))
+        }
         startBtn.OnEvent("Click", (*) => this.modifyReservation())
+
+        saveTempConfirmation(curEdit) {
+            curEditName := curEdit.Name
+            ResvHandler.resvTempObj[curEditName] := Trim(curEdit.Text)
+            IniWrite(Jxon_Dump(ResvHandler.resvTempObj), store, "ResvHandler", "ResvTemplates")
+        }
     }
 
     static saveAddOnJson(App) {
@@ -75,9 +93,12 @@ class ResvHandler {
     static modifyReservation() {
         bookingInfo := IniRead(store, "ResvHandler", "JSON")
         bookingInfoObj := Jxon_Load(&bookingInfo)
+
         switch bookingInfoObj["agent"] {
             case "fedex":
                 RH_Fedex(bookingInfoObj)
+            case "kingsley":
+                RH_Kingsley(bookingInfoObj, ResvHandler.resvTempObj.kingsley)
             default:
         }
         Sleep 500
