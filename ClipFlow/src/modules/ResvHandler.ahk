@@ -58,7 +58,7 @@ class ResvHandler {
         clb := A_Clipboard
         bookingInfoObj := Jxon_Load(&clb)
         for k, v in bookingInfoObj {
-            if (IsObject(v)) {
+            if (v is Array) {
                 if (k = "contacts") {
                     try {
                         outputVal := "电话：" . v["phone"] . " " . "邮箱：" . v["email"]
