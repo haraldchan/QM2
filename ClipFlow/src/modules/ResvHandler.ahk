@@ -67,7 +67,11 @@ class ResvHandler {
                     outputVal := arrToStr(v)
                 }
             } else {
-                outputVal := v
+                outputVal := ""
+                loop v.Length {
+                    outputVal .= v[A_Index] . "，"
+                }
+                outputVal := SubStr(outputVal, 1, StrLen(outputVal)-1)
             }
             popupInfo .= Format("{1}：{2}`n", k, outputVal)
         }

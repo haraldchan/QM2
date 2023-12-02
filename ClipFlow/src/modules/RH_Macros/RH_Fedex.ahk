@@ -282,7 +282,7 @@ RH_Fedex(infoObj) {
     addModification(infoObj) {
         addFrom := InputBox("请指定需要从哪个 Block Add-On? (请输入 BlockCode )", "Reservation Handler", , SubStr(A_YYYY, 3, 4) . A_MM . A_MDay . "FEDEX")
         if (addFrom.Result = "Cancel") {
-            cleanReload()
+            Utils.cleanReload(winGroup)
         }
 
         loop infoObj["roomQty"] {
@@ -362,7 +362,7 @@ RH_Fedex(infoObj) {
             nofitier := Format("待修改订单数量：{1}, 已完成{2}个。`n`n 请先打开需要修改的 Fedex 预订。", infoObj["roomQty"], A_Index)
             changeFrom := MsgBox(nofitier, "Reservation Handler", "OKCancel 4096")
             if (changeFrom.Result = "Cancel") {
-                cleanReload()
+                Utils.cleanReload(winGroup)
             }
             profileEntry(infoObj)
             Sleep 1000

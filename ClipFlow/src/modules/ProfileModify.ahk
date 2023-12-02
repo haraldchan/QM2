@@ -24,11 +24,15 @@ class ProfileModify {
 
     static USE(App) {
         ; GUI
-        App.AddGroupBox("R6 w250 y+20", this.title)
-        App.AddText("xp+10", this.desc)
-        copyBtn := App.AddButton("Default xp h35 w110 y+15", "开始复制")
-        pasteBtn := App.AddButton("Disabled xp+10 h35 w110 x+10 ", "开始填入")
-
+        ui := [
+            App.AddGroupBox("R6 w250 y+20", this.title),
+            App.AddText("xp+10", this.desc),
+            App.AddButton("vcopyBtn Default xp h35 w110 y+15", "开始复制"),
+            App.AddButton("vpasteBtn Disabled xp+10 h35 w110 x+10 ", "开始填入"),
+        ]
+        
+        copyBtn := Interface.getCtrlByName("copyBtn", ui)
+        pasteBtn := Interface.getCtrlByName("pasteBtn", ui)
         ; function
         copyBtn.OnEvent("Click", psbCopy)
         psbCopy(*) {
@@ -58,7 +62,7 @@ class ProfileModify {
             WinActivate "旅客信息"
         } catch {
             MsgBox("请先打开 旅客信息 窗口", this.popupTitle)
-            cleanReload()
+            Utils.cleanReload(winGroup)
         }
         checkGuestType := [PixelGetColor(464, 87), PixelGetColor(553, 87), PixelGetColor(649, 87)]
         loop checkGuestType.Length {

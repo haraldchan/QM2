@@ -10,7 +10,8 @@
 CoordMode "Mouse", "Screen"
 TraySetIcon A_ScriptDir . "\src\assets\CFTray.ico"
 OnClipboardChange addToHistory
-modules := [ProfileModify, InvoiceWechat, ShareClip,ResvHandler]
+winGroup := ["ahk_class SunAwtFrame", "旅客信息"]
+modules := [ProfileModify, InvoiceWechat, ShareClip, ResvHandler]
 version := "0.0.1"
 popupTitle := "ClipFlow " . version
 if (FileExist(A_MyDocuments . "\ClipFlow.ini")) {
@@ -34,7 +35,7 @@ onTop := false
 
 ; { GUI template
 ClipFlow := Gui(, popupTitle)
-ClipFlow.OnEvent("Close", quitApp)
+ClipFlow.OnEvent("Close", (*) => Utils.quitApp("ClipFlow", popupTitle, winGroup))
 
 ; ClipFlow.AddText(, "~~When Flowing, press Esc to Unflow~~")
 ClipFlow.AddCheckbox("h25 x15", "Keep ClipFlow On Top").OnEvent("Click", keepOnTop)
@@ -72,7 +73,7 @@ keepOnTop(*) {
     WinSetAlwaysOnTop onTop, popupTitle
 }
 
-addToHistory(*){
+addToHistory(*) {
     if (A_Clipboard = "") {
         return
     }
@@ -86,11 +87,11 @@ addToHistory(*){
 clearList(*) {
     FileDelete(store)
     FileCopy(A_ScriptDir . "\src\lib\ClipFlow.ini", A_MyDocuments)
-    cleanReload()
+    Utils.cleanReload(winGroup)
 }
 
 refresh(*) {
-    cleanReload()
+    Utils.cleanReload(winGroup)
 }
 
 moduleLoader(App) {
@@ -107,13 +108,13 @@ moduleLoader(App) {
     }
     ; load selected module
     modules[moduleSelected].USE(App)
-    
+
     ; check which module is selected, save it to ini, reload (swap to seleced module)
     saveSelect(*) {
         loop loadedModules.Length {
             if (loadedModules[A_Index].Value = 1) {
                 IniWrite(A_Index, store, "Module", "ModuleSelected")
-                cleanReload()
+                Utils.cleanReload(winGroup)
             }
         }
     }
@@ -143,52 +144,52 @@ renderHistory() {
 ;     }
 ; }
 
-flowStart(*) {
-    global isFlowCopying := !isFlowCopying
-    bgc := isFlowCopying ? "AEE9FF" : ""
-    ClipFlow.BackColor := bgc
-    global flowArr := []
-    if (isFlowCopying) {
-        flowing := MsgBox("Flowing! OK to end flow.", popupTitle, "OK 4096")
-        if (flowing = "OK") {
-            flowLoad()
-        }
-    }
-}
-; when flow turned on
-flowAdd() {
-    sleep 20
-    flowArr.Push(clipHisArr[1])
-}
-; when flow turned off
-flowLoad(*) {
-    global isFlowCopying := false
-    global isFlowPasting := true
-    A_Clipboard := ""
-    MsgBox("Flow loaded, ready to fire.", popupTitle, "4096 T1")
-    IniWrite(arrToStr(flowArr), store, "Flow", "flowArr")
-}
-
-; over-ride default ctrl+v behavior
-flowFire() {
-    if (flowPointer > flowArr.Length) {
-        isFlowPasting := false
-        global flowPointer := 1
-    }
-    Send flowArr[flowPointer]
-    flowPointer++
-}
-
-loadAsFlow(*) {
-    global flowArr := clipHisArr
-    flowLoad()
-}
+; flowStart(*) {
+;     global isFlowCopying := !isFlowCopying
+;     bgc := isFlowCopying ? "AEE9FF" : ""
+;     ClipFlow.BackColor := bgc
+;     global flowArr := []
+;     if (isFlowCopying) {
+;         flowing := MsgBox("Flowing! OK to end flow.", popupTitle, "OK 4096")
+;         if (flowing = "OK") {
+;             flowLoad()
+;         }
+;     }
+; }
+; ; when flow turned on
+; flowAdd() {
+;     sleep 20
+;     flowArr.Push(clipHisArr[1])
+; }
+; ; when flow turned off
+; flowLoad(*) {
+;     global isFlowCopying := false
+;     global isFlowPasting := true
+;     A_Clipboard := ""
+;     MsgBox("Flow loaded, ready to fire.", popupTitle, "4096 T1")
+;     IniWrite(arrToStr(flowArr), store, "Flow", "flowArr")
 ; }
 
+; ; over-ride default ctrl+v behavior
+; flowFire() {
+;     if (flowPointer > flowArr.Length) {
+;         isFlowPasting := false
+;         global flowPointer := 1
+;     }
+;     Send flowArr[flowPointer]
+;     flowPointer++
+; }
+
+; loadAsFlow(*) {
+;     global flowArr := clipHisArr
+;     flowLoad()
+; }
+; ; }
+
 ; hotkeys
-F12::cleanReload()
+F12:: Utils.cleanReload(winGroup)
 Pause:: ClipFlow.Show()
-#Hotif WinActive(popupTitle)
+; #Hotif WinActive(popupTitle)
 Esc:: ClipFlow.Hide()
 ; #HotIf isFlowPasting
 ; ~^v:: flowFire()

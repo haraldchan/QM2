@@ -39,11 +39,11 @@ class ShareClip {
             App.AddButton("vshowShareClipboardBtn " . "xp h32 w230 y+10", "打开 剪贴板"),
         ]
         ; get controls
-        clbListener := getCtrlByName("clbListener" , ui)
-        sendHistoryBtn := getCtrlByName("sendHistoryBtn", ui)
-        userInputText := getCtrlByName("userInputText", ui)
-        sendTextBtn := getCtrlByName("sendTextBtn", ui)
-        showShareClipboardBtn := getCtrlByName("showShareClipboardBtn", ui)
+        clbListener := Interface.getCtrlByName("clbListener" , ui)
+        sendHistoryBtn := Interface.getCtrlByName("sendHistoryBtn", ui)
+        userInputText := Interface.getCtrlByName("userInputText", ui)
+        sendTextBtn := Interface.getCtrlByName("sendTextBtn", ui)
+        showShareClipboardBtn := Interface.getCtrlByName("showShareClipboardBtn", ui)
 
         ; add events
         clbListener.OnEvent("Click", toggleListen)
@@ -58,7 +58,8 @@ class ShareClip {
         }
 
         sendHistory(*) {
-            clipHistory := strToArr(IniRead(store, "ClipHistory", "clipHisArr"))
+            his := IniRead(store, "ClipHistory", "clipHisArr")
+            clipHistory := Jxon_Load(&his)
             if (!clipHistory.Length) {
                 return
             }
@@ -88,7 +89,7 @@ class ShareClip {
     static listenAndSend() {
         this := ShareClip
         if (isListening = true) {
-            filePrepend(this.prefix . A_Clipboard . "`r`n`r`n", this.shareTxt)
+            Utils.filePrepend(this.prefix . A_Clipboard . "`r`n`r`n", this.shareTxt)
             MsgBox(this.prefix . A_Clipboard, this.popupTitle, "4096 T1")
         } else {
             return
@@ -100,12 +101,12 @@ class ShareClip {
         loop clipHisArr.Length {
             text .= clipHisArr[A_Index] . "`r`n"
         }
-        filePrepend(text . "`r`n`r`n", this.shareTxt)
+        Utils.filePrepend(text . "`r`n`r`n", this.shareTxt)
         return text
     }
 
     static sendUserInputText(userInput) {
-        filePrepend(this.prefix . userInput . "`r`n`r`n", this.shareTxt)
+        Utils.filePrepend(this.prefix . userInput . "`r`n`r`n", this.shareTxt)
         return this.prefix . userInput
     }
 
@@ -123,10 +124,10 @@ class ShareClip {
         shareCLB.Show()
         WinSetAlwaysOnTop true, "Share 剪贴板"
 
-        autoRefresher := getCtrlByName("autoRefresher", ui)
-        shareClipboard := getCtrlByName("shareClipboard", ui)
-        refreshBtn := getCtrlByName("refreshBtn", ui)
-        openShareClbBtn := getCtrlByName("openShareClbBtn", ui)
+        autoRefresher := Interface.getCtrlByName("autoRefresher", ui)
+        shareClipboard := Interface.getCtrlByName("shareClipboard", ui)
+        refreshBtn := Interface.getCtrlByName("refreshBtn", ui)
+        openShareClbBtn := Interface.getCtrlByName("openShareClbBtn", ui)
 
         autoRefresher.OnEvent("Click", toggleAutoRefresh)
         refreshBtn.OnEvent("Click", getUpdateSharedText)
