@@ -89,10 +89,10 @@ class Utils {
 
     static arrayEvery(fn, targetArray) {
         if (!(fn is Func)) {
-            throw TypeError(fn . " 必须是回调函数。")
+            throw TypeError(fn . " is not a Function Object.")
         }
         if (!(fn is Array)) {
-            throw TypeError(fn . " 必须是数组。")
+            throw TypeError(targetArray . " is not an Array")
         }
         loop targetArray.Length {
             if (!fn(targetArray[A_Index])) {
@@ -104,10 +104,10 @@ class Utils {
 
     static arrayFilter(fn, targetArray) {
         if (!(fn is Func)) {
-            throw TypeError(fn . " 必须是回调函数。")
+            throw TypeError(fn . " is not a Function Object.")
         }
         if (!(fn is Array)) {
-            throw TypeError(fn . " 必须是数组。")
+            throw TypeError(targetArray . " is not an Array")
         }
         newArray := []
         loop targetArray.Length {
