@@ -1,4 +1,3 @@
-
 ; getCtrlByName(vName, ctrlArray){
 ;     loop ctrlArray.Length {
 ;         if (vName = ctrlArray[A_Index].Name) {
@@ -87,6 +86,37 @@ class Utils {
         FileDelete fileToPrepend
         FileAppend textToInsert . textOrigin, fileToPrepend
     }
+
+    static arrayEvery(fn, targetArray) {
+        try {
+            loop targetArray.Length {
+                if (!fn(targetArray[A_Index])) {
+                    return false
+                }
+            }
+            return true
+        } catch {
+            MsgBox("参数输入有误！ `n`n参数1：回调函数`n 参数2：目标数组")
+        }
+    }
+    
+    static arrayFilter(fn, targetArray) {
+        try {
+            newArray := []
+            loop targetArray.Length {
+                if (fn(targetArray[A_Index])) {
+                    newArray.Push(targetArray[A_Index])
+                }
+            }
+            return newArray
+        } catch {
+            MsgBox("参数输入有误！ `n`n参数1：回调函数`n 参数2：目标数组")
+        }
+    }
+}
+Utils.arrayEvery((item) => item > 3, winGroup)
+fn(item){
+    return item > 3
 }
 
 class Interface {
@@ -97,7 +127,7 @@ class Interface {
             }
         }
     }
-    
+
     getCtrlByType(ctrlType, ctrlArray) {
         loop ctrlArray.Length {
             if (type = ctrlArray[A_Index].Type) {
@@ -105,7 +135,7 @@ class Interface {
             }
         }
     }
-    
+
     getCtrlByTypeAll(type, ctrlArray) {
         controls := []
         loop ctrlArray.Length {
@@ -114,5 +144,5 @@ class Interface {
             }
         }
         return controls
-    }    
+    }
 }
