@@ -1,22 +1,23 @@
 #Include "../../lib/DictIndex.ahk"
 class Entry {
     ; to-be-test
-    static profileEntry(guestName) {
+    static profileEntry(guestName, initX := 471, initY := 217) {
         BlockInput true
         WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
         CoordMode "Mouse", "Screen"
         Sleep 2000
-        MouseMove 471, 217
+        MouseMove initX, initY ;471, 217
         Click
         Sleep 3000
         Send "!n"
         Sleep 100
-        MouseMove 432, 285
+        MouseMove initX - 39, initY + 68 ;432, 285
         Sleep 10
         Click 3
         Sleep 10
         Send Format("{Text}{1}", guestName[1])
-        MouseMove 399, 312
+        Sleep 100
+        MouseMove initX - 72, initY + 95 ;399, 312
         Sleep 10
         Click 3
         Sleep 10
@@ -27,64 +28,64 @@ class Entry {
 
     }
     ; WIP
-    static splitNameEntry(guestNames) {
+    static splitNameEntry(guestNames, initX, initY) {
         ;TODO: action: split party
 
     }
     ; WIP
-    static roomQtyEntry(roomQty) {
+    static roomQtyEntry(roomQty, initX, initY) {
         ; TODO: fill-in roomQty
     }
     ; to-be-test
-    static dateTimeEntry(checkin, checkout) {
+    static dateTimeEntry(checkin, checkout, initX := 332, initY := 356) {
         pmsCiDate := FormatTime(checkin, "MMddyyyy")
         pmsCoDate := FormatTime(checkout, "MMddyyyy")
         Sleep 200
-        MouseMove 332, 356
+        MouseMove initX, initY ;332, 356
         Sleep 1000
         Click "Down"
-        MouseMove 178, 360
+        MouseMove initX - 154, initY + 4 ;178, 360
         Sleep 300
         Click "Up"
-        MouseMove 172, 360
+        MouseMove initX - 160, initY + 4 ;172, 360
         Sleep 300
         Send Format("{Text}{1}", pmsCiDate)
         Sleep 100
-        MouseMove 325, 398
+        MouseMove initX - 7, initY + 42 ;325, 398
         Sleep 300
         Click
         Sleep 300
-        MouseMove 661, 543
+        MouseMove initX + 329, initY + 187 ;661, 543
         Sleep 300
         Click
-        MouseMove 636, 543
+        MouseMove initX + 304, initY + 187 ;636, 543
         Sleep 300
         Click
-        MouseMove 635, 543
-        Sleep 300
-        Click
+        MouseMove initX + 303, initY + 187 ;635, 543
         Sleep 300
         Click
         Sleep 300
-        MouseMove 335, 405
+        Click
+        Sleep 300
+        MouseMove initX + 3, initY + 49 ;335, 405
         Sleep 300
         Click "Down"
-        MouseMove 182, 409
+        MouseMove initX - 150, initY + 53 ;182, 409
         Sleep 300
         Click "Up"
-        MouseMove 207, 415
+        MouseMove initX - 125, initY + 59 ;207, 415
         Sleep 300
         Send Format("{Text}{1}", pmsCoDate)
         Sleep 200
     }
     ; to-be-test
-    static commentOrderIdEntry(orderId, comment) {
+    static commentOrderIdEntry(orderId, comment, initX := 622, initY := 596) {
         ; fill-in comment
         Sleep 100
-        MouseMove 622, 596
+        MouseMove initX, initY ;622, 596
         Sleep 200
         Click "Down"
-        MouseMove 1140, 605
+        MouseMove initX + 518, initY + 9 ;1140, 605
         Sleep 200
         Click "Up"
         Sleep 200
@@ -92,10 +93,10 @@ class Entry {
         Sleep 200
         ; fill-in orderId
         Sleep 200
-        MouseMove 839, 555
+        MouseMove initX + 217, initY - 41 ;839, 555
         Sleep 100
         Click "Down"
-        MouseMove 1107, 563
+        MouseMove initX + 485, initY - 33 ;1107, 563
         Sleep 200
         Click "Up"
         Sleep 200
@@ -103,8 +104,8 @@ class Entry {
         Sleep 200
     }
     ; WIP
-    static roomRatesEntry(roomRates, bbf) {
-        MouseMove 372, 504
+    static roomRatesEntry(roomRates, initX := 372, initY := 504) {
+        MouseMove initX, initY ;372, 504
         Sleep 300
         Click
         Sleep 300
@@ -116,37 +117,37 @@ class Entry {
             Sleep 200
             ; TODO: action: set bbf if included
         }
-        MouseMove 728, 548
+        MouseMove initX + 356, initY + 44 ;728, 548
         Sleep 300
         Send "!o"
         Sleep 300
-        MouseMove 542, 453
-        Sleep 300
-        Click
-        MouseMove 644, 523
-        Sleep 300
-        Click
-        Sleep 300
-        ; }
-        Sleep 2000
-        ; { close, save, down to the next one
-        Send "!o"
-        Sleep 5000
-        Send "!o"
-        Sleep 1000
-        Send "{Down}"
+        ; ⬇️ maybe won't need it
+        ; MouseMove initX + 170, initY - 51 ;542, 453
+        ; Sleep 300
+        ; Click
+        ; MouseMove initX + 272, initY + 19 ;644, 523
+        ; Sleep 300
+        ; Click
         Sleep 2000
     }
 
-    ; 
-    static USE(infoObj, roomType, comment) {
+    static breakfastEntry(bbf, initX, initY) {
+        ;TODO: action: entry bbf package
+    }
+
+    ; the initX, initY for USE() should be top-left corner of current booking window
+    static USE(infoObj, roomType, comment, initX, initY) {
         this.dateTimeEntry(infoObj["ciDate"], infoObj["coDate"])
         Sleep 2000
         this.roomQtyEntry(infoObj["roomQty"])
         Sleep 2000
         this.commentOrderIdEntry(infoObj["orderId"], comment)
         Sleep 2000
-        this.roomRatesEntry(infoObj["roomRates"], infoObj["bbf"])
+        this.roomRatesEntry(infoObj["roomRates"])
+        Sleep 2000
+        if (!Utils.arrayEvery(0, infoObj["bbf"])) {
+            this.breakfastEntry(infoObj["bbf"])
+        }
         Sleep 2000
     }
 }
