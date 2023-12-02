@@ -116,12 +116,7 @@ class Utils {
             }
         }
         return newArray
-
     }
-}
-Utils.arrayEvery((item) => item > 3, winGroup)
-fn(item) {
-    return item > 3
 }
 
 class Interface {
