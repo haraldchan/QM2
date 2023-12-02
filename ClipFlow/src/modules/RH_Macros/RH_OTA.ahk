@@ -1,5 +1,21 @@
 #Include "../../lib/DictIndex.ahk"
 class Entry {
+    ; the initX, initY for USE() should be top-left corner of current booking window
+    static USE(infoObj, roomType, comment, initX, initY) {
+        this.dateTimeEntry(infoObj["ciDate"], infoObj["coDate"])
+        Sleep 2000
+        this.roomQtyEntry(infoObj["roomQty"])
+        Sleep 2000
+        this.commentOrderIdEntry(infoObj["orderId"], comment)
+        Sleep 2000
+        this.roomRatesEntry(infoObj["roomRates"])
+        Sleep 2000
+        if (!Utils.arrayEvery((item) => item = 0, infoObj["bbf"])) {
+            this.breakfastEntry(infoObj["bbf"])
+        }
+        Sleep 2000
+    }
+
     ; to-be-test
     static profileEntry(guestName, initX := 471, initY := 217) {
         BlockInput true
@@ -135,21 +151,7 @@ class Entry {
         ;TODO: action: entry bbf package
     }
 
-    ; the initX, initY for USE() should be top-left corner of current booking window
-    static USE(infoObj, roomType, comment, initX, initY) {
-        this.dateTimeEntry(infoObj["ciDate"], infoObj["coDate"])
-        Sleep 2000
-        this.roomQtyEntry(infoObj["roomQty"])
-        Sleep 2000
-        this.commentOrderIdEntry(infoObj["orderId"], comment)
-        Sleep 2000
-        this.roomRatesEntry(infoObj["roomRates"])
-        Sleep 2000
-        if (!Utils.arrayEvery(0, infoObj["bbf"])) {
-            this.breakfastEntry(infoObj["bbf"])
-        }
-        Sleep 2000
-    }
+
 }
 
 ; Kingsley WIP
