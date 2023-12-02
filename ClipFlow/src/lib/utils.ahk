@@ -26,6 +26,24 @@ getCtrlByName(vName, ctrlArray){
     }
 }
 
+getCtrlByType(ctrlType, ctrlArray){
+    loop  ctrlArray.Length {
+        if (type = ctrlArray[A_Index].Type) {
+            return ctrlArray[A_Index]
+        }
+    }
+}
+
+getCtrlByTypeAll(type, ctrlArray){
+    controls := []
+    loop ctrlArray.Length {
+        if (type = ctrlArray[A_Index].Type) {
+            controls.Push(ctrlArray[A_Index])
+        }
+    }
+    return controls
+}
+
 cleanReload(quit := 0){
     ; Windows set default
     if (WinExist("ahk_class SunAwtFrame")) {
