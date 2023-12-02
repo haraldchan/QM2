@@ -13,6 +13,8 @@ class ResvHandler {
     static title := "Flow Mode - " . this.name
     static popupTitle := "ClipFlow - " . this.name
     static desc := ""
+    static initXpos := 0
+    static initYpos := 0
 
     resvTemp := IniRead(store, "ResvHandler", "ResvTemplates")
     static resvTempObj := Jxon_Load(&resvTemp)
