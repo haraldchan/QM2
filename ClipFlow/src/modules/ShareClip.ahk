@@ -19,7 +19,7 @@ class ShareClip {
         }
         ; cleanup txts older than x days.
         loop files this.shareClipFolder "\*.txt" {
-            if (DateDiff(FormatTime(A_Now, "yyyyMMdd"), SubStr(A_LoopFileName, 1, 8), "days") > this.archiveDays) {
+            if (DateDiff(FormatTime(A_Now, "yyyyMMdd"), SubStr(A_LoopFileName, 1, 8), "days") >= this.archiveDays) {
                 FileDelete this.shareClipFolder . "\" . A_LoopFileName
             }
         }
