@@ -8,45 +8,45 @@
 #Include "./RH_Macros/RH_Fedex.ahk"
 #Include "./RH_Macros/RH_OTA.ahk"
 
+store := A_MyDocuments . "\ClipFlow.ini"
+resvTemp := IniRead(store, "ResvHandler", "ResvTemplates")
+resvTempObj := Jxon_Load(&resvTemp)
+
 class ResvHandler {
-    static name := 'Reservation Handler'
+    static name := "Reservation Handler"
     static title := "Flow Mode - " . this.name
     static popupTitle := "ClipFlow - " . this.name
     static desc := ""
     static initXpos := 0
     static initYpos := 0
 
-    resvTemp := IniRead(store, "ResvHandler", "ResvTemplates")
-    static resvTempObj := Jxon_Load(&resvTemp)
-
     static USE(App) {
-        OnClipboardChange(() => this.saveAddOnJson(App))
-
+        OnClipboardChange((*) => this.saveAddOnJson(App))
         ui := [
             App.AddGroupBox("R6 w250 y+20", this.title),
             ; App.AddText("xp+10", this.desc),
             ; TODO: add template reservations and its setting here
-            App.AddText("xp10 yp+10 h20", "奇利模板"),
-            App.AddEdit("vkingsley x+10 h20", this.resvTempObj.kingsley),
-            App.AddText("xp10 yp+10 h20", "Agoda模板"),
-            App.AddEdit("vagoda x+10 h20", this.resvTempObj.agoda),
-            App.AddButton("vstartBtn Default h35 w230 y+15", "开始录入预订"),
+            App.AddText("xp10 yp+20 h20", "奇利模板 "),
+            App.AddEdit("vkingsley x+10 h20", resvTempObj["kingsley"]),
+            App.AddText("x40 yp+30 h20", "Agoda模板"),
+            App.AddEdit("vagoda x+10 h20", resvTempObj["agoda"]),
+            App.AddButton("vstartBtn Default x40 h35 w230 y+15", "开始录入预订"),
         ]
 
-        startBtn := Interface.getCtrlByName("start", ui)
+        startBtn := Interface.getCtrlByName("startBtn", ui)
         kingsley := Interface.getCtrlByName("kingsley", ui)
         agoda := Interface.getCtrlByName("agoda", ui)
         tempEdits := Interface.getCtrlByTypeAll("Edit", ui)
 
         startBtn.OnEvent("Click", (*) => this.modifyReservation())
-        for edit in tempEdits {
-            edit.OnEvent("Change", (*) => saveTempConfirmation(edit))
+        loop tempEdits.Length {
+            tempEdits[A_Index].OnEvent("Change", saveTempConfirmation.Bind(tempEdits[A_Index]))
         }
 
-        saveTempConfirmation(curEdit) {
+        saveTempConfirmation(curEdit,*) {
             curEditName := curEdit.Name
-            ResvHandler.resvTempObj[curEditName] := Trim(curEdit.Text)
-            IniWrite(Jxon_Dump(ResvHandler.resvTempObj), store, "ResvHandler", "ResvTemplates")
+            resvTempObj[curEditName] := Trim(curEdit.Text)
+            IniWrite(Jxon_Dump(resvTempObj), store, "ResvHandler", "ResvTemplates")
         }
     }
 
@@ -58,7 +58,7 @@ class ResvHandler {
         clb := A_Clipboard
         bookingInfoObj := Jxon_Load(&clb)
         for k, v in bookingInfoObj {
-            if (v is Array) {
+            if (IsObject(v)) {
                 if (k = "contacts") {
                     try {
                         outputVal := "电话：" . v["phone"] . " " . "邮箱：" . v["email"]
@@ -66,14 +66,13 @@ class ResvHandler {
                         outputVal := ""
                     }
                 } else {
-                    outputVal := Jxon_Dump(&v)
+                    outputVal := ""
+                    loop v.Length {
+                        outputVal .= v[A_Index] . "，"
+                    }
+                    outputVal := SubStr(outputVal, 1, StrLen(outputVal) - 1)
                 }
             } else {
-                ; outputVal := ""
-                ; loop v.Length {
-                ;     outputVal .= v[A_Index] . "，"
-                ; }
-                ; outputVal := SubStr(outputVal, 1, StrLen(outputVal) - 1)
                 outputVal := v
             }
             popupInfo .= Format("{1}：{2}`n", k, outputVal)
@@ -88,13 +87,13 @@ class ResvHandler {
         取消(Esc)：       留在 当前页面
         )", popupInfo), ResvHandler.popupTitle, "OKCancel 4096")
         if (toOpera = "OK") {
-            try {
+            ; try {
                 WinActivate "ahk_class SunAwtFrame"
                 App.Hide()
                 ResvHandler.modifyReservation()
-            } catch {
-                MsgBox("请先打开 Opera 窗口。", ResvHandler.popupTitle)
-            }
+            ; } catch {
+            ;     MsgBox("请先打开 Opera 窗口。", ResvHandler.popupTitle)
+            ; }
         }
     }
 
@@ -106,7 +105,7 @@ class ResvHandler {
             case "fedex":
                 RH_Fedex(bookingInfoObj)
             case "kingsley":
-                RH_Kingsley(bookingInfoObj, ResvHandler.resvTempObj.kingsley)
+                RH_Kingsley(bookingInfoObj, resvTempObj["kingsley"])
             default:
         }
         Sleep 500
