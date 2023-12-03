@@ -1,63 +1,3 @@
-; getCtrlByName(vName, ctrlArray){
-;     loop ctrlArray.Length {
-;         if (vName = ctrlArray[A_Index].Name) {
-;             return ctrlArray[A_Index]
-;         }
-;     }
-; }
-
-; getCtrlByType(ctrlType, ctrlArray){
-;     loop  ctrlArray.Length {
-;         if (type = ctrlArray[A_Index].Type) {
-;             return ctrlArray[A_Index]
-;         }
-;     }
-; }
-
-; getCtrlByTypeAll(type, ctrlArray){
-;     controls := []
-;     loop ctrlArray.Length {
-;         if (type = ctrlArray[A_Index].Type) {
-;             controls.Push(ctrlArray[A_Index])
-;         }
-;     }
-;     return controls
-; }
-
-; filePrepend(textToInsert, fileToPrepend){
-;     textOrigin := FileRead(fileToPrepend)
-;     FileDelete fileToPrepend
-;     FileAppend textToInsert . textOrigin, fileToPrepend
-; }
-
-
-; cleanReload(quit := 0){
-;     ; Windows set default
-;     if (WinExist("ahk_class SunAwtFrame")) {
-;         WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-;     }
-;     if (WinExist("旅客信息")) {
-;         WinSetAlwaysOnTop false, "旅客信息"
-;     }
-;     ; Key/Mouse state set default
-;     BlockInput false
-;     SetCapsLockState false
-;     CoordMode "Mouse", "Screen"
-;     if (quit = "quit") {
-;         ExitApp
-;     }
-;     Reload
-; }
-
-; quitApp(*) {
-;     quitConfirm := MsgBox("是否确定退出ClipFlow? ", popupTitle, "OKCancel 4096")
-;     if (quitConfirm = "OK") {
-;         cleanReload("quit")
-;     } else {
-;         cleanReload()
-;     }
-; }
-
 class Utils {
     static cleanReload(winGroup, quit := 0) {
         ; Windows set default
@@ -89,10 +29,10 @@ class Utils {
 
     static arrayEvery(fn, targetArray) {
         if (!(fn is Func)) {
-            throw TypeError(fn . " is not a Function Object.")
+            throw TypeError("First parameter is not a Function Object.")
         }
-        if (!(fn is Array)) {
-            throw TypeError(targetArray . " is not an Array")
+        if (!(targetArray is Array)) {
+            throw TypeError("Second parameter is not an Array")
         }
         loop targetArray.Length {
             if (!fn(targetArray[A_Index])) {
@@ -104,10 +44,10 @@ class Utils {
 
     static arrayFilter(fn, targetArray) {
         if (!(fn is Func)) {
-            throw TypeError(fn . " is not a Function Object.")
+            throw TypeError("First parameter is not a Function Object.")
         }
-        if (!(fn is Array)) {
-            throw TypeError(targetArray . " is not an Array")
+        if (!(targetArray is Array)) {
+            throw TypeError("Second parameter is not an Array")
         }
         newArray := []
         loop targetArray.Length {
@@ -120,7 +60,7 @@ class Utils {
 }
 
 class Interface {
-    getCtrlByName(vName, ctrlArray) {
+    static getCtrlByName(vName, ctrlArray) {
         loop ctrlArray.Length {
             if (vName = ctrlArray[A_Index].Name) {
                 return ctrlArray[A_Index]
@@ -128,7 +68,7 @@ class Interface {
         }
     }
 
-    getCtrlByType(ctrlType, ctrlArray) {
+    static getCtrlByType(ctrlType, ctrlArray) {
         loop ctrlArray.Length {
             if (type = ctrlArray[A_Index].Type) {
                 return ctrlArray[A_Index]
@@ -136,7 +76,7 @@ class Interface {
         }
     }
 
-    getCtrlByTypeAll(type, ctrlArray) {
+    static getCtrlByTypeAll(type, ctrlArray) {
         controls := []
         loop ctrlArray.Length {
             if (type = ctrlArray[A_Index].Type) {
