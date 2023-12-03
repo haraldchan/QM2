@@ -87,13 +87,13 @@ class ResvHandler {
         取消(Esc)：       留在 当前页面
         )", popupInfo), ResvHandler.popupTitle, "OKCancel 4096")
         if (toOpera = "OK") {
-            ; try {
+            try {
                 WinActivate "ahk_class SunAwtFrame"
                 App.Hide()
                 ResvHandler.modifyReservation()
-            ; } catch {
-            ;     MsgBox("请先打开 Opera 窗口。", ResvHandler.popupTitle)
-            ; }
+            } catch {
+                MsgBox("请先打开 Opera 窗口。", ResvHandler.popupTitle)
+            }
         }
     }
 
