@@ -1,7 +1,7 @@
 #Include "../../lib/DictIndex.ahk"
 class Entry {
     ; the initX, initY for USE() should be top-left corner of current booking window
-    static USE(infoObj, roomType, comment, initX, initY) {
+    static USE(infoObj, roomType, comment, initX:=193, initY:=182) {
         this.dateTimeEntry(infoObj["ciDate"], infoObj["coDate"])
         Sleep 2000
         this.roomQtyEntry(infoObj["roomQty"])
@@ -16,9 +16,9 @@ class Entry {
         Sleep 2000
     }
 
-    ; to-be-test
+    ; tested
     static profileEntry(guestName, initX := 471, initY := 217) {
-        BlockInput true
+        ; BlockInput true
         WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
         CoordMode "Mouse", "Screen"
         Sleep 2000
@@ -28,31 +28,53 @@ class Entry {
         Send "!n"
         Sleep 100
         MouseMove initX - 39, initY + 68 ;432, 285
-        Sleep 10
+        Sleep 100
         Click 3
-        Sleep 10
+        Sleep 100
         Send Format("{Text}{1}", guestName[1])
         Sleep 100
         MouseMove initX - 72, initY + 95 ;399, 312
-        Sleep 10
+        Sleep 100
         Click 3
-        Sleep 10
+        Sleep 100
         Send Format("{Text}{1}", guestName[2])
-        Sleep 10
+        Sleep 100
+        if (guestName.Length = 3) {
+            MouseMove initX - 17, initY + 67 ; 454, 284
+            Sleep 100
+            Click 3
+            Sleep 3000
+            Send Format("{Text}{1}", guestName[3])
+            Sleep 100 
+            Send "!o"
+        }
+        Sleep 1500
         Send "!o"
-        Sleep 10000
-
+        Sleep 5000
     }
     ; WIP
     static splitNameEntry(guestNames, initX, initY) {
         ;TODO: action: split party
 
     }
-    ; WIP
-    static roomQtyEntry(roomQty, initX, initY) {
+    ; tested
+    static roomQtyEntry(roomQty, initX:=294, initY:=441) {
         ; TODO: fill-in roomQty
+        MouseMove initX, initY
+        Sleep 100
+        Click 3
+        Sleep 100
+        Send Format("{Text}{1}", roomQty)
+        Sleep 200
+        Send "{Tab}"
+        Sleep 100
+        loop 2 {
+            Send "{Esc}"
+            Sleep 500
+        }
+        Sleep 100
     }
-    ; to-be-test
+    ; tested
     static dateTimeEntry(checkin, checkout, initX := 332, initY := 356) {
         pmsCiDate := FormatTime(checkin, "MMddyyyy")
         pmsCoDate := FormatTime(checkout, "MMddyyyy")
@@ -93,8 +115,15 @@ class Entry {
         Sleep 300
         Send Format("{Text}{1}", pmsCoDate)
         Sleep 200
+        Send "{Tab}"
+        Sleep 100
+        loop 2 {
+            Send "{Esc}"
+            Sleep 500
+        }
+        Sleep 100
     }
-    ; to-be-test
+    ; tested
     static commentOrderIdEntry(orderId, comment, initX := 622, initY := 596) {
         ; fill-in comment
         Sleep 100
@@ -118,6 +147,11 @@ class Entry {
         Sleep 200
         Send Format("{Text}{1}", orderId)
         Sleep 200
+            loop 2 {
+            Send "{Esc}"
+            Sleep 500
+        }
+        Sleep 100
     }
     ; WIP
     static roomRatesEntry(roomRates, initX := 372, initY := 504) {
@@ -147,16 +181,36 @@ class Entry {
         Sleep 2000
     }
 
-    static breakfastEntry(bbf, initX, initY) {
-        ;TODO: action: entry bbf package
+    ; tested
+    static breakfastEntry(bbf, initX:=352, initY:=548) {
+        ;entry bbf package
+        Sleep 100
+        MouseMove initX, initY
+        Sleep 100
+        Click 
+        Sleep 2000
+        Send "!n"
+        Sleep 100
+        Send "{Text}BFNP"
+        Sleep 100
+        Send "!o"
+        Sleep 1000
+        Send "!o"
+        Sleep 100
+        Send "{Esc}" 
+        Sleep 500
+        ; change "Adults"
+        MouseMove initX - 67, initY - 124 ; 285, 424
+        Sleep 100
+        Click 3
+        Send bbf[1]
+        Sleep 100
     }
-
-
 }
 
 ; Kingsley WIP
 RH_Kingsley(infoObj, addFromConf) {
-    roomTypeRef := Map([
+    roomTypeRef := Map(
         "标准大床房", "SKC",
         "标准双床房", "STC",
         "豪华城景大床房", "DKC",
@@ -168,7 +222,7 @@ RH_Kingsley(infoObj, addFromConf) {
         "行政豪华江景大床房", "CKR",
         "行政豪华江景双床房", "CTR"
         "行政尊贵套房", "CSK"
-    ])
+    )
     roomType := ""
     for k, v in roomTypeRef {
         if (infoObj["roomType"] = k) {
@@ -182,7 +236,7 @@ RH_Kingsley(infoObj, addFromConf) {
         ? "RM TO TA"
         : Format("RM INCL {1}{2} TO TA", breakfastQty, breakfastType)
     pmsGuestNames := []
-    loop infoObj["guestNames"] {
+    loop infoObj["guestNames"].Length {
         curGuestName := infoObj["guestNames"][A_Index]
         if (RegExMatch(curGuestName, "^[a-zA-Z/]+$") > 0) {
             ; if it only includes English alphabet, push [lastName, firstName]
@@ -196,20 +250,24 @@ RH_Kingsley(infoObj, addFromConf) {
         }
     }
 
-    ; TODO: add-on new booking from addFrom booking
-    ; TODO: open the booking, fill-in profile
-    Entry.profileEntry(pmsGuestNames[1])
-    Sleep 1000
-    Entry.USE(infoObj, roomType, comment)
-    Sleep 1000
-    ; TODO: close and save
-    ; TODO: if roomQty > 1, split and fill-in other names
-    Entry.splitNameEntry(pmsGuestNames)
+    startEntry(){
+        ; TODO: add-on new booking from addFrom booking
+        ; TODO: open the booking, fill-in profile
+        Entry.profileEntry(pmsGuestNames[1])
+        Sleep 1000
+        Entry.USE(infoObj, roomType, comment)
+        Sleep 1000
+        ; TODO: close and save
+        ; TODO: if roomQty > 1, split and fill-in other names
+        Entry.splitNameEntry(pmsGuestNames)
+    }
+
+
 }
 
 ; Agoda WIP
 RH_Agoda(infoObj, addFromConf) {
-    roomTypeRef := Map([
+    roomTypeRef := Map(
         "Standard Room - Queen bed", "SKC",
         "Standard Room - Twin Bed", "STC",
         "Deluxe City View with King Bed", "DKC",
@@ -219,7 +277,7 @@ RH_Agoda(infoObj, addFromConf) {
         "Club Deluxe City View", "CKC",
         "Club Deluxe River View Room", "CKR",
         "Club Premier Suite", "CPK",
-    ])
+    )
 
     roomType := ""
     for k, v in roomTypeRef {
