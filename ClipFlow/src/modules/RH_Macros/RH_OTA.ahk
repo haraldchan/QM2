@@ -1,25 +1,59 @@
 #Include "../../lib/DictIndex.ahk"
+
 class Entry {
     ; the initX, initY for USE() should be top-left corner of current booking window
-    static USE(infoObj, roomType, comment, initX:=193, initY:=182) {
-        this.dateTimeEntry(infoObj["ciDate"], infoObj["coDate"])
-        Sleep 2000
-        this.roomQtyEntry(infoObj["roomQty"])
-        Sleep 2000
-        this.commentOrderIdEntry(infoObj["orderId"], comment)
-        Sleep 2000
-        this.roomRatesEntry(infoObj["roomRates"])
-        Sleep 2000
-        if (!Utils.arrayEvery((item) => item = 0, infoObj["bbf"])) {
-            this.breakfastEntry(infoObj["bbf"])
+    static USE(curTemplate, infoObj, roomType, comment, pmsGuestNames, initX:=193, initY:=182) {
+        MsgBox("Start in seconds...","Reservation Handler","T1 4096")
+        Entry.addFromTemplates(curTemplate)
+        ; Sleep 1000
+        Entry.profileEntry(pmsGuestNames[1])
+        ; sleep 1000
+        Entry.roomQtyEntry(infoObj["roomQty"])
+        ; sleep 1000
+        Entry.roomTypeEntry(roomType)
+        ; sleep 1000
+        Entry.dateTimeEntry(infoObj["ciDate"],infoObj["coDate"])
+        ; sleep 1000
+        Entry.commentOrderIdEntry(infoObj["orderId"], comment )
+        ; sleep 1000
+        if (!(Utils.arrayEvery((item) => item = 0, infoObj["bbf"]))) {
+            Entry.breakfastEntry(infoObj["bbf"])
         }
-        Sleep 2000
+        ; sleep 1000
+        Entry.roomRatesEntry(infoObj["roomRates"])
+        sleep 1000
+        MsgBox("Completed.","Reservation Handler","T1 4096")
+        Utils.cleanReload(winGroup)
+    }
+
+    ; tested
+    static addFromTemplates(agentTemplate){
+        Send "!r"
+        sleep 100
+        Send "u"
+        Sleep 500
+        Send Format("{Text}{1}", agentTemplate)
+        Sleep 100
+        Send "!h"
+        Sleep 100
+        Send "!t"
+        Sleep 100
+        Send "!o"
+        Sleep 100
+        Send "!o"
+        Sleep 100
+            loop 5 {
+            Send "{Esc}"
+            Sleep 200
+        }
+        Sleep 100
     }
 
     ; tested
     static profileEntry(guestName, initX := 471, initY := 217) {
+        trayTip "录入中：Profile"
         ; BlockInput true
-        WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
+        ; WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
         CoordMode "Mouse", "Screen"
         Sleep 2000
         MouseMove initX, initY ;471, 217
@@ -50,127 +84,169 @@ class Entry {
         }
         Sleep 1500
         Send "!o"
-        Sleep 5000
+        Sleep 2000
     }
     ; WIP
     static splitNameEntry(guestNames, initX, initY) {
         ;TODO: action: split party
-
     }
+
     ; tested
     static roomQtyEntry(roomQty, initX:=294, initY:=441) {
+        trayTip "录入中：房间数量"
         ; TODO: fill-in roomQty
         MouseMove initX, initY
         Sleep 100
         Click 3
         Sleep 100
         Send Format("{Text}{1}", roomQty)
-        Sleep 200
+        Sleep 100
         Send "{Tab}"
         Sleep 100
-        loop 2 {
+        loop 5 {
             Send "{Esc}"
-            Sleep 500
+            Sleep 200
         }
         Sleep 100
     }
+
+    ; tested
+    static roomTypeEntry(roomType, initX:=472, initY:=465) {
+        trayTip "录入中：房型"
+        MouseMove initX, initY
+        Sleep 100
+        Click 2
+        Sleep 100
+        Send roomType
+        Sleep 100
+        Send "{Tab}"
+        Sleep 100
+        loop 5 {
+            Send "{Esc}"
+            Sleep 200
+        }
+        Sleep 100
+        MouseMove initX-152, initY  ;320, 461
+        Sleep 100
+        Click "Down"
+        Sleep 100
+        MouseMove initX-232, initY ; 240, 465 
+        Sleep 100
+        Click "Up"
+        Sleep 100
+        Send roomType
+        Sleep 100
+        Send "{Tab}"
+        Sleep 100
+    }
+
     ; tested
     static dateTimeEntry(checkin, checkout, initX := 332, initY := 356) {
+        trayTip "录入中：入住/退房日期"
         pmsCiDate := FormatTime(checkin, "MMddyyyy")
         pmsCoDate := FormatTime(checkout, "MMddyyyy")
-        Sleep 200
+        Sleep 100
         MouseMove initX, initY ;332, 356
         Sleep 1000
         Click "Down"
         MouseMove initX - 154, initY + 4 ;178, 360
-        Sleep 300
+        Sleep 100
         Click "Up"
         MouseMove initX - 160, initY + 4 ;172, 360
-        Sleep 300
+        Sleep 100
         Send Format("{Text}{1}", pmsCiDate)
         Sleep 100
         MouseMove initX - 7, initY + 42 ;325, 398
-        Sleep 300
+        Sleep 100
         Click
-        Sleep 300
+        Sleep 100
         MouseMove initX + 329, initY + 187 ;661, 543
-        Sleep 300
+        Sleep 100
         Click
         MouseMove initX + 304, initY + 187 ;636, 543
-        Sleep 300
+        Sleep 100
         Click
         MouseMove initX + 303, initY + 187 ;635, 543
-        Sleep 300
+        Sleep 100
         Click
-        Sleep 300
+        Sleep 100
         Click
-        Sleep 300
+        Sleep 100
         MouseMove initX + 3, initY + 49 ;335, 405
-        Sleep 300
+        Sleep 100
         Click "Down"
         MouseMove initX - 150, initY + 53 ;182, 409
-        Sleep 300
+        Sleep 100
         Click "Up"
         MouseMove initX - 125, initY + 59 ;207, 415
-        Sleep 300
+        Sleep 100
         Send Format("{Text}{1}", pmsCoDate)
-        Sleep 200
+        Sleep 100
         Send "{Tab}"
         Sleep 100
-        loop 2 {
+        loop 5 {
             Send "{Esc}"
-            Sleep 500
+            Sleep 200
         }
         Sleep 100
     }
+
     ; tested
     static commentOrderIdEntry(orderId, comment, initX := 622, initY := 596) {
+        trayTip "录入中：COMMENT，订单号"
         ; fill-in comment
         Sleep 100
         MouseMove initX, initY ;622, 596
-        Sleep 200
+        Sleep 100
         Click "Down"
         MouseMove initX + 518, initY + 9 ;1140, 605
-        Sleep 200
+        Sleep 100
         Click "Up"
-        Sleep 200
+        Sleep 100
         Send Format("{Text}{1}", comment)
-        Sleep 200
+        Sleep 100
         ; fill-in orderId
-        Sleep 200
+        Sleep 100
         MouseMove initX + 217, initY - 41 ;839, 555
         Sleep 100
         Click "Down"
         MouseMove initX + 485, initY - 33 ;1107, 563
-        Sleep 200
+        Sleep 100
         Click "Up"
-        Sleep 200
+        Sleep 100
         Send Format("{Text}{1}", orderId)
-        Sleep 200
-            loop 2 {
+        Sleep 100
+            loop 5 {
             Send "{Esc}"
-            Sleep 500
+            Sleep 200
         }
         Sleep 100
     }
-    ; WIP
-    static roomRatesEntry(roomRates, initX := 372, initY := 504) {
+
+    ; tested? 
+    static roomRatesEntry(roomRates, initX := 372, initY := 524) {
+        trayTip "录入中：房价"
         MouseMove initX, initY ;372, 504
-        Sleep 300
+        Sleep 100
         Click
-        Sleep 300
+        Sleep 100
+        loop 5 {
+            Send "{Esc}"
+            Sleep 200
+        }
+        Sleep 100
         Send "!d"
-        Sleep 300
+        Sleep 100
         loop roomRates.Length {
             Send Format("{Text}{1}", roomRates[A_Index])
             Send "{Down}"
-            Sleep 200
+            Sleep 100
             ; TODO: action: set bbf if included
         }
         MouseMove initX + 356, initY + 44 ;728, 548
-        Sleep 300
+        Sleep 100
         Send "!o"
-        Sleep 300
+        Sleep 500
         ; ⬇️ maybe won't need it
         ; MouseMove initX + 170, initY - 51 ;542, 453
         ; Sleep 300
@@ -178,11 +254,12 @@ class Entry {
         ; MouseMove initX + 272, initY + 19 ;644, 523
         ; Sleep 300
         ; Click
+        Send "{Esc}"
         Sleep 2000
     }
-
     ; tested
     static breakfastEntry(bbf, initX:=352, initY:=548) {
+        trayTip "录入中：早餐"
         ;entry bbf package
         Sleep 100
         MouseMove initX, initY
@@ -203,13 +280,17 @@ class Entry {
         MouseMove initX - 67, initY - 124 ; 285, 424
         Sleep 100
         Click 3
-        Send bbf[1]
+        Send Format("{Text}{1}", bbf[1])
+        ; Send "1"
         Sleep 100
     }
 }
 
 ; Kingsley WIP
 RH_Kingsley(infoObj, addFromConf) {
+    ; template booking
+    thisTemplate := "template-kingsley"
+    ; convert roomType
     roomTypeRef := Map(
         "标准大床房", "SKC",
         "标准双床房", "STC",
@@ -229,12 +310,15 @@ RH_Kingsley(infoObj, addFromConf) {
             roomType := v
         }
     }
-    addFrom := addFromConf
+
+    ; define breakfast comment
     breakfastType := (SubStr(roomType, 1, 1) = "C") ? "CBF" : "BBF"
     breakfastQty := infoObj["bbf"][1]
     comment := (breakfastQty = 0)
         ? "RM TO TA"
         : Format("RM INCL {1}{2} TO TA", breakfastQty, breakfastType)
+    
+    ; reformat guest names
     pmsGuestNames := []
     loop infoObj["guestNames"].Length {
         curGuestName := infoObj["guestNames"][A_Index]
@@ -250,19 +334,13 @@ RH_Kingsley(infoObj, addFromConf) {
         }
     }
 
-    startEntry(){
-        ; TODO: add-on new booking from addFrom booking
-        ; TODO: open the booking, fill-in profile
-        Entry.profileEntry(pmsGuestNames[1])
-        Sleep 1000
-        Entry.USE(infoObj, roomType, comment)
-        Sleep 1000
-        ; TODO: close and save
-        ; TODO: if roomQty > 1, split and fill-in other names
-        Entry.splitNameEntry(pmsGuestNames)
-    }
-
-
+    Entry.USE(
+        thisTemplate,
+        infoObj,
+        roomType,
+        comment,
+        pmsGuestNames
+    )
 }
 
 ; Agoda WIP
