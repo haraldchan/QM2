@@ -3,6 +3,160 @@
 ; FedEx WIP
 ;KNOWN ISSUE: when modifying daily detail, error popup needs to handle
 ; WIP: CHANGE
+class FedexEntry {
+    static USE(infoObj){
+        CoordMode "Mouse", "Screen"
+
+        if (infoObj["resvType"] = "CHANGE") {
+            ; changeModification(infoObj)
+        } else {
+            ; addModification(infoObj)
+        }
+    }
+
+    static roomQtyEntry(roomQty, initX:=294, initY:=441) {
+        ; TODO: fill-in roomQty
+        MouseMove initX, initY
+        Sleep 100
+        Click 3
+        Sleep 100
+        Send Format("{Text}{1}", roomQty)
+        Sleep 200
+        Send "{Tab}"
+        Sleep 100
+        loop 2 {
+            Send "{Esc}"
+            Sleep 500
+        }
+        Sleep 100
+    }
+
+    static profileEntry(crewNames, initX:=471, initY:=217){
+        crewName := StrSplit(crewNames[A_Index], " ")
+        Sleep 2000
+        MouseMove initX, initY ; 471, 217
+        Click
+        Sleep 3000
+        Send "!n"
+        Sleep 100
+        MouseMove initX-39, initY+68 ; 432, 285
+        Sleep 10
+        Click 3
+        Sleep 10
+        Send Format("{Text}{1}", crewName[2])
+        MouseMove initX-72, initY+95 ; 399, 312
+        Sleep 10
+        Click 3
+        Sleep 10
+        Send Format("{Text}{1}", crewName[1])
+        Sleep 10
+        Send "!o"
+        Sleep 10000
+    }
+
+    static dateTimeRateCodeEntry(checkin, checkout, ETA, ETD, initX:=323, initY:=506){
+        pmsCiDate := (StrSplit(ETA, ":")[1]) < 10
+            ? DateAdd(checkin, -1, "days")
+            : checkin
+        pmsCoDate := checkout
+        pmsNts := DateDiff(pmsCoDate, pmsCiDate, "days")
+        ; reformat to match pms date format
+        schdCiDate := FormatTime(checkin, "MMddyyyy")
+        schdCoDate := FormatTime(checkout, "MMddyyyy")
+        pmsCiDate := FormatTime(pmsCiDate, "MMddyyyy")
+        pmsCoDate := FormatTime(pmsCoDate, "MMddyyyy")
+
+        MouseMove initX, initY ; 323, 506
+        Sleep 100
+        Click
+        Sleep 100
+        Send "{Text}FEDEXN"
+        Sleep 100
+        Send "{Tab}"
+        Sleep 100
+        MouseMove initX+9, initY-150 ; 332, 356
+        Sleep 1000
+        Click "Down"
+        MouseMove initX-145, initY-146 ; 178, 360
+        Sleep 300
+        Click "Up"
+        MouseMove initX-151, initY-146 ; 172, 360
+        Sleep 300
+        Send Format("{Text}{1}", pmsCiDate)
+        Sleep 100
+        MouseMove initX+2, initY-108 ; 325, 398
+        Sleep 300
+        Click
+        Sleep 300
+        MouseMove initX+338, initY+37 ; 661, 543
+        Sleep 300
+        Click
+        MouseMove initX+313, initY+37 ; 636, 543
+        Sleep 300
+        Click
+        MouseMove initX+312, initY+37 ; 635, 543
+        Sleep 300
+        Click
+        Sleep 300
+        Click
+        Sleep 300
+        MouseMove initX+12, initY-101 ; 335, 405
+        Sleep 300
+        Click "Down"
+        MouseMove initX-141, initY-97 ; 182, 409
+        Sleep 300
+        Click "Up"
+        MouseMove initX-116, initY-91 ; 207, 415
+        Sleep 300
+        Send Format("{Text}{1}", pmsCoDate)
+        Sleep 300
+        ; }
+        Sleep 2000
+        ; { fill in ETA & ETD
+        MouseMove initX-29, initY+91 ; 294, 597
+        Sleep 200
+        Click
+        Sleep 200
+        Send "{Enter}"
+        Sleep 200
+        Send "{Enter}"
+        Sleep 200
+        Send "{Enter}"
+        Sleep 200
+        MouseMove initX-3, initY+91 ; 320, 597
+        Sleep 200
+        Click "Down"
+        MouseMove initX-123, initY+91 ; 200, 597
+        Sleep 200
+        Click "Up"
+        Sleep 200
+        Send Format("{Text}{1}", ETA)
+        Sleep 200
+        MouseMove initX+176, initY+91 ; 499, 597
+        Sleep 200
+        Click "Down"
+        MouseMove initX+7, initY+88 ; 330, 594
+        Sleep 200
+        Click "Up"
+        Sleep 200
+        Send Format("{Text}{1}", ETD)
+        Sleep 200
+        ; }
+    }
+
+    static commentTripNumEntry(resvType, flightIn, tripNum ,tracking, initX, initY){
+
+    }
+
+    static moreFieldsEntry(checkin, checkout, flightIn, flightOut, ETA, ETD, initX, initY){
+
+    }
+
+    static dailyDetailsEntry(daysActual, initX, initY){
+
+    }
+}
+
 RH_Fedex(infoObj) {
     pmsCiDate := (StrSplit(infoObj["ETA"], ":")[1]) < 10
         ? DateAdd(infoObj["ciDate"], -1, "days")
@@ -225,7 +379,7 @@ RH_Fedex(infoObj) {
         MouseMove 841, 680
         Sleep 100
         Click
-        Sleep 2000
+        Sleep 200
     }
     ; WIP
     dailyDetailsEntry(infoObj) {
