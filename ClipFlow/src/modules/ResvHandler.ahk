@@ -16,20 +16,34 @@ class ResvHandler {
     static name := "Reservation Handler"
     static title := "Flow Mode - " . this.name
     static popupTitle := "ClipFlow - " . this.name
-    static desc := ""
+    static desc := "
+        (
+            使用说明：
+
+            1、先在Firefox中的“打印”状态订单
+              使用扩展获取订单信息。
+
+            2、获取订单后点击弹窗的“确定”返回
+              Opera PMS，让脚本完成订单录入。
+
+            ※各Agent模板订单均以
+              “template-Agent Name”形式命名，
+              是Add-On的来源。如Rate Code等信
+              信息有所更新，请及时更新模板！
+        )"
     static initXpos := 0
     static initYpos := 0
 
     static USE(App) {
         OnClipboardChange((*) => this.saveAddOnJson(App))
         ui := [
-            App.AddGroupBox("R6 w250 y+20", this.title),
-            ; App.AddText("xp+10", this.desc),
+            App.AddGroupBox("R10 w250 y+20", this.title),
+            App.AddText("xp+10 yp+20", this.desc),
             ; TODO: add template reservations and its setting here
-            App.AddText("xp10 yp+20 h20", "奇利模板 "),
-            App.AddEdit("vkingsley x+10 h20", resvTempObj["kingsley"]),
-            App.AddText("x40 yp+30 h20", "Agoda模板"),
-            App.AddEdit("vagoda x+10 h20", resvTempObj["agoda"]),
+            ; App.AddText("xp10 yp+20 h20", "奇利模板 "),
+            ; App.AddEdit("vkingsley x+10 h20", resvTempObj["kingsley"]),
+            ; App.AddText("x40 yp+30 h20", "Agoda模板"),
+            ; App.AddEdit("vagoda x+10 h20", resvTempObj["agoda"]),
             App.AddButton("vstartBtn Default x40 h35 w230 y+15", "开始录入预订"),
         ]
 
@@ -38,7 +52,7 @@ class ResvHandler {
         agoda := Interface.getCtrlByName("agoda", ui)
         tempEdits := Interface.getCtrlByTypeAll("Edit", ui)
 
-        startBtn.OnEvent("Click", (*) => this.modifyReservation())
+        startBtn.OnEvent("Click", (*) => ResvHandler.modifyReservation(App))
         loop tempEdits.Length {
             tempEdits[A_Index].OnEvent("Change", saveTempConfirmation.Bind(tempEdits[A_Index]))
         }
@@ -89,21 +103,21 @@ class ResvHandler {
         if (toOpera = "OK") {
             try {
                 WinActivate "ahk_class SunAwtFrame"
-                App.Hide()
-                ResvHandler.modifyReservation()
+                App.Show()
             } catch {
                 MsgBox("请先打开 Opera 窗口。", ResvHandler.popupTitle)
             }
         }
     }
 
-    static modifyReservation() {
+    static modifyReservation(App) {
+        App.Hide()
         bookingInfo := IniRead(store, "ResvHandler", "JSON")
         bookingInfoObj := Jxon_Load(&bookingInfo)
 
         switch bookingInfoObj["agent"] {
             case "fedex":
-                RH_Fedex(bookingInfoObj)
+                ; RH_Fedex(bookingInfoObj)
             case "kingsley":
                 RH_Kingsley(bookingInfoObj, resvTempObj["kingsley"])
             default:
