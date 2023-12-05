@@ -4,31 +4,44 @@
 ;KNOWN ISSUE: when modifying daily detail, error popup needs to handle
 ; WIP: CHANGE
 class FedexEntry {
-    static USE(infoObj, initX, initY) {
+    static USE(infoObj, initX:=194, initY:=183) {
         ; CoordMode "Mouse", "Screen"
+        pmsCiDate := (StrSplit(infoObj["ETA"], ":"))[1] < 10
+            ? DateAdd(infoObj["ciDate"], -1, "days")
+            : infoObj["ciDate"]
+        pmsCoDate := infoObj["coDate"]
+        pmsNts := DateDiff(pmsCoDate, pmsCiDate, "days")
+
         this.profileEntry(infoObj["crewNames"])
-        Sleep 1000
+        Sleep 500
         if (infoObj["resvType"] = "ADD") {
             this.roomQtyEntry(infoObj["crewNames"].Length)
         }
-        Sleep 1000
+        Sleep 500
         this.dateTimeRateCodeEntry(infoObj["ciDate"], infoObj["coDate"], infoObj["ETA"], infoObj["ETD"])
-        Sleep 1000
+        Sleep 500
         this.moreFieldsEntry(infoObj)
-        Sleep 1000
+        Sleep 500
+        this.commentTripNumTrackingEntry(infoObj)
+        Sleep 500
         pmsNts := DateDiff(infoObj["coDate"], infoObj["ciDate"], "days")
         if (infoObj["daysActual"] != pmsNts) {
             this.dailyDetailsEntry(infoObj["daysActual"])
         }
     }
-
+    ; tested
     static profileEntry(crewNames, initX := 471, initY := 217) {
+        if (A_Index = 0) {
+            A_Index := 1
+        }
         crewName := StrSplit(crewNames[A_Index], " ")
         Sleep 1000
         MouseMove initX, initY ; 471, 217
         Click
         Sleep 3000
         Send "!n"
+        Sleep 100
+        Send "{Esc}"
         Sleep 100
         MouseMove initX - 39, initY + 68 ; 432, 285
         Sleep 10
@@ -44,7 +57,7 @@ class FedexEntry {
         Send "!o"
         Sleep 2000
     }
-
+    ; tested
     static roomQtyEntry(roomQty, initX := 294, initY := 441) {
         MouseMove initX, initY
         Sleep 100
@@ -56,25 +69,16 @@ class FedexEntry {
         Sleep 100
         loop 5 {
             Send "{Esc}"
-            Sleep 200
+            Sleep 100
         }
         Sleep 100
     }
-
+    ; tested. seems that rate code entry is not neccessary
     static dateTimeRateCodeEntry(checkin, checkout, ETA, ETD, initX := 323, initY := 506) {
         pmsCiDate := (StrSplit(ETA, ":")[1]) < 10
             ? FormatTime(DateAdd(checkin, -1, "days"), "MMddyyyy")
             : FormatTime(checkin, "MMddyyyy")
         pmsCoDate := FormatTime(checkout, "MMddyyyy")
-        ; fill-in rate code
-        MouseMove initX, initY ; 323, 506
-        Sleep 100
-        Click
-        Sleep 100
-        Send "{Text}FEDEXN"
-        Sleep 100
-        Send "{Tab}"
-        Sleep 100
         MouseMove initX + 9, initY - 150 ; 332, 356
         Sleep 100
         ; fill-in checkin/checkout
@@ -112,17 +116,23 @@ class FedexEntry {
         Sleep 100
         Send Format("{Text}{1}", pmsCoDate)
         Sleep 100
+        Send "{Enter}"
+        Sleep 100
+        loop 3 {
+            Send "{Esc}"
+            Sleep 100
+        }
         ; fill in ETA & ETD
         MouseMove initX - 29, initY + 91 ; 294, 597
         Sleep 100
-        Click
-        Sleep 100
-        Send "{Enter}"
-        Sleep 100
-        Send "{Enter}"
-        Sleep 100
-        Send "{Enter}"
-        Sleep 100
+        ; Click
+        ; Sleep 100
+        ; Send "{Enter}"
+        ; Sleep 100
+        ; Send "{Enter}"
+        ; Sleep 100
+        ; Send "{Enter}"
+        ; Sleep 100
         MouseMove initX - 3, initY + 91 ; 320, 597
         Sleep 100
         Click "Down"
@@ -142,8 +152,8 @@ class FedexEntry {
         Send Format("{Text}{1}", ETD)
         Sleep 100
     }
-
-    static commentTripNumEntry(infoObj, initX := 622, initY := 569) {
+    ; tested
+    static commentTripNumTrackingEntry(infoObj, initX := 622, initY := 589) {
         ; set comment
         comment := ""
         if (infoObj["resvType"] = "ADD") {
@@ -157,52 +167,51 @@ class FedexEntry {
             Sleep 100
             Click "Up"
             Sleep 100
-            Send "^c"
+            Send "^x"
+            Sleep 100
             prevComment := A_Clipboard
-            comment := Format("Changed to {1}={2}day(s), New Stay:{3}-{4} `n Before Update:{5}", infoObj["stayHours"], infoObj["daysActual"], infoObj["ciDate"], infoObj["coDate"], prevComment)
+            comment := Format("Changed to {1}={2}day(s), New Stay:{3}-{4} // Before Update:{5}", infoObj["stayHours"], infoObj["daysActual"], infoObj["ciDate"], infoObj["coDate"], prevComment)
         }
         ; fill-in comment
         Sleep 100
         MouseMove initX, initY ; 622, 596
         Sleep 100
-        Click "Down"
-        MouseMove initX + 518, initY + 36 ; 1140, 605
-        Sleep 100
-        Click "Up"
+        ; Click "Down"
+        ; MouseMove initX + 518, initY + 36 ; 1140, 605
+        ; Sleep 100
+        ; Click "Up"
+        Click
         Sleep 100
         Send Format("{Text}{1}", comment)
         Sleep 100
         ; fill-in new flight and trip
-        MouseMove initX + 217, initY - 50 ; 839, 555
+        MouseMove initX + 307, initY - 35 ; 929, 554
         Sleep 100
-        Click "Down"
-        MouseMove initX + 485, initY - 42 ; 1107, 563
-        Sleep 100
-        Click "Up"
+        Click 3
         Sleep 100
         Send Format("{Text}{1}  {2}", infoObj["flightIn"], infoObj["tripNum"])
         Sleep 100
         ; fill-in tracking
-        MouseMove initX + 281, initY - 99 ; 930, 506
+        MouseMove initX + 301, initY -84 ; 923, 505
         Sleep 100
         Click 3
         Sleep 100
         ; entry tracking number at field "contact", easier to access
-        Send Format("{Text}{1}", infoObj["tracking"])
+        Send Format("{Text}Tracking:{1}", infoObj["tracking"])
         Sleep 100
     }
-
-    static moreFieldsEntry(infoObj, checkin, checkout, initX := 236, initY := 333) {
-        schdCiDate := FormatTime(checkin, "MMddyyyy")
-        schdCoDate := FormatTime(checkout, "MMddyyyy")
+    ; tested
+    static moreFieldsEntry(infoObj, initX := 236, initY := 333) {
+        schdCiDate := FormatTime(infoObj["ciDate"], "MMddyyyy")
+        schdCoDate := FormatTime(infoObj["coDate"], "MMddyyyy")
         MouseMove initX, initY ; 236, 333
         Sleep 100
         Click
         Sleep 100
-        MouseMove initX := 450, initY := 126 ; 686, 459
+        MouseMove initX + 450, initY + 126 ; 686, 459
         Sleep 200
         Click "Down"
-        MouseMove initX := 242, initY + 126 ; 478, 459
+        MouseMove initX + 242, initY + 126 ; 478, 459
         Sleep 100
         Click "Up"
         Sleep 100
@@ -255,22 +264,18 @@ class FedexEntry {
         Click
         Sleep 100
     }
-    ; WIP!!!!
+    ; tested(change) // to-be-test(add)
     static dailyDetailsEntry(daysActual, initX := 372, initY := 524) {
         MouseMove initX, initY ; 372, 524
         Sleep 100
         Click
         Sleep 100
         Send "!d"
-        Sleep 3000
+        Sleep 1500
         loop daysActual {
             Send "{Down}"
             Sleep 200
         }
-        Send "0"
-        Sleep 100
-        MouseMove initX + 246, initY - 19 ; 618, 505
-        Sleep 100
         Send "!e"
         Sleep 100
         loop 4 {
@@ -279,33 +284,34 @@ class FedexEntry {
         }
         Send "{Text}NRR"
         Sleep 100
-        MouseMove initX + 46, initY - 127 ; 418, 397
-        Sleep 100
+        Send "!o"
+        loop 3 {
+            Send "{Enter}"
+            Sleep 200
+        }
+        Sleep 300
         Send "!o"
         Sleep 100
         loop 5 {
             Send "{Escape}"
             Sleep 200
         }
-        Send "!o"
-        Sleep 1500
-        Send "{Space}"
-        Sleep 500
-        MouseMove initX + 356, initY + 44 ; 728, 568
-        Sleep 100
-        Send "!o"
-        Sleep 100
-        MouseMove initX + 170, initY - 51 ; 542, 473
-        Sleep 100
-        Click
-        MouseMove initX + 272, initY + 19 ; 644, 543
-        Sleep 100
-        Click
         Sleep 100
     }
     ; WIP
-    static splitPartyEntry(crewNames, initX, initY) {
-
+    static splitParty(crewNames, initX:=456, initY:=482) {
+        Send "!t"
+        Sleep 100
+        MouseMove initX, initY
+        Sleep 100
+        Send Click
+        Sleep 100
+        Send "!s" ; !s: Split; !a: Split All
+        Sleep 100
+        Send "!o"
+        Sleep 100
+        Send "!c"
+        Sleep 100
     }
 }
 
@@ -370,26 +376,45 @@ RH_Fedex(infoObj) {
     ; to-be-test
     changeModification(infoObj) {
         loop roomQty {
-            if (A_Index > roomQty) {
-                MsgBox("已完成所有修改。")
-                return
-            }
-            nofitier := Format("
+            notifierOC := Format("
                 (
                     待修改订单数量：{1}, 已完成{2}个。
                     请先打开需要修改的 Fedex 预订。
 
                     确定(Enter)：     开始修改预订
                     取消(Esc)：       退出修改
-                )", roomQty, A_Index)
-            changePopup := MsgBox(nofitier, "Reservation Handler", "OKCancel 4096")
-            if (changePopup.Result = "Cancel") {
-                Utils.cleanReload(winGroup)
-            }
+                )", roomQty, A_Index - 1)
+            notifierYNC :=  Format("
+                (
+                    待修改订单数量：{1}, 已完成{2}个。
+                    请先打开需要修改的 Fedex 预订。
 
-            ; modification process
-            FedexEntry.USE(infoObj)
+                    是(Yes)：         开始修改预订
+                    否(No):           跳过第一个修改    
+                    取消(Cancel):     退出修改
+                )", roomQty, A_Index - 1)
+
+            options := roomQty = 2 ? "YesNoCancel" : "OKCancel"
+            notifier := roomQty = 2 ? notifierYNC : notifierOC
+            if (A_Index = 2) {
+                notifier := notifierOC
+                options := "OKCancel"
+            }
+            changePopup := MsgBox(notifier, "RH-FedEx - CHANGE", options . " 4096")
+            if (changePopup = "Cancel") {
+                Utils.cleanReload(winGroup)
+            } else if (changePopup = "No") {
+                continue
+            } else if (changePopup = "Yes"){
+                FedexEntry.USE(infoObj)
+            } else {
+                FedexEntry.USE(infoObj)
+            }
             ; leave close and save manually ???
+            if (A_Index = roomQty) {
+                MsgBox("已完成所有修改。","RH-FedEx - CHANGE", "T1 4096")
+            }
         }
+        Utils.cleanReload(winGroup)
     }
 }
