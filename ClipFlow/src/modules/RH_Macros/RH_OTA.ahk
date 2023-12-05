@@ -2,8 +2,8 @@
 
 class Entry {
     ; the initX, initY for USE() should be top-left corner of current booking window
-    static USE(curTemplate, infoObj, roomType, comment, pmsGuestNames, initX:=193, initY:=182) {
-        MsgBox("Start in seconds...","Reservation Handler","T1 4096")
+    static USE(curTemplate, infoObj, roomType, comment, pmsGuestNames, initX := 193, initY := 182) {
+        MsgBox("Start in seconds...", "Reservation Handler", "T1 4096")
         Entry.addFromTemplates(curTemplate)
         ; Sleep 1000
         Entry.profileEntry(pmsGuestNames[1])
@@ -12,9 +12,9 @@ class Entry {
         ; sleep 1000
         Entry.roomTypeEntry(roomType)
         ; sleep 1000
-        Entry.dateTimeEntry(infoObj["ciDate"],infoObj["coDate"])
+        Entry.dateTimeEntry(infoObj["ciDate"], infoObj["coDate"])
         ; sleep 1000
-        Entry.commentOrderIdEntry(infoObj["orderId"], comment )
+        Entry.commentOrderIdEntry(infoObj["orderId"], comment)
         ; sleep 1000
         if (!(Utils.arrayEvery((item) => item = 0, infoObj["bbf"]))) {
             Entry.breakfastEntry(infoObj["bbf"])
@@ -22,12 +22,12 @@ class Entry {
         ; sleep 1000
         Entry.roomRatesEntry(infoObj["roomRates"])
         sleep 1000
-        MsgBox("Completed.","Reservation Handler","T1 4096")
-        Utils.cleanReload(winGroup)
+        MsgBox("Completed.", "Reservation Handler", "T2 4096")
+        ; Utils.cleanReload(winGroup)
     }
 
     ; tested
-    static addFromTemplates(agentTemplate){
+    static addFromTemplates(agentTemplate) {
         Send "!r"
         sleep 100
         Send "u"
@@ -42,7 +42,7 @@ class Entry {
         Sleep 100
         Send "!o"
         Sleep 100
-            loop 5 {
+        loop 5 {
             Send "{Esc}"
             Sleep 200
         }
@@ -52,10 +52,7 @@ class Entry {
     ; tested
     static profileEntry(guestName, initX := 471, initY := 217) {
         trayTip "录入中：Profile"
-        ; BlockInput true
-        ; WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
-        CoordMode "Mouse", "Screen"
-        Sleep 2000
+        Sleep 1000
         MouseMove initX, initY ;471, 217
         Click
         Sleep 3000
@@ -79,20 +76,16 @@ class Entry {
             Click 3
             Sleep 3000
             Send Format("{Text}{1}", guestName[3])
-            Sleep 100 
+            Sleep 100
             Send "!o"
         }
         Sleep 1500
         Send "!o"
         Sleep 2000
     }
-    ; WIP
-    static splitNameEntry(guestNames, initX, initY) {
-        ;TODO: action: split party
-    }
 
     ; tested
-    static roomQtyEntry(roomQty, initX:=294, initY:=441) {
+    static roomQtyEntry(roomQty, initX := 294, initY := 441) {
         trayTip "录入中：房间数量"
         ; TODO: fill-in roomQty
         MouseMove initX, initY
@@ -111,7 +104,7 @@ class Entry {
     }
 
     ; tested
-    static roomTypeEntry(roomType, initX:=472, initY:=465) {
+    static roomTypeEntry(roomType, initX := 472, initY := 465) {
         trayTip "录入中：房型"
         MouseMove initX, initY
         Sleep 100
@@ -126,11 +119,11 @@ class Entry {
             Sleep 200
         }
         Sleep 100
-        MouseMove initX-152, initY  ;320, 461
+        MouseMove initX - 152, initY  ;320, 461
         Sleep 100
         Click "Down"
         Sleep 100
-        MouseMove initX-232, initY ; 240, 465 
+        MouseMove initX - 232, initY ; 240, 465
         Sleep 100
         Click "Up"
         Sleep 100
@@ -216,14 +209,14 @@ class Entry {
         Sleep 100
         Send Format("{Text}{1}", orderId)
         Sleep 100
-            loop 5 {
+        loop 5 {
             Send "{Esc}"
             Sleep 200
         }
         Sleep 100
     }
 
-    ; tested? 
+    ; tested?
     static roomRatesEntry(roomRates, initX := 372, initY := 524) {
         trayTip "录入中：房价"
         MouseMove initX, initY ;372, 504
@@ -247,24 +240,17 @@ class Entry {
         Sleep 100
         Send "!o"
         Sleep 500
-        ; ⬇️ maybe won't need it
-        ; MouseMove initX + 170, initY - 51 ;542, 453
-        ; Sleep 300
-        ; Click
-        ; MouseMove initX + 272, initY + 19 ;644, 523
-        ; Sleep 300
-        ; Click
         Send "{Esc}"
-        Sleep 2000
+        Sleep 100
     }
     ; tested
-    static breakfastEntry(bbf, initX:=352, initY:=548) {
+    static breakfastEntry(bbf, initX := 352, initY := 548) {
         trayTip "录入中：早餐"
         ;entry bbf package
         Sleep 100
         MouseMove initX, initY
         Sleep 100
-        Click 
+        Click
         Sleep 2000
         Send "!n"
         Sleep 100
@@ -274,7 +260,7 @@ class Entry {
         Sleep 1000
         Send "!o"
         Sleep 100
-        Send "{Esc}" 
+        Send "{Esc}"
         Sleep 500
         ; change "Adults"
         MouseMove initX - 67, initY - 124 ; 285, 424
@@ -284,11 +270,22 @@ class Entry {
         ; Send "1"
         Sleep 100
     }
+    ; WIP
+    static saveBooking(initX, initY) {
+        ;TODO: action: save modified booking, handle popups.
+    }
+
+    ; WIP
+    static splitPartyEntry(guestNames, initX, initY) {
+        ;TODO: action: split party
+    }
+
+
 }
 
 ; Kingsley WIP
 RH_Kingsley(infoObj, addFromConf) {
-    ; template booking
+    ; template booking name
     thisTemplate := "template-kingsley"
     ; convert roomType
     roomTypeRef := Map(
@@ -317,13 +314,13 @@ RH_Kingsley(infoObj, addFromConf) {
     comment := (breakfastQty = 0)
         ? "RM TO TA"
         : Format("RM INCL {1}{2} TO TA", breakfastQty, breakfastType)
-    
+
     ; reformat guest names
     pmsGuestNames := []
     loop infoObj["guestNames"].Length {
         curGuestName := infoObj["guestNames"][A_Index]
         if (RegExMatch(curGuestName, "^[a-zA-Z/]+$") > 0) {
-            ; if it only includes English alphabet, push [lastName, firstName]
+            ; if only includes English alphabet, push [lastName, firstName]
             pmsGuestNames.Push(StrSplit(curGuestName, "/"))
         } else {
             pmsGuestNames.Push([
@@ -334,6 +331,7 @@ RH_Kingsley(infoObj, addFromConf) {
         }
     }
 
+    ; Main booking modification
     Entry.USE(
         thisTemplate,
         infoObj,
