@@ -4,7 +4,7 @@
 ;KNOWN ISSUE: when modifying daily detail, error popup needs to handle
 ; WIP: CHANGE
 class FedexEntry {
-    static USE(infoObj, initX:=194, initY:=183) {
+    static USE(infoObj, initX := 194, initY := 183) {
         ; CoordMode "Mouse", "Screen"
         pmsCiDate := (StrSplit(infoObj["ETA"], ":"))[1] < 10
             ? DateAdd(infoObj["ciDate"], -1, "days")
@@ -24,8 +24,8 @@ class FedexEntry {
         Sleep 500
         this.commentTripNumTrackingEntry(infoObj)
         Sleep 500
-        pmsNts := DateDiff(infoObj["coDate"], infoObj["ciDate"], "days")
-        if (infoObj["daysActual"] != pmsNts) {
+        pmsNts := DateDiff(pmsCoDate, pmsCiDate, "days")
+        if (infoObj["daysActual"] < pmsNts) {
             this.dailyDetailsEntry(infoObj["daysActual"])
         }
     }
@@ -192,7 +192,7 @@ class FedexEntry {
         Send Format("{Text}{1}  {2}", infoObj["flightIn"], infoObj["tripNum"])
         Sleep 100
         ; fill-in tracking
-        MouseMove initX + 301, initY -84 ; 923, 505
+        MouseMove initX + 301, initY - 84 ; 923, 505
         Sleep 100
         Click 3
         Sleep 100
@@ -299,7 +299,7 @@ class FedexEntry {
         Sleep 100
     }
     ; WIP
-    static splitParty(crewNames, initX:=456, initY:=482) {
+    static splitParty(crewNames, initX := 456, initY := 482) {
         Send "!t"
         Sleep 100
         MouseMove initX, initY
@@ -384,7 +384,7 @@ RH_Fedex(infoObj) {
                     确定(Enter)：     开始修改预订
                     取消(Esc)：       退出修改
                 )", roomQty, A_Index - 1)
-            notifierYNC :=  Format("
+            notifierYNC := Format("
                 (
                     待修改订单数量：{1}, 已完成{2}个。
                     请先打开需要修改的 Fedex 预订。
@@ -405,14 +405,14 @@ RH_Fedex(infoObj) {
                 Utils.cleanReload(winGroup)
             } else if (changePopup = "No") {
                 continue
-            } else if (changePopup = "Yes"){
+            } else if (changePopup = "Yes") {
                 FedexEntry.USE(infoObj)
             } else {
                 FedexEntry.USE(infoObj)
             }
             ; leave close and save manually ???
             if (A_Index = roomQty) {
-                MsgBox("已完成所有修改。","RH-FedEx - CHANGE", "T1 4096")
+                MsgBox("已完成所有修改。", "RH-FedEx - CHANGE", "T1 4096")
             }
         }
         Utils.cleanReload(winGroup)
