@@ -16,11 +16,11 @@ class ProfileModify {
           点击“开始填入”。
     )"
     static profileAnchor := (A_OSVersion = "6.1.7601")
-            ? "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\assets\ProfileAnchorWin7.PNG"
-            : "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\assets\ProfileAnchor.PNG"
+        ? "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\assets\ProfileAnchorWin7.PNG"
+        : "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\assets\ProfileAnchor.PNG"
     static altAnchor := (A_OSVersion = "6.1.7601")
-            ? "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\assets\AltAnchorWin7.PNG"
-            : "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\assets\AltAnchor.PNG"
+        ? "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\assets\AltAnchorWin7.PNG"
+        : "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\assets\AltAnchor.PNG"
 
     static USE(App) {
         ; GUI
@@ -30,7 +30,7 @@ class ProfileModify {
             App.AddButton("vcopyBtn Default xp h35 w110 y+15", "开始复制"),
             App.AddButton("vpasteBtn Disabled xp+10 h35 w110 x+10 ", "开始填入"),
         ]
-        
+
         copyBtn := Interface.getCtrlByName("copyBtn", ui)
         pasteBtn := Interface.getCtrlByName("pasteBtn", ui)
         ; function
@@ -44,7 +44,7 @@ class ProfileModify {
             ; App.Show()
             pasteBtn.Focus()
         }
-        
+
         pasteBtn.OnEvent("Click", psbPaste)
         psbPaste(*) {
             App.Hide()
@@ -73,11 +73,11 @@ class ProfileModify {
         }
         return this.capture(gType)
     }
-    
+
     static capture(gType) {
         CoordMode "Mouse", "Window"
         BlockInput true
-        if (WinExist("旅客信息")){
+        if (WinExist("旅客信息")) {
             WinSetAlwaysOnTop true, "旅客信息"
         }
         capturedInfo := []
@@ -91,7 +91,7 @@ class ProfileModify {
         ; capture: gender
         MouseMove 565, 147
         Sleep 50
-        Click 
+        Click
         Sleep 50
         Click "Right"
         Sleep 200
@@ -131,13 +131,13 @@ class ProfileModify {
             Click "Up"
             Sleep 50
             Send "^c"
-            Sleep 50           
+            Sleep 50
             capturedInfo.Push(A_Clipboard)
             Sleep 50
             ; capture: province
             MouseMove 587, 292
             Sleep 50
-            Click 
+            Click
             Sleep 50
             Click "Right"
             Sleep 50
@@ -221,7 +221,7 @@ class ProfileModify {
             ; capture: country
             MouseMove 670, 322
             Sleep 50
-            Click 
+            Click
             Sleep 50
             Click "Right"
             Sleep 50
@@ -275,13 +275,13 @@ class ProfileModify {
                 guestProfile["idType"] := "TWT"
                 guestProfile["province"] := "TW"
             }
-        } else if (gType = 3)  {
+        } else if (gType = 3) {
             ; from abroad
             guestProfile["language"] := "E"
             guestProfile["idType"] := "NOP"
             guestProfile["nameLast"] := infoArr[4]
             guestProfile["nameFirst"] := infoArr[5]
-            guestProfile["country"] :=  getCountryCode(infoArr[6])
+            guestProfile["country"] := getCountryCode(infoArr[6])
         }
 
         for k, v in guestProfile {
@@ -308,55 +308,55 @@ class ProfileModify {
 
     static paste(guestProfileMap) {
         CoordMode "Pixel", "Screen"
-        if (ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenWidth, this.profileAnchor))  {
+        if (ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenWidth, this.profileAnchor)) {
             anchorX := FoundX
             anchorY := FoundY
         } else {
             ; msgbox("请先打开Profile界面", this.popupTitle)
             WinMaximize "ahk_class SunAwtFrame"
             anchorX := 205
-            anchorY := 203           
+            anchorY := 203
         }
         WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
         CoordMode "Mouse", "Screen"
         BlockInput true
         ; { fillin common info: nameLast, nameFirst, language, gender, country, birthday, idType, idNum
-        MouseMove anchorX+228, anchorY+80
+        MouseMove anchorX + 228, anchorY + 80
         Click 3
         Sleep 50
         Send Format("{Text}{1}", guestProfileMap["nameLast"])
         Sleep 50
-        MouseMove anchorX+188, anchorY+104
+        MouseMove anchorX + 188, anchorY + 104
         Click 3
         Sleep 50
         Send Format("{Text}{1}", guestProfileMap["nameFirst"])
         Sleep 50
-        MouseMove anchorX+155, anchorY+134
+        MouseMove anchorX + 155, anchorY + 134
         Click 3
         Sleep 50
         Send Format("{Text}{1}", guestProfileMap["language"])
         Sleep 50
-        MouseMove anchorX+230, anchorY+133
+        MouseMove anchorX + 230, anchorY + 133
         Click 3
         Sleep 50
         Send Format("{Text}{1}", guestProfileMap["gender"])
         Sleep 50
-        MouseMove anchorX+150, anchorY+284
+        MouseMove anchorX + 150, anchorY + 284
         Click 3
         Sleep 50
         Send Format("{Text}{1}", guestProfileMap["country"])
         Sleep 50
-        MouseMove anchorX+635, anchorY+78
+        MouseMove anchorX + 635, anchorY + 78
         Click 3
         Sleep 50
         Send Format("{Text}{1}", guestProfileMap["birthday"])
         Sleep 50
-        MouseMove anchorX+633, anchorY+99
+        MouseMove anchorX + 633, anchorY + 99
         Click 3
         Sleep 50
         Send Format("{Text}{1}", guestProfileMap["idType"])
         Sleep 50
-        MouseMove anchorX+658, anchorY+121
+        MouseMove anchorX + 658, anchorY + 121
         Click 3
         Sleep 50
         Send Format("{Text}{1}", guestProfileMap["idNum"])
@@ -365,34 +365,34 @@ class ProfileModify {
         if (guestProfileMap.Has("nameAlt")) {
             ; { with hanzi name
             ; fillin: address, province, nameAlt, gender(in nameAlt window)
-            MouseMove anchorX+227, anchorY+161
+            MouseMove anchorX + 227, anchorY + 161
             Click 3
             Sleep 50
             Send Format("{Text}{1}", guestProfileMap["address"])
             Sleep 50
-            MouseMove anchorX+233, anchorY+282
+            MouseMove anchorX + 233, anchorY + 282
             Click 3
             Sleep 50
             Send Format("{Text}{1}", guestProfileMap["province"])
             Sleep 50
 
-            MouseMove anchorX+247, anchorY+76 ; open alt name win
+            MouseMove anchorX + 247, anchorY + 76 ; open alt name win
             Click 1
             Sleep 3500
 
             if (ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenWidth, this.AltAnchor)) {
                 altX := FoundX
-                altY := FoundY 
+                altY := FoundY
             } else {
                 altX := 419
-                altY := 369                 
+                altY := 369
             }
-            MouseMove altX+224, altY+11
+            MouseMove altX + 224, altY + 11
             Click 3
             Sleep 50
             Send Format("{Text}{1}", guestProfileMap["nameAlt"])
             Sleep 50
-            MouseMove altX+319, altY+101
+            MouseMove altX + 319, altY + 101
             Click 3
             Sleep 50
             Send Format("{Text}{1}", guestProfileMap["gender"])
@@ -401,7 +401,7 @@ class ProfileModify {
             Sleep 500
             Send "!o"
             Sleep 200
-            }
+        }
         BlockInput false
         WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 
@@ -418,8 +418,8 @@ class ProfileModify {
             if (WinExist("旅客信息")) {
                 WinActivate "旅客信息"
             } else {
-            WinActivate "ahk_exe hotel.exe"
+                WinActivate "ahk_exe hotel.exe"
             }
-        } 
+        }
     }
 }
