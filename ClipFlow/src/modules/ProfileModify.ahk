@@ -84,21 +84,21 @@ class ProfileModify {
         ; capture: birthday
         MouseMove 755, 147
         click 1
-        Sleep 10
+        Sleep 50
         Send "^c"
-        Sleep 100
+        Sleep 500
         capturedInfo.Push(A_Clipboard)
         ; capture: gender
         MouseMove 565, 147
-        Sleep 10
+        Sleep 50
         Click 
-        Sleep 10
+        Sleep 50
         Click "Right"
         Sleep 200
         Send "{c}"
-        Sleep 10
+        Sleep 50
         Send "{Esc}"
-        Sleep 10
+        Sleep 50
         capturedInfo.Push(A_Clipboard)
         Sleep 500
         if (gType = 1) {
@@ -106,43 +106,43 @@ class ProfileModify {
             ; capture: id
             MouseMove 738, 235
             Click "Down"
-            Sleep 10
+            Sleep 50
             MouseMove 483, 235
             Click "Up"
-            Sleep 10
+            Sleep 50
             Send "^c"
-            Sleep 10
+            Sleep 50
             capturedInfo.Push(A_Clipboard)
             ; capture: fullname
             MouseMove 658, 116
             Click "Down"
-            Sleep 10
+            Sleep 50
             MouseMove 498, 116
             Click "Up"
-            Sleep 10
+            Sleep 50
             Send "^c"
-            Sleep 10
+            Sleep 50
             capturedInfo.Push(A_Clipboard)
             ; capture: address
             MouseMove 519, 262
             Click "Down"
-            Sleep 10
+            Sleep 50
             MouseMove 789, 262
             Click "Up"
-            Sleep 10
+            Sleep 50
             Send "^c"
-            Sleep 10           
+            Sleep 50           
             capturedInfo.Push(A_Clipboard)
-            Sleep 10
+            Sleep 50
             ; capture: province
             MouseMove 587, 292
-            Sleep 10
+            Sleep 50
             Click 
-            Sleep 10
+            Sleep 50
             Click "Right"
-            Sleep 10
+            Sleep 50
             Send "c"
-            Sleep 10
+            Sleep 50
             Send "{Esc}"
             Sleep 20
             capturedInfo.Push(A_Clipboard)
@@ -151,86 +151,86 @@ class ProfileModify {
             ; capture: id
             MouseMove 652, 291
             Click "Down"
-            Sleep 10
+            Sleep 50
             MouseMove 506, 291
             Click "Up"
             Send "^c"
-            Sleep 10
+            Sleep 50
             capturedInfo.Push(A_Clipboard)
             ; capture: fullname
             MouseMove 658, 116
             Click "Down"
-            Sleep 10
+            Sleep 50
             MouseMove 498, 116
             Click "Up"
-            Sleep 10
+            Sleep 50
             Send "^c"
-            Sleep 100
+            Sleep 500
             capturedInfo.Push(A_Clipboard)
             ; capture: nameLast
             MouseMove 759, 203
             Click "Down"
-            Sleep 10
+            Sleep 50
             MouseMove 500, 203
             Click "Up"
-            Sleep 10
+            Sleep 50
             Send "^c"
-            Sleep 10
+            Sleep 50
             capturedInfo.Push(A_Clipboard)
             ; capture: nameFirst
             MouseMove 759, 233
             Click "Down"
-            Sleep 10
+            Sleep 50
             MouseMove 500, 233
             Click "Up"
-            Sleep 10
+            Sleep 50
             Send "^c"
-            Sleep 10
+            Sleep 50
             capturedInfo.Push(A_Clipboard)
-            Sleep 10
+            Sleep 50
         } else if (gType = 3) {
             ; from abroad
             ; capture: id
             MouseMove 666, 290
-            Sleep 10
+            Sleep 50
             Click 2
-            Sleep 10
+            Sleep 50
             Send "^c"
-            Sleep 10
+            Sleep 50
             capturedInfo.Push(A_Clipboard)
             ; capture: nameLast
             MouseMove 759, 203
             Click "Down"
-            Sleep 10
+            Sleep 50
             MouseMove 500, 203
             Click "Up"
-            Sleep 10
+            Sleep 50
             Send "^c"
-            Sleep 10
+            Sleep 50
             capturedInfo.Push(A_Clipboard)
             ; capture: nameFirst
             MouseMove 759, 233
             Click "Down"
-            Sleep 10
+            Sleep 50
             MouseMove 500, 233
             Click "Up"
-            Sleep 10
+            Sleep 50
             Send "^c"
-            Sleep 10
+            Sleep 50
             capturedInfo.Push(A_Clipboard)
             ; capture: country
             MouseMove 670, 322
-            Sleep 10
+            Sleep 50
             Click 
-            Sleep 10
+            Sleep 50
             Click "Right"
-            Sleep 10
+            Sleep 50
             Send "c"
-            Sleep 10
+            Sleep 50
             Send "{Esc}"
-            Sleep 10
+            Sleep 50
             capturedInfo.Push(A_Clipboard)
-            Sleep 10
+            Sleep 50
         }
         WinSetAlwaysOnTop false, "旅客信息"
         BlockInput false
@@ -323,58 +323,58 @@ class ProfileModify {
         ; { fillin common info: nameLast, nameFirst, language, gender, country, birthday, idType, idNum
         MouseMove anchorX+228, anchorY+80
         Click 3
-        Sleep 10
+        Sleep 50
         Send Format("{Text}{1}", guestProfileMap["nameLast"])
-        Sleep 10
+        Sleep 50
         MouseMove anchorX+188, anchorY+104
         Click 3
-        Sleep 10
+        Sleep 50
         Send Format("{Text}{1}", guestProfileMap["nameFirst"])
-        Sleep 10
+        Sleep 50
         MouseMove anchorX+155, anchorY+134
         Click 3
-        Sleep 10
+        Sleep 50
         Send Format("{Text}{1}", guestProfileMap["language"])
-        Sleep 10
+        Sleep 50
         MouseMove anchorX+230, anchorY+133
         Click 3
-        Sleep 10
+        Sleep 50
         Send Format("{Text}{1}", guestProfileMap["gender"])
-        Sleep 10
+        Sleep 50
         MouseMove anchorX+150, anchorY+284
         Click 3
-        Sleep 10
+        Sleep 50
         Send Format("{Text}{1}", guestProfileMap["country"])
-        Sleep 10
+        Sleep 50
         MouseMove anchorX+635, anchorY+78
         Click 3
-        Sleep 10
+        Sleep 50
         Send Format("{Text}{1}", guestProfileMap["birthday"])
-        Sleep 10
+        Sleep 50
         MouseMove anchorX+633, anchorY+99
         Click 3
-        Sleep 10
+        Sleep 50
         Send Format("{Text}{1}", guestProfileMap["idType"])
-        Sleep 10
+        Sleep 50
         MouseMove anchorX+658, anchorY+121
         Click 3
-        Sleep 10
+        Sleep 50
         Send Format("{Text}{1}", guestProfileMap["idNum"])
-        Sleep 10
+        Sleep 50
         ; }
         if (guestProfileMap.Has("nameAlt")) {
             ; { with hanzi name
             ; fillin: address, province, nameAlt, gender(in nameAlt window)
             MouseMove anchorX+227, anchorY+161
             Click 3
-            Sleep 10
+            Sleep 50
             Send Format("{Text}{1}", guestProfileMap["address"])
-            Sleep 10
+            Sleep 50
             MouseMove anchorX+233, anchorY+282
             Click 3
-            Sleep 10
+            Sleep 50
             Send Format("{Text}{1}", guestProfileMap["province"])
-            Sleep 10
+            Sleep 50
 
             MouseMove anchorX+247, anchorY+76 ; open alt name win
             Click 1
@@ -389,16 +389,16 @@ class ProfileModify {
             }
             MouseMove altX+224, altY+11
             Click 3
-            Sleep 10
+            Sleep 50
             Send Format("{Text}{1}", guestProfileMap["nameAlt"])
-            Sleep 10
+            Sleep 50
             MouseMove altX+319, altY+101
             Click 3
-            Sleep 10
+            Sleep 50
             Send Format("{Text}{1}", guestProfileMap["gender"])
-            Sleep 10
+            Sleep 50
             Send "{Enter}"
-            Sleep 100
+            Sleep 500
             Send "!o"
             Sleep 200
             }
