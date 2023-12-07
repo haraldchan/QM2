@@ -76,7 +76,7 @@ class FedexEntry {
         Sleep 100
     }
     ; tested. seems that rate code entry is not neccessary
-    static dateTimeCodeEntry(checkin, checkout, ETA, ETD, initX := 323, initY := 506) {
+    static dateTimeEntry(checkin, checkout, ETA, ETD, initX := 323, initY := 506) {
         pmsCiDate := (StrSplit(ETA, ":")[1]) < 10
             ? FormatTime(DateAdd(checkin, -1, "days"), "MMddyyyy")
             : FormatTime(checkin, "MMddyyyy")
