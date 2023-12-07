@@ -4,7 +4,7 @@
 ;KNOWN ISSUE: when modifying daily detail, error popup needs to handle
 ; WIP: CHANGE
 class FedexEntry {
-    static USE(infoObj, initX := 194, initY := 183) {
+    static USE(infoObj, initX:=194, initY:=183) {
         ; CoordMode "Mouse", "Screen"
         pmsCiDate := (StrSplit(infoObj["ETA"], ":"))[1] < 10
             ? DateAdd(infoObj["ciDate"], -1, "days")
@@ -18,7 +18,7 @@ class FedexEntry {
             this.roomQtyEntry(infoObj["crewNames"].Length)
         }
         Sleep 500
-        this.dateTimeRateCodeEntry(infoObj["ciDate"], infoObj["coDate"], infoObj["ETA"], infoObj["ETD"])
+        this.dateTimeEntry(infoObj["ciDate"], infoObj["coDate"], infoObj["ETA"], infoObj["ETD"])
         Sleep 500
         this.moreFieldsEntry(infoObj)
         Sleep 500
@@ -28,12 +28,14 @@ class FedexEntry {
         if (infoObj["daysActual"] < pmsNts) {
             this.dailyDetailsEntry(infoObj["daysActual"])
         }
+        Sleep 500
+        FedexEntry.rateCodeEntry()
     }
     ; tested
     static profileEntry(crewNames, initX := 471, initY := 217) {
-        ; if (A_Index = 0) { 
-        ;     A_Index := 1
-        ; }
+        if (A_Index = 0) {
+            A_Index := 1
+        }
         crewName := StrSplit(crewNames[A_Index], " ")
         Sleep 1000
         MouseMove initX, initY ; 471, 217
@@ -74,7 +76,7 @@ class FedexEntry {
         Sleep 100
     }
     ; tested. seems that rate code entry is not neccessary
-    static dateTimeRateCodeEntry(checkin, checkout, ETA, ETD, initX := 323, initY := 506) {
+    static dateTimeCodeEntry(checkin, checkout, ETA, ETD, initX := 323, initY := 506) {
         pmsCiDate := (StrSplit(ETA, ":")[1]) < 10
             ? FormatTime(DateAdd(checkin, -1, "days"), "MMddyyyy")
             : FormatTime(checkin, "MMddyyyy")
@@ -192,7 +194,7 @@ class FedexEntry {
         Send Format("{Text}{1}  {2}", infoObj["flightIn"], infoObj["tripNum"])
         Sleep 100
         ; fill-in tracking
-        MouseMove initX + 301, initY - 84 ; 923, 505
+        MouseMove initX + 301, initY -84 ; 923, 505
         Sleep 100
         Click 3
         Sleep 100
@@ -299,7 +301,7 @@ class FedexEntry {
         Sleep 100
     }
     ; WIP
-    static splitParty(initX := 456, initY := 482) {
+    static splitParty(crewNames, initX:=456, initY:=482) {
         Send "!t"
         Sleep 100
         MouseMove initX, initY
@@ -308,12 +310,32 @@ class FedexEntry {
         Sleep 100
         Send "!s" ; !s: Split; !a: Split All
         Sleep 100
-        Send "!r" ; enter a booking after split
-        Sleep 1000 
+        Send "!r"
+        Sleep 1000
+    }
+    ; to-be-test 
+    static rateCodeEntry(initX := 326, initY := 507){
+        MouseMove initX, initY
+        Sleep 100
+        Click "Down"
+        Sleep 100
+        MouseMove initX - 71, initY
+        Sleep 100
+        Click "Up"
+        Sleep 100
+        Send "{Text}FEDEXN"
+        Sleep 100
+        Send "{Tab}"
+        Sleep 100
+        loop 3 {
+            Send "{Esc}"
+            Sleep 100
+        }
     }
 }
 
 RH_Fedex(infoObj) {
+    ; infoObj["ETA"] := "12:52"
     roomQty := infoObj["crewNames"].Length
 
     ; starter
@@ -324,53 +346,51 @@ RH_Fedex(infoObj) {
     }
 
     ; WIP
-    addModification(infoObj){
-        loop roomQty {
-            notifierOC := Format("
-                (
-                    新增订单数量：{1}, 已完成{2}个。
-                    请先新增一个booking并打开，按下
-                    确定后开始修改。
-
-                    确定(Enter)：     开始录入新增
-                    取消(Esc)：       退出新增
-                )", roomQty, A_Index - 1)
-            notifierYNC := Format("
-                (
-                    新增订单数量：{1}, 已完成{2}个。
-                    请先打开需要录入新增信息的预订。
-
-                    是(Yes)：         开始录入新增
-                    否(No):           跳过第一个修改    
-                    取消(Cancel):     退出新增
-                )", roomQty, A_Index - 1)
-
-            options := roomQty = 2 ? "YesNoCancel" : "OKCancel"
-            notifier := roomQty = 2 ? notifierYNC : notifierOC
-            if (A_Index = 2) {
-                notifier := notifierOC
-                options := "OKCancel"
-            }
-            changePopup := MsgBox(notifier, "RH-FedEx - ADD", options . " 4096")
-            if (changePopup = "Cancel") {
-                Utils.cleanReload(winGroup)
-            } else if (changePopup = "No") {
-                continue
-            } else {
-                FedexEntry.USE(infoObj)
-            }
-            ; split and open a booking, modified again(second loop)
-            if (A_Index = 1) {
-                ; change msgbox to save actions later!
-                MsgBox("请保存，完成后点击确定进入下一个", "RH-FedEx - CHANGE", "4096")
-                FedexEntry.splitParty()
-            }
-            ; leave close and save manually ???
-            if (A_Index = roomQty) {
-                MsgBox("已完成所有新增。", "RH-FedEx - CHANGE", "T1 4096")
-            }
+    addModification(infoObj) {
+        addFrom := InputBox("请指定需要从哪个 FedEx Block Add-On? (请输入 BlockCode )", "Reservation Handler", , SubStr(A_YYYY, 3, 4) . A_MM . A_MDay . "FEDEX")
+        if (addFrom.Result = "Cancel") {
+            Utils.cleanReload(winGroup)
         }
-        Utils.cleanReload(winGroup)
+
+        ; TODO: action: adds on from a block pm(by using addFrom.Value), then open it.
+        Sleep 1000
+        Send "!r"
+        Sleep 100
+        Send "u"
+        Sleep 3000
+        Loop 8 {
+            Send "{Tab}"
+            Sleep 10
+        }
+        Send addFrom.Value
+        Sleep 100
+        Loop 4 {
+            Send "{Tab}"
+            Sleep 10
+        }
+        Send "{Delete}"
+        Sleep 10
+        Send "!h"
+        Sleep 10
+        Send "!t"
+        Sleep 10
+        Send "!o"
+        Send "{Text}DKC"
+        Sleep 10
+        Send "!o"
+        Sleep 10
+        Send "{Left}"
+        Sleep 10
+        Send "{Enter}"
+        Sleep 4000
+        Send "{Esc}"
+        Sleep 2500
+
+        FedexEntry.USE(infoObj)
+        Sleep 1000
+        FedexEntry.splitPartyEntry(infoObj["crewNames"])
+
+        MsgBox("已完成新增。", "Reservation Handler", "T2 4096")
     }
 
     ; to-be-test
@@ -384,7 +404,7 @@ RH_Fedex(infoObj) {
                     确定(Enter)：     开始修改预订
                     取消(Esc)：       退出修改
                 )", roomQty, A_Index - 1)
-            notifierYNC := Format("
+            notifierYNC :=  Format("
                 (
                     待修改订单数量：{1}, 已完成{2}个。
                     请先打开需要修改的 Fedex 预订。
@@ -405,14 +425,14 @@ RH_Fedex(infoObj) {
                 Utils.cleanReload(winGroup)
             } else if (changePopup = "No") {
                 continue
-            } else if (changePopup = "Yes") {
+            } else if (changePopup = "Yes"){
                 FedexEntry.USE(infoObj)
             } else {
                 FedexEntry.USE(infoObj)
             }
             ; leave close and save manually ???
             if (A_Index = roomQty) {
-                MsgBox("已完成所有修改。", "RH-FedEx - CHANGE", "T1 4096")
+                MsgBox("已完成所有修改。","RH-FedEx - CHANGE", "T1 4096")
             }
         }
         Utils.cleanReload(winGroup)
