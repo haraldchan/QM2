@@ -29,7 +29,7 @@ class FedexEntry {
         }
         Sleep 500
         FedexEntry.rateCodeEntry()
-        Sleep 500
+        Sleep 1000
         if (infoObj["daysActual"] > pmsNts) {
             this.postRoomChargeAlertEntry(pmsNts, infoObj["daysActual"])
         }
@@ -369,7 +369,6 @@ class FedexEntry {
 }
 
 RH_Fedex(infoObj) {
-    infoObj["ETA"] := "12:52"
     roomQty := infoObj["crewNames"].Length
 
     ; starter
