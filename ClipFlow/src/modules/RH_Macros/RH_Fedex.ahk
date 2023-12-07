@@ -1,8 +1,7 @@
 #Include "../../lib/utils.ahk"
 #Include "../../lib/DictIndex.ahk"
 ; FedEx WIP
-;KNOWN ISSUE: when modifying daily detail, error popup needs to handle
-; WIP: CHANGE
+; WIP: ADD
 class FedexEntry {
     static USE(infoObj, initX:=194, initY:=183) {
         ; CoordMode "Mouse", "Screen"
@@ -30,6 +29,10 @@ class FedexEntry {
         }
         Sleep 500
         FedexEntry.rateCodeEntry()
+        Sleep 500
+        if (infoObj["daysActual"] > pmsNts) {
+            this.postRoomChargeAlertEntry(pmsNts, infoObj["daysActual"])
+        }
     }
     ; tested
     static profileEntry(crewNames, initX := 471, initY := 217) {
@@ -332,10 +335,41 @@ class FedexEntry {
             Sleep 100
         }
     }
+    ; to-be-test
+    static postRoomChargeAlertEntry(pmsNts, daysActual, initX:=759, initY:=266) {
+        Send "!t"
+        MouseMove initX, initY ; 759, 266
+        Sleep 100
+        Click
+        Send "!n"
+        Sleep 100
+        Send "{Text}OTH"
+        MouseMove initX-242, initY+133 ; 517, 399
+        Sleep 100
+        Click
+        MouseMove initX-280, initY+169 ; 479, 435
+        Sleep 100
+        Click
+        MouseMove initX-70, initY+211 ; 689, 477
+        Sleep 100
+        Click "Down"
+        MouseMove initX-62, initY+211 ; 697, 477
+        Sleep 100
+        Click "Up"
+        Sleep 100
+        Send Format("{Text}实际需收取 {1} 晚房费。退房请补入 {2} 晚房费。", daysActual, daysActual - pmsNts)
+        Sleep 150
+        Send "!o"
+        Sleep 400
+        Send "!c"
+        Sleep 200
+        Send "!c"
+        Sleep 200
+    }
 }
 
 RH_Fedex(infoObj) {
-    ; infoObj["ETA"] := "12:52"
+    infoObj["ETA"] := "12:52"
     roomQty := infoObj["crewNames"].Length
 
     ; starter
