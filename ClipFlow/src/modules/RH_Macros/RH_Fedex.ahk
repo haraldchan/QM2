@@ -346,51 +346,53 @@ RH_Fedex(infoObj) {
     }
 
     ; WIP
-    addModification(infoObj) {
-        addFrom := InputBox("请指定需要从哪个 FedEx Block Add-On? (请输入 BlockCode )", "Reservation Handler", , SubStr(A_YYYY, 3, 4) . A_MM . A_MDay . "FEDEX")
-        if (addFrom.Result = "Cancel") {
-            Utils.cleanReload(winGroup)
-        }
+    addModification(infoObj){
+        loop roomQty {
+            notifierOC := Format("
+                (
+                    新增订单数量：{1}, 已完成{2}个。
+                    请先新增一个booking并打开，按下
+                    确定后开始修改。
 
-        ; TODO: action: adds on from a block pm(by using addFrom.Value), then open it.
-        Sleep 1000
-        Send "!r"
-        Sleep 100
-        Send "u"
-        Sleep 3000
-        Loop 8 {
-            Send "{Tab}"
-            Sleep 10
-        }
-        Send addFrom.Value
-        Sleep 100
-        Loop 4 {
-            Send "{Tab}"
-            Sleep 10
-        }
-        Send "{Delete}"
-        Sleep 10
-        Send "!h"
-        Sleep 10
-        Send "!t"
-        Sleep 10
-        Send "!o"
-        Send "{Text}DKC"
-        Sleep 10
-        Send "!o"
-        Sleep 10
-        Send "{Left}"
-        Sleep 10
-        Send "{Enter}"
-        Sleep 4000
-        Send "{Esc}"
-        Sleep 2500
+                    确定(Enter)：     开始录入新增
+                    取消(Esc)：       退出新增
+                )", roomQty, A_Index - 1)
+            notifierYNC := Format("
+                (
+                    新增订单数量：{1}, 已完成{2}个。
+                    请先打开需要录入新增信息的预订。
 
-        FedexEntry.USE(infoObj)
-        Sleep 1000
-        FedexEntry.splitPartyEntry(infoObj["crewNames"])
+                    是(Yes)：         开始录入新增
+                    否(No):           跳过第一个修改    
+                    取消(Cancel):     退出新增
+                )", roomQty, A_Index - 1)
 
-        MsgBox("已完成新增。", "Reservation Handler", "T2 4096")
+            options := roomQty = 2 ? "YesNoCancel" : "OKCancel"
+            notifier := roomQty = 2 ? notifierYNC : notifierOC
+            if (A_Index = 2) {
+                notifier := notifierOC
+                options := "OKCancel"
+            }
+            changePopup := MsgBox(notifier, "RH-FedEx - ADD", options . " 4096")
+            if (changePopup = "Cancel") {
+                Utils.cleanReload(winGroup)
+            } else if (changePopup = "No") {
+                continue
+            } else {
+                FedexEntry.USE(infoObj)
+            }
+            ; split and open a booking, modified again(second loop)
+            if (A_Index = 1) {
+                ; change msgbox to save actions later!
+                MsgBox("请保存，完成后点击确定进入下一个", "RH-FedEx - CHANGE", "4096")
+                FedexEntry.splitParty()
+            }
+            ; leave close and save manually ???
+            if (A_Index = roomQty) {
+                MsgBox("已完成所有新增。", "RH-FedEx - CHANGE", "T1 4096")
+            }
+        }
+        Utils.cleanReload(winGroup)
     }
 
     ; to-be-test
