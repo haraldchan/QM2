@@ -31,9 +31,9 @@ class FedexEntry {
     }
     ; tested
     static profileEntry(crewNames, initX := 471, initY := 217) {
-        if (A_Index = 0) {
-            A_Index := 1
-        }
+        ; if (A_Index = 0) { 
+        ;     A_Index := 1
+        ; }
         crewName := StrSplit(crewNames[A_Index], " ")
         Sleep 1000
         MouseMove initX, initY ; 471, 217
