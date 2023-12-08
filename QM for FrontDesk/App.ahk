@@ -10,7 +10,8 @@
 ; #Include "%A_ScriptDir%\src\modules\GroupProfilesModify.ahk"
 ; #Include "%A_ScriptDir%\src\modules\PsbBatchCO.ahk"
 ; #Include "%A_ScriptDir%\src\modules\Phrases.ahk"
-#Include "./src/lib/utils.ahk"
+; #Include "./src/lib/utils.ahk"
+#Include "../Lib/Classes/utils.ahk"
 #Include "./src/modules/CityLedgerCO.ahk"
 #Include "./src/modules/InhShare.ahk"
 #Include "./src/modules/Pbpf.ahk"
@@ -30,7 +31,9 @@ CoordMode "Mouse", "Screen"
 ; globals and states
 version := "2.1.0"
 today := FormatTime(A_Now, "yyyyMMdd")
-config := A_ScriptDir . "\src\lib\config.ini"
+; config := A_ScriptDir . "\src\lib\config.ini"
+config := "../Lib/QM for FrontDesk/config.ini"
+winGroup := ["ahk_class SunAwtFrame"]
 popupTitle := "QM for FrontDesk " . version
 cityLedgerOn := true
 desktopMode := false
@@ -213,8 +216,10 @@ runSelectedScript(*) {
 F9:: {
     QM.Show()
  } 
-F12:: cleanReload()
-^F12:: quitApp() 
+; F12:: cleanReload()
+F12:: Utils.cleanReload(winGroup)
+; ^F12:: quitApp() 
+^F12:: Utils.quitApp("QM for FrontDesk", popupTitle, winGroup)
 
 #HotIf cityLedgerOn
 ^o::CityLedgerCo.USE()

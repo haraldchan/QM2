@@ -1,6 +1,8 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
 ; #Include "%A_ScriptDir%\src\modules\ProfileModify.ahk"
-#Include "./src/lib/utils.ahk"
+; #Include "./src/lib/utils.ahk"
+#Include "../Lib/Classes/utils.ahk"
+#Include "../Lib/Classes/_JXON.ahk"
 #Include "./src/modules/ProfileModify.ahk"
 #Include "./src/modules/InvoiceWechat.ahk"
 #Include "./src/modules/ShareClip.ahk"
@@ -17,7 +19,8 @@ popupTitle := "ClipFlow " . version
 if (FileExist(A_MyDocuments . "\ClipFlow.ini")) {
     store := A_MyDocuments . "\ClipFlow.ini"
 } else {
-    FileCopy A_ScriptDir . "\src\lib\ClipFlow.ini", A_MyDocuments
+    ; FileCopy A_ScriptDir . "\src\lib\ClipFlow.ini", A_MyDocuments
+    FileCopy "../Lib/ClipFlow/ClipFlow.ini", A_MyDocuments
     store := A_MyDocuments . "\ClipFlow.ini"
 }
 Sleep 100
@@ -71,7 +74,8 @@ addToHistory(*) {
 
 clearList(*) {
     FileDelete(store)
-    FileCopy(A_ScriptDir . "\src\lib\ClipFlow.ini", A_MyDocuments)
+    ; FileCopy(A_ScriptDir . "\src\lib\ClipFlow.ini", A_MyDocuments)
+    FileCopy("../Lib/ClipFlow/ClipFlow.ini", A_MyDocuments)
     Utils.cleanReload(winGroup)
 }
 

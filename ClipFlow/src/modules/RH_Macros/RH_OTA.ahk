@@ -1,4 +1,5 @@
-#Include "../../lib/DictIndex.ahk"
+; #Include "../../lib/DictIndex.ahk"
+#Include "../../../../Lib/ClipFlow/DictIndex.ahk"
 
 class Entry {
     ; the initX, initY for USE() should be top-left corner of current booking window

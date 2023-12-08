@@ -1,5 +1,7 @@
-#Include "../../lib/utils.ahk"
-#Include "../../lib/DictIndex.ahk"
+; #Include "../../lib/utils.ahk"
+; #Include "../../lib/DictIndex.ahk"
+#Include "../../../../Lib/Classes/utils.ahk"
+#Include "../../../../Lib/ClipFlow/DictIndex.ahk"
 ; FedEx WIP
 ; WIP: ADD
 class FedexEntry {

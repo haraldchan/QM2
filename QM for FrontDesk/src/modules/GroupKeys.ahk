@@ -1,5 +1,6 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-#Include "../lib/utils.ahk"
+; #Include "../lib/utils.ahk"
+#Include "../../../Lib/Classes/utils.ahk"
 
 class GroupKeys {
     static name := "GroupKeys"
@@ -37,7 +38,7 @@ class GroupKeys {
         3、确保VingCard已经打开处于Check-in界面。
         )", this.popupTitle, "OKCancel 4096")
         if (start = "Cancel") {
-            cleanReload()
+            Utils.cleanReload(winGroup)
         }
         loop {
             coDateInput := InputBox("请输入退房日期：`n(格式为yyyy-mm-dd或yyyy/mm/dd)", this.popupTitle).Value
@@ -59,7 +60,7 @@ class GroupKeys {
             退房时间：{2}
             )", coDateInput, coTimeInput), "GroupKey", "OKCancel")
         if (infoConfirm = "Cancel") {
-            cleanReload()
+            Utils.cleanReload(winGroup)
         }
         
         Xl := ComObject("Excel.Application")
@@ -127,7 +128,7 @@ class GroupKeys {
                 - 否(N)退出制卡
                 )", roomNums[A_Index]), this.popupTitle, "OKCancel 4096")
             if (checkConf = "Cancel") {
-                cleanReload()
+                Utils.cleanReload(winGroup)
             }
         }
         Sleep 1000

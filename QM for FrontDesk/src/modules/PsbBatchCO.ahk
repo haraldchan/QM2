@@ -1,7 +1,9 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
 ; #Include "%A_ScriptDir%\src\lib\reports.ahk"
-#Include "../lib/utils.ahk"
-#Include "../lib/reports.ahk"
+; #Include "../lib/utils.ahk"
+; #Include "../lib/reports.ahk"
+#Include  "../../../Lib/Classes/utils.ahk"
+#Include  "../../../Lib/QM for FrontDesk/reports.ahk"
 
 class PsbBatchCO {
     static name := "PsbBatchCO"
@@ -41,7 +43,7 @@ class PsbBatchCO {
             this.saveDep(path)
             this.batchOut(path)
         } else {
-            cleanReload()
+            Utils.cleanReload(winGroup)
         }
     }
 
@@ -164,7 +166,7 @@ class PsbBatchCO {
     static batchOut(path) {
         autoOut := MsgBox("即将开始自动拍Out脚本`n请先打开PSB，进入“旅客退房”界面", PsbBatchCo.popupTitle, "OKCancel")
         if (autoOut = "Cancel") {
-            cleanReload()
+            Utils.cleanReload(winGroup)
         }
         Xl := ComObject("Excel.Application")
         CheckOut := Xl.Workbooks.Open(path)

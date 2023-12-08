@@ -1,5 +1,7 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-#Include "../lib/utils.ahk"
+; #Include "../lib/utils.ahk"
+#Include "../../../Lib/Classes/utils.ahk"
+#Include "../../../Lib/Classes/_JXON.ahk"
 #Include "../../App.ahk"
 
 class ShareClip {

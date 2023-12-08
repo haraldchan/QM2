@@ -1,5 +1,6 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-#Include "../lib/utils.ahk"
+; #Include "../lib/utils.ahk"
+#Include  "../../../Lib/Classes/utils.ahk"
 
 class GroupShare {
     static description := "旅行团房Share + DoNotMove"
@@ -19,11 +20,11 @@ class GroupShare {
             3.以Name筛选团房（如使用BlockCode将会出错）
         )", this.popupTitle, "OKCancel 4096")
         If (confirmMsg = "Cancel") {
-            cleanReload()
+            Utils.cleanReload(winGroup)
         } else {
             roomQty := InputBox("`n请输入需要Share + DNM的房间数量", this.popupTitle, "h150")
             if (roomQty.Result = "Cancel") {
-                cleanReload()
+                Utils.cleanReload(winGroup)
             }
         }
         MouseMove 340, 311

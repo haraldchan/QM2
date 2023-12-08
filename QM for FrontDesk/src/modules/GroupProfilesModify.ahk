@@ -1,5 +1,6 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-#Include "../lib/utils.ahk"
+; #Include "../lib/utils.ahk"
+#Include  "../../../Lib/Classes/utils.ahk"
 
 class GroupProfilesModify {
     static name := "GroupProfilesModify"
@@ -35,7 +36,7 @@ class GroupProfilesModify {
         2、请在InHouse界面下启动
         )", GroupProfilesModify.popupTitle, "OKCancel 4096")
         if (gpmStart = "Cancel") {
-            cleanReload()
+            Utils.cleanReload(winGroup)
         }
 
         Xl := ComObject("Excel.Application")
@@ -102,12 +103,12 @@ class GroupProfilesModify {
             Sleep 200
             CoordMode "Mouse", "Screen"
             ; stop on error
-            if (PixelGetColor(698, 306) = errorRed) {
-                MsgBox("Modify出错，脚本已终止`n`n已Modify到：" . roomNums[A_Index], this.popupTitle)
-                quitOnRoom := A_Clipboard
-                IniWrite(quitOnRoom, A_ScriptDir . "\lib\lib\config.ini", "PsbBatchCO", "errorQuitAt")
-                cleanReload()
-            }
+            ; if (PixelGetColor(698, 306) = errorRed) {
+            ;     MsgBox("Modify出错，脚本已终止`n`n已Modify到：" . roomNums[A_Index], this.popupTitle)
+            ;     quitOnRoom := A_Clipboard
+            ;     IniWrite(quitOnRoom, A_ScriptDir . "\lib\lib\config.ini", "PsbBatchCO", "errorQuitAt")
+            ;     Utils.cleanReload(winGroup)
+            ; }
         }
         ; }
 

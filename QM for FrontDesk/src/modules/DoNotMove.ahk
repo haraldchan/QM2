@@ -1,5 +1,6 @@
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-#Include "../lib/utils.ahk"
+; #Include "../lib/utils.ahk"
+#Include "../../../Lib/Classes/utils.ahk"
 
 class DoNotMove {
     static description := "预到房间批量 DoNotMove"
@@ -11,7 +12,7 @@ class DoNotMove {
         Sleep 500
         roomQty := InputBox("`n请输入需要DNM的房间数量", this.popupTitle, "h150")
         if (roomQty.Result = "Cancel") {
-            cleanReload()
+            Utils.cleanReload(winGroup)
         }
         BlockInput true
         loop roomQty.Value {

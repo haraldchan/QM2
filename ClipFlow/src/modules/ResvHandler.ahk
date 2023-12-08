@@ -3,8 +3,8 @@
 ; #Include "%A_ScriptDir%\src\lib\RH_Macros\RH_Fedex.ahk"
 ; #Include "%A_ScriptDir%\src\lib\RH_Macros\RH_OTA.ahk"
 ; #Include "../../App.ahk"
-#Include "../lib/utils.ahk"
-#Include "../lib/_JXON.ahk"
+#Include "../../../Lib/Classes/utils.ahk"
+#Include "../../../Lib/Classes/_JXON.ahk"
 #Include "./RH_Macros/RH_Fedex.ahk"
 #Include "./RH_Macros/RH_OTA.ahk"
 

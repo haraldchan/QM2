@@ -1,7 +1,9 @@
 ; #Include "%A_ScriptDir%\src\lib\reports.ahk"
 ; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-#Include "../Lib/reports.ahk"
-#Include "../Lib/utils.ahk"
+; #Include "../Lib/reports.ahk"
+; #Include "../Lib/utils.ahk"
+#Include "../../../Lib/QM for FrontDesk/reports.ahk"
+#Include "../../../Lib/Classes/utils.ahk"
 
 class ReportMaster {
     static description := "报表保存 - Report Master"
@@ -47,7 +49,8 @@ class ReportMaster {
 		)", this.getReportListStr(this.reportIndex))
 		reportSelector := InputBox(reportMsg, this.popupTitle, "h600", "666")
 		if (reportSelector.Result = "Cancel") {
-			cleanReload()
+			; cleanReload()
+			Utils.cleanReload(winGroup)
 		}
 		if (isNumber(reportSelector.Value)) {
 			if (reportSelector.Value > 0 && reportSelector.Value <= this.reportIndex.Length) {
@@ -99,7 +102,8 @@ class ReportMaster {
 				} else if (rmListSaver = "No") {
 					this.saveGroupRmList()
 				} else {
-				cleanReload()
+				; cleanReload()
+				Utils.cleanReload(winGroup)
 				}
 				Sleep 1000
 				this.openMyDocs(reportName)
@@ -130,7 +134,8 @@ class ReportMaster {
 		if (openFolder = "OK") {
 			Run A_MyDocuments
 		} else {
-			cleanReload()
+			; cleanReload()
+			Utils.cleanReload(winGroup)
 		}
 	}
 
