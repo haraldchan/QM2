@@ -100,8 +100,9 @@ class ShareClip {
 
     static sendHistory(clipHisArr) {
         text := this.prefix
-        loop clipHisArr.Length {
-            text .= clipHisArr[A_Index] . "`r`n"
+        his := Jxon_Load(&clipHisArr)
+        loop his.Length {
+            text .= his[A_Index] . "`r`n"
         }
         Utils.filePrepend(text . "`r`n`r`n", this.shareTxt)
         return text
