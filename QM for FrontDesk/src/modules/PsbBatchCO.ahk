@@ -212,7 +212,7 @@ class PsbBatchCO {
                 MsgBox("PSB系统出错，脚本已终止`n`n已拍Out到：" . depRoomNums[A_Index], PsbBatchCo.popupTitle)
                 quitOnRoom := depRoomNums[A_Index]
                 IniWrite(quitOnRoom, A_ScriptDir . "\src\lib\config.ini", "PsbBatchCO", "errorQuitAt")
-                cleanReload()
+                Utils.cleanReload(winGroup)
             }
         }
 

@@ -49,7 +49,6 @@ class ReportMaster {
 		)", this.getReportListStr(this.reportIndex))
 		reportSelector := InputBox(reportMsg, this.popupTitle, "h600", "666")
 		if (reportSelector.Result = "Cancel") {
-			; cleanReload()
 			Utils.cleanReload(winGroup)
 		}
 		if (isNumber(reportSelector.Value)) {
@@ -102,7 +101,6 @@ class ReportMaster {
 				} else if (rmListSaver = "No") {
 					this.saveGroupRmList()
 				} else {
-				; cleanReload()
 				Utils.cleanReload(winGroup)
 				}
 				Sleep 1000
