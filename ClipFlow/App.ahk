@@ -4,14 +4,15 @@
 #Include "./src/modules/InvoiceWechat.ahk"
 #Include "./src/modules/ShareClip.ahk"
 #Include "./src/modules/ResvHandler.ahk"
-; { setup
+
 #SingleInstance Force
 CoordMode "Mouse", "Screen"
 TraySetIcon A_ScriptDir . "\src\assets\CFTray.ico"
 OnClipboardChange addToHistory
 modules := [
-    ; ProfileModify, 
-    ; ShareClip,  
+    ProfileModify,
+    InvoiceWechat, 
+    ShareClip,  
     ResvHandler,
 ]
 winGroup := ["ahk_class SunAwtFrame", "旅客信息"]
@@ -26,12 +27,12 @@ Sleep 100
 clipHisObj := IniRead(store, "ClipHistory", "clipHisArr")
 clipHisArr := Jxon_Load(&clipHisObj)
 onTop := false
-; }
 
-; { GUI template
+
+; GUI template
 ClipFlow := Gui(, popupTitle)
 ClipFlow.OnEvent("Close", (*) => Utils.quitApp("ClipFlow", popupTitle, winGroup))
-ClipFlow.AddCheckbox("h25 x15", "Keep ClipFlow On Top").OnEvent("Click", keepOnTop)
+ClipFlow.AddCheckbox("h25 x15", "保持 ClipFlow 置顶      / 停止脚本: Ctrl+F12").OnEvent("Click", keepOnTop)
 
 tab3 := ClipFlow.AddTab3("w280 x15", ["Flow Modes", "History", "DevTool"])
 
@@ -117,7 +118,7 @@ renderHistory() {
     }
     loop clipHisArr.Length {
         tabHistory.Push(
-            ClipFlow.AddEdit("h30 w250 y+10 ReadOnly", clipHisArr[A_Index])
+            ClipFlow.AddEdit("h40 w250 y+10 ReadOnly", clipHisArr[A_Index])
         )
     }
 }
@@ -125,13 +126,13 @@ renderHistory() {
 runTest(*) {
     ClipFlow.Hide()
 
-    
+    ; test code here.
 
     Utils.cleanReload(winGroup)
 }
 
 ; hotkeys
-F12:: Utils.cleanReload(winGroup)
+^F12:: Utils.cleanReload(winGroup)
 Pause:: ClipFlow.Show()
 #Hotif WinActive(popupTitle)
 Esc:: ClipFlow.Hide()
