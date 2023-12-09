@@ -1,4 +1,3 @@
-; #Include "%A_ScriptDir%\src\lib\utils.ahk"
 #Include "../../../Lib/Classes/utils.ahk"
 
 class InvoiceWechat {
@@ -18,7 +17,7 @@ class InvoiceWechat {
         OnClipboardChange this.clipWithMsg
         ui := [
             App.AddGroupBox("R6 w250 y+20", this.title),
-            App.AddText("xp+10", this.desc),
+            App.AddText("xp+10 yp+20", this.desc),
             App.AddButton("Default h35 w230 y+15", "开始填入"),
         ]
 
@@ -118,6 +117,6 @@ class InvoiceWechat {
         } else if (invoiceType = "split"){
             handleFill([[738, 199],[738, 233],[739, 259],[732, 290]])
         }
-        Clipboard := ""
+        A_Clipboard := ""
     }
 }
