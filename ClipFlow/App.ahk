@@ -16,7 +16,7 @@ modules := [
     ResvHandler,
 ]
 winGroup := ["ahk_class SunAwtFrame", "旅客信息"]
-version := "DEV"
+version := "1.1.0"
 scriptHost := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM2 - Nightly"
 popupTitle := "ClipFlow " . version
 if (!FileExist(A_MyDocuments . "\ClipFlow.ini")) {
@@ -24,6 +24,7 @@ if (!FileExist(A_MyDocuments . "\ClipFlow.ini")) {
 }
 store := A_MyDocuments . "\ClipFlow.ini"
 Sleep 100
+tabPos := IniRead(store, "Tab", "tabPos")
 clipHisObj := IniRead(store, "ClipHistory", "clipHisArr")
 clipHisArr := Jxon_Load(&clipHisObj)
 onTop := false
@@ -34,7 +35,8 @@ ClipFlow := Gui(, popupTitle)
 ClipFlow.OnEvent("Close", (*) => Utils.quitApp("ClipFlow", popupTitle, winGroup))
 ClipFlow.AddCheckbox("h25 x15", "保持 ClipFlow 置顶      / 停止脚本: Ctrl+F12").OnEvent("Click", keepOnTop)
 
-tab3 := ClipFlow.AddTab3("w280 x15", ["Flow Modes", "History", "DevTool"])
+tab3 := ClipFlow.AddTab3("w280 x15 " . "Choose" . tabPos, ["Flow Modes", "History", "DevTool"])
+tab3.OnEvent("Change", saveTabPos)
 
 tab3.UseTab(1)
 moduleLoader(ClipFlow)
@@ -110,6 +112,10 @@ moduleLoader(App) {
     }
 }
 
+saveTabPos(*){
+    IniWrite(tab3.Value, store, "Tab", "tabPos")
+}
+
 ; render tab: Clipboard History base on clipHisArr
 renderHistory() {
     global tabHistory := []
@@ -118,8 +124,15 @@ renderHistory() {
     }
     loop clipHisArr.Length {
         tabHistory.Push(
-            ClipFlow.AddEdit("h40 w250 y+10 ReadOnly", clipHisArr[A_Index])
+            ClipFlow.AddEdit("x30 h40 w220 y+10 ReadOnly", clipHisArr[A_Index]),
+            ClipFlow.AddButton("x+0 w30 h40","×").OnEvent("Click", delHistoryItem.Bind(A_Index))
         )
+    }
+
+    delHistoryItem(index, *){
+        clipHisArr.RemoveAt(index)
+        IniWrite(Jxon_Dump(clipHisArr), store, "ClipHistory", "clipHisArr")
+        Utils.cleanReload(winGroup)
     }
 }
 
