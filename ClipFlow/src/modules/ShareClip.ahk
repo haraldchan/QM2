@@ -16,7 +16,7 @@ class ShareClip {
         OnClipboardChange this.listenAndSend
         ; create new txt
         if (!FileExist(this.shareTxt)) {
-            FileCopy(this.scriptHost . "\Lib\ClipFlow\shareTemplate.txt", this.shareTxt)
+            FileAppend("", this.shareTxt)
         }
         ; cleanup txts older than x days.
         loop files this.shareClipFolder "\*.txt" {
