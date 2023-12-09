@@ -52,7 +52,7 @@ class InvoiceWechat {
 
     static clipWithMsg() {
         msgMap := InvoiceWechat.parseInvoiceInfo()
-        if (msgMap.Capacity = 0) {
+        if (!(msgMap is Map)) {
             return
         }
         for k, v in msgMap {
@@ -77,6 +77,9 @@ class InvoiceWechat {
     }
 
     static fillInfo(infoMap) {
+        if (!(infoMap is Map)) {
+            return
+        }
         CoordMode "Mouse", "Screen"
         CoordMode "Pixel", "Screen"
         ; determine current issue type
@@ -93,20 +96,20 @@ class InvoiceWechat {
             MouseMove coords[1][1], coords[1][2]
             click
             Send Format("{Text}{1}", infoMap["company"])
-            sleep 10
+            sleep 50
             MouseMove coords[2][1], coords[2][2]
             click
             Send Format("{Text}{1}", infoMap["taxNum"])
-            sleep 10
+            sleep 50
             try {
                 MouseMove coords[3][1], coords[3][2]
                 click
                 Send Format("{Text}{1} {2}", infoMap["address"], infoMap["tel"])
-                sleep 10
+                sleep 50
                 MouseMove coords[4][1], coords[4][2]
                 click
                 Send Format("{Text}{1} {2}", infoMap["bank"], infoMap["account"])
-                sleep 10
+                sleep 50
             }
         }
 
