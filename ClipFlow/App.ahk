@@ -1,6 +1,3 @@
-; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-; #Include "%A_ScriptDir%\src\modules\ProfileModify.ahk"
-; #Include "./src/lib/utils.ahk"
 #Include "../Lib/Classes/utils.ahk"
 #Include "../Lib/Classes/_JXON.ahk"
 #Include "./src/modules/ProfileModify.ahk"
@@ -12,17 +9,19 @@
 CoordMode "Mouse", "Screen"
 TraySetIcon A_ScriptDir . "\src\assets\CFTray.ico"
 OnClipboardChange addToHistory
-modules := [ProfileModify, InvoiceWechat, ShareClip, ResvHandler]
+modules := [
+    ; ProfileModify, 
+    ; ShareClip,  
+    ResvHandler,
+]
 winGroup := ["ahk_class SunAwtFrame", "旅客信息"]
 version := "DEV"
+scriptHost := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM2 - Nightly"
 popupTitle := "ClipFlow " . version
-if (FileExist(A_MyDocuments . "\ClipFlow.ini")) {
-    store := A_MyDocuments . "\ClipFlow.ini"
-} else {
-    ; FileCopy A_ScriptDir . "\src\lib\ClipFlow.ini", A_MyDocuments
-    FileCopy "../Lib/ClipFlow/ClipFlow.ini", A_MyDocuments
-    store := A_MyDocuments . "\ClipFlow.ini"
+if (!FileExist(A_MyDocuments . "\ClipFlow.ini")) {
+    FileCopy scriptHost . "\Lib\ClipFlow\ClipFlow.ini", A_MyDocuments
 }
+store := A_MyDocuments . "\ClipFlow.ini"
 Sleep 100
 clipHisObj := IniRead(store, "ClipHistory", "clipHisArr")
 clipHisArr := Jxon_Load(&clipHisObj)
@@ -44,7 +43,8 @@ tabHistory := []
 renderHistory()
 
 tab3.UseTab(3)
-ClipFlow.AddButton("h30 w130", "Run Test").OnEvent("Click", runTest)
+ClipFlow.AddText("x40 y80", "点击 Run Test 运行测试代码。")
+ClipFlow.AddButton("y+20 h40 w160", "Run Test").OnEvent("Click", runTest)
 
 tab3.UseTab()
 
@@ -124,19 +124,9 @@ renderHistory() {
 
 runTest(*) {
     ClipFlow.Hide()
-    ; Entry.profileEntry(["chen","ming hao","陈明颢"])
-    ; sleep 1000
-    ; Entry.roomQtyEntry(5)
-    ; sleep 1000
-    ; Entry.dateTimeEntry("20241201","20241203")
-    ; sleep 1000
-    ; Entry.commentOrderIdEntry("1103619", "RM INCL 2BBF TO TA")
-    sleep 1000
-    bbf := [1, 1, 1]
-    ; msgbox(bbf is Array)
-    if (!(Utils.arrayEvery((item) => item = 0, bbf))) {
-        Entry.breakfastEntry(bbf)
-    }
+
+    
+
     Utils.cleanReload(winGroup)
 }
 
