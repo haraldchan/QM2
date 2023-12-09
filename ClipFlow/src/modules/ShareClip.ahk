@@ -1,5 +1,3 @@
-; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-; #Include "../lib/utils.ahk"
 #Include "../../../Lib/Classes/utils.ahk"
 #Include "../../../Lib/Classes/_JXON.ahk"
 #Include "../../App.ahk"
@@ -8,7 +6,8 @@ class ShareClip {
     static name := "Share Clip"
     static title := "Flow Mode - " . this.name
     static popupTitle := "ClipFlow - " . this.name
-    static shareClipFolder := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\ClipFlow\src\lib\SharedClips"
+    static scriptHost := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM2 - Nightly"
+    static shareClipFolder := this.scriptHost . "\Lib\ClipFlow\SharedClips"
     static shareTxt := Format("{1}\{2}.txt", this.shareClipFolder, FormatTime(A_Now, "yyyyMMdd"))
     static prefix := Format("发送自: {1}, {2} `r`n", A_UserName, FormatTime(A_Now))
     static archiveDays := 5
@@ -17,7 +16,7 @@ class ShareClip {
         OnClipboardChange this.listenAndSend
         ; create new txt
         if (!FileExist(this.shareTxt)) {
-            FileCopy(A_ScriptDir . "\src\lib\shareTemplate.txt", this.shareTxt)
+            FileCopy(this.scriptHost . "\Lib\ClipFlow\shareTemplate.txt", this.shareTxt)
         }
         ; cleanup txts older than x days.
         loop files this.shareClipFolder "\*.txt" {
@@ -100,9 +99,8 @@ class ShareClip {
 
     static sendHistory(clipHisArr) {
         text := this.prefix
-        his := Jxon_Load(&clipHisArr)
-        loop his.Length {
-            text .= his[A_Index] . "`r`n"
+        loop clipHisArr.Length {
+            text .= clipHisArr[A_Index] . "`r`n"
         }
         Utils.filePrepend(text . "`r`n`r`n", this.shareTxt)
         return text

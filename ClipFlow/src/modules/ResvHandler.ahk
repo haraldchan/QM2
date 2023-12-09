@@ -1,16 +1,11 @@
-; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-; #Include "%A_ScriptDir%\src\lib\_JXON.ahk"
-; #Include "%A_ScriptDir%\src\lib\RH_Macros\RH_Fedex.ahk"
-; #Include "%A_ScriptDir%\src\lib\RH_Macros\RH_OTA.ahk"
-; #Include "../../App.ahk"
 #Include "../../../Lib/Classes/utils.ahk"
 #Include "../../../Lib/Classes/_JXON.ahk"
 #Include "./RH_Macros/RH_Fedex.ahk"
 #Include "./RH_Macros/RH_OTA.ahk"
 
 store := A_MyDocuments . "\ClipFlow.ini"
-resvTemp := IniRead(store, "ResvHandler", "ResvTemplates")
-resvTempObj := Jxon_Load(&resvTemp)
+; resvTemp := IniRead(store, "ResvHandler", "ResvTemplates")
+; resvTempObj := Jxon_Load(&resvTemp)
 
 class ResvHandler {
     static name := "Reservation Handler"
@@ -48,20 +43,22 @@ class ResvHandler {
         ]
 
         startBtn := Interface.getCtrlByName("startBtn", ui)
-        kingsley := Interface.getCtrlByName("kingsley", ui)
-        agoda := Interface.getCtrlByName("agoda", ui)
-        tempEdits := Interface.getCtrlByTypeAll("Edit", ui)
-
         startBtn.OnEvent("Click", (*) => ResvHandler.modifyReservation(App))
-        loop tempEdits.Length {
-            tempEdits[A_Index].OnEvent("Change", saveTempConfirmation.Bind(tempEdits[A_Index]))
-        }
 
-        saveTempConfirmation(curEdit,*) {
-            curEditName := curEdit.Name
-            resvTempObj[curEditName] := Trim(curEdit.Text)
-            IniWrite(Jxon_Dump(resvTempObj), store, "ResvHandler", "ResvTemplates")
-        }
+        ; kingsley := Interface.getCtrlByName("kingsley", ui)
+        ; agoda := Interface.getCtrlByName("agoda", ui)
+        ; tempEdits := Interface.getCtrlByTypeAll("Edit", ui)
+
+
+        ; loop tempEdits.Length {
+        ;     tempEdits[A_Index].OnEvent("Change", saveTempConfirmation.Bind(tempEdits[A_Index]))
+        ; }
+
+        ; saveTempConfirmation(curEdit,*) {
+        ;     curEditName := curEdit.Name
+        ;     resvTempObj[curEditName] := Trim(curEdit.Text)
+        ;     IniWrite(Jxon_Dump(resvTempObj), store, "ResvHandler", "ResvTemplates")
+        ; }
     }
 
     static saveAddOnJson(App) {
@@ -117,9 +114,9 @@ class ResvHandler {
 
         switch bookingInfoObj["agent"] {
             case "fedex":
-                ; RH_Fedex(bookingInfoObj)
+                RH_Fedex(bookingInfoObj)
             case "kingsley":
-                RH_Kingsley(bookingInfoObj, resvTempObj["kingsley"])
+                RH_Kingsley(bookingInfoObj)
             default:
         }
         Sleep 500
