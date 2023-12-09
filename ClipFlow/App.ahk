@@ -32,11 +32,14 @@ onTop := false
 
 ; GUI template
 ClipFlow := Gui(, popupTitle)
-ClipFlow.OnEvent("Close", (*) => Utils.quitApp("ClipFlow", popupTitle, winGroup))
+ClipFlow.OnEvent("Close", (*) => 
+    IniWrite(1, store, "Tab", "tabPos")
+    Utils.quitApp("ClipFlow", popupTitle, winGroup)
+    )
 ClipFlow.AddCheckbox("h25 x15", "保持 ClipFlow 置顶    / 停止脚本: Ctrl+F12").OnEvent("Click", keepOnTop)
 
 tab3 := ClipFlow.AddTab3("w280 x15 " . "Choose" . tabPos, ["Flow Modes", "History", "DevTool"])
-tab3.OnEvent("Change", saveTabPos)
+tab3.OnEvent("Change", (*) => IniWrite(tab3.Value, store, "Tab", "tabPos"))
 
 tab3.UseTab(1)
 moduleLoader(ClipFlow)
