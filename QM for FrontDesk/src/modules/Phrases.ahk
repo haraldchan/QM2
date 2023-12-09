@@ -1,3 +1,5 @@
+#Include  "../../../Lib/Classes/utils.ahk"
+
 class Phrases {
     static gbWidth := "w320 "
     
@@ -17,8 +19,8 @@ class Phrases {
             App.AddButton("xp w80 h50 x250 y192", "复制`nComment`nAlert").OnEvent("Click", copy),
         ]
 
-        rushTime := getCtrlByName("rushTime", ui)
-        keyMade := getCtrlByName("keyMade", ui)
+        rushTime := Interface.getCtrlByName("rushTime", ui)
+        keyMade := Interface.getCtrlByName("keyMade", ui)
 
         copy(*) {
             if (rushTime.Text = "" ) {
@@ -45,10 +47,10 @@ class Phrases {
             App.AddButton("xp w80 h50 x250 y285", "复制`nComment`nAlert").OnEvent("Click", copy),
         ]
 
-        roomType := getCtrlByName("roomType", ui)
-        rateDiff := getCtrlByName("rateDiff", ui)
-        nts := getCtrlByName("nts", ui)
-        lang := getCtrlByName("lang", ui)
+        roomType := Interface.getCtrlByName("roomType", ui)
+        rateDiff := Interface.getCtrlByName("rateDiff", ui)
+        nts := Interface.getCtrlByName("nts", ui)
+        lang := Interface.getCtrlByName("lang", ui)
 
         copy(*) {
             if (
@@ -81,11 +83,11 @@ class Phrases {
             App.AddButton("xp w80 h50 x250 y440", "复制`nComment`nAlert").OnEvent("Click", copy),
         ]
 
-        restaurant := getCtrlByName("restaurant", ui)
-        date := getCtrlByName("date", ui)
-        time := getCtrlByName("time", ui)
-        guests := getCtrlByName("guests", ui)
-        staff := getCtrlByName("staff", ui)
+        restaurant := Interface.getCtrlByName("restaurant", ui)
+        date := Interface.getCtrlByName("date", ui)
+        time := Interface.getCtrlByName("time", ui)
+        guests := Interface.getCtrlByName("guests", ui)
+        staff := Interface.getCtrlByName("staff", ui)
 
         copy(*) {
             if (

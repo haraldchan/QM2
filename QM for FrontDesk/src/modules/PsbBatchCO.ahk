@@ -1,7 +1,3 @@
-; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-; #Include "%A_ScriptDir%\src\lib\reports.ahk"
-; #Include "../lib/utils.ahk"
-; #Include "../lib/reports.ahk"
 #Include  "../../../Lib/Classes/utils.ahk"
 #Include  "../../../Lib/QM for FrontDesk/reports.ahk"
 
@@ -9,7 +5,8 @@ class PsbBatchCO {
     static name := "PsbBatchCO"
     static description := "旅安系统批量退房 - Excel表：CheckOut.xls"
     static popupTitle := "PSB CheckOut(Batch)"
-    static path := IniRead(A_ScriptDir . "\src\lib\config.ini", "PsbBatchCO", "xlsPath")
+    static scriptHost := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM2 - Nightly"
+    static path := IniRead(this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "PsbBatchCO", "xlsPath")
 
     static USE(desktopMode := 0) {
         if (desktopMode = true) {

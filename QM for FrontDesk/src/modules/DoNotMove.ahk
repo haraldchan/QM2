@@ -1,5 +1,3 @@
-; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-; #Include "../lib/utils.ahk"
 #Include "../../../Lib/Classes/utils.ahk"
 
 class DoNotMove {

@@ -1,12 +1,11 @@
-; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-; #Include "../lib/utils.ahk"
 #Include  "../../../Lib/Classes/utils.ahk"
 
 class GroupProfilesModify {
     static name := "GroupProfilesModify"
     static description := "团队Profile录入  - Excel表：GroupRoomNum.xls"
     static popupTitle := "GroupProfilesModify"
-    static path := IniRead(A_ScriptDir . "\src\lib\config.ini", "GroupProfilesModify", "xlsPath")
+    static scriptHost := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM2 - Nightly"
+    static path := IniRead(this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "GroupProfilesModify", "xlsPath")
     static wwly := this.getWwlyPath()
 
     static USE(desktopMode := 0) {

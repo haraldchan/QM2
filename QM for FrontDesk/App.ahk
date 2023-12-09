@@ -1,16 +1,3 @@
-; { import
-; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-; #Include "%A_ScriptDir%\src\modules\CityLedgerCO.ahk"
-; #Include "%A_ScriptDir%\src\modules\InhShare.ahk"
-; #Include "%A_ScriptDir%\src\modules\Pbpf.ahk"
-; #Include "%A_ScriptDir%\src\modules\GroupShare.ahk"
-; #Include "%A_ScriptDir%\src\modules\DoNotMove.ahk"
-; #Include "%A_ScriptDir%\src\modules\ReportMaster.ahk"
-; #Include "%A_ScriptDir%\src\modules\GroupKeys.ahk"
-; #Include "%A_ScriptDir%\src\modules\GroupProfilesModify.ahk"
-; #Include "%A_ScriptDir%\src\modules\PsbBatchCO.ahk"
-; #Include "%A_ScriptDir%\src\modules\Phrases.ahk"
-; #Include "./src/lib/utils.ahk"
 #Include "../Lib/Classes/utils.ahk"
 #Include "./src/modules/CityLedgerCO.ahk"
 #Include "./src/modules/InhShare.ahk"
@@ -22,21 +9,22 @@
 #Include "./src/modules/GroupProfilesModify.ahk"
 #Include "./src/modules/PsbBatchCO.ahk"
 #Include "./src/modules/Phrases.ahk"
-;}
-; { setup
+
 #SingleInstance Force
 TraySetIcon A_ScriptDir . "\src\assets\QMTray.ico"
 TrayTip "QM 2 运行中…按下 F9 开始使用脚本"
 CoordMode "Mouse", "Screen"
+
 ; globals and states
 version := "2.1.0"
 today := FormatTime(A_Now, "yyyyMMdd")
-; config := A_ScriptDir . "\src\lib\config.ini"
-config := "../Lib/QM for FrontDesk/config.ini"
+scriptHost := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM2 - Nightly"
+config := scriptHost . "\Lib\QM for FrontDesk\config.ini"
 winGroup := ["ahk_class SunAwtFrame"]
 popupTitle := "QM for FrontDesk " . version
 cityLedgerOn := true
 desktopMode := false
+
 ; script classes
 scriptIndex := [
     [
@@ -64,10 +52,10 @@ try {
     )", popupTitle)
     ExitApp
 }
-; }
 
-; { GUI template
+; GUI
 QM := Gui("", popupTitle)
+QM.OnEvent("Close", (*) => Utils.quitApp("QM for FrontDesk", popupTitle, winGroup))
 QM.AddText(, "
 (
 快捷键及对应功能：
@@ -216,9 +204,7 @@ runSelectedScript(*) {
 F9:: {
     QM.Show()
  } 
-; F12:: cleanReload()
 F12:: Utils.cleanReload(winGroup)
-; ^F12:: quitApp() 
 ^F12:: Utils.quitApp("QM for FrontDesk", popupTitle, winGroup)
 
 #HotIf cityLedgerOn

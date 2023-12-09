@@ -1,7 +1,3 @@
-; #Include "%A_ScriptDir%\src\lib\reports.ahk"
-; #Include "%A_ScriptDir%\src\lib\utils.ahk"
-; #Include "../Lib/reports.ahk"
-; #Include "../Lib/utils.ahk"
 #Include "../../../Lib/QM for FrontDesk/reports.ahk"
 #Include "../../../Lib/Classes/utils.ahk"
 
