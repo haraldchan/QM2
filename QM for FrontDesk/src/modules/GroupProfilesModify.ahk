@@ -1,4 +1,4 @@
-#Include  "../../../Lib/Classes/utils.ahk"
+#Include "../../../Lib/Classes/utils.ahk"
 
 class GroupProfilesModify {
     static name := "GroupProfilesModify"
@@ -8,7 +8,7 @@ class GroupProfilesModify {
     static path := IniRead(this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "GroupProfilesModify", "xlsPath")
     static wwly := this.getWwlyPath()
 
-    static USE(desktopMode := 0) {
+    static USE(desktopMode := 0, initX := 0, initY := 0) {
         if (desktopMode = true) {
             if (FileExist(A_Desktop . "\GroupRoomNum.xls")) {
                 path := A_Desktop . "\GroupRoomNum.xls"
@@ -109,60 +109,7 @@ class GroupProfilesModify {
             ;     Utils.cleanReload(winGroup)
             ; }
         }
-        ; }
 
-        ; loop lastRow {
-        ;     roomNum := Integer(groupRooms.Cells(row, 1).Value)
-        ;     A_Clipboard := roomNum
-        ;     Sleep 500
-        ;     MouseMove 598, 573
-        ;     Sleep 500
-        ;     Send "!p"
-        ;     Sleep 300
-        ;     Send "!n"
-        ;     Sleep 200
-        ;     MouseMove 666, 545
-        ;     Sleep 1000
-        ;     Click
-        ;     Sleep 3000
-
-        ;     Send "{Pause}"
-        ;     WinWait "ahk_class TMAIN"
-        ;     WinActivate "ahk_class TMAIN"
-
-        ;     CoordMode "Mouse", "Client"
-        ;     MouseMove 400, 23
-        ;     Click "Down"
-        ;     Sleep 200
-        ;     MouseMove 324, 23
-        ;     Click "Up"
-        ;     Sleep 200
-        ;     Send "^v"
-        ;     Sleep 200
-        ;     Send "{F11}"
-        ;     Sleep 300
-        ;     Send "{Enter}"
-        ;     Sleep 7500
-        ;     MouseMove 626, 299
-        ;     Sleep 500
-        ;     Send "!o"
-        ;     Sleep 500
-        ;     Send "!o"
-        ;     Sleep 2000
-        ;     Send "{Down}"
-        ;     Sleep 200
-        ;     CoordMode "Mouse", "Screen"
-
-        ;     if (PixelGetColor(698, 306) = errorRed) {
-        ;         MsgBox("Modify出错，脚本已终止`n`n已Modify到：" . roomNum, this.popupTitle)
-        ;         quitOnRoom := roomNum
-        ;         IniWrite(quitOnRoom, "%A_ScriptDir%\lib\lib\config.ini", "PsbBatchCO", "errorQuitAt")
-        ;         cleanReload()
-        ;     }
-        ;     row++
-        ; }
-        ; GroupRoomNum.Close()
-        ; Xl.Quit()
         BlockInput false
         Sleep 500
         MsgBox("已Modify 完成，请再次检查是否正确。", this.popupTitle)

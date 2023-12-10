@@ -3,10 +3,10 @@
 class InhShare {
 	static description := "生成空白 In-House Share"
 
-	static USE() {
+	static USE(initX := 949, initY := 599) {
 		WinMaximize "ahk_class SunAwtFrame"
-        WinActivate "ahk_class SunAwtFrame"
-        Sleep 1000
+		WinActivate "ahk_class SunAwtFrame"
+		Sleep 1000
 		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 		BlockInput true
 		Sleep 100
@@ -36,20 +36,20 @@ class InhShare {
 		Sleep 800
 		Send "!r"
 		Sleep 1000
-		MouseMove 949, 599
+		MouseMove initX, initY ; 949, 599
 		Sleep 2000
 		Click
 		Sleep 200
 		Send "!d"
-		MouseMove 611, 546
+		MouseMove initX - 338, initY - 53 ; 611, 546
 		Sleep 200
 		Click
 		Sleep 1500
 		Send "!c"
-		MouseMove 324, 507
+		MouseMove initX - 625, initY - 92 ; 324, 507
 		Sleep 1000
 		Click "Down"
-		MouseMove 212, 520
+		MouseMove initX - 737, initY - 79 ; 212, 520
 		Sleep 200
 		Click "Up"
 		Sleep 200
@@ -59,7 +59,7 @@ class InhShare {
 		Sleep 1000
 		loop 4 {
 			Send "{Esc}"
-			Sleep 500
+			Sleep 100
 		}
 		Sleep 3500
 		Send "!i"

@@ -1,10 +1,10 @@
-#Include  "../../../Lib/Classes/utils.ahk"
+#Include "../../../Lib/Classes/utils.ahk"
 
 class GroupShare {
     static description := "旅行团房Share + DoNotMove"
     static popupTitle := "Group Share & DoNotMove"
 
-    static USE() {
+    static USE(initX := 0, initY := 0) {
         WinMaximize "ahk_class SunAwtFrame"
         WinActivate "ahk_class SunAwtFrame"
         Sleep 500
@@ -25,23 +25,31 @@ class GroupShare {
                 Utils.cleanReload(winGroup)
             }
         }
-        MouseMove 340, 311
+
+        this.dnmShare(roomQty.Value)
+
+        Sleep 1000
+        MsgBox("已完成DNM & Share共 " . roomQty.Value . " 房，请核对有否错漏。", this.popupTitle, "4096")
+    }
+
+    static dnmShare(roomQty, initX := 340, initY := 311) {
+        MouseMove initX, initY ; 340, 311
         Sleep 100
         Click "Down"
-        MouseMove 182, 310
+        MouseMove initX - 158, initY - 1 ; 182, 310
         Sleep 100
         Click "Up"
-        MouseMove 300, 307
+        MouseMove initX - 40, initY - 4 ; 300, 307
         Sleep 100
         Send "{Backspace}"
         Sleep 100
         Send "{Text}TGDA"
-        loop roomQty.Value {
+        loop roomQty {
             BlockInput true
-            MouseMove 425, 537
+            MouseMove initX + 85, initY + 226 ; 425, 537
             Sleep 200
             Send "!r"
-            MouseMove 469, 512
+            MouseMove initX + 129, initY + 201 ; 469, 512
             Sleep 3000
             Click
             Sleep 700
@@ -56,13 +64,13 @@ class GroupShare {
             Sleep 300
             Send "{Text}1"
             Sleep 100
-            MouseMove 487, 402
+            MouseMove initX + 147, initY + 91 ; 487, 402
             Sleep 100
             Click "Down"
-            MouseMove 518, 403
+            MouseMove initX + 178, initY + 92 ; 518, 403
             Sleep 200
             Click "Up"
-            MouseMove 516, 443
+            MouseMove initX + 176, initY + 132 ; 516, 443
             Sleep 200
             Send "{Text}0"
             Sleep 200
@@ -70,7 +78,7 @@ class GroupShare {
             Sleep 1000
             Send "!r"
             Sleep 200
-            MouseMove 942, 598
+            MouseMove initX + 593, initY + 287 ; 942, 598
             Sleep 2500
             Click
             Sleep 800
@@ -84,10 +92,10 @@ class GroupShare {
             Sleep 500
             Send "!c"
             Sleep 300
-            MouseMove 321, 507
+            MouseMove initX - 19, initY + 196 ; 321, 507
             Sleep 1500
             Click "Down"
-            MouseMove 186, 509
+            MouseMove initX - 154, initY + 198 ; 186, 509
             Sleep 200
             Click "Up"
             Sleep 200
@@ -111,7 +119,5 @@ class GroupShare {
             Sleep 5000
             BlockInput false
         }
-        Sleep 1000
-        MsgBox("已完成DNM & Share共 " . roomQty.Value . " 房，请核对有否错漏。", this.popupTitle, "4096")
     }
 }

@@ -1,5 +1,5 @@
 class CityLedgerCo {
-	static USE() {
+	static USE(initX := 0, initY := 0) {
 		WinMaximize "ahk_class SunAwtFrame"
 		WinActivate "ahk_class SunAwtFrame"
 		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
@@ -10,9 +10,9 @@ class CityLedgerCo {
 		WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 	}
 
-	static fullWin() {
+	static fullWin(initX := 862, initY := 272) {
 		BlockInput true
-		MouseMove 862, 272
+		MouseMove initX, initY ; 862, 272
 		Sleep 100
 		Click
 		Sleep 10
@@ -26,19 +26,14 @@ class CityLedgerCo {
 		Sleep 10
 		Send "{Esc}"
 		Sleep 10
-		
-		; Move to Close button
-		; MouseMove 894, 722
-		; Move to Win.1
-		MouseMove 345, 269
-
+		MouseMove initX - 517, initY - 3 ; 345, 269
 		Sleep 100
 		BlockInput false
 	}
-	
-	static smallWin() {
+
+	static smallWin(initX := 700, initY := 200) {
 		BlockInput true
-		MouseMove 700, 200
+		MouseMove initX, initY ; 700, 200
 		Sleep 10
 		Click
 		Sleep 10

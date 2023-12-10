@@ -1,10 +1,10 @@
-#Include  "../../../Lib/Classes/utils.ahk"
+#Include "../../../Lib/Classes/utils.ahk"
 
 class PbPf {
 	static description := "生成 PayBy PayFor 信息"
 	static popupTitle := "PayBy PayFor"
 
-	static USE() {
+	static USE(initX := 0, initY := 0) {
 		static relations := []
 		; GUI
 		Pbpf := Gui(, this.popupTitle)
@@ -19,14 +19,12 @@ class PbPf {
 			Pbpf.AddText("x20 y+10", "Total房数  "),
 			Pbpf.AddEdit("vroomQty Number x+10 w80", ""),
 			Pbpf.AddButton("vpfCopy x20 y+10 h30 w160", "复制Pay For信息"),
-
 			Pbpf.AddGroupBox("x+20 y8 w180 h190", "P/B房(被支付人)"),
 			Pbpf.AddText("xp+10 yp+25", "房号       "),
 			Pbpf.AddEdit("vpbRoom Number x+10 w80", ""),
 			Pbpf.AddText("xp-75 y+10", "姓名/确认号"),
 			Pbpf.AddEdit("vpbName x+10 w80", ""),
 			Pbpf.AddButton("vpbCopy xp-75 y+70 h30 w160", "复制Pay By信息"),
-
 			Pbpf.AddButton("w370 x10 y+20 h35", "开始粘贴").OnEvent("Click", paste),
 		]
 
@@ -93,17 +91,17 @@ class PbPf {
 
 		paste(*) {
 			if (!relations.Length) {
-				return 
+				return
 			} else {
 				Pbpf.Hide()
-				this.Run()
+				this.pbpf()
 				Sleep 500
 				Pbpf.Show()
 			}
 		}
 	}
 
-	static Run() {
+	static pbpf(initX := 759, initY := 266) {
 		commentPos := (A_OSVersion = "6.1.7601")
 			? "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM for FrontDesk\src\assets\commentWin7.PNG"
 			: "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM for FrontDesk\src\assets\comment.PNG"
@@ -114,7 +112,7 @@ class PbPf {
 		BlockInput true
 		CoordMode "Pixel", "Screen"
 		CoordMode "Mouse", "Screen"
-		if (ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenHeight, commentPos)){
+		if (ImageSearch(&FoundX, &FoundY, 0, 0, A_ScreenWidth, A_ScreenHeight, commentPos)) {
 			anchorX := FoundX
 			anchorY := FoundY
 			MouseMove anchorX + 1, anchorY + 1
@@ -137,22 +135,22 @@ class PbPf {
 		Send "!c"
 		Sleep 100
 		Send "!t"
-		MouseMove 759, 266
+		MouseMove initX, initY ; 759, 266
 		Sleep 200
 		Click
 		Send "!n"
 		Sleep 200
 		Send "{Text}OTH"
-		MouseMove 517, 399
+		MouseMove initX - 242, initY + 133 ; 517, 399
 		Sleep 100
 		Click
-		MouseMove 479, 435
+		MouseMove initX - 280, initY + 169 ; 479, 435
 		Sleep 100
 		Click
-		MouseMove 689, 477
+		MouseMove initX - 70, initY + 211 ; 689, 477
 		Sleep 100
 		Click "Down"
-		MouseMove 697, 477
+		MouseMove initX - 62, initY + 211 ; 697, 477
 		Sleep 100
 		Click "Up"
 		Sleep 100
