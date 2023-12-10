@@ -27,6 +27,12 @@ class Utils {
         FileAppend textToInsert . textOrigin, fileToPrepend
     }
 
+    static mouseMoveOffset(initX, initY, targetX, targetY) {
+        offsetX := targetX - initX
+        offsetY := targetY - initY
+        MouseMove initX + offsetX, initY + offsetY
+    }
+
     static arrayEvery(fn, targetArray) {
         if (!(fn is Func)) {
             throw TypeError("First parameter is not a Function Object.")
