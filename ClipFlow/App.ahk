@@ -11,8 +11,8 @@ TraySetIcon A_ScriptDir . "\src\assets\CFTray.ico"
 OnClipboardChange addToHistory
 modules := [
     ProfileModify,
-    InvoiceWechat,
-    ShareClip,
+    InvoiceWechat, 
+    ShareClip,  
     ResvHandler,
 ]
 winGroup := ["ahk_class SunAwtFrame", "旅客信息"]
@@ -32,9 +32,10 @@ onTop := false
 
 ; GUI template
 ClipFlow := Gui(, popupTitle)
-ClipFlow.OnEvent("Close", (*) =>
+ClipFlow.OnEvent("Close", (*) => 
     IniWrite(1, store, "App", "tabPos")
-    Utils.quitApp("ClipFlow", popupTitle, winGroup))
+    Utils.quitApp("ClipFlow", popupTitle, winGroup)
+    )
 ClipFlow.AddCheckbox("h25 x15", "保持 ClipFlow 置顶    / 停止脚本: Ctrl+F12").OnEvent("Click", keepOnTop)
 
 tab3 := ClipFlow.AddTab3("w280 x15 " . "Choose" . tabPos, ["Flow Modes", "History", "DevTool"])
@@ -119,11 +120,11 @@ renderHistory() {
     loop clipHisArr.Length {
         tabHistory.Push(
             ClipFlow.AddEdit("x30 h40 w220 y+10 ReadOnly", clipHisArr[A_Index]),
-            ClipFlow.AddButton("x+0 w30 h40", "×").OnEvent("Click", delHistoryItem.Bind(A_Index))
+            ClipFlow.AddButton("x+0 w30 h40","×").OnEvent("Click", delHistoryItem.Bind(A_Index))
         )
     }
 
-    delHistoryItem(index, *) {
+    delHistoryItem(index, *){
         clipHisArr.RemoveAt(index)
         IniWrite(Jxon_Dump(clipHisArr), store, "ClipHistory", "clipHisArr")
         Utils.cleanReload(winGroup)
