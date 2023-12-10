@@ -1,27 +1,26 @@
-; #Include "../../lib/DictIndex.ahk"
 #Include "../../../../Lib/ClipFlow/DictIndex.ahk"
 
-class Entry {
+class BookingEntry {
     ; the initX, initY for USE() should be top-left corner of current booking window
     static USE(curTemplate, infoObj, roomType, comment, pmsGuestNames, initX := 193, initY := 182) {
         MsgBox("Start in seconds...", "Reservation Handler", "T1 4096")
-        Entry.addFromTemplates(curTemplate)
+        BookingEntry.addFromTemplates(curTemplate)
         ; Sleep 1000
-        Entry.profileEntry(pmsGuestNames[1])
+        BookingEntry.profileEntry(pmsGuestNames[1])
         ; sleep 1000
-        Entry.roomQtyEntry(infoObj["roomQty"])
+        BookingEntry.roomQtyEntry(infoObj["roomQty"])
         ; sleep 1000
-        Entry.roomTypeEntry(roomType)
+        BookingEntry.roomTypeEntry(roomType)
         ; sleep 1000
-        Entry.dateTimeEntry(infoObj["ciDate"], infoObj["coDate"])
+        BookingEntry.dateTimeEntry(infoObj["ciDate"], infoObj["coDate"])
         ; sleep 1000
-        Entry.commentOrderIdEntry(infoObj["orderId"], comment)
+        BookingEntry.commentOrderIdEntry(infoObj["orderId"], comment)
         ; sleep 1000
         if (!(Utils.arrayEvery((item) => item = 0, infoObj["bbf"]))) {
-            Entry.breakfastEntry(infoObj["bbf"])
+            BookingEntry.breakfastEntry(infoObj["bbf"])
         }
         ; sleep 1000
-        Entry.roomRatesEntry(infoObj["roomRates"])
+        BookingEntry.roomRatesEntry(infoObj["roomRates"])
         sleep 1000
         MsgBox("Completed.", "Reservation Handler", "T2 4096")
         ; Utils.cleanReload(winGroup)
@@ -277,8 +276,23 @@ class Entry {
     }
 
     ; WIP
-    static splitPartyEntry(guestNames, initX, initY) {
+    static splitPartyEntry(guestNames, roomQty, initX := 456, initY := 482) {
         ;TODO: action: split party
+        Send "!t"
+        Sleep 100
+        MouseMove initX, initY
+        Sleep 100
+        Send Click
+        Sleep 100
+        ; !s: Split; !a: Split All
+        if (roomQty = 2) {
+            Send "!s"
+        } else {
+            Send "!a"
+        }
+        Sleep 100
+        ; Send "!r"
+        ; Sleep 1000
     }
 
 
@@ -333,7 +347,7 @@ RH_Kingsley(infoObj, addFromConf) {
     }
 
     ; Main booking modification
-    Entry.USE(
+    BookingEntry.USE(
         thisTemplate,
         infoObj,
         roomType,

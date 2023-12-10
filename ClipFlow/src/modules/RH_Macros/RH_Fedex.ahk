@@ -1,11 +1,9 @@
-; #Include "../../lib/utils.ahk"
-; #Include "../../lib/DictIndex.ahk"
 #Include "../../../../Lib/Classes/utils.ahk"
 #Include "../../../../Lib/ClipFlow/DictIndex.ahk"
 ; FedEx WIP
 ; WIP: ADD
-class FedexEntry {
-    static USE(infoObj, initX:=194, initY:=183) {
+class FedexBookingEntry {
+    static USE(infoObj, initX := 194, initY := 183) {
         ; CoordMode "Mouse", "Screen"
         pmsCiDate := (StrSplit(infoObj["ETA"], ":"))[1] < 10
             ? DateAdd(infoObj["ciDate"], -1, "days")
@@ -30,7 +28,7 @@ class FedexEntry {
             this.dailyDetailsEntry(infoObj["daysActual"])
         }
         Sleep 500
-        FedexEntry.rateCodeEntry()
+        FedexBookingEntry.rateCodeEntry()
         Sleep 1000
         if (infoObj["daysActual"] > pmsNts) {
             this.postRoomChargeAlertEntry(pmsNts, infoObj["daysActual"])
@@ -199,7 +197,7 @@ class FedexEntry {
         Send Format("{Text}{1}  {2}", infoObj["flightIn"], infoObj["tripNum"])
         Sleep 100
         ; fill-in tracking
-        MouseMove initX + 301, initY -84 ; 923, 505
+        MouseMove initX + 301, initY - 84 ; 923, 505
         Sleep 100
         Click 3
         Sleep 100
@@ -306,7 +304,7 @@ class FedexEntry {
         Sleep 100
     }
     ; WIP
-    static splitParty(crewNames, initX:=456, initY:=482) {
+    static splitParty(crewNames, initX := 456, initY := 482) {
         Send "!t"
         Sleep 100
         MouseMove initX, initY
@@ -318,8 +316,8 @@ class FedexEntry {
         Send "!r"
         Sleep 1000
     }
-    ; to-be-test 
-    static rateCodeEntry(initX := 326, initY := 507){
+    ; to-be-test
+    static rateCodeEntry(initX := 326, initY := 507) {
         MouseMove initX, initY
         Sleep 100
         Click "Down"
@@ -338,7 +336,7 @@ class FedexEntry {
         }
     }
     ; to-be-test
-    static postRoomChargeAlertEntry(pmsNts, daysActual, initX:=759, initY:=266) {
+    static postRoomChargeAlertEntry(pmsNts, daysActual, initX := 759, initY := 266) {
         Send "!t"
         MouseMove initX, initY ; 759, 266
         Sleep 100
@@ -346,16 +344,16 @@ class FedexEntry {
         Send "!n"
         Sleep 100
         Send "{Text}OTH"
-        MouseMove initX-242, initY+133 ; 517, 399
+        MouseMove initX - 242, initY + 133 ; 517, 399
         Sleep 100
         Click
-        MouseMove initX-280, initY+169 ; 479, 435
+        MouseMove initX - 280, initY + 169 ; 479, 435
         Sleep 100
         Click
-        MouseMove initX-70, initY+211 ; 689, 477
+        MouseMove initX - 70, initY + 211 ; 689, 477
         Sleep 100
         Click "Down"
-        MouseMove initX-62, initY+211 ; 697, 477
+        MouseMove initX - 62, initY + 211 ; 697, 477
         Sleep 100
         Click "Up"
         Sleep 100
@@ -381,7 +379,7 @@ RH_Fedex(infoObj) {
     }
 
     ; WIP
-    addModification(infoObj){
+    addModification(infoObj) {
         loop roomQty {
             notifierOC := Format("
                 (
@@ -414,13 +412,13 @@ RH_Fedex(infoObj) {
             } else if (changePopup = "No") {
                 continue
             } else {
-                FedexEntry.USE(infoObj)
+                FedexBookingEntry.USE(infoObj)
             }
             ; split and open a booking, modified again(second loop)
             if (A_Index = 1) {
                 ; change msgbox to save actions later!
                 MsgBox("请保存，完成后点击确定进入下一个", "RH-FedEx - CHANGE", "4096")
-                FedexEntry.splitParty()
+                FedexBookingEntry.splitParty()
             }
             ; leave close and save manually ???
             if (A_Index = roomQty) {
@@ -441,7 +439,7 @@ RH_Fedex(infoObj) {
                     确定(Enter)：     开始修改预订
                     取消(Esc)：       退出修改
                 )", roomQty, A_Index - 1)
-            notifierYNC :=  Format("
+            notifierYNC := Format("
                 (
                     待修改订单数量：{1}, 已完成{2}个。
                     请先打开需要修改的 Fedex 预订。
@@ -462,14 +460,14 @@ RH_Fedex(infoObj) {
                 Utils.cleanReload(winGroup)
             } else if (changePopup = "No") {
                 continue
-            } else if (changePopup = "Yes"){
-                FedexEntry.USE(infoObj)
+            } else if (changePopup = "Yes") {
+                FedexBookingEntry.USE(infoObj)
             } else {
-                FedexEntry.USE(infoObj)
+                FedexBookingEntry.USE(infoObj)
             }
             ; leave close and save manually ???
             if (A_Index = roomQty) {
-                MsgBox("已完成所有修改。","RH-FedEx - CHANGE", "T1 4096")
+                MsgBox("已完成所有修改。", "RH-FedEx - CHANGE", "T1 4096")
             }
         }
         Utils.cleanReload(winGroup)
