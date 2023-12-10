@@ -11,8 +11,8 @@ TraySetIcon A_ScriptDir . "\src\assets\CFTray.ico"
 OnClipboardChange addToHistory
 modules := [
     ProfileModify,
-    InvoiceWechat, 
-    ShareClip,  
+    InvoiceWechat,
+    ShareClip,
     ResvHandler,
 ]
 winGroup := ["ahk_class SunAwtFrame", "旅客信息"]
@@ -24,7 +24,7 @@ if (!FileExist(A_MyDocuments . "\ClipFlow.ini")) {
 }
 store := A_MyDocuments . "\ClipFlow.ini"
 Sleep 100
-tabPos := IniRead(store, "Tab", "tabPos")
+tabPos := IniRead(store, "App", "tabPos")
 clipHisObj := IniRead(store, "ClipHistory", "clipHisArr")
 clipHisArr := Jxon_Load(&clipHisObj)
 onTop := false
@@ -32,14 +32,13 @@ onTop := false
 
 ; GUI template
 ClipFlow := Gui(, popupTitle)
-ClipFlow.OnEvent("Close", (*) => 
-    IniWrite(1, store, "Tab", "tabPos")
-    Utils.quitApp("ClipFlow", popupTitle, winGroup)
-    )
+ClipFlow.OnEvent("Close", (*) =>
+    IniWrite(1, store, "App", "tabPos")
+    Utils.quitApp("ClipFlow", popupTitle, winGroup))
 ClipFlow.AddCheckbox("h25 x15", "保持 ClipFlow 置顶    / 停止脚本: Ctrl+F12").OnEvent("Click", keepOnTop)
 
 tab3 := ClipFlow.AddTab3("w280 x15 " . "Choose" . tabPos, ["Flow Modes", "History", "DevTool"])
-tab3.OnEvent("Change", (*) => IniWrite(tab3.Value, store, "Tab", "tabPos"))
+tab3.OnEvent("Change", (*) => IniWrite(tab3.Value, store, "App", "tabPos"))
 
 tab3.UseTab(1)
 moduleLoader(ClipFlow)
@@ -55,7 +54,7 @@ ClipFlow.AddButton("y+20 h40 w160", "Run Test").OnEvent("Click", runTest)
 tab3.UseTab()
 
 ClipFlow.AddButton("h30 w130", "Clear").OnEvent("Click", clearList)
-ClipFlow.AddButton("h30 w130 x+20", "Refresh").OnEvent("Click", refresh)
+ClipFlow.AddButton("h30 w130 x+20", "Refresh").OnEvent("Click", (*) => Utils.cleanReload(winGroup))
 
 ClipFlow.Show()
 WinSetAlwaysOnTop onTop, popupTitle
@@ -85,12 +84,8 @@ clearList(*) {
     Utils.cleanReload(winGroup)
 }
 
-refresh(*) {
-    Utils.cleanReload(winGroup)
-}
-
 moduleLoader(App) {
-    moduleSelected := IniRead(store, "Module", "moduleSelected")
+    moduleSelected := IniRead(store, "App", "moduleSelected")
     loadedModules := []
     ; create module select radio
     loop modules.Length {
@@ -108,15 +103,11 @@ moduleLoader(App) {
     saveSelect(*) {
         loop loadedModules.Length {
             if (loadedModules[A_Index].Value = 1) {
-                IniWrite(A_Index, store, "Module", "ModuleSelected")
+                IniWrite(A_Index, store, "App", "moduleSelected")
                 Utils.cleanReload(winGroup)
             }
         }
     }
-}
-
-saveTabPos(*){
-    IniWrite(tab3.Value, store, "Tab", "tabPos")
 }
 
 ; render tab: Clipboard History base on clipHisArr
@@ -128,11 +119,11 @@ renderHistory() {
     loop clipHisArr.Length {
         tabHistory.Push(
             ClipFlow.AddEdit("x30 h40 w220 y+10 ReadOnly", clipHisArr[A_Index]),
-            ClipFlow.AddButton("x+0 w30 h40","×").OnEvent("Click", delHistoryItem.Bind(A_Index))
+            ClipFlow.AddButton("x+0 w30 h40", "×").OnEvent("Click", delHistoryItem.Bind(A_Index))
         )
     }
 
-    delHistoryItem(index, *){
+    delHistoryItem(index, *) {
         clipHisArr.RemoveAt(index)
         IniWrite(Jxon_Dump(clipHisArr), store, "ClipHistory", "clipHisArr")
         Utils.cleanReload(winGroup)
