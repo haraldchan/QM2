@@ -1,5 +1,5 @@
-#Include  "../../../Lib/Classes/utils.ahk"
-#Include  "../../../Lib/QM for FrontDesk/reports.ahk"
+#Include "../../../Lib/Classes/utils.ahk"
+#Include "../../../Lib/QM for FrontDesk/reports.ahk"
 
 class PsbBatchCO {
     static name := "PsbBatchCO"
@@ -7,6 +7,7 @@ class PsbBatchCO {
     static popupTitle := "PSB CheckOut(Batch)"
     static scriptHost := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM2 - Nightly"
     static path := IniRead(this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "PsbBatchCO", "xlsPath")
+    static blockingPopups := []
 
     static USE(desktopMode := 0) {
         if (desktopMode = true) {
@@ -114,6 +115,8 @@ class PsbBatchCO {
         roomNumsTxt := Format("{1} check-out.txt", today)
         reportSave(roomNumsTxt)
         ; }
+
+        ; TODO: change the following part to loopfield and write xls
         A_Clipboard := FileRead(Format("{1}\{2}", A_MyDocuments, roomNumsTxt))
         BlockInput false
         Run path
@@ -169,8 +172,6 @@ class PsbBatchCO {
         CheckOut := Xl.Workbooks.Open(path)
         depRooms := CheckOut.Worksheets("Sheet1")
         lastRow := depRooms.Cells(depRooms.Rows.Count, "A").End(-4162).Row
-        ; row := 1
-        errorBrown := "0x804000"
         depRoomNums := []
         TrayTip "读入房号中……"
         loop lastRow {
@@ -180,11 +181,13 @@ class PsbBatchCO {
         Xl.Quit()
         TrayTip "读入完成"
 
+        SetTimer(this.winDetectAndClose(this.blockingPopups))
+
         loop lastRow {
             A_Clipboard := depRoomNums[A_Index]
             MouseMove 279, 200
             Sleep 50
-            Click 
+            Click
             Sleep 350
             Send "^v"
             Sleep 100
@@ -205,16 +208,26 @@ class PsbBatchCO {
             Send "{BackSpace}"
             Sleep 200
             ; terminate on error pop-up
-            if (PixelGetColor(251, 196) = errorBrown) {
+            if (WinExist("出错会导致溢出的弹窗名字")) {
                 MsgBox("PSB系统出错，脚本已终止`n`n已拍Out到：" . depRoomNums[A_Index], PsbBatchCo.popupTitle)
                 quitOnRoom := depRoomNums[A_Index]
-                IniWrite(quitOnRoom, A_ScriptDir . "\src\lib\config.ini", "PsbBatchCO", "errorQuitAt")
+                IniWrite(quitOnRoom, this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "PsbBatchCO", "errorQuitAt")
                 Utils.cleanReload(winGroup)
             }
         }
 
-        IniWrite("null", A_ScriptDir . "\src\lib\config.ini", "PsbBatchCO", "errorQuitAt")
+        IniWrite("null", this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "PsbBatchCO", "errorQuitAt")
         Sleep 1000
         MsgBox("PSB 批量拍Out 已完成！", this.popupTitle)
+
+        SetTimer(this.winDetectAndClose(this.blockingPopups), 0)
+    }
+
+    static winDetectAndClose(targetWins) {
+        loop targetWins.Length {
+            if (WinExist(winGroup[A_Index])) {
+                WinClose winGroup[A_Index]
+            }
+        }
     }
 }
