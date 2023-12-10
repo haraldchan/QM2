@@ -22,19 +22,37 @@ class GroupKeys {
         } else {
             path := this.path
         }
+
+        infoFromInput := this.getCheckoutInput()
+
+        Xl := ComObject("Excel.Application")
+        GroupKeysXl := Xl.Workbooks.Open(path)
+        groupRooms := GroupKeysXl.Worksheets("Sheet1")
+        lastRow := groupRooms.Cells(groupRooms.Rows.Count, "A").End(-4162).Row
+
+        roomingList := this.getRoomingList(lastRow, groupRooms)
+        infoFromXls := this.getCheckoutXls(lastRow, groupRooms)
+
+        GroupKeysXl.Close()
+        Xl.Quit()
+
+        this.makeKey(lastRow, roomingList, infoFromInput, infoFromXls)
+    }
+
+    static getCheckoutInput() {
         start := MsgBox("
         (
-        即将进行批量团卡制作，启动前请先完成以下准备工作：
+            即将进行批量团卡制作，启动前请先完成以下准备工作：
 
-        1、请先保存需要制卡的团Rooming List；
+            1、请先保存需要制卡的团Rooming List；
 
-        2、将Rooming List的房号录入“GroupKeys.xls”文件的第一列；
+            2、将Rooming List的房号录入“GroupKeys.xls”文件的第一列；
 
-        - 如需单独修改某个房间的退房日期、时间，请分别填入GroupKeys.xls的第二、第三列
-        - 日期格式：yyyy-mm-dd 或 yyyy/mm/dd（具体请先查看VingCard中格式）
-        - 时间格式：HH:MM
+            - 如需单独修改某个房间的退房日期、时间，请分别填入GroupKeys.xls的第二、第三列
+            - 日期格式：yyyy-mm-dd 或 yyyy/mm/dd（具体请先查看VingCard中格式）
+            - 时间格式：HH:MM
         
-        3、确保VingCard已经打开处于Check-in界面。
+            3、确保VingCard已经打开处于Check-in界面。
         )", this.popupTitle, "OKCancel 4096")
         if (start = "Cancel") {
             Utils.cleanReload(winGroup)
@@ -61,57 +79,68 @@ class GroupKeys {
         if (infoConfirm = "Cancel") {
             Utils.cleanReload(winGroup)
         }
-        
-        Xl := ComObject("Excel.Application")
-        GroupKeysXl := Xl.Workbooks.Open(path)
-        groupRooms := GroupKeysXl.Worksheets("Sheet1")
-        lastRow := groupRooms.Cells(groupRooms.Rows.Count, "A").End(-4162).Row
 
-        roomNums := []
+        return [coDateInput, coTimeInput]
+    }
+
+    static getCheckoutXls(lastRow, sheet) {
         coDateRead := []
         coTimeRead := []
+        sheet.Cells(A_Index, 2).Text = ""
+            ? coDateRead.Push("blank")
+            : coDateRead.Push(sheet.Cells(A_Index, 2).Text)
+        sheet.Cells(A_Index, 3).Text = ""
+            ? coTimeRead.Push("blank")
+            : coTimeRead.Push(sheet.Cells(A_Index, 3).Text)
+
+        return [coDateRead, coDateRead]
+    }
+
+    static getRoomingList(lastRow, sheet) {
+        roomNums := []
         loop lastRow {
-            roomNums.Push(groupRooms.Cells(A_Index, 1).Text)
-            groupRooms.Cells(A_Index, 2).Text = "" 
-                ? coDateRead.Push("blank") 
-                : coDateRead.Push(groupRooms.Cells(A_Index, 2).Text)
-            groupRooms.Cells(A_Index, 3).Text = "" 
-                ? coTimeRead.Push("blank")
-                : coTimeRead.Push(groupRooms.Cells(A_Index, 3).Text)
+            roomNums.Push(sheet.Cells(A_Index, 1).Text)
         }
-        GroupKeysXl.Close()
-        Xl.Quit()
+
+        return roomNums
+    }
+
+    static makeKey(lastRow, roomingList, Input, Xls, initX := 387, initY := 409) {
+        coDateXls := Xls[1]
+        coTimeXls := Xls[2]
+        coDateInput := Input[1]
+        coTimeInput := Input[2]
 
         loop lastRow {
             BlockInput true
-            A_Clipboard := roomNums[A_Index]
-            coDateLoop := (coDateRead[A_Index] = "blank") ? coDateInput : coDateRead[A_Index]
-            coTimeLoop := (coTimeRead[A_Index] = "blank") ? coTimeInput : coTimeRead[A_Index]
-            MouseMove 387, 409
+            A_Clipboard := roomingList[A_Index]
+            coDateLoop := (coDateXls[A_Index] = "blank") ? coDateInput : coDateXls[A_Index]
+            coTimeLoop := (coTimeXls[A_Index] = "blank") ? coTimeInput : coTimeXls[A_Index]
+            MouseMove initX, initY ; 387, 409
             Sleep 300
             Click "Down"
-            MouseMove 252, 409
+            MouseMove initX - 135, initY ; 252, 409
             Sleep 150
             Click "Up"
             Sleep 150
             Send "^v"
             Sleep 200
-            MouseMove 410, 582
+            MouseMove initX + 23, initY + 173 ; 410, 582
             Sleep 150
             Click "Down"
-            MouseMove 249, 582
+            MouseMove initX - 138, initY + 173 ; 249, 582
             Sleep 150
             Click "Up"
             Sleep 100
             Send "{Text}" . coDateLoop
             Sleep 100
-            MouseMove 528, 578
+            MouseMove initX + 141, initY + 169 ; 528, 578
             Sleep 150
             Click 2
             Sleep 200
             Send "{Text}" . coTimeLoop
             Sleep 100
-            MouseMove 499, 742
+            MouseMove initX + 112, initY + 333 ; 499, 742
             Sleep 100
             Click 2
             Sleep 100
@@ -125,12 +154,10 @@ class GroupKeys {
                 已做房卡：{1}
                 - 是(Y)制作下一个
                 - 否(N)退出制卡
-                )", roomNums[A_Index]), this.popupTitle, "OKCancel 4096")
+                )", roomingList[A_Index]), this.popupTitle, "OKCancel 4096")
             if (checkConf = "Cancel") {
                 Utils.cleanReload(winGroup)
             }
         }
-        Sleep 1000
-        MsgBox("已完成团队制卡，请与Opera/蓝豆系统核对是否正确！", this.popupTitle)
     }
 }
