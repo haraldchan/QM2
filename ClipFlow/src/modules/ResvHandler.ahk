@@ -116,7 +116,7 @@ class ResvHandler {
             case "fedex":
                 RH_Fedex(bookingInfoObj)
             case "kingsley":
-                RH_Kingsley(bookingInfoObj)
+                ; RH_Kingsley(bookingInfoObj)
             default:
         }
         Sleep 500
