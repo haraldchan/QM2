@@ -69,24 +69,41 @@ class ResvHandler {
         clb := A_Clipboard
         bookingInfoObj := Jxon_Load(&clb)
         for k, v in bookingInfoObj {
-            if (IsObject(v)) {
-                if (k = "contacts") {
-                    try {
-                        outputVal := "电话：" . v["phone"] . " " . "邮箱：" . v["email"]
-                    } catch {
-                        outputVal := ""
-                    }
-                } else {
-                    outputVal := ""
-                    loop v.Length {
-                        outputVal .= v[A_Index] . "，"
-                    }
-                    outputVal := SubStr(outputVal, 1, StrLen(outputVal) - 1)
-                }
-            } else {
+            ; if (IsObject(v)) {
+            ;     if (k = "contacts") {
+            ;         try {
+            ;             outputVal := "电话：" . v["phone"] . " " . "邮箱：" . v["email"]
+            ;         } catch {
+            ;             outputVal := ""
+            ;         }
+            ;     } else {
+            ;         outputVal := ""
+            ;         loop v.Length {
+            ;             outputVal .= v[A_Index] . "，"
+            ;         }
+            ;         outputVal := SubStr(outputVal, 1, StrLen(outputVal) - 1)
+            ;     }
+            ; } else {
+            ;     outputVal := v
+            ; }
+            if (v is String) {
                 outputVal := v
+            } else if (v is Array) {
+                outputVal := ""
+                loop v.Length {
+                    outputVal .= v[A_Index] . ", "
+                }
+                outputVal := SubStr(outputVal, 1, StrLen(outputVal) - 1)
+            } else {
+                outputVal := "`n"
+                for key, val in v {
+                    outputVal .= Format("   {1}: {2}`n", key, val)
+                } 
             }
+
             popupInfo .= Format("{1}：{2}`n", k, outputVal)
+
+
         }
         toOpera := MsgBox(Format("
         (   
