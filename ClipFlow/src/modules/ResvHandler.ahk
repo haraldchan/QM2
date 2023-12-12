@@ -62,7 +62,7 @@ class ResvHandler {
     }
 
     static saveAddOnJson(App) {
-        if (!InStr(A_Clipboard, '"header":"RH"')) {
+        if (!InStr(A_Clipboard, '"identifier":"ReservationHandler"')) {
             return
         }
         IniWrite(A_Clipboard, store, "ResvHandler", "JSON")
