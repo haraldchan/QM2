@@ -299,7 +299,7 @@ class BookingEntry {
 }
 
 ; Kingsley WIP
-RH_Kingsley(infoObj, addFromConf) {
+RH_Kingsley(infoObj, addFromConf := 0) {
     ; template booking name
     thisTemplate := "template-kingsley"
     ; convert roomType
@@ -356,8 +356,65 @@ RH_Kingsley(infoObj, addFromConf) {
     )
 }
 
+; Fliggy WIP
+RH_Fliggy(infoObj, addFromConf := 0) {
+    thisTemplate := "template-fliggy"
+    roomTypeRef := Map(
+        "城景标准中床房", "SKC",
+        "城景标准双床房", "STC",
+        "城景豪华大床房", "DKC",
+        "城景豪华双床房", "DTC",
+        "江景豪华大床房", "DKR",
+        "江景豪华双床房", "DTR",
+        "城景行政豪华大床房", "CKC",
+        "城景行政豪华大床房", "CKR",
+        "行政尊贵套房", "CSK",
+    )
+    roomType := ""
+    for k, v in roomTypeRef {
+        if (infoObj["roomType"] = k) {
+            roomType := v
+        }
+    }
+
+    breakfastType := (SubStr(roomType, 1, 1) = "C") ? "CBF" : "BBF"
+    breakfastQty := infoObj["bbf"][1]
+
+    commentBreakfast := (breakfastQty = 0)
+        ? ""
+        : Format(" INCL {1}{2} ", breakfastQty, breakfastType)
+    commentBenefits := Format(", {1}", infoObj["remarks"])
+    comment := infoObj["paymentType"] = "信用住"
+        ? Format("All{1}{2} TO 信用住。{3}", commentBreakfast, commentBenefits, infoObj["invoiceMemo"])
+        : Format("RM {1}{2} TO TA。{3}", commentBreakfast, commentBenefits, infoObj["invoiceMemo"])
+
+    pmsGuestNames := []
+    loop infoObj["guestNames"].Length {
+        curGuestName := infoObj["guestNames"][A_Index]
+        if (RegExMatch(curGuestName, "^[a-zA-Z]+$") > 0) {
+            ; if only includes English alphabet, push [lastName, firstName]
+            pmsGuestNames.Push(StrSplit(curGuestName, " "))
+        } else {
+            pmsGuestNames.Push([
+                getFullnamePinyin(curGuestName)[1], ; lastName pinyin
+                getFullnamePinyin(curGuestName)[2], ; firstName pinyin
+                curGuestName, ; hanzi-name
+            ])
+        }
+    }
+
+    ; Main booking modification
+    BookingEntry.USE(
+        thisTemplate,
+        infoObj,
+        roomType,
+        comment,
+        pmsGuestNames
+    )
+}
+
 ; Agoda WIP
-RH_Agoda(infoObj, addFromConf) {
+RH_Agoda(infoObj, addFromConf := 0) {
     roomTypeRef := Map(
         "Standard Room - Queen bed", "SKC",
         "Standard Room - Twin Bed", "STC",
