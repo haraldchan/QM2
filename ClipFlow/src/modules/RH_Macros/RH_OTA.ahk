@@ -4,24 +4,24 @@ class BookingEntry {
     ; the initX, initY for USE() should be top-left corner of current booking window
     static USE(curTemplate, infoObj, roomType, comment, pmsGuestNames, initX := 193, initY := 182) {
         MsgBox("Start in seconds...", "Reservation Handler", "T1 4096")
-        BookingEntry.addFromTemplates(curTemplate)
-        ; Sleep 1000
+        ; BookingEntry.addFromTemplates(curTemplate)
+        ; Sleep 500
         BookingEntry.profileEntry(pmsGuestNames[1])
-        ; sleep 1000
+        ; Sleep 500
         BookingEntry.roomQtyEntry(infoObj["roomQty"])
-        ; sleep 1000
+        ; Sleep 500
         BookingEntry.roomTypeEntry(roomType)
-        ; sleep 1000
+        ; Sleep 500
         BookingEntry.dateTimeEntry(infoObj["ciDate"], infoObj["coDate"])
-        ; sleep 1000
+        ; Sleep 500
         BookingEntry.commentOrderIdEntry(infoObj["orderId"], comment)
-        ; sleep 1000
+        ; Sleep 500
         if (!(Utils.arrayEvery((item) => item = 0, infoObj["bbf"]))) {
             BookingEntry.breakfastEntry(infoObj["bbf"])
         }
-        ; sleep 1000
+        ; Sleep 500
         BookingEntry.roomRatesEntry(infoObj["roomRates"])
-        sleep 1000
+        ; Sleep 500
         MsgBox("Completed.", "Reservation Handler", "T2 4096")
         ; Utils.cleanReload(winGroup)
     }
@@ -179,7 +179,7 @@ class BookingEntry {
         Sleep 100
         loop 5 {
             Send "{Esc}"
-            Sleep 200
+            Sleep 100
         }
         Sleep 100
     }
@@ -225,17 +225,22 @@ class BookingEntry {
         Sleep 100
         loop 5 {
             Send "{Esc}"
-            Sleep 200
+            Sleep 100
         }
         Sleep 100
         Send "!d"
-        Sleep 100
+        Sleep 1000
         loop roomRates.Length {
-            Send Format("{Text}{1}", roomRates[A_Index])
+            Send roomRates[A_Index]
+            Sleep 100
             Send "{Down}"
             Sleep 100
-            ; TODO: action: set bbf if included
+            Send "{Enter}"
+            Sleep 1000
+            ; Send "{Enter}"
+            ; Sleep 2000
         }
+        Sleep 100
         MouseMove initX + 356, initY + 44 ;728, 548
         Sleep 100
         Send "!o"
@@ -269,6 +274,10 @@ class BookingEntry {
         Send Format("{Text}{1}", bbf[1])
         ; Send "1"
         Sleep 100
+                loop 5 {
+            Send "{Esc}"
+            Sleep 100
+        }
     }
     ; WIP
     static saveBooking(initX, initY) {
@@ -294,8 +303,6 @@ class BookingEntry {
         ; Send "!r"
         ; Sleep 1000
     }
-
-
 }
 
 ; Kingsley WIP
@@ -361,11 +368,13 @@ RH_Fliggy(infoObj, addFromConf := 0) {
     thisTemplate := "template-fliggy"
     roomTypeRef := Map(
         "城景标准中床房", "SKC",
+        "标准大床房", "SKC",
         "城景标准双床房", "STC",
-        "城景豪华大床房", "DKC",
-        "城景豪华双床房", "DTC",
-        "江景豪华大床房", "DKR",
-        "江景豪华双床房", "DTR",
+        "标准双床房", "STC",
+        "豪华城景大床房", "DKC",
+        "豪华城景双床房", "DTC",
+        "豪华江景大床房", "DKR",
+        "豪华江景双床房", "DTR",
         "城景行政豪华大床房", "CKC",
         "城景行政豪华大床房", "CKR",
         "行政尊贵套房", "CSK",
@@ -383,8 +392,10 @@ RH_Fliggy(infoObj, addFromConf := 0) {
     commentBreakfast := (breakfastQty = 0)
         ? ""
         : Format(" INCL {1}{2} ", breakfastQty, breakfastType)
-    commentBenefits := Format(", {1}", infoObj["remarks"])
-    comment := infoObj["paymentType"] = "信用住"
+    commentBenefits := infoObj["remarks"] = "" 
+        ? "" 
+        : Format(",{1}", infoObj["remarks"])
+    comment := infoObj["payment"] = "信用住"
         ? Format("All{1}{2} TO 信用住。{3}", commentBreakfast, commentBenefits, infoObj["invoiceMemo"])
         : Format("RM {1}{2} TO TA。{3}", commentBreakfast, commentBenefits, infoObj["invoiceMemo"])
 
