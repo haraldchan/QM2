@@ -4,9 +4,6 @@
 #Include "./RH_Macros/RH_OTA.ahk"
 
 store := A_MyDocuments . "\ClipFlow.ini"
-; resvTemp := IniRead(store, "ResvHandler", "ResvTemplates")
-; resvTempObj := Jxon_Load(&resvTemp)
-
 class ResvHandler {
     static name := "Reservation Handler"
     static title := "Flow Mode - " . this.name
@@ -34,31 +31,12 @@ class ResvHandler {
         ui := [
             App.AddGroupBox("R10 w250 y+20", this.title),
             App.AddText("xp+10 yp+20", this.desc),
-            ; TODO: add template reservations and its setting here
-            ; App.AddText("xp10 yp+20 h20", "奇利模板 "),
-            ; App.AddEdit("vkingsley x+10 h20", resvTempObj["kingsley"]),
-            ; App.AddText("x40 yp+30 h20", "Agoda模板"),
-            ; App.AddEdit("vagoda x+10 h20", resvTempObj["agoda"]),
             App.AddButton("vstartBtn Default x40 h35 w230 y+15", "开始录入预订"),
         ]
 
         startBtn := Interface.getCtrlByName("startBtn", ui)
         startBtn.OnEvent("Click", (*) => ResvHandler.modifyReservation(App))
 
-        ; kingsley := Interface.getCtrlByName("kingsley", ui)
-        ; agoda := Interface.getCtrlByName("agoda", ui)
-        ; tempEdits := Interface.getCtrlByTypeAll("Edit", ui)
-
-
-        ; loop tempEdits.Length {
-        ;     tempEdits[A_Index].OnEvent("Change", saveTempConfirmation.Bind(tempEdits[A_Index]))
-        ; }
-
-        ; saveTempConfirmation(curEdit,*) {
-        ;     curEditName := curEdit.Name
-        ;     resvTempObj[curEditName] := Trim(curEdit.Text)
-        ;     IniWrite(Jxon_Dump(resvTempObj), store, "ResvHandler", "ResvTemplates")
-        ; }
     }
 
     static saveAddOnJson(App) {
@@ -69,37 +47,21 @@ class ResvHandler {
         clb := A_Clipboard
         bookingInfoObj := Jxon_Load(&clb)
         for k, v in bookingInfoObj {
-            ; if (IsObject(v)) {
-            ;     if (k = "contacts") {
-            ;         try {
-            ;             outputVal := "电话：" . v["phone"] . " " . "邮箱：" . v["email"]
-            ;         } catch {
-            ;             outputVal := ""
-            ;         }
-            ;     } else {
-            ;         outputVal := ""
-            ;         loop v.Length {
-            ;             outputVal .= v[A_Index] . "，"
-            ;         }
-            ;         outputVal := SubStr(outputVal, 1, StrLen(outputVal) - 1)
-            ;     }
-            ; } else {
-            ;     outputVal := v
-            ; }
-            if (v is String) {
+            if (v is String || v is Number) {
                 outputVal := v
             } else if (v is Array) {
                 outputVal := ""
                 loop v.Length {
-                    outputVal .= v[A_Index] . ", "
+                    outputVal .= v[A_Index] . "，"
                 }
                 outputVal := SubStr(outputVal, 1, StrLen(outputVal) - 1)
             } else {
                 outputVal := "`n"
+                msgbox(v)
                 for key, val in v {
                     outputVal .= Format("   {1}: {2}`n", key, val)
                 } 
-            }
+            } 
 
             popupInfo .= Format("{1}：{2}`n", k, outputVal)
 
