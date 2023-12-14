@@ -86,7 +86,9 @@ clearList(*) {
 }
 
 moduleLoader(App) {
-    moduleSelected := IniRead(store, "App", "moduleSelected")
+    moduleSelectedStored := IniRead(store, "App", "moduleSelected")
+    moduleSelected := moduleSelectedStored > modules.Length ? 1 : moduleSelectedStored
+
     loadedModules := []
     ; create module select radio
     loop modules.Length {
