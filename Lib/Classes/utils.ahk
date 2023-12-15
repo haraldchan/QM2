@@ -63,6 +63,20 @@ class Utils {
         }
         return newArray
     }
+
+    static arrayMap(fn, targetArray) {
+        if (!(fn is Func)) {
+            throw TypeError("First parameter is not a Function Object.")
+        }
+        if (!(targetArray is Array)) {
+            throw TypeError("Second parameter is not an Array")
+        }
+        newArray := []
+        loop targetArray.Length {
+            newArray.Push(fn(targetArray[A_Index]))
+        }
+        return newArray
+    }
 }
 
 class Interface {
