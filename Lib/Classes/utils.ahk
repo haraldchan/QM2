@@ -1,3 +1,4 @@
+;Utils: general utility methods
 class Utils {
     static cleanReload(winGroup, quit := 0) {
         ; Windows set default
@@ -32,8 +33,26 @@ class Utils {
         offsetY := targetY - initY
         MouseMove initX + offsetX, initY + offsetY
     }
+}
 
-    static arrayEvery(fn, targetArray) {
+; JSA: array methods that mimic JavaScript's Array.Prototype methods.
+class JSA {
+    static some(fn, targetArray) {
+        if (!(fn is Func)) {
+            throw TypeError("First parameter is not a Function Object.")
+        }
+        if (!(targetArray is Array)) {
+            throw TypeError("Second parameter is not an Array")
+        }
+        loop targetArray.Length {
+            if (fn(targetArray[A_Index])) {
+                return true
+            }
+        }
+        return false
+    }
+
+    static every(fn, targetArray) {
         if (!(fn is Func)) {
             throw TypeError("First parameter is not a Function Object.")
         }
@@ -48,7 +67,7 @@ class Utils {
         return true
     }
 
-    static arrayFilter(fn, targetArray) {
+    static filter(fn, targetArray) {
         if (!(fn is Func)) {
             throw TypeError("First parameter is not a Function Object.")
         }
@@ -64,7 +83,7 @@ class Utils {
         return newArray
     }
 
-    static arrayMap(fn, targetArray) {
+    static map(fn, targetArray) {
         if (!(fn is Func)) {
             throw TypeError("First parameter is not a Function Object.")
         }
@@ -77,8 +96,53 @@ class Utils {
         }
         return newArray
     }
+
+    static reduce(fn, targetArray, initialValue := 0) {
+        if (!(fn is Func)) {
+            throw TypeError("First parameter is not a Function Object.")
+        }
+        if (!(targetArray is Array)) {
+            throw TypeError("Second parameter is not an Array")
+        }
+        if (!(initialValue is Number)) {
+            throw TypeError("Third parameter is not an Number")
+        }
+        initIsSet := !(initialValue = 0)
+        accumulator := initIsSet ? initialValue : targetArray[1]
+        currentValue := initIsSet ? targetArray[1] : targetArray[2]
+        loopTimes := initIsSet ? targetArray.Length : targetArray.Length - 1
+        result := 0
+        loop loopTimes {
+            if (A_Index = 1) {
+                result := fn(accumulator, currentValue)
+            } else {
+                if (!(initialValue = 0)) {
+                    result := fn(result, targetArray[A_Index])
+                } else {
+                    result := fn(result, targetArray[A_Index + 1])
+                }
+            }
+        }
+        return result
+    }
+
+    static with(index, newValue, targetArray) {
+        if (index > targetArray.Length) {
+            throw ValueError("Index out of range")
+        }
+        if (!(targetArray is Array)) {
+            throw TypeError("Third parameter is not an Array")
+        }
+        newArray := []
+        loop targetArray.Length {
+            newArray.Push(targetArray[A_Index])
+        }
+        newArray[index] := newValue
+        return newArray
+    }
 }
 
+; Interface: methods to interact with GUI controls.
 class Interface {
     static getCtrlByName(vName, ctrlArray) {
         loop ctrlArray.Length {
@@ -106,3 +170,4 @@ class Interface {
         return controls
     }
 }
+#Include ../../FedexScheduleMonthly/FedexScheduleMonthly.ahk
