@@ -1,3 +1,5 @@
+#Include "./_JXON.ahk"
+
 ;Utils: general utility methods
 class Utils {
     static cleanReload(winGroup, quit := 0) {
@@ -32,6 +34,19 @@ class Utils {
         offsetX := targetX - initX
         offsetY := targetY - initY
         MouseMove initX + offsetX, initY + offsetY
+    }
+}
+
+class JSON {
+    static fileRead(jsonFile) {
+        json := FileRead(jsonFile)
+        return Jxon_Load(&json)
+    }
+
+    static fileWrite(newJson, jsonFile) {
+        jsonOrigin := FileRead(jsonFile)
+        FileDelete jsonOrigin
+        FileAppend Jxon_Dump(newJson), jsonFile 
     }
 }
 
@@ -170,4 +185,3 @@ class Interface {
         return controls
     }
 }
-#Include ../../FedexScheduleMonthly/FedexScheduleMonthly.ahk
