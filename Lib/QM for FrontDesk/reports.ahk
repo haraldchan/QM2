@@ -1,7 +1,6 @@
 reportFiling(reportName, fileType, reportSavingFunction, initX := 591, initY := 456) {
     WinMaximize "ahk_class SunAwtFrame"
     WinActivate "ahk_class SunAwtFrame"
-    WinActivate "ahk_class SunAwtFrame"
     BlockInput true
     Sleep 150
     Send "!m"

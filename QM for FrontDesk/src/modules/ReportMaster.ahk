@@ -28,8 +28,6 @@ class ReportMaster {
 	]
 
 	static USE() {
-		WinMaximize "ahk_class SunAwtFrame"
-		WinActivate "ahk_class SunAwtFrame"
 		reportMsg := Format("
 		(
 		请输入对应的报表编号（默认为夜审后操作）。
@@ -47,6 +45,9 @@ class ReportMaster {
 		if (reportSelector.Result = "Cancel") {
 			Utils.cleanReload(winGroup)
 		}
+
+		;TODO: try to use ListView for this 
+
 		if (isNumber(reportSelector.Value)) {
 			if (reportSelector.Value > 0 && reportSelector.Value <= this.reportIndex.Length) {
 				WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
