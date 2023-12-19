@@ -161,6 +161,10 @@ class JSA {
 class Interface {
     static getCtrlByName(vName, ctrlArray) {
         loop ctrlArray.Length {
+            if (ctrlArray[A_Index] is Array) {
+                arrElement := ctrlArray[A_Index]
+                this.getCtrlByName(vName, arrElement)
+            }
             if (vName = ctrlArray[A_Index].Name) {
                 return ctrlArray[A_Index]
             }
@@ -168,6 +172,10 @@ class Interface {
     }
 
     static getCtrlByType(ctrlType, ctrlArray) {
+        if (ctrlArray[A_Index] is Array) {
+            arrElement := ctrlArray[A_Index]
+            this.getCtrlByName(ctrlType, arrElement)
+        }
         loop ctrlArray.Length {
             if (type = ctrlArray[A_Index].Type) {
                 return ctrlArray[A_Index]
