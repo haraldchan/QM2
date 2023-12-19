@@ -113,10 +113,12 @@ class GroupKeys {
         coTimeInput := Input[2]
 
         loop lastRow {
-            BlockInput true
             A_Clipboard := roomingList[A_Index]
             coDateLoop := (coDateXls[A_Index] = "blank") ? coDateInput : coDateXls[A_Index]
             coTimeLoop := (coTimeXls[A_Index] = "blank") ? coTimeInput : coTimeXls[A_Index]
+            finMsg := A_Index = lastRow ? "`n房卡已全部制作完成，请再次核对确保无误" : ""
+            
+            BlockInput true
             MouseMove initX, initY ; 387, 409
             Sleep 300
             Click "Down"
@@ -155,7 +157,8 @@ class GroupKeys {
                 已做房卡：{1}
                 - 是(Y)制作下一个
                 - 否(N)退出制卡
-                )", roomingList[A_Index]), this.popupTitle, "OKCancel 4096")
+                {2}
+                )", roomingList[A_Index], finMsg), this.popupTitle, "OKCancel 4096")
             if (checkConf = "Cancel") {
                 Utils.cleanReload(winGroup)
             }
