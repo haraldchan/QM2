@@ -27,6 +27,12 @@ class ReportMaster {
 		["19 - Guest In House w/o Due Out(VIP INH) ", vipInh]
 	]
 
+	static reportList := [
+		{searchStr: "%complimentary", name:"Guest INH Complimentary", desc:"在住免费房/工作用房", saveFn: comp},
+		{searchStr: "", name:"", desc:"", saveFn: mgrFlash},
+		
+	]
+
 	static USE() {
 		reportMsg := Format("
 		(
