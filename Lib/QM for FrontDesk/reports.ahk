@@ -1,4 +1,48 @@
-; now runs in CoordMode "Screen"
+reportFiling(reportName, fileType, reportSavingFunction, initX := 591, initY := 456) {
+    WinMaximize "ahk_class SunAwtFrame"
+    WinActivate "ahk_class SunAwtFrame"
+    WinActivate "ahk_class SunAwtFrame"
+    BlockInput true
+    Sleep 150
+    Send "!m"
+    Sleep 300
+    Send "{Text}R"
+    Sleep 200
+    Send Format("{Text}{1}", reportName)
+    Sleep 200
+    MouseMove initX + 194, initY - 225  ; 785, 231
+    Sleep 150
+    Click ; click print to file
+    Sleep 150
+
+    ; TODO: select saving file type
+
+    ; run saving actions, return filename
+    saveName := reportSavingFunction()
+    saveFileName := saveFileName . "." . fileType
+
+    Sleep 1000
+    Send "!f"
+    Sleep 1000
+    Send "{Backspace}"
+    Sleep 200
+    Send Format("{Text}{1}", saveFileName)
+    Sleep 1000
+    Send "{Enter}"
+    saveMsg := Format("{1} 保存中", saveFileName)
+    TrayTip Format("正在保存：{1}", saveFileName)
+    MsgBox(saveMsg, "ReportMaster", "T10 4096")
+    if (saveFileName = "VIP INH-Guest INH without due out.pdf") {
+        Sleep 13000
+    }
+    Sleep 200
+    MouseMove initX, initY ; WIP
+    Click
+    Sleep 200
+    Send "!c"
+    BlockInput false
+}
+
 reportOpen(searchStr, initX := 591, initY := 456) {
     WinMaximize "ahk_class SunAwtFrame"
     WinActivate "ahk_class SunAwtFrame"
