@@ -2,7 +2,7 @@
 #Include "../../../Lib/Classes/utils.ahk"
 
 class ReportMaster {
-    static description := "报表保存 - Report Master"
+	static description := "报表保存 - Report Master"
 	static popupTitle := "Report Master"
 	static reportIndex := [
 		; [report name, report saving func]
@@ -28,69 +28,134 @@ class ReportMaster {
 	]
 
 	static reportList := {
-		onr : [
-			{searchStr: "%complimentary", name:"Guest INH Complimentary", saveFn: comp},
-			{searchStr: "FI01", name:"NA02-Manager Flash", saveFn: mgrFlash},
-			{searchStr: "RS05", name:"RS05-（前后15天）History & Forecast", saveFn: hisFor15},
-			{searchStr: "RS05", name:"RS05-（FO当月）History & Forecast", saveFn: hisForThisMonth},
-			{searchStr: "RS05", name:"RS05-（FO次月）History & Forecast", saveFn: hisForNextMonth},
-			{searchStr: "FO01-VIP", name:"VIP Arrival (VIP Arr)", saveFn: vipArr},
-			{searchStr: "FO03", name:"FO03-VIP DEP", saveFn: vipDep},
-			{searchStr: "FO01", name:"FO01-Arrival Detailed", saveFn: arrAll},
-			{searchStr: "FO02", name:"FO02-Guests INH by Room", saveFn: inhAll},
-			{searchStr: "FO03", name:"FO03-Departures", saveFn: depAll},
-			{searchStr: "FO11", name:"FO11-Credit Limit", saveFn: creditLimit},
-			{searchStr: "FO13", name:"FO13-Package Forecast（仅早餐）", saveFn: bbf},
-			{searchStr: "%hkroomstatusperroom", name:"Rooms-housekeepingstatus", saveFn: rooms},
-			{searchStr: "HK03", name:"HK03-OOO", saveFn: ooo},
-			{searchStr: "gprpmlist", name:"Group Rooming List", saveFn: groupRoom},
-			{searchStr: "grpinhouse", name:"Group In House", saveFn: groupInh},
-			{searchStr: "FO08", name:"FO08-No Show", saveFn: noShow},
-			{searchStr: "rescancel", name:"Cancellations", saveFn: cancel},
-			{searchStr: "%guestinhw", name:"Guest In House w/o Due Out(VIP INH)", saveFn: vipInh},
+		onr: [{
+			searchStr: "%complimentary",
+			name: "Guest INH Complimentary",
+			saveFn: comp
+		}, {
+			searchStr: "FI01",
+			name: "NA02-Manager Flash",
+			saveFn: mgrFlash
+		}, {
+			searchStr: "RS05",
+			name: "RS05-（前后15天）History & Forecast",
+			saveFn: hisFor15
+		}, {
+			searchStr: "RS05",
+			name: "RS05-（FO当月）History & Forecast",
+			saveFn: hisForThisMonth
+		}, {
+			searchStr: "RS05",
+			name: "RS05-（FO次月）History & Forecast",
+			saveFn: hisForNextMonth
+		}, {
+			searchStr: "FO01-VIP",
+			name: "VIP Arrival (VIP Arr)",
+			saveFn: vipArr
+		}, {
+			searchStr: "FO03",
+			name: "FO03-VIP DEP",
+			saveFn: vipDep
+		}, {
+			searchStr: "FO01",
+			name: "FO01-Arrival Detailed",
+			saveFn: arrAll
+		}, {
+			searchStr: "FO02",
+			name: "FO02-Guests INH by Room",
+			saveFn: inhAll
+		}, {
+			searchStr: "FO03",
+			name: "FO03-Departures",
+			saveFn: depAll
+		}, {
+			searchStr: "FO11",
+			name: "FO11-Credit Limit",
+			saveFn: creditLimit
+		}, {
+			searchStr: "FO13",
+			name: "FO13-Package Forecast（仅早餐）",
+			saveFn: bbf
+		}, {
+			searchStr: "%hkroomstatusperroom",
+			name: "Rooms-housekeepingstatus",
+			saveFn: rooms
+		}, {
+			searchStr: "HK03",
+			name: "HK03-OOO",
+			saveFn: ooo
+		}, {
+			searchStr: "gprpmlist",
+			name: "Group Rooming List",
+			saveFn: groupRoom
+		}, {
+			searchStr: "grpinhouse",
+			name: "Group In House",
+			saveFn: groupInh
+		}, {
+			searchStr: "FO08",
+			name: "FO08-No Show",
+			saveFn: noShow
+		}, {
+			searchStr: "rescancel",
+			name: "Cancellations",
+			saveFn: cancel
+		}, {
+			searchStr: "%guestinhw",
+			name: "Guest In House w/o Due Out(VIP INH)",
+			saveFn: vipInh
+		},
 		],
-		misc : [
-			{searchStr: "Wshgz_special", name:"Specials - 保存当天水果5 报表", saveFn: vipInh},
-			{searchStr: "GRPRMLIST", name:"Group Arrival - 保存当天到达团单", saveFn: vipInh},
-		] 
+		misc: [{
+			searchStr: "Wshgz_special",
+			name: "Specials - 保存当天水果5 报表",
+			saveFn: vipInh
+		}, {
+			searchStr: "GRPRMLIST",
+			name: "Group Arrival - 保存当天到达团单",
+			saveFn: vipInh
+		},
+		]
 	}
 
 
 	static USE() {
 		RM := Gui("+Resize", this.popupTitle)
-       	tab3 := RM.AddTab3("w300 h600", ["夜班报表", "其他报表"])
+		tab3 := RM.AddTab3("w300 h600", ["夜班报表", "其他报表"])
 
-       	tab3.UseTab(1)
-       	RM.AddText("xp+10 yp+35","请选择需要保存的报表，日期设定为夜审后操作。`n`n（报表将保存至 开始菜单-文档）。")
-       	overNightReports := []
-       	loop this.reportList.onr.Length {
+		tab3.UseTab(1)
+		RM.AddText("xp+10 yp+35", "请选择需要保存的报表，日期设定为夜审后操作。`n`n（报表将保存至 开始菜单-文档）。")
+		overNightReports := []
+		loop this.reportList.onr.Length {
 			overNightReports.Push(
 				RM.AddCheckbox("Checked h15 xp y+12", this.reportList.onr[A_Index].name)
 			)
 		}
 
-       	tab3.UseTab(2)
-       	miscReports := []
-       	loop this.reportList.misc.Length {
+		tab3.UseTab(2)
+		miscReports := []
+		loop this.reportList.misc.Length {
 			miscReports.Push(
-				RM.AddCheckbox("h15 xp y+12", this.reportList.misc[A_Index].name)
+				RM.AddRadio("h15 xp y+12", this.reportList.misc[A_Index].name)
 			)
-       	}
+		}
 
-       	tab3.UseTab()
+		tab3.UseTab()
 
-       	RM.AddCheckbox("Checked h30 x15", "全选").OnEvent("Click", selectAll)
-       	RM.AddButton("h30 w80 x+165", "保存报表").OnEvent("Click", saveReports)
+		RM.AddCheckbox("Checked h30 x15", "全选").OnEvent("Click", selectAll)
+		RM.AddButton("h30 w80 x+165", "保存报表").OnEvent("Click", saveReports)
 
 		RM.Show()
 
 		selectAll(*) {
-	       	loop overNightReports.Length {
-	       		overNightReports[A_Index].Value := overNightReports[A_Index].Value = 1 ? 0 : 1
+			loop overNightReports.Length {
+				overNightReports[A_Index].Value := overNightReports[A_Index].Value = 1 ? 0 : 1
 			}
 		}
 
-		
+		saveReports(*) {
+			curPage := tab3.Value
+		}
 
 
 		reportMsg := Format("
@@ -111,7 +176,7 @@ class ReportMaster {
 			Utils.cleanReload(winGroup)
 		}
 
-		;TODO: try to use ListView for this 
+		;TODO: try to use ListView for this
 
 		if (isNumber(reportSelector.Value)) {
 			if (reportSelector.Value > 0 && reportSelector.Value <= this.reportIndex.Length) {
@@ -163,7 +228,7 @@ class ReportMaster {
 				} else if (rmListSaver = "No") {
 					this.saveGroupRmList()
 				} else {
-				Utils.cleanReload(winGroup)
+					Utils.cleanReload(winGroup)
 				}
 				Sleep 1000
 				this.openMyDocs(reportName)
@@ -179,7 +244,7 @@ class ReportMaster {
 		}
 	}
 
-	static getReportListStr(reportList){
+	static getReportListStr(reportList) {
 		list := ""
 		loop reportList.Length {
 			list .= Format("{1}`n", reportList[A_Index][1])

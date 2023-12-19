@@ -1,4 +1,4 @@
-reportFiling(reportName, fileType, reportSavingFunction, initX := 591, initY := 456) {
+reportFiling(reportQuery, fileType, reportSavingFunction, initX := 591, initY := 456) {
     WinMaximize "ahk_class SunAwtFrame"
     WinActivate "ahk_class SunAwtFrame"
     BlockInput true
@@ -7,7 +7,7 @@ reportFiling(reportName, fileType, reportSavingFunction, initX := 591, initY := 
     Sleep 300
     Send "{Text}R"
     Sleep 200
-    Send Format("{Text}{1}", reportName)
+    Send Format("{Text}{1}", reportQuery)
     Sleep 200
     MouseMove initX + 194, initY - 225  ; 785, 231
     Sleep 150
