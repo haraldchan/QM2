@@ -161,6 +161,9 @@ class ReportMaster {
 			savedReport := ""
 			if (curPage = 1) {
 				loop overNightReports.Length {
+					if (JSA.every((item) => item.Value = 0), overNightReports) {
+						return
+					} 
 					if (overNightReports[A_Index].Value = 1) {
 						if (this.reportList.onr[A_Index].name = "RS05-（FO次月）History & Forecast") {
 							if ((this.getLastDay() - A_DD) > 5) {
@@ -204,8 +207,6 @@ class ReportMaster {
 		if (reportSelector.Result = "Cancel") {
 			Utils.cleanReload(winGroup)
 		}
-
-		;TODO: try to use ListView for this
 
 		if (isNumber(reportSelector.Value)) {
 			if (reportSelector.Value > 0 && reportSelector.Value <= this.reportIndex.Length) {
