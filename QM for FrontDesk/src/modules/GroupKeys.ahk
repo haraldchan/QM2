@@ -6,7 +6,8 @@ class GroupKeys {
     static popupTitle := "Group Keys"
     static dateDash := "^\d{1,4}-\d{1,2}-\d{1,2}"
     static dateSlash := "\d{4}/\d{2}/\d{2}"
-    static scriptHost := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM2 - Nightly"
+    ; static scriptHost := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM2 - Nightly"
+    static scriptHost := SubStr(A_ScriptDir, 1, InStr(A_ScriptDir, "\", , -1, -1) - 1)
     static path := IniRead(this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "GroupKeys", "xlsPath")
 
     static USE(desktopMode := 0) {
