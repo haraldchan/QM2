@@ -1,4 +1,5 @@
-reportFiling(reportQuery, fileType, reportSavingFunction, initX := 591, initY := 456) {
+reportFiling(reportInfoObj, fileType, initX := 591, initY := 456) {
+    WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
     WinMaximize "ahk_class SunAwtFrame"
     WinActivate "ahk_class SunAwtFrame"
     BlockInput true
@@ -7,7 +8,7 @@ reportFiling(reportQuery, fileType, reportSavingFunction, initX := 591, initY :=
     Sleep 300
     Send "{Text}R"
     Sleep 200
-    Send Format("{Text}{1}", reportQuery)
+    Send Format("{Text}{1}", reportInfoObj["searchStr"])
     Sleep 200
     MouseMove initX + 194, initY - 225  ; 785, 231
     Sleep 150
@@ -17,7 +18,7 @@ reportFiling(reportQuery, fileType, reportSavingFunction, initX := 591, initY :=
     ; TODO: select saving file type
 
     ; run saving actions, return filename
-    saveName := reportSavingFunction()
+    saveName := reportInfoObj["saveFn"].Call()
     saveFileName := saveFileName . "." . fileType
 
     Sleep 1000
@@ -40,6 +41,7 @@ reportFiling(reportQuery, fileType, reportSavingFunction, initX := 591, initY :=
     Sleep 200
     Send "!c"
     BlockInput false
+    WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 }
 
 reportOpen(searchStr, initX := 591, initY := 456) {

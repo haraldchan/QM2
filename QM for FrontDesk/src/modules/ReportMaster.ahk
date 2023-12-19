@@ -108,12 +108,12 @@ class ReportMaster {
 		],
 		misc: [{
 			searchStr: "Wshgz_special",
-			name: "Specials - 保存当天水果5 报表",
-			saveFn: vipInh
+			name: "Specials - 当天水果5 报表",
+			saveFn: special
 		}, {
 			searchStr: "GRPRMLIST",
-			name: "Group Arrival - 保存当天到达团单",
-			saveFn: vipInh
+			name: "Group Arrival - 当天预抵团单",
+			saveFn: this.groupArrivingOptions
 		},
 		]
 	}
@@ -131,7 +131,6 @@ class ReportMaster {
 				RM.AddCheckbox("Checked h15 xp y+12", this.reportList.onr[A_Index].name)
 			)
 		}
-
 		tab3.UseTab(2)
 		miscReports := []
 		loop this.reportList.misc.Length {
@@ -139,13 +138,17 @@ class ReportMaster {
 				RM.AddRadio("h15 xp y+12", this.reportList.misc[A_Index].name)
 			)
 		}
-
 		tab3.UseTab()
 
-		RM.AddCheckbox("Checked h30 x15", "全选").OnEvent("Click", selectAll)
-		RM.AddButton("h30 w80 x+165", "保存报表").OnEvent("Click", saveReports)
+		footer := [
+			RM.AddCheckbox("Checked h30 x15", "全选").OnEvent("Click", selectAll),
+			RM.AddDropDownList("vfileType h30 w80 x+140 Choose1", ["PDF", "XML", "TXT", "XLS"])
+			RM.AddButton("h30 w80 x+10", "保存报表").OnEvent("Click", saveReports),
+		]
 
 		RM.Show()
+
+		fileType := Interface.getCtrlByName("fileType", footer)
 
 		selectAll(*) {
 			loop overNightReports.Length {
@@ -155,6 +158,32 @@ class ReportMaster {
 
 		saveReports(*) {
 			curPage := tab3.Value
+			savedReport := ""
+			if (curPage = 1) {
+				loop overNightReports.Length {
+					if (overNightReports[A_Index].Value = 1) {
+						if (this.reportList.onr[A_Index].name = "RS05-（FO次月）History & Forecast") {
+							if ((this.getLastDay() - A_DD) > 5) {
+								continue
+							}
+						}
+						reportFiling(this.reportList.onr[A_Index].saveFn, fileType)
+						savedReport .= this.reportList.onr[A_Index].name . "`n"
+					}
+				}
+				if (JSA.every((item) => item.Value = 1, overNightReports)) {
+					savedReport := "夜班报表"
+				}
+			} else {
+				loop miscReports.Length {
+					if (miscReports[A_Index].Value = 1) {
+						reportFiling(this.reportList.misc[A_Index].saveFn, fileType)
+						savedReport := this.reportList.misc[A_Index].name
+					}
+				}
+			}
+			Sleep 1000
+			this.openMyDocs(savedReport)
 		}
 
 
@@ -254,12 +283,11 @@ class ReportMaster {
 
 	static openMyDocs(reportName) {
 		WinSetAlwaysOnTop false
-		myText := "已保存报表：" . reportName . "`n`n是否打开所在文件夹? "
+		myText := "已保存报表：`n`n" . reportName . "`n是否打开所在文件夹? "
 		openFolder := MsgBox(myText, this.popupTitle, "OKCancel")
 		if (openFolder = "OK") {
 			Run A_MyDocuments
 		} else {
-			; cleanReload()
 			Utils.cleanReload(winGroup)
 		}
 	}
@@ -275,6 +303,33 @@ class ReportMaster {
 		printYear := preAuditMonth = 12 ? preAuditYear + 1 : preAuditYear
 		firstDayOfNextMonth := printYear . nextMonth . "01"
 		return FormatTime(DateAdd(firstDayOfNextMonth, -1, "Days"), "dd")
+	}
+
+	static groupArrivingOptions() {
+		reportName := "当天 Arrival 团单"
+		onDayGroup := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{2}\{2}{3}\{1}Group ARR&DEP.xlsx", today, A_Year, A_MM)
+		blockInfo := this.getBlockInfo(onDayGroup)
+		blockInfoText := ""
+		for blockName, blockCode in blockInfo {
+			blockInfoText .= Format("{1}：{2}`n", blockName, blockCode)
+		}
+		rmListSaver := MsgBox(Format("
+			(	
+			请确认当天Arrival 团队信息：
+
+			{1}
+
+			是(Y)：自动保存上述团队团单
+			否(N)：手动录入block code保存团单
+			取消：退出脚本
+			)", blockInfoText), this.popupTitle, "YesNoCancel")
+		if (rmListSaver = "Yes") {
+			this.saveGroupAll(blockinfo)
+		} else if (rmListSaver = "No") {
+			this.saveGroupRmList()
+		} else {
+			Utils.cleanReload(winGroup)
+		}
 	}
 
 	static getBlockInfo(fileName) {
