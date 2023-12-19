@@ -18,7 +18,8 @@ CoordMode "Mouse", "Screen"
 ; globals and states
 version := "2.1.0"
 today := FormatTime(A_Now, "yyyyMMdd")
-scriptHost := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM2 - Nightly"
+; scriptHost := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM2 - Nightly"
+scriptHost := SubStr(A_ScriptDir, 1, InStr(A_ScriptDir, "\", , -1, -1) - 1)
 config := scriptHost . "\Lib\QM for FrontDesk\config.ini"
 winGroup := ["ahk_class SunAwtFrame"]
 popupTitle := "QM for FrontDesk " . version
@@ -69,7 +70,7 @@ Ctrl+O:    CityLedger挂账
 )")
 QM.AddCheckbox("Checked h25 y+10", "令 CityLedger 挂账保持常驻").OnEvent("Click", cityLedgerKeepAlive)
 
-tab3 := QM.AddTab3("w350", ["一键运行", "Excel辅助", "常用语句"])
+tab3 := QM.AddTab3("", ["一键运行", "Excel辅助", "常用语句"])
 tab3.UseTab(1)
 basic := []
 loop scriptIndex[1].Length {
