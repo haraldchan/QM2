@@ -165,7 +165,7 @@ class ReportMaster {
 			selectAllBtn.Value := JSA.every((item) => item.Value = 1, overNightReports) ? 1 : 0
 		}
 
-		selectAll(*) {
+		setSelectAll(*) {
 			loop overNightReports.Length {
 				overNightReports[A_Index].Value := overNightReports[A_Index].Value = 1 ? 0 : 1
 			}
