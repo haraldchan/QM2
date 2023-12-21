@@ -6,6 +6,7 @@ class Phrases {
     static USE(App) {
         this.Rush(App)
         this.Upsell(App)
+        this.ExtraBed(App)
         this.TableReserve(App)
     }
 
@@ -41,7 +42,7 @@ class Phrases {
             App.AddText("x35 y+10 ", "每晚差价"),
             App.AddEdit("vrateDiff Number x+10 w150", ""),
             App.AddText("x35 y+10", "升级晚数"),
-            App.AddEdit("vnts Number x+10 w150", ""),
+            App.AddEdit("vntsUps Number x+10 w150", ""),
             App.AddRadio("vlang h20 x35 y+10 Checked", "中文"),
             App.AddRadio("h20 x+10", "英文"),
             App.AddButton("xp w80 h50 x250 y285", "复制`nComment`nAlert").OnEvent("Click", copy),
@@ -49,57 +50,48 @@ class Phrases {
 
         roomType := Interface.getCtrlByName("roomType", ui)
         rateDiff := Interface.getCtrlByName("rateDiff", ui)
-        nts := Interface.getCtrlByName("nts", ui)
+        ntsUps := Interface.getCtrlByName("ntsUps", ui)
         lang := Interface.getCtrlByName("lang", ui)
 
         copy(*) {
             if (
                 rateDiff.Text = "" ||
                 roomType.Text = "" ||
-                nts.Text = ""
+                ntsUps.Text = ""
             ) {
                 return
             }
             A_Clipboard := (lang.Value = 1)
-                ? Format("另加{1}元每晚 升级到{2}，共{3}晚，合共{4}元。", rateDiff.Text, roomType.Text, nts.Text, rateDiff.Value * nts.Value)
-                : Format("Add RMB{1}(per night) upgrade to {2} for {3}Nights, total RMB{4}", rateDiff.Text, roomType.Text, nts.Text, rateDiff.Value * nts.Value)
+                ? Format("另加{1}元每晚 升级到{2}，共{3}晚，合共{4}元。", rateDiff.Text, roomType.Text, ntsUps.Text, rateDiff.Value * ntsUps.Value)
+                : Format("Add RMB{1}(per night) upgrade to {2} for {3}Nights, total RMB{4}", rateDiff.Text, roomType.Text, ntsUps.Text, rateDiff.Value * ntsUps.Value)
             MsgBox(A_Clipboard, "已复制信息", "T1")
         }
     }
     ; layout not tested yet
     static ExtraBed(App) {
-        approverEnabled := false
         ui := [
-            App.AddGroupBox(this.gbWidth . "r4 x25 y+20", "Extra Bed - 加床"),
-            App.AddText("xp+10 yp+25", "加床金额"),
-            [
-                App.AddRadio("Default h25 x35 y+10", "345元"),
-                App.AddRadio("h25 x+10", "575元"),
-                App.AddRadio("h25 x+10", "免费"),
-            ]
-            App.AddText("h25 x+10", "批准人"),
-            App.AddEdit("vapprover h25 w25 x+10", "")
-            App.AddText("x35 y+10", "加床晚数"),
-            App.AddEdit("vnts Number x+10 w150", "1"),
-            App.AddRadio("visChinese h20 x35 y+10 Checked", "中文"),
+            App.AddGroupBox(this.gbWidth . "r5 x25 y+80", "Extra Bed - 加床"),
+            App.AddText("xp10 yp+25 r1", "价格"),
+            App.AddRadio("Checked h15 x+10", "345元"),
+            App.AddRadio("h15 x+5", "575元"),
+            App.AddRadio("h15 x+5", "免费"),
+            App.AddText("x35 h20 y+15", "批准人"),
+            App.AddEdit("vapprover h20 w40 x+5", "Amy"),
+            App.AddText("x+10", "加床晚数"),
+            App.AddEdit("vntsEB Number x+10 w40", "1"),
+            App.AddRadio("visChinese h20 x35 y+15 Checked", "中文"),
             App.AddRadio("h20 x+10", "英文"),
-            App.AddButton("xp w80 h50 x250 y285", "复制`nComment`nAlert").OnEvent("Click", copy),
+            App.AddButton("x250 y440 w80 h50", "复制`nComment`nAlert").OnEvent("Click", copy),
         ]
 
-        payAmountOptions := ui[3]
-        nts := Interface.getCtrlByName("nts", ui)
+        payAmountOptions := [ui[3], ui[4], ui[5]]
+        ntsEB := Interface.getCtrlByName("ntsEB", ui)
         approver := Interface.getCtrlByName("approver", ui)
-        isChinese := Interface.getCtrlByName("isChinese", ui).value
 
-        approver.Enabled := approverEnabled
-
-        payAmountOptions[3].OnEvent("Click", toggleApprover)
-        toggleApprover(*) {
-            global approverEnabled := !approverEnabled
-            approver.Enable := !approverEnabled
-        }
 
         copy(*) {
+            isChinese := Interface.getCtrlByName("isChinese", ui).value
+
             if (payAmountOptions[3].Value = 1 && approver.Text = "") {
                 MsgBox("免费加床必须输入批准人", "常用语句", "T1")
                 return
@@ -110,19 +102,16 @@ class Phrases {
                 : payAmountOptions[2].Value = 1
                     ? 575
                     : 0
-
             commentChn := selectedAmount = 345
-                ? Format("另加床{1}元/晚，共{2}晚，合共{3}元。 ", selectedAmount, nts.Value, selectedAmount * nts.Value)
+                ? Format("另加床{1}元/晚，共{2}晚，合共{3}元。 ", selectedAmount, ntsEB.Value, selectedAmount * ntsEB.Value)
                 : selectedAmount = 575
-                    ? Format("另加床{1}元/晚含一位行政酒廊待遇，共{2}晚，合共{3}元。 ", selectedAmount, nts, selectedAmount * nts)
-                    : Format("免费加床 by {1}，共{2}晚。 ", approver.Text, nts.Value)
-
-
-            commentEng := := selectedAmount = 345
-                ? Format("Add extra-bed for RMB{1}net per night for {2} night(s), RMB{3}net total. ", selectedAmount, nts.Value, selectedAmount * nts.Value)
+                    ? Format("另加床{1}元/晚含一位行政酒廊待遇，共{2}晚，合共{3}元。 ", selectedAmount, ntsEB.Value, selectedAmount * ntsEB.Value)
+                    : Format("免费加床 by {1}，共{2}晚。 ", approver.Text, ntsEB.Value)
+            commentEng := selectedAmount = 345
+                ? Format("Add extra-bed for RMB{1}net per night for {2} night(s), RMB{3}net total. ", selectedAmount, ntsEB.Value, selectedAmount * ntsEB.Value)
                 : selectedAmount = 575
-                    ? Format("Add extra-bed for RMB{1}net per night(including ClubFloor benefits) for {2} night(s), RMB{3}net total.", selectedAmount, nts, selectedAmount * nts)
-                    : Format("Free extra bed by {1} for {2}night(s). ", approver.Text, nts.Value)
+                    ? Format("Add extra-bed for RMB{1}net per night(including ClubFloor benefits) for {2} night(s), RMB{3}net total.", selectedAmount, ntsEB.Value, selectedAmount * ntsEB.Value)
+                    : Format("Free extra bed by {1} for {2}night(s). ", approver.Text, ntsEB.Value)
 
             A_Clipboard := isChinese ? commentChn : commentEng
             MsgBox(A_Clipboard, "已复制信息", "T1")
@@ -131,7 +120,7 @@ class Phrases {
 
     static TableReserve(App) {
         ui := [
-            App.AddGroupBox(this.gbWidth . "r7 x25 y+80", "Table Resv - 餐饮预订"),
+            App.AddGroupBox(this.gbWidth . "r7 x25 y+70", "Table Resv - 餐饮预订"),
             App.AddText("xp+10 yp+20", "预订餐厅"),
             App.AddComboBox("vrestaurant w150 x+10 Choose1", ["宏图府", "玉堂春暖", "风味餐厅", "流浮阁"]),
             App.AddText("x35 y+10", "预订日期"),
