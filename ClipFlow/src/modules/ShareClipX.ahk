@@ -16,8 +16,9 @@ class ShareClipX {
         ui := [
             App.AddGroupBox("R6 w250 y+20", this.title),
         ]
+        
     }
-
+ 
     static showSavedClips() {
         this.SavedClips.Show()
     }
@@ -55,42 +56,42 @@ class ShareClipX {
         MsgBox(Format("已复制：`n`n{1}", A_Clipboard), this.popupTitle, "4096 T1")
     }
 
-    static insertText() {
+    static insertText(guiObj) {
         destPath := Format("{1}\#####{2}#####", this.tempDir, A_Now . ".txt")
         FileAppend(A_Clipboard, destPath)
         this.SavedClipsUI.InsertAt(1,
             [
-                this.SavedClips.AddGroupBox("r3 w250 y+20", "文字 - Text"),
-                this.SavedClips.AddEdit("xp+10 h30 w200", A_Clipboard),
-                this.SavedClips.AddButton("h15 w15 x+0", "×").OnEvent("Click", (*) => ShareClipX.removeCLipFile(destPath)),
-                this.SavedClips.AddButton("h15 w15 y+15", "✎").OnEvent("Click", (*) => ShareClipX.openClipFile(destPath)),
+                guiObj.AddGroupBox("r3 w250 y+20", "文字 - Text"),
+                guiObj.AddEdit("xp+10 h30 w200", A_Clipboard),
+                guiObj.AddButton("h15 w15 x+0", "×").OnEvent("Click", (*) => ShareClipX.removeCLipFile(destPath)),
+                guiObj.AddButton("h15 w15 y+15", "✎").OnEvent("Click", (*) => ShareClipX.openClipFile(destPath)),
             ]
         )
     }
 
-    static insertImage() {
+    static insertImage(guiObj) {
         destPath := Format("{1}\#####{2}#####{3}", this.tempDir, A_Now, StrSplit(A_Clipboard, "\").Pop())
         FileMove(A_Clipboard, destPath)
         this.SavedClipsUI.InsertAt(1,
             [
-                this.SavedClips.AddGroupBox("r5 w250 y+20", "图片 - Image"),
-                this.SavedClips.AddPicture("xp h50 w200", destPath)
-                this.SavedClips.AddButton("h15 w15 x+0", "×").OnEvent("Click", (*) => ShareClipX.removeCLipFile(destPath)),
-                this.SavedClips.AddButton("h15 w15 y+15", "✎").OnEvent("Click", (*) => ShareClipX.openClipFile(destPath)),
+                guiObj.AddGroupBox("r5 w250 y+20", "图片 - Image"),
+                guiObj.AddPicture("xp h50 w200", destPath)
+                guiObj.AddButton("h15 w15 x+0", "×").OnEvent("Click", (*) => ShareClipX.removeCLipFile(destPath)),
+                guiObj.AddButton("h15 w15 y+15", "✎").OnEvent("Click", (*) => ShareClipX.openClipFile(destPath)),
             ]
         )
     }
 
-    static insertFile() {
+    static insertFile(guiObj) {
         fileName := StrSplit(A_Clipboard, "\").Pop()
         destPath := Format("{1}\#####{2}#####{3}", this.tempDir, A_Now, fileName)
         FileMove(A_Clipboard, destPath)
         this.SavedClipsUI.insertAt(1,
             [
-                this.SavedClips.AddGroupBox("r5 w250 y+20", "文件 - File"),
-                this.SavedClips.AddEdit("xp+10 h30 w200", fileName),
-                this.SavedClips.AddButton("h15 w15 x+0", "×").OnEvent("Click", (*) => ShareClipX.removeCLipFile(destPath)),
-                this.SavedClips.AddButton("h15 w15 y+15", "✎").OnEvent("Click", (*) => ShareClipX.openClipFile(destPath)),
+                guiObj.AddGroupBox("r5 w250 y+20", "文件 - File"),
+                guiObj.AddEdit("xp+10 h30 w200", fileName),
+                guiObj.AddButton("h15 w15 x+0", "×").OnEvent("Click", (*) => ShareClipX.removeCLipFile(destPath)),
+                guiObj.AddButton("h15 w15 y+15", "✎").OnEvent("Click", (*) => ShareClipX.openClipFile(destPath)),
             ]
         )
     }
