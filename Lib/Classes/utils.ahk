@@ -192,4 +192,15 @@ class Interface {
         }
         return controls
     }
+
+    static signal(val){
+        setter(newVal){
+            if (newVal is Func) {
+                return val := newVal(val)
+            } else {
+                return val := newVal
+            }
+        }
+        return [() => val, setter]
+    }
 }
