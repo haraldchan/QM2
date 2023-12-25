@@ -408,7 +408,7 @@ RH_Fedex(infoObj) {
             }
             changePopup := MsgBox(notifier, "RH-FedEx - ADD", options . " 4096")
             if (changePopup = "Cancel") {
-                Utils.cleanReload(winGroup)
+                utils.cleanReload(winGroup)
             } else if (changePopup = "No") {
                 continue
             } else {
@@ -425,7 +425,7 @@ RH_Fedex(infoObj) {
                 MsgBox("已完成所有新增。", "RH-FedEx - CHANGE", "T1 4096")
             }
         }
-        Utils.cleanReload(winGroup)
+        utils.cleanReload(winGroup)
     }
 
     ; to-be-test
@@ -457,7 +457,7 @@ RH_Fedex(infoObj) {
             }
             changePopup := MsgBox(notifier, "RH-FedEx - CHANGE", options . " 4096")
             if (changePopup = "Cancel") {
-                Utils.cleanReload(winGroup)
+                utils.cleanReload(winGroup)
             } else if (changePopup = "No") {
                 continue
             } else if (changePopup = "Yes") {
@@ -470,6 +470,6 @@ RH_Fedex(infoObj) {
                 MsgBox("已完成所有修改。", "RH-FedEx - CHANGE", "T1 4096")
             }
         }
-        Utils.cleanReload(winGroup)
+        utils.cleanReload(winGroup)
     }
 }

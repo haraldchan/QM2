@@ -10,7 +10,7 @@ class DoNotMove {
         Sleep 100
         roomQty := InputBox("`n请输入需要DNM的房间数量", this.popupTitle, "h150")
         if (roomQty.Result = "Cancel") {
-            Utils.cleanReload(winGroup)
+            utils.cleanReload(winGroup)
         }
         this.dnm(roomQty.Value)
         Sleep 1000

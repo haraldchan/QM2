@@ -34,7 +34,7 @@ onTop := false
 ClipFlow := Gui(, popupTitle)
 ClipFlow.OnEvent("Close", (*) => 
     IniWrite(1, store, "App", "tabPos")
-    Utils.quitApp("ClipFlow", popupTitle, winGroup)
+    utils.quitApp("ClipFlow", popupTitle, winGroup)
     )
 ClipFlow.AddCheckbox("h25 x15", "保持 ClipFlow 置顶    / 停止脚本: Ctrl+F12").OnEvent("Click", keepOnTop)
 
@@ -55,7 +55,7 @@ ClipFlow.AddButton("y+20 h40 w160", "Run Test").OnEvent("Click", runTest)
 tab3.UseTab()
 
 ClipFlow.AddButton("h30 w130", "Clear").OnEvent("Click", clearList)
-ClipFlow.AddButton("h30 w130 x+20", "Refresh").OnEvent("Click", (*) => Utils.cleanReload(winGroup))
+ClipFlow.AddButton("h30 w130 x+20", "Refresh").OnEvent("Click", (*) => utils.cleanReload(winGroup))
 
 ClipFlow.Show()
 WinSetAlwaysOnTop onTop, popupTitle
@@ -82,7 +82,7 @@ clearList(*) {
     FileDelete(store)
     ; FileCopy(A_ScriptDir . "\src\lib\ClipFlow.ini", A_MyDocuments)
     FileCopy("../Lib/ClipFlow/ClipFlow.ini", A_MyDocuments)
-    Utils.cleanReload(winGroup)
+    utils.cleanReload(winGroup)
 }
 
 moduleLoader(App) {
@@ -107,7 +107,7 @@ moduleLoader(App) {
         loop loadedModules.Length {
             if (loadedModules[A_Index].Value = 1) {
                 IniWrite(A_Index, store, "App", "moduleSelected")
-                Utils.cleanReload(winGroup)
+                utils.cleanReload(winGroup)
             }
         }
     }
@@ -129,7 +129,7 @@ renderHistory() {
     delHistoryItem(index, *){
         clipHisArr.RemoveAt(index)
         IniWrite(Jxon_Dump(clipHisArr), store, "ClipHistory", "clipHisArr")
-        Utils.cleanReload(winGroup)
+        utils.cleanReload(winGroup)
     }
 }
 
@@ -138,11 +138,11 @@ runTest(*) {
 
     ; test code here.
 
-    Utils.cleanReload(winGroup)
+    utils.cleanReload(winGroup)
 }
 
 ; hotkeys
-^F12:: Utils.cleanReload(winGroup)
+^F12:: utils.cleanReload(winGroup)
 Pause:: ClipFlow.Show()
 #Hotif WinActive(popupTitle)
 Esc:: ClipFlow.Hide()

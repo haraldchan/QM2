@@ -41,7 +41,7 @@ class PsbBatchCO {
             this.saveDep(path)
             this.batchOut(path)
         } else {
-            Utils.cleanReload(winGroup)
+            utils.cleanReload(winGroup)
         }
     }
 
@@ -166,7 +166,7 @@ class PsbBatchCO {
     static batchOut(path) {
         autoOut := MsgBox("即将开始自动拍Out脚本`n请先打开PSB，进入“旅客退房”界面", PsbBatchCo.popupTitle, "OKCancel")
         if (autoOut = "Cancel") {
-            Utils.cleanReload(winGroup)
+            utils.cleanReload(winGroup)
         }
         Xl := ComObject("Excel.Application")
         CheckOut := Xl.Workbooks.Open(path)
@@ -212,7 +212,7 @@ class PsbBatchCO {
                 MsgBox("PSB系统出错，脚本已终止`n`n已拍Out到：" . depRoomNums[A_Index], PsbBatchCo.popupTitle)
                 quitOnRoom := depRoomNums[A_Index]
                 IniWrite(quitOnRoom, this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "PsbBatchCO", "errorQuitAt")
-                Utils.cleanReload(winGroup)
+                utils.cleanReload(winGroup)
             }
         }
 

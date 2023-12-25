@@ -1,7 +1,7 @@
 #Include "./_JXON.ahk"
 
 ;Utils: general utility methods
-class Utils {
+class utils {
     static cleanReload(winGroup, quit := 0) {
         ; Windows set default
         loop winGroup.Length {
@@ -37,7 +37,7 @@ class Utils {
     }
 }
 
-class JSON {
+class json {
     static fileRead(jsonFile) {
         json := FileRead(jsonFile)
         return Jxon_Load(&json)
@@ -51,7 +51,7 @@ class JSON {
 }
 
 ; JSA: array methods that mimic JavaScript's Array.Prototype methods.
-class JSA {
+class jsa {
     static some(fn, targetArray) {
         if (!(fn is Func)) {
             throw TypeError("First parameter is not a Function Object.")

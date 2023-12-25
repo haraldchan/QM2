@@ -56,7 +56,7 @@ try {
 
 ; GUI
 QM := Gui("", popupTitle)
-QM.OnEvent("Close", (*) => Utils.quitApp("QM for FrontDesk", popupTitle, winGroup))
+QM.OnEvent("Close", (*) => utils.quitApp("QM for FrontDesk", popupTitle, winGroup))
 QM.AddText(, "
 (
 快捷键及对应功能：
@@ -205,8 +205,8 @@ runSelectedScript(*) {
 F9:: {
     QM.Show()
  } 
-F12:: Utils.cleanReload(winGroup)
-^F12:: Utils.quitApp("QM for FrontDesk", popupTitle, winGroup)
+F12:: utils.cleanReload(winGroup)
+^F12:: utils.quitApp("QM for FrontDesk", popupTitle, winGroup)
 
 #HotIf cityLedgerOn
 ^o::CityLedgerCo.USE()

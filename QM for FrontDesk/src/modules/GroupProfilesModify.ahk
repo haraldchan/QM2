@@ -35,7 +35,7 @@ class GroupProfilesModify {
         2、请在InHouse界面下启动
         )", GroupProfilesModify.popupTitle, "OKCancel 4096")
         if (gpmStart = "Cancel") {
-            Utils.cleanReload(winGroup)
+            utils.cleanReload(winGroup)
         }
 
         Xl := ComObject("Excel.Application")

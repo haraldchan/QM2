@@ -18,11 +18,11 @@ class GroupShare {
             3.以Name筛选团房（如使用BlockCode将会出错）
         )", this.popupTitle, "OKCancel 4096")
         If (confirmMsg = "Cancel") {
-            Utils.cleanReload(winGroup)
+            utils.cleanReload(winGroup)
         } else {
             roomQty := InputBox("`n请输入需要Share + DNM的房间数量", this.popupTitle, "h150")
             if (roomQty.Result = "Cancel") {
-                Utils.cleanReload(winGroup)
+                utils.cleanReload(winGroup)
             }
         }
 

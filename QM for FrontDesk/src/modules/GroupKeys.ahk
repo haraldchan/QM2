@@ -56,7 +56,7 @@ class GroupKeys {
             3、确保VingCard已经打开处于Check-in界面。
         )", this.popupTitle, "OKCancel 4096")
         if (start = "Cancel") {
-            Utils.cleanReload(winGroup)
+            utils.cleanReload(winGroup)
         }
         loop {
             coDateInput := InputBox("请输入退房日期：`n(格式为yyyy-mm-dd或yyyy/mm/dd)", this.popupTitle).Value
@@ -78,7 +78,7 @@ class GroupKeys {
             退房时间：{2}
             )", coDateInput, coTimeInput), "GroupKey", "OKCancel")
         if (infoConfirm = "Cancel") {
-            Utils.cleanReload(winGroup)
+            utils.cleanReload(winGroup)
         }
 
         return [coDateInput, coTimeInput]
@@ -160,7 +160,7 @@ class GroupKeys {
                 {2}
                 )", roomingList[A_Index], finMsg), this.popupTitle, "OKCancel 4096")
             if (checkConf = "Cancel") {
-                Utils.cleanReload(winGroup)
+                utils.cleanReload(winGroup)
             }
         }
     }

@@ -16,7 +16,7 @@ class BookingEntry {
         ; Sleep 500
         BookingEntry.commentOrderIdEntry(infoObj["orderId"], comment)
         ; Sleep 500
-        if (!(JSA.every((item) => item = 0, infoObj["bbf"]))) {
+        if (!(jsa.every((item) => item = 0, infoObj["bbf"]))) {
             BookingEntry.breakfastEntry(infoObj["bbf"])
         }
         ; Sleep 500

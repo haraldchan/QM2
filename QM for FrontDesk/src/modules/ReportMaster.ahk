@@ -137,7 +137,7 @@ class ReportMaster {
 		selectAllBtn.OnEvent("Click", setSelectAll)
 
 		checkIsSelectedAll(*) {
-			selectAllBtn.Value := JSA.every((item) => item.Value = 1, overNightReports) ? 1 : 0
+			selectAllBtn.Value := jsa.every((item) => item.Value = 1, overNightReports) ? 1 : 0
 			global isSelectedAll := selectAllBtn.Value
 		}
 
@@ -153,7 +153,7 @@ class ReportMaster {
 			fileType := fileTypeBtn.Text
 
 			if (tab3.Value = 1) {
-				if (JSA.every(item => item.Value = 0, overNightReports)) {
+				if (jsa.every(item => item.Value = 0, overNightReports)) {
 					return
 				}
 				for checkbox in overNightReports {
@@ -167,7 +167,7 @@ class ReportMaster {
 						savedReport .= this.reportList.onr[A_Index].name . "`n"
 					}
 				}
-				if (JSA.every((item) => item.Value = 1, overNightReports)) {
+				if (jsa.every((item) => item.Value = 1, overNightReports)) {
 					savedReport := "夜班报表"
 				}
 			} else {
@@ -183,7 +183,6 @@ class ReportMaster {
 	}
 
 	static handleMiscReportOptions(reportInfoObj, fileType, options*) {
-		reportFn := reportInfoObj.saveFn
 		if (reportInfoObj.name = "Specials - 当天水果5 报表") {
 			reportFiling(reportInfoObj, fileType)
 		} else if (reportInfoObj.name = "Group Arrival - 当天预抵团单") {
@@ -199,7 +198,7 @@ class ReportMaster {
 		if (openFolder = "OK") {
 			Run A_MyDocuments
 		} else {
-			Utils.cleanReload(winGroup)
+			utils.cleanReload(winGroup)
 		}
 	}
 
@@ -239,7 +238,7 @@ class ReportMaster {
 		} else if (rmListSaver = "No") {
 			this.saveGroupRmList(fileType)
 		} else {
-			Utils.cleanReload(winGroup)
+			utils.cleanReload(winGroup)
 		}
 	}
 
@@ -296,7 +295,6 @@ class ReportMaster {
 		BlockInput true
 		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 		for blockName, blockCode in blockInfo {
-			; arrivingGroups(blockCode, blockName)
 			this.reportList.misc[2].blockCode := blockCode
 			this.reportList.misc[2].blockName := blockName
 			reportFiling(this.reportList.misc[2], fileType)

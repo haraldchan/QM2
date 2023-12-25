@@ -60,7 +60,7 @@ class ProfileModify {
             WinActivate "旅客信息"
         } catch {
             MsgBox("请先打开 旅客信息 窗口", this.popupTitle)
-            Utils.cleanReload(winGroup)
+            utils.cleanReload(winGroup)
         }
         checkGuestType := [PixelGetColor(464, 87), PixelGetColor(553, 87), PixelGetColor(649, 87)]
         loop checkGuestType.Length {
