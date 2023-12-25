@@ -1,25 +1,51 @@
-reportFiling(reportInfoObj, fileType, initX := 591, initY := 456) {
+reportFiling(reportInfoObj, fileType, initX := 433, initY := 598) {
+    fileTypeSelectPointer := Map(
+        "PDF", 0,
+        "XML", 2,
+        "TXT", 4,
+        "XLS", 5,
+    )
+
     WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
     WinMaximize "ahk_class SunAwtFrame"
     WinActivate "ahk_class SunAwtFrame"
     BlockInput true
-    Sleep 150
+    Sleep 100
     Send "!m"
-    Sleep 300
+    Sleep 100
     Send "{Text}R"
-    Sleep 200
-    Send Format("{Text}{1}", reportInfoObj["searchStr"])
-    Sleep 200
-    MouseMove initX + 194, initY - 225  ; 785, 231
+    Sleep 100
+    Send Format("{Text}{1}", reportInfoObj.searchStr)
+    Sleep 100
+    Send "!h"
+    Sleep 100
+    MouseMove initX, initY ; 433, 598
     Sleep 150
     Click ; click print to file
     Sleep 150
 
     ; TODO: select saving file type
+    MouseMove initX + 380 , initY 
+    Click 
+    if (fileTypeSelectPointer[fileType] != 0) {
+        loop fileTypeSelectPointer[fileType] {
+            Send "{Down}"
+            Sleep 10
+        }
+    }
+    Sleep 100
+    Send "{Enter}"
+    Sleep 100
+    Send "!o"
 
     ; run saving actions, return filename
-    saveName := reportInfoObj["saveFn"].Call()
-    saveFileName := saveFileName . "." . fileType
+    reportFn := reportInfoObj.saveFn
+    if reportInfoObj.searchStr = "GRPRMLIST" {
+            saveName := reportFn(reportInfoObj.blockCode, reportInfoObj.blockName)
+        } else {
+            saveName := reportFn()
+        }
+    saveFileName := saveName . "." . fileType
 
     Sleep 1000
     Send "!f"
@@ -44,143 +70,15 @@ reportFiling(reportInfoObj, fileType, initX := 591, initY := 456) {
     WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 }
 
-reportOpen(searchStr, initX := 591, initY := 456) {
-    WinMaximize "ahk_class SunAwtFrame"
-    WinActivate "ahk_class SunAwtFrame"
-    BlockInput true
-    MouseMove initX, initY  ; 591, 456
-    Sleep 150
-    Send "!m"
-    Sleep 300
-    Send "{Text}R"
-    Sleep 200
-    Send Format("{Text}{1}", searchStr)
-    Sleep 200
-    ; print to PDF
-    MouseMove initX + 194, initY - 225  ; 785, 231
-    Sleep 150
-    Click
-    MouseMove initX - 104, initY + 133  ; 487, 589
-    Sleep 150
-    Click
-    MouseMove initX + 14, initY - 123  ; 605, 333
-    Sleep 150
-    Click
-    Sleep 50
-    Click
-    Sleep 150
-    BlockInput false
-}
-
-reportOpenDelimitedData(searchStr, initX := 591, initY := 456) {
-    WinMaximize "ahk_class SunAwtFrame"
-    WinActivate "ahk_class SunAwtFrame"
-    BlockInput true
-    MouseMove initX, initY
-    Sleep 150
-    Send "!m"
-    Sleep 150
-    Send "R"
-    Sleep 200
-    Send Format("{Text}{1}", searchStr)
-    Sleep 200
-    MouseMove initX + 194, initY - 225  ; 785, 231
-    Sleep 150
-    Click
-    MouseMove initX - 135, initY + 145 ; 456, 601
-    Sleep 150
-    Click "Down"
-    MouseMove initX - 132, initY + 145 ; 459, 601
-    Sleep 100
-    Click "Up"
-    MouseMove initX + 225, initY + 142 ; 816, 598
-    Sleep 150
-    Click
-    MouseMove initX + 182, initY + 246 ; 773, 702
-    Sleep 150
-    Click
-    MouseMove initX + 145, initY + 233 ; 736, 689
-    Sleep 150
-    Click
-    BlockInput false
-}
-
-reportOpenSpreadSheet(searchStr, initX := 591, initY := 456) {
-    WinMaximize "ahk_class SunAwtFrame"
-    WinActivate "ahk_class SunAwtFrame"
-    BlockInput true
-    MouseMove initX, initY ; 591, 456
-    Sleep 150
-    Send "!m"
-    Sleep 150
-    Send "R"
-    Sleep 150
-    Sleep 200
-    Send Format("{Text}{1}", searchStr)
-    Sleep 200
-    MouseMove initX + 206, initY - 221 ; 797, 235
-    Sleep 100
-    Click
-    MouseMove initX - 136, initY + 147 ; 455, 603
-    Sleep 100
-    Click
-    MouseMove initX + 137, initY + 143 ; 728, 599
-    Sleep 100
-    Click
-    MouseMove initX + 166, initY + 267 ; 757, 723
-    Sleep 100
-    Click
-    MouseMove initX + 140, initY + 233 ; 731, 689
-    Sleep 100
-    Click
-    BlockInput false
-}
-
-reportSave(savename, initX := 600, initY := 620) {
-    BlockInput true
-    Sleep 1000
-    Send "!f"
-    Sleep 1000
-    Send "{Backspace}"
-    Sleep 200
-    Send Format("{Text}{1}", savename)
-    Sleep 1000
-    Send "{Enter}"
-    saveMsg := Format("{1} 保存中", savename)
-    MsgBox(saveMsg, "ReportMaster", "T10 4096")
-    if (savename = "VIP INH-Guest INH without due out.pdf") {
-        Sleep 13000
-    }
-    Sleep 200
-    MouseMove initX, initY
-    Click
-    Sleep 200
-    Send "!c"
-    BlockInput false
-}
-
 comp() {
-    ; searchStr := "%complimentary"
-    ; fileName := "comp.pdf"
     fileName := "Comp"
-    ; BlockInput true
-    ; reportOpen(searchStr)
     Sleep 200
-    ; report options here
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
 mgrFlash(initX := 749, initY := 333) {
-    ; searchStr := "FI01"
-    ; fileName := "NA02-MANAGER FLASH.pdf"
     fileName := "NA02-MANAGER FLASH"
-    ; BlockInput true
-    ; reportOpen(searchStr)
     Sleep 200
-    ; report options here
     MouseMove initX, initY ; 749, 333
     Sleep 150
     Send "!o"
@@ -188,18 +86,11 @@ mgrFlash(initX := 749, initY := 333) {
     Sleep 150
     Click
     Sleep 150
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
 hisFor15(initX := 644, initY := 178) {
-    ; searchStr := "RS05"
-    ; fileName := "RS05-林总.pdf"
     fileName := "RS05-林总"
-    ; BlockInput true
-    ; reportOpen(searchStr)
     Sleep 200
     ; report options here
     MouseMove initX, initY ; 644, 178
@@ -231,9 +122,6 @@ hisFor15(initX := 644, initY := 178) {
     Sleep 150
     Click
     Sleep 150
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
@@ -251,12 +139,7 @@ hisForThisMonth(initX := 645, initY := 205) {
     dateFirst := preAuditMonth . "01" . preAuditYear
     dateLast := FormatTime(DateAdd(firstDayOfNextMonth, -1, "Days"), "MMddyyyy")
 
-    ; searchStr := "RS05"
-    ; fileName := Format("RS05-{1}月.pdf", preAuditMonth)
     fileName := Format("RS05-{1}月", preAuditMonth)
-    ; BlockInput true
-    ; reportOpen(searchStr)
-    ; report options here
     Sleep 150
     Send "{Backspace}"
     Sleep 300
@@ -280,9 +163,6 @@ hisForThisMonth(initX := 645, initY := 205) {
     Sleep 150
     Click
     Sleep 150
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
@@ -300,8 +180,6 @@ hisForNextMonth(initX := 645, initY := 205) {
     dateFirstNext := nextMonth . "01" . printYear
     dateLastNext := FormatTime(DateAdd(firstDayOfNextNextMonth, -1, "Days"), "MMddyyyy")
 
-    ; searchStr := "RS05"
-    ; fileName := Format("RS05-{1}月.pdf", nextMonth)
     fileName := Format("RS05-{1}月", nextMonth)
     ; BlockInput true
     ; reportOpen(searchStr)
@@ -329,18 +207,11 @@ hisForNextMonth(initX := 645, initY := 205) {
     Sleep 150
     Click
     Sleep 150
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
 vipArr(initX := 464, initY := 194) {
-    ; searchStr := "FO01-VIP"
-    ; fileName := "FO01-VIP ARR.pdf"
     fileName := "FO01-VIP ARR"
-    ; BlockInput true
-    ; reportOpen(searchStr)
     Sleep 200
     ; report options here
     MouseMove initX, initY ; 464, 194
@@ -362,32 +233,17 @@ vipArr(initX := 464, initY := 194) {
     Click
     MouseMove initX + 146, initY + 549 ; 610, 743
     Sleep 150
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
 vipInh() {
-    ; searchStr := "%GUEST INH WITHOUT DUE OUT"
-    ; fileName := "VIP INH-Guest INH without due out.pdf"
     fileName := "VIP INH-Guest INH without due out"
-    ; BlockInput true
-    ; reportOpen(searchStr)
     Sleep 200
-    ; report options here
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
 vipDep(initX := 600, initY := 545) {
-    ; searchStr := "FO03"
-    ; fileName := "FO03-VIP DEP.pdf"
     fileName := "FO03-VIP DEP"
-    ; BlockInput true
-    ; reportOpen(searchStr)
     Sleep 200
     ; report options here
     MouseMove initX, initY ; 600, 545
@@ -408,18 +264,11 @@ vipDep(initX := 600, initY := 545) {
     Click
     MouseMove initX + 35, initY + 136 ; 635, 681
     Sleep 150
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
 arrAll(initX := 309, initY := 566) {
-    ; searchStr := "FO01"
-    ; fileName := "FO01-Arrival Detailed.pdf"
     fileName := "FO01-Arrival Detailed"
-    ; BlockInput true
-    ; reportOpen(searchStr)
     Sleep 200
     ; report options here
     MouseMove initX, initY ; 309, 566
@@ -437,35 +286,21 @@ arrAll(initX := 309, initY := 566) {
     MouseMove initX + 299, initY + 52 ; 608, 618
     Click
     Sleep 150
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
 inhAll(initX := 433, initY := 523) {
-    ; searchStr := "FO02"
-    ; fileName := "FO02-INH.pdf"
     fileName := "FO02-INH"
-    ; BlockInput true
-    ; reportOpen(searchStr)
     Sleep 200
     ; report options here
     MouseMove initX, initY ; 433, 523
     Sleep 150
     Click
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
 depAll(initX := 607, initY := 540) {
-    ; searchStr := "FO03"
-    ; fileName := "FO03-DEP.pdf"
     fileName := "FO03-DEP"
-    ; BlockInput true
-    ; reportOpen(searchStr)
     Sleep 200
     ; report options here
     MouseMove initX, initY ; 607, 540
@@ -475,18 +310,12 @@ depAll(initX := 607, initY := 540) {
     MouseMove initX - 119, initY - 50 ; 488, 490
     Sleep 150
     Click
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
 creditLimit(initX := 686, initY := 474) {
-    ; searchStr := "FO11"
-    ; fileName := "FO11-CREDIT LIMIT.pdf"
     fileName := "FO11-CREDIT LIMIT"
     ; BlockInput true
-    ; reportOpen(searchStr)
     Sleep 200
     ; report options here
     MouseMove initX, initY ; 686, 474
@@ -495,18 +324,11 @@ creditLimit(initX := 686, initY := 474) {
     Sleep 150
     Click
     Sleep 200
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
 bbf(initX := 599, initY := 276) {
-    ; searchStr := "FO13"
-    ; fileName := "FO13-Packages 早餐.pdf"
     fileName := "FO13-Packages 早餐"
-    ; BlockInput true
-    ; reportOpen(searchStr)
     Sleep 200
     ; report options here
     MouseMove initX, initY ; 599, 276
@@ -546,47 +368,27 @@ bbf(initX := 599, initY := 276) {
     Sleep 150
     Click
     Sleep 150
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
 rooms(initX := 476, initY := 515) {
-    ; searchStr := "%hkroomstatusperroom"
-    ; fileName := "Rooms.pdf"
     fileName := "Rooms"
-    ; BlockInput true
-    ; reportOpen(searchStr)
     Sleep 200
     ; report options here
     MouseMove initX, initY
     Sleep 150
     Click
     Sleep 150
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
 ooo() {
-    ; searchStr := "HK03"
-    ; fileName := "HK03-OOO.pdf"
     fileName := "HK03-OOO"
-    ; BlockInput true
-    ; reportOpen(searchStr)
     Sleep 200
-    ; report options here
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
 groupRoom(initX := 372, initY := 544) {
-    ; searchStr := "GRPRMLIST"
-    ; fileName := "Group Rooming List.pdf"
     fileName := "Group Rooming List"
     ; BlockInput true
     ; reportOpen(searchStr)
@@ -602,15 +404,10 @@ groupRoom(initX := 372, initY := 544) {
     Sleep 150
     Click
     Sleep 150
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
 groupInh(initX := 470, initY := 425) {
-    ; searchStr := "GROUP IN HOUSE"
-    ; fileName := "Group INH.pdf"
     fileName := "Group INH"
     ; BlockInput true
     ; reportOpen(searchStr)
@@ -623,18 +420,11 @@ groupInh(initX := 470, initY := 425) {
     Sleep 150
     Click
     Sleep 150
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
 noShow(initX := 573, initY := 440) {
-    ; searchStr := "FO08"
-    ; fileName := "FO08-NO SHOW.pdf"
     fileName := "FO08-NO SHOW"
-    ; BlockInput true
-    ; reportOpen(searchStr)
     Sleep 200
     ; report options here
     MouseMove initX, initY
@@ -651,18 +441,11 @@ noShow(initX := 573, initY := 440) {
     Sleep 100
     Send "{Text}1"
     Sleep 150
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
 cancel(initX := 601, initY := 291) {
-    ; searchStr := "RESCANCEL"
-    ; fileName := "CXL.pdf"
     fileName := "CXL"
-    ; BlockInput true
-    ; reportOpen(searchStr)
     Sleep 200
     ; report options here
     MouseMove initX, initY ; 601, 291
@@ -703,17 +486,11 @@ cancel(initX := 601, initY := 291) {
     Click
     MouseMove initX + 94, initY + 32 ; 695, 323
     Sleep 150
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
 arrivingGroups(blockCodeInput, saveName, initX := 845, initY := 376) {
-    ; fileName := Format("{1}.pdf", saveName)
     fileName := saveName
-    ; BlockInput true
-    ; reportOpen("GRPRMLIST")
     Sleep 200
     ; report options here
     MouseMove initX, initY ; 845, 376
@@ -772,18 +549,11 @@ arrivingGroups(blockCodeInput, saveName, initX := 845, initY := 376) {
     Sleep 150
     Click
     MouseMove initX - 236, initY + 271 ; 609, 647
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：{1}", fileName)
-    ; BlockInput false
     return fileName
 }
 
-special(today, initX := 600, initY := 482) {
-    ; searchStr := "Wshgz_special"
-    ; fileName := Format("{1} 水果5.xls", today)
-    fileName := Format("{1} 水果5", today)
-    ; BlockInput true
-    ; reportOpenSpreadSheet(searchStr)
+special(initX := 600, initY := 482) {
+    fileName := Format("{1} 水果5", FormatTime(A_Now, "yyyyMMdd"))
     Sleep 200
     ; report options here
     MouseMove initX, initY ; 600, 482
@@ -794,28 +564,5 @@ special(today, initX := 600, initY := 482) {
     Sleep 100
     MouseMove initX + 16, initY + 56 ; 616, 538
     Sleep 200
-    ; reportSave(fileName)
-    ; TrayTip Format("正在保存：", fileName)
-    ; BlockInput false
     return fileName
 }
-
-
-; template(){
-;     searchStr := ""
-;     fileName := ""
-;     BlockInput true
-;     reportOpen(searchStr)
-;     Sleep 200
-
-;     ; report options here
-
-;     reportSave(fileName)
-;     TrayTip Format("正在保存：{1}",fileName)
-;     BlockInput false
-; }
-
-
-; ^F9::reportOpenDelimitedData("grpr")
-; F12:: Reload
-; ^F12:: ExitApp
