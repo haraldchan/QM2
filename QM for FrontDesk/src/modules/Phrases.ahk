@@ -120,7 +120,7 @@ class Phrases {
 
     static TableReserve(App) {
         ui := [
-            App.AddGroupBox(this.gbWidth . "r7 x25 y+70", "Table Resv - 餐饮预订"),
+            App.AddGroupBox(this.gbWidth . "r7 x25 y+55", "Table Resv - 餐饮预订"),
             App.AddText("xp+10 yp+20", "预订餐厅"),
             App.AddComboBox("vrestaurant w150 x+10 Choose1", ["宏图府", "玉堂春暖", "风味餐厅", "流浮阁"]),
             App.AddText("x35 y+10", "预订日期"),
@@ -131,7 +131,7 @@ class Phrases {
             App.AddEdit("vguests Number x+10 w150", ""),
             App.AddText("x35 y+10", "对方工号"),
             App.AddEdit("vstaff Number x+10 w150", ""),
-            App.AddButton("xp w80 h50 x250 y440", "复制`nComment`nAlert").OnEvent("Click", copy),
+            App.AddButton("xp w80 h50 x250 y565", "复制`nComment`nAlert").OnEvent("Click", copy),
         ]
 
         restaurant := Interface.getCtrlByName("restaurant", ui)
