@@ -4,28 +4,6 @@
 class ReportMaster {
 	static description := "报表保存 - Report Master"
 	static popupTitle := "Report Master"
-	; static reportIndex := [
-	; 	; [report name, report saving func]
-	; 	["1  - Guest INH Complimentary", comp],
-	; 	["2  - NA02-Manager Flash", mgrFlash],
-	; 	["3  - RS05-（前后15天）History & Forecast", hisFor15],
-	; 	["4  - RS05-（FO当月）History & Forecast", hisForThisMonth],
-	; 	["5  - RS05-（FO次月）History & Forecast", hisForNextMonth],
-	; 	["6  - FO01-VIP Arrival (VIP Arr)", vipArr],
-	; 	["7  - FO03-VIP DEP", vipDep],
-	; 	["8  - FO01-Arrival Detailed", arrAll],
-	; 	["9  - FO02-Guests INH by Room", inhAll],
-	; 	["10 - FO03-Departures", depAll],
-	; 	["11 - FO11-Credit Limit", creditLimit],
-	; 	["12 - FO13-Package Forecast（仅早餐）", bbf],
-	; 	["13 - Rooms-housekeepingstatus", rooms],
-	; 	["14 - HK03-OOO", ooo],
-	; 	["15 - Group Rooming List", groupRoom],
-	; 	["16 - Group In House", groupInh],
-	; 	["17 - FO08-No Show", noShow],
-	; 	["18 - Cancellations", cancel],
-	; 	["19 - Guest In House w/o Due Out(VIP INH) ", vipInh]
-	; ]
 	static reportList := {
 		onr: [{
 			searchStr: "%complimentary",
@@ -112,85 +90,72 @@ class ReportMaster {
 		}, {
 			searchStr: "GRPRMLIST",
 			name: "Group Arrival - 当天预抵团单",
-			saveFn: this.groupArrivingOptions
+			saveFn: arrivingGroups
 		},
 		]
 	}
 
 
 	static USE() {
-		RM := Gui("+Resize", this.popupTitle)
+		RM := Gui("", this.popupTitle)
 
 		tab3 := RM.AddTab3("w300 h600", ["夜班报表", "其他报表"])
 		tab3.UseTab(1)
 		RM.AddText("xp+10 yp+35", "请选择需要保存的报表，日期设定为夜审后操作。`n`n（报表将保存至 开始菜单-文档）。")
 		overNightReports := []
-		; loop this.reportList.onr.Length {
-		; 	overNightReports.Push(
-		; 		RM.AddCheckbox("Checked h15 xp y+12", this.reportList.onr[A_Index].name)
-		; 	)
-		; }
 		for report in this.reportList.onr {
 			overNightReports.Push(
-				RM.AddCheckbox("Checked h15 xp y+12", report.name).OnEvent("Click", checkIsSelectedAll)
+				RM.AddCheckbox("Checked h15 xp y+12", report.name)
 			)
 		}
-
+		for control in overNightReports {
+			control.OnEvent("Click", checkIsSelectedAll)
+		}
 		tab3.UseTab(2)
 		miscReports := []
-		; loop this.reportList.misc.Length {
-		; 	miscReports.Push(
-		; 		RM.AddRadio("h15 xp y+12", this.reportList.misc[A_Index].name)
-		; 	)
-		; }
+
 		for report in this.reportList.misc {
+			radioStyle := (A_Index = 1) ? "Checked h15 xp y+12" : "h15 xp y+12"
 			miscReports.Push(
-				RM.AddRadio("h15 xp y+12", report.name)
+				RM.AddRadio(radioStyle, report.name)
 			)
 		}
 		tab3.UseTab()
 
 		footer := [
-			RM.AddCheckbox("vselectAllBtn Checked h30 x15", "全选")
-			RM.AddDropDownList("vfileType h30 w80 x+140 Choose1", ["PDF", "XML", "TXT", "XLS"])
-			RM.AddButton("h30 w80 x+10", "保存报表").OnEvent("Click", saveReports),
+			RM.AddCheckbox("vselectAllBtn Checked h22 x15", "全选"),
+			RM.AddDropDownList("vfileType w80 x+70 Choose1", ["PDF", "XML", "TXT", "XLS"]),
+			RM.AddButton("w80 x+10", "保存报表").OnEvent("Click", saveReports),
 		]
 
 		RM.Show()
 
+		global isSelectedAll := true
 		selectAllBtn := Interface.getCtrlByName("selectAllBtn", footer)
-		fileType := Interface.getCtrlByName("fileType", footer)
+		fileTypeBtn := Interface.getCtrlByName("fileType", footer)
+
+		selectAllBtn.OnEvent("Click", setSelectAll)
 
 		checkIsSelectedAll(*) {
 			selectAllBtn.Value := JSA.every((item) => item.Value = 1, overNightReports) ? 1 : 0
+			global isSelectedAll := selectAllBtn.Value
 		}
 
 		setSelectAll(*) {
-			loop overNightReports.Length {
-				overNightReports[A_Index].Value := overNightReports[A_Index].Value = 1 ? 0 : 1
+			global isSelectedAll := !isSelectedAll
+			for control in overNightReports {
+				control.Value := isSelectedAll
 			}
 		}
 
 		saveReports(*) {
 			savedReport := ""
+			fileType := fileTypeBtn.Text
+
 			if (tab3.Value = 1) {
-				if (JSA.every((item) => item.Value = 0), overNightReports) {
+				if (JSA.every(item => item.Value = 0, overNightReports)) {
 					return
 				}
-				; loop overNightReports.Length {
-				; 	if (JSA.every((item) => item.Value = 0), overNightReports) {
-				; 		return
-				; 	}
-				; 	if (overNightReports[A_Index].Value = 1) {
-				; 		if (this.reportList.onr[A_Index].name = "RS05-（FO次月）History & Forecast") {
-				; 			if ((this.getLastDay() - A_DD) > 5) {
-				; 				continue
-				; 			}
-				; 		}
-				; 		reportFiling(this.reportList.onr[A_Index].saveFn, fileType)
-				; 		savedReport .= this.reportList.onr[A_Index].name . "`n"
-				; 	}
-				; }
 				for checkbox in overNightReports {
 					if (checkbox.Value = 1) {
 						if (this.reportList.onr[A_Index].name = "RS05-（FO次月）History & Forecast") {
@@ -198,7 +163,7 @@ class ReportMaster {
 								continue
 							}
 						}
-						reportFiling(this.reportList.onr[A_Index].saveFn, fileType)
+						reportFiling(this.reportList.onr[A_Index], fileType)
 						savedReport .= this.reportList.onr[A_Index].name . "`n"
 					}
 				}
@@ -206,16 +171,9 @@ class ReportMaster {
 					savedReport := "夜班报表"
 				}
 			} else {
-				; loop miscReports.Length {
-				; 	if (miscReports[A_Index].Value = 1) {
-				; 		reportFiling(this.reportList.misc[A_Index].saveFn, fileType)
-				; 		savedReport := this.reportList.misc[A_Index].name
-				; 	}
-				; }
 				for checkbox in miscReports {
 					if (checkbox.Value = 1) {
-						reportFiling(this.reportList.misc[A_Index].saveFn, fileType)
-						savedReport := this.reportList.misc[A_Index].name
+						savedReport := this.handleMiscReportOptions(this.reportList.misc[A_Index], fileType)
 					}
 				}
 			}
@@ -224,101 +182,19 @@ class ReportMaster {
 		}
 	}
 
-	; 	reportMsg := Format("
-	; 	(
-	; 	请输入对应的报表编号（默认为夜审后操作）。
-	; 	（报表将保存至 开始菜单-文档）。
-
-	; 	夜班报表：
-	; 	{1}
-	; 	666 - 保存以上所有报表（执行时间约8分钟，期间请勿操作电脑）
-
-	; 	其他：
-	; 	garr - 保存当天团单
-	; 	sp - 保存当天水果5（Excel格式）
-	; 	)", this.getReportListStr(this.reportIndex))
-	; 	reportSelector := InputBox(reportMsg, this.popupTitle, "h600", "666")
-	; 	if (reportSelector.Result = "Cancel") {
-	; 		Utils.cleanReload(winGroup)
-	; 	}
-
-	; 	if (isNumber(reportSelector.Value)) {
-	; 		if (reportSelector.Value > 0 && reportSelector.Value <= this.reportIndex.Length) {
-	; 			WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
-	; 			reportName := this.reportIndex[reportSelector.Value][1]
-	; 			this.reportIndex[reportSelector.Value][2]()
-	; 			WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-	; 			Sleep 1000
-	; 			this.openMyDocs(reportName)
-	; 		} else if (reportSelector.Value = 666) {
-	; 			WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
-	; 			loop this.reportIndex.Length {
-	; 				if (A_Index = 5) {
-	; 					if ((this.getLastDay() - A_DD) > 5) {
-	; 						continue
-	; 					}
-	; 				}
-	; 				this.reportIndex[A_Index][2]()
-	; 				Sleep 3000
-	; 			}
-	; 			WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-	; 			Sleep 1000
-	; 			this.openMyDocs("夜班报表")
-	; 		} else {
-	; 			WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-	; 			MsgBox("请选择表中的指令", this.popupTitle)
-	; 		}
-	; 	} else {
-	; 		if (StrLower(reportSelector.Value) = "garr") {
-	; 			reportName := "当天 Arrival 团单"
-	; 			onDayGroup := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{2}\{2}{3}\{1}Group ARR&DEP.xlsx", today, A_Year, A_MM)
-	; 			blockInfo := this.getBlockInfo(onDayGroup)
-	; 			blockInfoText := ""
-	; 			for blockName, blockCode in blockInfo {
-	; 				blockInfoText .= Format("{1}：{2}`n", blockName, blockCode)
-	; 			}
-	; 			rmListSaver := MsgBox(Format("
-	; 				(
-	; 				请确认当天Arrival 团队信息：
-
-	; 				{1}
-
-	; 				是(Y)：自动保存上述团队团单
-	; 				否(N)：手动录入block code保存团单
-	; 				取消：退出脚本
-	; 				)", blockInfoText), this.popupTitle, "YesNoCancel")
-	; 			if (rmListSaver = "Yes") {
-	; 				this.saveGroupAll(blockinfo)
-	; 			} else if (rmListSaver = "No") {
-	; 				this.saveGroupRmList()
-	; 			} else {
-	; 				Utils.cleanReload(winGroup)
-	; 			}
-	; 			Sleep 1000
-	; 			this.openMyDocs(reportName)
-	; 		} else if (StrLower(reportSelector.Value) = "sp") {
-	; 			reportName := today . "水果5"
-	; 			special(today)
-	; 			Sleep 1000
-	; 			this.openMyDocs(reportName)
-	; 		} else {
-	; 			WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-	; 			MsgBox("请选择表中的指令", this.popupTitle)
-	; 		}
-	; 	}
-	; }
-
-	; static getReportListStr(reportList) {
-	; 	list := ""
-	; 	loop reportList.Length {
-	; 		list .= Format("{1}`n", reportList[A_Index][1])
-	; 	}
-	; 	return list
-	; }
+	static handleMiscReportOptions(reportInfoObj, fileType, options*) {
+		reportFn := reportInfoObj.saveFn
+		if (reportInfoObj.name = "Specials - 当天水果5 报表") {
+			reportFiling(reportInfoObj, fileType)
+		} else if (reportInfoObj.name = "Group Arrival - 当天预抵团单") {
+			this.groupArrivingOptions(fileType)
+		}
+		return reportInfoObj.name
+	}
 
 	static openMyDocs(reportName) {
 		WinSetAlwaysOnTop false
-		myText := "已保存报表：`n`n" . reportName . "`n是否打开所在文件夹? "
+		myText := "已保存报表：`n`n" . reportName . "`n`n是否打开所在文件夹? "
 		openFolder := MsgBox(myText, this.popupTitle, "OKCancel")
 		if (openFolder = "OK") {
 			Run A_MyDocuments
@@ -340,7 +216,7 @@ class ReportMaster {
 		return FormatTime(DateAdd(firstDayOfNextMonth, -1, "Days"), "dd")
 	}
 
-	static groupArrivingOptions() {
+	static groupArrivingOptions(fileType) {
 		reportName := "当天 Arrival 团单"
 		onDayGroup := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{2}\{2}{3}\{1}Group ARR&DEP.xlsx", today, A_Year, A_MM)
 		blockInfo := this.getBlockInfo(onDayGroup)
@@ -359,9 +235,9 @@ class ReportMaster {
 			取消：退出脚本
 			)", blockInfoText), this.popupTitle, "YesNoCancel")
 		if (rmListSaver = "Yes") {
-			this.saveGroupAll(blockinfo)
+			this.saveGroupAll(blockinfo, fileType)
 		} else if (rmListSaver = "No") {
-			this.saveGroupRmList()
+			this.saveGroupRmList(fileType)
 		} else {
 			Utils.cleanReload(winGroup)
 		}
@@ -384,7 +260,7 @@ class ReportMaster {
 		return blockInfoMap
 	}
 
-	static saveGroupRmList() {
+	static saveGroupRmList(fileType) {
 		groups := []
 		Loop {
 			blocks := InputBox("
@@ -404,20 +280,26 @@ class ReportMaster {
 		For g in groups {
 			if (InStr(g, "=")) {
 				g := StrSplit(g, "=")
-				arrivingGroups(g[1], g[2])
+				this.reportList.misc[2].blockCode := g[1]
+				this.reportList.misc[2].blockName := g[2]
 			} else {
-				arrivingGroups(g, g)
+				this.reportList.misc[2].blockCode := g
+				this.reportList.misc[2].blockName := g
 			}
+			reportFiling(this.reportList.misc[2], fileType)
 		}
 		WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 		BlockInput false
 	}
 
-	static saveGroupAll(blockInfo) {
+	static saveGroupAll(blockInfo, fileType) {
 		BlockInput true
 		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 		for blockName, blockCode in blockInfo {
-			arrivingGroups(blockCode, blockName)
+			; arrivingGroups(blockCode, blockName)
+			this.reportList.misc[2].blockCode := blockCode
+			this.reportList.misc[2].blockName := blockName
+			reportFiling(this.reportList.misc[2], fileType)
 		}
 		WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 		BlockInput false
