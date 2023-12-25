@@ -79,45 +79,45 @@ class PsbBatchCO {
         BlockInput true
         WinMaximize "ahk_class SunAwtFrame"
         WinActivate "ahk_class SunAwtFrame"
-        reportOpenDelimitedData("departure_all")
-        Sleep 100
-        MouseMove 473, 570
-        Sleep 100
-        Click
-        MouseMove 474, 547
-        Sleep 100
-        Click
-        MouseMove 483, 453
-        Sleep 100
-        Click
-        MouseMove 613, 443
-        Sleep 100
-        Click
-        Sleep 300
-        MouseMove 495, 366
-        Sleep 100
-        Click "Down"
-        MouseMove 378, 365
-        Sleep 100
-        Click "Up"
-        Sleep 100
-        Send "{Text}" . frTime
-        Sleep 100
-        MouseMove 579, 366
-        Sleep 100
-        Click "Down"
-        MouseMove 449, 366
-        Sleep 100
-        Click "Up"
-        Sleep 100
-        Send "{Text}" . toTime
-        Sleep 100
-        roomNumsTxt := Format("{1} check-out.txt", today)
-        reportSave(roomNumsTxt)
-        ; }
+        ; ; reportOpenDelimitedData("departure_all")
+        ; Sleep 100
+        ; MouseMove 473, 570
+        ; Sleep 100
+        ; Click
+        ; MouseMove 474, 547
+        ; Sleep 100
+        ; Click
+        ; MouseMove 483, 453
+        ; Sleep 100
+        ; Click
+        ; MouseMove 613, 443
+        ; Sleep 100
+        ; Click
+        ; Sleep 300
+        ; MouseMove 495, 366
+        ; Sleep 100
+        ; Click "Down"
+        ; MouseMove 378, 365
+        ; Sleep 100
+        ; Click "Up"
+        ; Sleep 100
+        ; Send "{Text}" . frTime
+        ; Sleep 100
+        ; MouseMove 579, 366
+        ; Sleep 100
+        ; Click "Down"
+        ; MouseMove 449, 366
+        ; Sleep 100
+        ; Click "Up"
+        ; Sleep 100
+        ; Send "{Text}" . toTime
+        ; Sleep 100
+        ; roomNumsTxt := Format("{1} check-out.txt", today)
+        ; ; reportSave(roomNumsTxt)
+        ; ; }
 
         ; TODO: change the following part to loopfield and write xls
-        A_Clipboard := FileRead(Format("{1}\{2}", A_MyDocuments, roomNumsTxt))
+        ; A_Clipboard := FileRead(Format("{1}\{2}", A_MyDocuments, roomNumsTxt))
         BlockInput false
         Run path
         WinWait "ahk_class XLMAIN"
