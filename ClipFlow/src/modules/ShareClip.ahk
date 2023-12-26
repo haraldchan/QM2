@@ -6,7 +6,7 @@ class ShareClip {
     static name := "Share Clip"
     static title := "Flow Mode - " . this.name
     static popupTitle := "ClipFlow - " . this.name
-    static scriptHost := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM2 - Nightly"
+    static scriptHost := SubStr(A_ScriptDir, 1, InStr(A_ScriptDir, "\", , -1, -1) - 1)
     static shareClipFolder := this.scriptHost . "\Lib\ClipFlow\SharedClips"
     static shareTxt := Format("{1}\{2}.txt", this.shareClipFolder, FormatTime(A_Now, "yyyyMMdd"))
     static prefix := Format("发送自: {1}, {2} `r`n", A_UserName, FormatTime(A_Now))
@@ -15,6 +15,9 @@ class ShareClip {
     static USE(App) {
         OnClipboardChange this.listenAndSend
         ; create new txt
+        if (!DirExist(this.shareClipFolder)) {
+            DirCreate(this.shareClipFolder)
+        }
         if (!FileExist(this.shareTxt)) {
             FileAppend("", this.shareTxt)
         }
