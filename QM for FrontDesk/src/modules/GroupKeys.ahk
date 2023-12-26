@@ -87,12 +87,14 @@ class GroupKeys {
     static getCheckoutXls(lastRow, sheet) {
         coDateRead := []
         coTimeRead := []
-        sheet.Cells(A_Index, 2).Text = ""
-            ? coDateRead.Push("blank")
-            : coDateRead.Push(sheet.Cells(A_Index, 2).Text)
-        sheet.Cells(A_Index, 3).Text = ""
-            ? coTimeRead.Push("blank")
-            : coTimeRead.Push(sheet.Cells(A_Index, 3).Text)
+        loop lastRow {
+            sheet.Cells(A_Index, 2).Text = ""
+                ? coDateRead.Push("blank")
+                : coDateRead.Push(sheet.Cells(A_Index, 2).Text)
+            sheet.Cells(A_Index, 3).Text = ""
+                ? coTimeRead.Push("blank")
+                : coTimeRead.Push(sheet.Cells(A_Index, 3).Text)
+        }
 
         return [coDateRead, coDateRead]
     }
