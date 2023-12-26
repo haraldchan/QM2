@@ -124,8 +124,8 @@ class ReportMaster {
 
 		footer := [
 			RM.AddCheckbox("vselectAllBtn Checked h22 x15", "全选"),
-			RM.AddDropDownList("vfileType w80 x+70 Choose1", ["PDF", "XML", "TXT", "XLS"]),
-			RM.AddButton("w80 x+10", "保存报表").OnEvent("Click", saveReports),
+			RM.AddDropDownList("vfileType w50 x+100 Choose1", ["PDF", "XML", "TXT", "XLS"]),
+			RM.AddButton("w80 x+10 Default", "保存报表").OnEvent("Click", saveReports),
 		]
 
 		RM.Show()
