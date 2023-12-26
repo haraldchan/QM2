@@ -13,11 +13,11 @@ modules := [
     ProfileModify,
     InvoiceWechat, 
     ShareClip,  
-    ResvHandler,
+    ; ResvHandler,
 ]
 winGroup := ["ahk_class SunAwtFrame", "旅客信息"]
-version := "1.1.0"
-scriptHost := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM2 - Nightly"
+version := "1.2.0"
+scriptHost := SubStr(A_ScriptDir, 1, InStr(A_ScriptDir, "\", , -1, -1) - 1)
 popupTitle := "ClipFlow " . version
 if (!FileExist(A_MyDocuments . "\ClipFlow.ini")) {
     FileCopy scriptHost . "\Lib\ClipFlow\ClipFlow.ini", A_MyDocuments
