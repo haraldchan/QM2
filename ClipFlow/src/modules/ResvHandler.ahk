@@ -34,7 +34,7 @@ class ResvHandler {
             App.AddButton("vstartBtn Default x40 h35 w230 y+15", "开始录入预订"),
         ]
 
-        startBtn := Interface.getCtrlByName("startBtn", ui)
+        startBtn := interface.getCtrlByName("startBtn", ui)
         startBtn.OnEvent("Click", (*) => ResvHandler.modifyReservation(App))
 
     }

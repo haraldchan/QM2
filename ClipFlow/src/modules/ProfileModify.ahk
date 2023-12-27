@@ -29,8 +29,8 @@ class ProfileModify {
             App.AddButton("vpasteBtn Disabled xp+10 h35 w110 x+10 ", "开始填入"),
         ]
         
-        copyBtn := Interface.getCtrlByName("copyBtn", ui)
-        pasteBtn := Interface.getCtrlByName("pasteBtn", ui)
+        copyBtn := interface.getCtrlByName("copyBtn", ui)
+        pasteBtn := interface.getCtrlByName("pasteBtn", ui)
         ; function
         copyBtn.OnEvent("Click", psbCopy)
         psbCopy(*) {

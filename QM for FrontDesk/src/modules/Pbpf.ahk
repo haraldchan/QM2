@@ -28,14 +28,14 @@ class PbPf {
 			Pbpf.AddButton("w370 x10 y+20 h35", "开始粘贴").OnEvent("Click", paste),
 		]
 
-		pfRoom := Interface.getCtrlByName("pfRoom", ui)
-		pfName := Interface.getCtrlByName("pfName", ui)
-		party := Interface.getCtrlByName("party", ui)
-		roomQty := Interface.getCtrlByName("roomQty", ui)
-		pfCopy := Interface.getCtrlByName("pfCopy", ui)
-		pbRoom := Interface.getCtrlByName("pbRoom", ui)
-		pbName := Interface.getCtrlByName("pbName", ui)
-		pbCopy := Interface.getCtrlByName("pbCopy", ui)
+		pfRoom := interface.getCtrlByName("pfRoom", ui)
+		pfName := interface.getCtrlByName("pfName", ui)
+		party := interface.getCtrlByName("party", ui)
+		roomQty := interface.getCtrlByName("roomQty", ui)
+		pfCopy := interface.getCtrlByName("pfCopy", ui)
+		pbRoom := interface.getCtrlByName("pbRoom", ui)
+		pbName := interface.getCtrlByName("pbName", ui)
+		pbCopy := interface.getCtrlByName("pbCopy", ui)
 
 		pbpfCtrls := [pfRoom, pfName, party, roomQty, pbRoom, pbName]
 		loop pbpfCtrls.Length {

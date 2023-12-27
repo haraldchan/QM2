@@ -131,8 +131,8 @@ class ReportMaster {
 		RM.Show()
 
 		global isSelectedAll := true
-		selectAllBtn := Interface.getCtrlByName("selectAllBtn", footer)
-		fileTypeBtn := Interface.getCtrlByName("fileType", footer)
+		selectAllBtn := interface.getCtrlByName("selectAllBtn", footer)
+		fileTypeBtn := interface.getCtrlByName("fileType", footer)
 
 		selectAllBtn.OnEvent("Click", setSelectAll)
 

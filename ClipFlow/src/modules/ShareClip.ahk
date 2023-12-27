@@ -43,11 +43,11 @@ class ShareClip {
             App.AddButton("vshowShareClipboardBtn " . "xp h32 w230 y+10", "打开 剪贴板"),
         ]
         ; get controls
-        clbListener := Interface.getCtrlByName("clbListener" , ui)
-        sendHistoryBtn := Interface.getCtrlByName("sendHistoryBtn", ui)
-        userInputText := Interface.getCtrlByName("userInputText", ui)
-        sendTextBtn := Interface.getCtrlByName("sendTextBtn", ui)
-        showShareClipboardBtn := Interface.getCtrlByName("showShareClipboardBtn", ui)
+        clbListener := interface.getCtrlByName("clbListener" , ui)
+        sendHistoryBtn := interface.getCtrlByName("sendHistoryBtn", ui)
+        userInputText := interface.getCtrlByName("userInputText", ui)
+        sendTextBtn := interface.getCtrlByName("sendTextBtn", ui)
+        showShareClipboardBtn := interface.getCtrlByName("showShareClipboardBtn", ui)
 
         ; add events
         clbListener.OnEvent("Click", toggleListen)
@@ -128,10 +128,10 @@ class ShareClip {
         shareCLB.Show()
         WinSetAlwaysOnTop true, "Share 剪贴板"
 
-        autoRefresher := Interface.getCtrlByName("autoRefresher", ui)
-        shareClipboard := Interface.getCtrlByName("shareClipboard", ui)
-        refreshBtn := Interface.getCtrlByName("refreshBtn", ui)
-        openShareClbBtn := Interface.getCtrlByName("openShareClbBtn", ui)
+        autoRefresher := interface.getCtrlByName("autoRefresher", ui)
+        shareClipboard := interface.getCtrlByName("shareClipboard", ui)
+        refreshBtn := interface.getCtrlByName("refreshBtn", ui)
+        openShareClbBtn := interface.getCtrlByName("openShareClbBtn", ui)
 
         autoRefresher.OnEvent("Click", toggleAutoRefresh)
         refreshBtn.OnEvent("Click", getUpdateSharedText)

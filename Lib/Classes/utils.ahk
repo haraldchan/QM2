@@ -158,7 +158,7 @@ class jsa {
 }
 
 ; Interface: methods to interact with GUI controls.
-class Interface {
+class interface {
     static getCtrlByName(vName, ctrlArray) {
         loop ctrlArray.Length {
             if (ctrlArray[A_Index] is Array) {

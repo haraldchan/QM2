@@ -20,8 +20,8 @@ class Phrases {
             App.AddButton("xp w80 h50 x250 y192", "复制`nComment`nAlert").OnEvent("Click", copy),
         ]
 
-        rushTime := Interface.getCtrlByName("rushTime", ui)
-        keyMade := Interface.getCtrlByName("keyMade", ui)
+        rushTime := interface.getCtrlByName("rushTime", ui)
+        keyMade := interface.getCtrlByName("keyMade", ui)
 
         copy(*) {
             if (rushTime.Text = "") {
@@ -48,10 +48,10 @@ class Phrases {
             App.AddButton("xp w80 h50 x250 y285", "复制`nComment`nAlert").OnEvent("Click", copy),
         ]
 
-        roomType := Interface.getCtrlByName("roomType", ui)
-        rateDiff := Interface.getCtrlByName("rateDiff", ui)
-        ntsUps := Interface.getCtrlByName("ntsUps", ui)
-        lang := Interface.getCtrlByName("lang", ui)
+        roomType := interface.getCtrlByName("roomType", ui)
+        rateDiff := interface.getCtrlByName("rateDiff", ui)
+        ntsUps := interface.getCtrlByName("ntsUps", ui)
+        lang := interface.getCtrlByName("lang", ui)
 
         copy(*) {
             if (
@@ -85,12 +85,12 @@ class Phrases {
         ]
 
         payAmountOptions := [ui[3], ui[4], ui[5]]
-        ntsEB := Interface.getCtrlByName("ntsEB", ui)
-        approver := Interface.getCtrlByName("approver", ui)
+        ntsEB := interface.getCtrlByName("ntsEB", ui)
+        approver := interface.getCtrlByName("approver", ui)
 
 
         copy(*) {
-            isChinese := Interface.getCtrlByName("isChinese", ui).value
+            isChinese := interface.getCtrlByName("isChinese", ui).value
 
             if (payAmountOptions[3].Value = 1 && approver.Text = "") {
                 MsgBox("免费加床必须输入批准人", "常用语句", "T1")
@@ -134,11 +134,11 @@ class Phrases {
             App.AddButton("xp w80 h50 x250 y565", "复制`nComment`nAlert").OnEvent("Click", copy),
         ]
 
-        restaurant := Interface.getCtrlByName("restaurant", ui)
-        date := Interface.getCtrlByName("date", ui)
-        time := Interface.getCtrlByName("time", ui)
-        guests := Interface.getCtrlByName("guests", ui)
-        staff := Interface.getCtrlByName("staff", ui)
+        restaurant := interface.getCtrlByName("restaurant", ui)
+        date := interface.getCtrlByName("date", ui)
+        time := interface.getCtrlByName("time", ui)
+        guests := interface.getCtrlByName("guests", ui)
+        staff := interface.getCtrlByName("staff", ui)
 
         copy(*) {
             if (
