@@ -11,9 +11,9 @@ TraySetIcon A_ScriptDir . "\src\assets\CFTray.ico"
 OnClipboardChange addToHistory
 modules := [
     ProfileModify,
-    InvoiceWechat, 
-    ShareClip,  
-    ; ResvHandler,
+    ; InvoiceWechat, 
+    ; ShareClip,  
+    ResvHandler,
 ]
 winGroup := ["ahk_class SunAwtFrame", "旅客信息"]
 version := "1.2.0"
@@ -136,7 +136,7 @@ renderHistory() {
 runTest(*) {
     ClipFlow.Hide()
 
-    ; test code here.
+    ; TEST CODE HERE
 
     utils.cleanReload(winGroup)
 }
