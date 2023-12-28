@@ -12,7 +12,7 @@ class FedexBookingEntry {
         this.profileEntry(infoObj["crewNames"])
         Sleep 500
 
-        if (infoObj["resvType"] = "ADD") {
+        if (infoObj["resvType"] = "ADD" && curIndex = 1) {
             this.roomQtyEntry(infoObj["crewNames"].Length)
         }
         Sleep 500
@@ -189,6 +189,15 @@ class FedexBookingEntry {
         comment := ""
         if (infoObj["resvType"] = "ADD") {
             comment := Format("RM INCL 1BBF TO CO,Hours@Hotel: {1}={2}day(s), ActualStay: {3}-{4}", infoObj["stayHours"], infoObj["daysActual"], infoObj["ciDate"], infoObj["coDate"])
+            MouseMove initX, initY ; 622, 596
+            Sleep 100
+            Click "Down"
+            MouseMove initX + 518, initY + 36 ; 1140, 605
+            Sleep 100
+            Click "Up"
+            Sleep 100
+            Send "{Backspace}"
+            Sleep 100
         } else {
             ; copy current comment and reformat
             MouseMove initX, initY ; 622, 596
