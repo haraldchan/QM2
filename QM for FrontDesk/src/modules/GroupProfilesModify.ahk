@@ -4,7 +4,7 @@ class GroupProfilesModify {
     static name := "GroupProfilesModify"
     static description := "团队Profile录入  - Excel表：GroupRoomNum.xls"
     static popupTitle := "GroupProfilesModify"
-    static scriptHost := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM2 - Nightly"
+    static scriptHost := SubStr(A_ScriptDir, 1, InStr(A_ScriptDir, "\", , -1, -1) - 1)
     static path := IniRead(this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "GroupProfilesModify", "xlsPath")
     static wwly := this.getWwlyPath()
 
