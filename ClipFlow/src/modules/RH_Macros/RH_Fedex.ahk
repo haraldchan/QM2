@@ -1,10 +1,8 @@
 #Include "../../../../Lib/Classes/utils.ahk"
 #Include "../../../../Lib/ClipFlow/DictIndex.ahk"
 ; FedEx WIP
-; WIP: ADD
 class FedexBookingEntry {
-    static USE(infoObj, initX := 194, initY := 183) {
-        ; CoordMode "Mouse", "Screen"
+    static USE(infoObj, curIndex, initX := 194, initY := 183) {
         pmsCiDate := (StrSplit(infoObj["ETA"], ":"))[1] < 10
             ? DateAdd(infoObj["ciDate"], -1, "days")
             : infoObj["ciDate"]
@@ -13,56 +11,92 @@ class FedexBookingEntry {
 
         this.profileEntry(infoObj["crewNames"])
         Sleep 500
+
         if (infoObj["resvType"] = "ADD") {
             this.roomQtyEntry(infoObj["crewNames"].Length)
         }
         Sleep 500
+
         this.dateTimeEntry(infoObj["ciDate"], infoObj["coDate"], infoObj["ETA"], infoObj["ETD"])
         Sleep 500
+
         this.moreFieldsEntry(infoObj)
         Sleep 500
-        this.commentTripNumTrackingEntry(infoObj)
+
+        ; only modify comment on the first booking (ADD)
+        if (infoObj["resvType"] = "ADD" && curIndex = 1) {
+            this.commentTripNumTrackingEntry(infoObj)
+        } else {
+            this.commentTripNumTrackingEntry(infoObj)
+        }
         Sleep 500
-        pmsNts := DateDiff(pmsCoDate, pmsCiDate, "days")
+
         if (infoObj["daysActual"] < pmsNts) {
             this.dailyDetailsEntry(infoObj["daysActual"])
         }
+        ; Sleep 500
+        ; FedexBookingEntry.rateCodeEntry()
         Sleep 500
-        FedexBookingEntry.rateCodeEntry()
-        Sleep 1000
         if (infoObj["daysActual"] > pmsNts) {
             this.postRoomChargeAlertEntry(pmsNts, infoObj["daysActual"])
         }
     }
-    ; tested
+
     static profileEntry(crewNames, initX := 471, initY := 217) {
-        if (A_Index = 0) {
-            A_Index := 1
-        }
+        ; for test only
+        ; if (A_Index = 0) {
+        ;     A_Index := 1
+        ; }
         crewName := StrSplit(crewNames[A_Index], " ")
-        Sleep 1000
+
         MouseMove initX, initY ; 471, 217
         Click
         Sleep 3000
-        Send "!n"
-        Sleep 100
-        Send "{Esc}"
-        Sleep 100
-        MouseMove initX - 39, initY + 68 ; 432, 285
+        MouseMove 380, 555 ; 380, 555
         Sleep 10
-        Click 3
+        Click 
         Sleep 10
         Send Format("{Text}{1}", crewName[2])
-        MouseMove initX - 72, initY + 95 ; 399, 312
         Sleep 10
-        Click 3
+        Send "{Tab}"
         Sleep 10
         Send Format("{Text}{1}", crewName[1])
         Sleep 10
-        Send "!o"
-        Sleep 2000
+        Send "{Tab}"
+        Sleep 500
+
+        CoordMode "Pixel", "Screen"
+        ; Profile is found
+        if (PixelGetColor(580, 505) != "0x0000FF") {
+            ; msgbox("Found!")
+            Send "{Enter}"
+            Sleep 100
+            Send "!o"
+            Sleep 3000
+        } else {
+            ; msgbox("Not Found!")
+            Send "{Enter}"
+            Sleep 100
+            Send "!n"
+            Sleep 100
+            Send "{Esc}"
+            Sleep 100
+            MouseMove initX - 39, initY + 68 ; 432, 285
+            Sleep 10
+            Click 3
+            Sleep 10
+            Send Format("{Text}{1}", crewName[2])
+            MouseMove initX - 72, initY + 95 ; 399, 312
+            Sleep 10
+            Click 3
+            Sleep 10
+            Send Format("{Text}{1}", crewName[1])
+            Sleep 10
+            Send "!o"
+            Sleep 3000
+        }
     }
-    ; tested
+
     static roomQtyEntry(roomQty, initX := 294, initY := 441) {
         MouseMove initX, initY
         Sleep 100
@@ -78,7 +112,7 @@ class FedexBookingEntry {
         }
         Sleep 100
     }
-    ; tested. seems that rate code entry is not neccessary
+
     static dateTimeEntry(checkin, checkout, ETA, ETD, initX := 323, initY := 506) {
         pmsCiDate := (StrSplit(ETA, ":")[1]) < 10
             ? FormatTime(DateAdd(checkin, -1, "days"), "MMddyyyy")
@@ -125,19 +159,11 @@ class FedexBookingEntry {
         Sleep 100
         loop 3 {
             Send "{Esc}"
-            Sleep 100
+            Sleep 200
         }
         ; fill in ETA & ETD
         MouseMove initX - 29, initY + 91 ; 294, 597
         Sleep 100
-        ; Click
-        ; Sleep 100
-        ; Send "{Enter}"
-        ; Sleep 100
-        ; Send "{Enter}"
-        ; Sleep 100
-        ; Send "{Enter}"
-        ; Sleep 100
         MouseMove initX - 3, initY + 91 ; 320, 597
         Sleep 100
         Click "Down"
@@ -157,7 +183,7 @@ class FedexBookingEntry {
         Send Format("{Text}{1}", ETD)
         Sleep 100
     }
-    ; tested
+
     static commentTripNumTrackingEntry(infoObj, initX := 622, initY := 589) {
         ; set comment
         comment := ""
@@ -205,7 +231,7 @@ class FedexBookingEntry {
         Send Format("{Text}Tracking:{1}", infoObj["tracking"])
         Sleep 100
     }
-    ; tested
+
     static moreFieldsEntry(infoObj, initX := 236, initY := 333) {
         schdCiDate := FormatTime(infoObj["ciDate"], "MMddyyyy")
         schdCoDate := FormatTime(infoObj["coDate"], "MMddyyyy")
@@ -223,10 +249,10 @@ class FedexBookingEntry {
         Send Format("{Text}{1}", infoObj["flightIn"])
         Sleep 100
         MouseMove initX + 436, initY + 170 ; 672, 503
-        Sleep 281
+        Sleep 100
         Click "Down"
         MouseMove initX + 287, initY + 170 ; 523, 503
-        Sleep 358
+        Sleep 100
         Click "Up"
         Send Format("{Text}{1}", schdCiDate)
         Sleep 100
@@ -269,7 +295,7 @@ class FedexBookingEntry {
         Click
         Sleep 100
     }
-    ; tested(change) // to-be-test(add)
+
     static dailyDetailsEntry(daysActual, initX := 372, initY := 524) {
         MouseMove initX, initY ; 372, 524
         Sleep 100
@@ -316,7 +342,7 @@ class FedexBookingEntry {
         Send "!r"
         Sleep 1000
     }
-    ; to-be-test
+
     static rateCodeEntry(initX := 326, initY := 507) {
         MouseMove initX, initY
         Sleep 100
@@ -335,7 +361,7 @@ class FedexBookingEntry {
             Sleep 100
         }
     }
-    ; to-be-test
+
     static postRoomChargeAlertEntry(pmsNts, daysActual, initX := 759, initY := 266) {
         Send "!t"
         MouseMove initX, initY ; 759, 266
@@ -412,17 +438,17 @@ RH_Fedex(infoObj) {
             } else if (changePopup = "No") {
                 continue
             } else {
-                FedexBookingEntry.USE(infoObj)
+                FedexBookingEntry.USE(infoObj, A_Index)
             }
             ; split and open a booking, modified again(second loop)
             if (A_Index = 1) {
                 ; change msgbox to save actions later!
-                MsgBox("请保存，完成后点击确定进入下一个", "RH-FedEx - CHANGE", "4096")
-                FedexBookingEntry.splitParty()
+                MsgBox("请保存，完成后点击确定进入下一个", "RH-FedEx - ADD", "4096")
+                ; FedexBookingEntry.splitParty()
             }
             ; leave close and save manually ???
             if (A_Index = roomQty) {
-                MsgBox("已完成所有新增。", "RH-FedEx - CHANGE", "T1 4096")
+                MsgBox("已完成所有新增。", "RH-FedEx - ADD", "T1 4096")
             }
         }
         utils.cleanReload(winGroup)
@@ -461,9 +487,9 @@ RH_Fedex(infoObj) {
             } else if (changePopup = "No") {
                 continue
             } else if (changePopup = "Yes") {
-                FedexBookingEntry.USE(infoObj)
+                FedexBookingEntry.USE(infoObj, A_Index)
             } else {
-                FedexBookingEntry.USE(infoObj)
+                FedexBookingEntry.USE(infoObj, A_Index)
             }
             ; leave close and save manually ???
             if (A_Index = roomQty) {
