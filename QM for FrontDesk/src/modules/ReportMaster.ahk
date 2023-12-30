@@ -95,7 +95,6 @@ class ReportMaster {
 		]
 	}
 
-
 	static USE() {
 		RM := Gui("", this.popupTitle)
 
