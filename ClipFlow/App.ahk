@@ -96,8 +96,8 @@ moduleLoader(App) {
         loadedModules.Push(App.AddRadio(moduleRadioStyle, modules[A_Index].name))
     }
     ; add event
-    loop loadedModules.Length {
-        loadedModules[A_Index].OnEvent("Click", saveSelect)
+    for control in loadedModules {
+        control.OnEvent("Click", saveSelect)
     }
     ; load selected module
     modules[moduleSelected].USE(App)
