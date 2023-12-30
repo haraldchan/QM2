@@ -1,6 +1,6 @@
 #Include "../../../../Lib/Classes/utils.ahk"
 #Include "../../../../Lib/ClipFlow/DictIndex.ahk"
-; FedEx WIP
+
 class FedexBookingEntry {
     static USE(infoObj, curIndex, initX := 194, initY := 183) {
         pmsCiDate := (StrSplit(infoObj["ETA"], ":"))[1] < 10
@@ -12,49 +12,73 @@ class FedexBookingEntry {
         this.profileEntry(infoObj["crewNames"])
         Sleep 500
 
-        if (infoObj["resvType"] = "ADD" && curIndex = 1) {
-            this.roomQtyEntry(infoObj["crewNames"].Length)
-        }
-        Sleep 500
-
-        this.dateTimeEntry(infoObj["ciDate"], infoObj["coDate"], infoObj["ETA"], infoObj["ETD"])
-        Sleep 500
-
-        this.moreFieldsEntry(infoObj)
-        Sleep 500
-
-        ; only modify comment on the first booking (ADD)
-        if (infoObj["resvType"] = "ADD" && curIndex = 1) {
-            this.commentTripNumTrackingEntry(infoObj)
-        } else {
-            this.commentTripNumTrackingEntry(infoObj)
-        }
-        Sleep 500
-
-        if (infoObj["daysActual"] < pmsNts) {
-            this.dailyDetailsEntry(infoObj["daysActual"])
-        }
+        ; Only enter No. of Rooms when resvType is "ADD" on the first loop
+        ; if (infoObj["resvType"] = "ADD" && curIndex = 1) {
+        ;     this.roomQtyEntry(infoObj["crewNames"].Length)
+        ; }
         ; Sleep 500
-        ; FedexBookingEntry.rateCodeEntry()
-        Sleep 500
+
+        ; this.dateTimeEntry(infoObj["ciDate"], infoObj["coDate"], infoObj["ETA"], infoObj["ETD"])
+        ; Sleep 500
+
+        ; this.moreFieldsEntry(infoObj)
+        ; Sleep 500
+
+        ; ; only modify comment on the first booking (ADD)
+        ; if (infoObj["resvType"] = "ADD" && curIndex = 1) {
+        ;     this.commentTripNumTrackingEntry(infoObj)
+        ; } else {
+        ;     this.commentTripNumTrackingEntry(infoObj)
+        ; }
+        ; Sleep 500
+
+        ; if (infoObj["daysActual"] < pmsNts) {
+        ;     this.dailyDetailsEntry(infoObj["daysActual"])
+        ; }
+        ; ; Sleep 500
+        ; ; FedexBookingEntry.rateCodeEntry()
+        ; Sleep 500
+        ; if (infoObj["daysActual"] > pmsNts) {
+        ;     this.postRoomChargeAlertEntry(pmsNts, infoObj["daysActual"])
+        ; }
+
+        ; only enter neccessary field when resvType is CHANGE or first loop of ADD
+        if (infoObj["resvType"] = "ADD" && curIndex = 1 || infoObj["resvType"] = "CHANGE") {
+            if (infoObj["resvType"] = "ADD") {
+                this.roomQtyEntry(infoObj["crewNames"].Length)
+            }
+            Sleep 500
+
+            this.dateTimeEntry(infoObj["ciDate"], infoObj["coDate"], infoObj["ETA"], infoObj["ETD"])
+            Sleep 500
+
+            this.moreFieldsEntry(infoObj)
+            Sleep 500
+
+            this.commentTripNumTrackingEntry(infoObj)
+            Sleep 500
+
+            if (infoObj["daysActual"] < pmsNts) {
+                this.dailyDetailsEntry(infoObj["daysActual"])
+            }
+            Sleep 500
+        }
+
+        ; post Alert reminder when room charge needs to be post manually
         if (infoObj["daysActual"] > pmsNts) {
             this.postRoomChargeAlertEntry(pmsNts, infoObj["daysActual"])
         }
     }
 
     static profileEntry(crewNames, initX := 471, initY := 217) {
-        ; for test only
-        ; if (A_Index = 0) {
-        ;     A_Index := 1
-        ; }
         crewName := StrSplit(crewNames[A_Index], " ")
 
         MouseMove initX, initY ; 471, 217
         Click
         Sleep 3000
-        MouseMove 380, 555 ; 380, 555
+        MouseMove initX - 91, initY + 338 ; 380, 555
         Sleep 10
-        Click 
+        Click
         Sleep 10
         Send Format("{Text}{1}", crewName[2])
         Sleep 10
@@ -63,18 +87,14 @@ class FedexBookingEntry {
         Send Format("{Text}{1}", crewName[1])
         Sleep 10
         Send "{Tab}"
-        Sleep 500
+        Sleep 500 ; delay must be >= 500ms
 
+        ; check profile existence
         CoordMode "Pixel", "Screen"
-        ; Profile is found
-        if (PixelGetColor(580, 505) != "0x0000FF") {
-            ; msgbox("Found!")
+        if (PixelGetColor(initX + 99, initY + 288) != "0x0000FF") { ; profile is found
             Send "{Enter}"
             Sleep 100
-            Send "!o"
-            Sleep 3000
-        } else {
-            ; msgbox("Not Found!")
+        } else { ; profile not found, create a new one
             Send "{Enter}"
             Sleep 100
             Send "!n"
@@ -92,9 +112,9 @@ class FedexBookingEntry {
             Sleep 10
             Send Format("{Text}{1}", crewName[1])
             Sleep 10
-            Send "!o"
-            Sleep 3000
         }
+        Send "!o"
+        Sleep 3000
     }
 
     static roomQtyEntry(roomQty, initX := 294, initY := 441) {
@@ -185,45 +205,36 @@ class FedexBookingEntry {
     }
 
     static commentTripNumTrackingEntry(infoObj, initX := 622, initY := 589) {
-        ; set comment
         comment := ""
+
+        ; select current comment
+        MouseMove initX, initY ; 622, 596
+        Sleep 100
+        Click "Down"
+        MouseMove initX + 518, initY + 36 ; 1140, 605
+        Sleep 100
+        Click "Up"
+        Sleep 100
+        Send "^x"
+        Sleep 100
+
+        ; set new comment
         if (infoObj["resvType"] = "ADD") {
             comment := Format("RM INCL 1BBF TO CO,Hours@Hotel: {1}={2}day(s), ActualStay: {3}-{4}", infoObj["stayHours"], infoObj["daysActual"], infoObj["ciDate"], infoObj["coDate"])
-            MouseMove initX, initY ; 622, 596
-            Sleep 100
-            Click "Down"
-            MouseMove initX + 518, initY + 36 ; 1140, 605
-            Sleep 100
-            Click "Up"
-            Sleep 100
-            Send "{Backspace}"
-            Sleep 100
         } else {
-            ; copy current comment and reformat
-            MouseMove initX, initY ; 622, 596
-            Sleep 100
-            Click "Down"
-            MouseMove initX + 518, initY + 36 ; 1140, 605
-            Sleep 100
-            Click "Up"
-            Sleep 100
-            Send "^x"
-            Sleep 100
             prevComment := A_Clipboard
             comment := Format("Changed to {1}={2}day(s), New Stay:{3}-{4} // Before Update:{5}", infoObj["stayHours"], infoObj["daysActual"], infoObj["ciDate"], infoObj["coDate"], prevComment)
         }
+
         ; fill-in comment
         Sleep 100
         MouseMove initX, initY ; 622, 596
         Sleep 100
-        ; Click "Down"
-        ; MouseMove initX + 518, initY + 36 ; 1140, 605
-        ; Sleep 100
-        ; Click "Up"
         Click
         Sleep 100
         Send Format("{Text}{1}", comment)
         Sleep 100
+
         ; fill-in new flight and trip
         MouseMove initX + 307, initY - 35 ; 929, 554
         Sleep 100
@@ -231,7 +242,8 @@ class FedexBookingEntry {
         Sleep 100
         Send Format("{Text}{1}  {2}", infoObj["flightIn"], infoObj["tripNum"])
         Sleep 100
-        ; fill-in tracking
+
+        ; fill-in tracking No.
         MouseMove initX + 301, initY - 84 ; 923, 505
         Sleep 100
         Click 3
@@ -244,6 +256,7 @@ class FedexBookingEntry {
     static moreFieldsEntry(infoObj, initX := 236, initY := 333) {
         schdCiDate := FormatTime(infoObj["ciDate"], "MMddyyyy")
         schdCoDate := FormatTime(infoObj["coDate"], "MMddyyyy")
+
         MouseMove initX, initY ; 236, 333
         Sleep 100
         Click
@@ -413,7 +426,6 @@ RH_Fedex(infoObj) {
         addModification(infoObj)
     }
 
-    ; WIP
     addModification(infoObj) {
         loop roomQty {
             notifierOC := Format("
@@ -452,7 +464,7 @@ RH_Fedex(infoObj) {
             ; split and open a booking, modified again(second loop)
             if (A_Index = 1) {
                 ; change msgbox to save actions later!
-                MsgBox("请保存，完成后点击确定进入下一个", "RH-FedEx - ADD", "4096")
+                MsgBox("已完成第一个新增`n`n请先保存，并打开 Party → Split → Resv 进入下一个预订继续修改", "RH-FedEx - ADD", "4096")
                 ; FedexBookingEntry.splitParty()
             }
             ; leave close and save manually ???
@@ -463,7 +475,6 @@ RH_Fedex(infoObj) {
         utils.cleanReload(winGroup)
     }
 
-    ; to-be-test
     changeModification(infoObj) {
         loop roomQty {
             notifierOC := Format("
