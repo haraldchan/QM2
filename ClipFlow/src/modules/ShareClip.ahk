@@ -14,7 +14,7 @@ class ShareClip {
 
     static USE(App) {
         OnClipboardChange this.listenAndSend
-        ; create new txt
+        ; create new shareclip dir/txt
         if (!DirExist(this.shareClipFolder)) {
             DirCreate(this.shareClipFolder)
         }
@@ -27,7 +27,7 @@ class ShareClip {
                 FileDelete this.shareClipFolder . "\" . A_LoopFileName
             }
         }
-        ;states
+
         global isListening := false
         global readyToSend := false
 
@@ -42,21 +42,18 @@ class ShareClip {
             App.AddText("xp y+15", "3、查看 Share 剪贴板内容"),
             App.AddButton("vshowShareClipboardBtn " . "xp h32 w230 y+10", "打开 剪贴板"),
         ]
-        ; get controls
         clbListener := interface.getCtrlByName("clbListener" , ui)
         sendHistoryBtn := interface.getCtrlByName("sendHistoryBtn", ui)
         userInputText := interface.getCtrlByName("userInputText", ui)
         sendTextBtn := interface.getCtrlByName("sendTextBtn", ui)
         showShareClipboardBtn := interface.getCtrlByName("showShareClipboardBtn", ui)
 
-        ; add events
         clbListener.OnEvent("Click", toggleListen)
         sendHistoryBtn.OnEvent("Click", sendHistory)
         userInputText.OnEvent("Change", checkInput)
         sendTextBtn.OnEvent("Click", sendUserInputText)
         showShareClipboardBtn.OnEvent("Click", showShareClipboard)
 
-        ; callbacks
         toggleListen(*) {
             global isListening := !isListening
         }
