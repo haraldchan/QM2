@@ -1,8 +1,8 @@
 ; { imports
 ; #Include "%A_ScriptDir%\utils.ahk"
 ; #Include "%A_ScriptDir%\FedexScheduledResv.ahk"
-#Include "../utils.ahk"
-#Include "../FedexScheduledResv.ahk"
+#Include "./utils.ahk"
+#Include "./FedexScheduledResv.ahk"
 ; }
 
 ; { setup
