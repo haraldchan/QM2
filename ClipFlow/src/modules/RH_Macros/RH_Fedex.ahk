@@ -12,36 +12,6 @@ class FedexBookingEntry {
         this.profileEntry(infoObj["crewNames"])
         Sleep 500
 
-        ; Only enter No. of Rooms when resvType is "ADD" on the first loop
-        ; if (infoObj["resvType"] = "ADD" && curIndex = 1) {
-        ;     this.roomQtyEntry(infoObj["crewNames"].Length)
-        ; }
-        ; Sleep 500
-
-        ; this.dateTimeEntry(infoObj["ciDate"], infoObj["coDate"], infoObj["ETA"], infoObj["ETD"])
-        ; Sleep 500
-
-        ; this.moreFieldsEntry(infoObj)
-        ; Sleep 500
-
-        ; ; only modify comment on the first booking (ADD)
-        ; if (infoObj["resvType"] = "ADD" && curIndex = 1) {
-        ;     this.commentTripNumTrackingEntry(infoObj)
-        ; } else {
-        ;     this.commentTripNumTrackingEntry(infoObj)
-        ; }
-        ; Sleep 500
-
-        ; if (infoObj["daysActual"] < pmsNts) {
-        ;     this.dailyDetailsEntry(infoObj["daysActual"])
-        ; }
-        ; ; Sleep 500
-        ; ; FedexBookingEntry.rateCodeEntry()
-        ; Sleep 500
-        ; if (infoObj["daysActual"] > pmsNts) {
-        ;     this.postRoomChargeAlertEntry(pmsNts, infoObj["daysActual"])
-        ; }
-
         ; only enter neccessary field when resvType is CHANGE or first loop of ADD
         if (infoObj["resvType"] = "ADD" && curIndex = 1 || infoObj["resvType"] = "CHANGE") {
             if (infoObj["resvType"] = "ADD") {
