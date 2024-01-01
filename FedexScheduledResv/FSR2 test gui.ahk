@@ -106,6 +106,35 @@ showScheduleList(scheduledPath) {
 			)
 		)
 	}
+	SchdList.AddButton("y+10", "开始录入").OnEvent("Click", start)
 
-	
+	SchdList.Show()
+
+	start(*) {
+		listItems := [
+			"tripNum",
+			"roomQty",
+			"flightIn",
+			"ibDate",
+			"ETA",
+			"stayHours",
+			"obDate",
+			"ETD",
+			"flightOut",
+		]
+		selectedFlightList := []
+
+		checkedList := ListViewGetContent("Selected", SchdList)
+		loop parse, checkedList, "`n" {
+			listRow := Map()
+			loop parse, A_LoopField, A_Tab {
+				listRow[listItems[A_Index]] := A_LoopField
+			}
+			selectedFlightList.Push(listRow)
+		}
+
+		SchdList.Hide()
+		
+		FedexScheduledReservations.writeReservations(selectedFlightList)
+	}
 }

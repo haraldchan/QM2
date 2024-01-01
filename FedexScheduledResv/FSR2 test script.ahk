@@ -76,8 +76,8 @@ class FsrEntry {
 			schdCiDate,
 			schdCoDate
 		)
-		flightIn := inboundFlightLine["flightIn1"] . inboundFlightLine["flightIn2"]
-		flightOut := inboundFlightLine["flightOut1"] . inboundFlightLine["flightOut2"]
+		; flightIn := inboundFlightLine["flightIn1"] . inboundFlightLine["flightIn2"]
+		; flightOut := inboundFlightLine["flightOut1"] . inboundFlightLine["flightOut2"]
 		pmsNts := DateDiff(pmsCoDate, pmsCiDate, "days")
 		; reformat to match pms date format
 		schdCiDate := FormatTime(schdCiDate, "MMddyyyy")
@@ -88,16 +88,16 @@ class FsrEntry {
 		this.openBooking()
 		Sleep 500
 
-		this.profileEntry(flightIn, inboundFlightLine["tripNum"])
+		this.profileEntry(inboundFlightLine["flightIn"], inboundFlightLine["tripNum"])
 		Sleep 500
 
 		this.dateTimeEntry(pmsCiDate, pmsCoDate, inboundFlightLine["ETA"], inboundFlightLine["ETD"])
 		Sleep 500
 
-		this.commentIbdTripEntry(comment, inboundFlightLine["flightIn1"] . inboundFlightLine["flightIn2"], inboundFlightLine["tripNum"])
+		this.commentIbdTripEntry(comment, inboundFlightLine["flightIn"], inboundFlightLine["tripNum"])
 		Sleep 500
 
-		this.moreFieldsEntry(schdCiDate, schdCoDate, inboundFlightLine["ETA"], inboundFlightLine["ETD"], flightIn, flightOut)
+		this.moreFieldsEntry(schdCiDate, schdCoDate, inboundFlightLine["ETA"], inboundFlightLine["ETD"], inboundFlightLine["flightIn"], inboundFlightLine["flightOut"])
 		Sleep 500
 
 		if (inboundFlightLine["daysActual"] < pmsNts) {
