@@ -42,6 +42,7 @@ selectedDate := interface.getCtrlByName("selectedDate", FSR_UI)
 showQueryDateDetails := interface.getCtrlByName("showQueryDateDetails", FSR_UI)
 killExcelBtn := interface.getCtrlByName("killExcelBtn", FSR_UI)
 
+schdPath.OnEvent("LoseFocus", savePath)
 selectFileBtn.OnEvent("Click", getSchd)
 openFileBtn.OnEvent("Click", (*) => Run(schdPath.Text))
 toNextDropdown.OnEvent("Change", saveTime)
@@ -97,6 +98,7 @@ showScheduleList(scheduledPath) {
 
 	SchdList := Gui("", Format("FedEx Schedule {1}", FormatTime(selectedDate.Value, "yyyy/MM/dd")))
 	LV := SchdList.AddListView("Checked w600 h350", colTitles)
+	; render list
 	SchdDetails := []
 	for flight in flights {
 		SchdDetails.Push(
@@ -119,7 +121,7 @@ showScheduleList(scheduledPath) {
 	SchdList.Show()
 
 	start(*) {
-		listItems := [
+		flightKeys := [
 			"tripNum",
 			"roomQty",
 			"flightIn",
@@ -130,37 +132,62 @@ showScheduleList(scheduledPath) {
 			"ETD",
 			"flightOut",
 		]
-		selectedFlightList := []
 
-		; store checked row numbers
-		checkedRows := []
-		loop flights.Length {
-			curRow := LV.GetNext(A_Index-1,"Checked")
-			try {
-				if (curRow = lastRow || curRow = 0) {
-					Continue
+		getCheckedRowNumbers(listViewCtrl, listData) {
+			checkedRowNumbers := []
+			loop listData.Length {
+				curRow := listViewCtrl.GetNext(A_Index - 1, "Checked")
+				try {
+					if (curRow = prevRow || curRow = 0) {
+						Continue
+					}
 				}
+				checkedRowNumbers.Push(curRow)
+				prevRow := curRow
 			}
-			checkedRows.Push(curRow)
-			lastRow := curRow
+			return checkedRowNumbers
 		}
+
+		filterCheckedRowDataMap(listViewCtrl, mapKeys, checkedRows) {
+			checkedRowsData := []
+			for rowNumber in checkedRows {
+				dataMap := Map()
+				for key in mapKeys {
+					dataMap[key] := listViewCtrl.GetText(rowNumber, A_Index)
+				}
+				checkedRowsData.Push(dataMap)
+			}
+			return checkedRowsData
+		}
+
+		checkedFlights := filterCheckedRowDataMap(LV, flightKeys, getCheckedRowNumbers(LV, flights))
+
+		; selectedFlightList := []
+		; store checked row numbers
+		; checkedRows := []
+		; loop flights.Length {
+		; 	curRow := LV.GetNext(A_Index - 1, "Checked")
+		; 	try {
+		; 		if (curRow = prevRow || curRow = 0) {
+		; 			Continue
+		; 		}
+		; 	}
+		; 	checkedRows.Push(curRow)
+		; 	prevRow := curRow
+		; }
 
 		; loop through every field in checked rows
-		loop checkedRows.Length {
-			; fullLine := ""
-			flight := Map()
-			row := checkedRows[A_Index]
-			loop listItems.Length {
-				; fullLine .= LV.GetText(row, A_Index) . "  "
-				flight[listItems[A_Index]] := LV.GetText(row, A_Index)
-			}
-			; msgbox(fullLine)
-			selectedFlightList.Push(flight)
-		}
-
+		; loop checkedRows.Length {
+		; 	flightMap := Map()
+		; 	row := checkedRows[A_Index]
+		; 	loop flightKeys.Length {
+		; 		flightMap[flightKeys[A_Index]] := LV.GetText(row, A_Index)
+		; 	}
+		; 	selectedFlightList.Push(flightMap)
+		; }
 		FSR.Hide()
 		SchdList.Hide()
-		
-		; FedexScheduledReservations.writeReservations(selectedFlightList)
+
+		; FedexScheduledReservations.writeReservations(checkedFlights)
 	}
 }
