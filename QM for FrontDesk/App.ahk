@@ -63,10 +63,9 @@ QM.AddText(, "
 
 F9:        显示脚本选择窗
 F12:       强制停止脚本/重载
-Ctrl+F12:  退出
 
 常驻脚本(按下即启动)
-Ctrl+O:    CityLedger挂账
+Ctrl+O 或 鼠标中键:    CityLedger挂账
 )")
 QM.AddCheckbox("Checked h25 y+10", "令 CityLedger 挂账保持常驻").OnEvent("Click", cityLedgerKeepAlive)
 
@@ -206,7 +205,7 @@ F9:: {
     QM.Show()
  } 
 F12:: utils.cleanReload(winGroup)
-^F12:: utils.quitApp("QM for FrontDesk", popupTitle, winGroup)
+; ^F12:: utils.quitApp("QM for FrontDesk", popupTitle, winGroup)
 
 #HotIf cityLedgerOn
 ^o::CityLedgerCo.USE()
