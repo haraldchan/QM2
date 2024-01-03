@@ -28,6 +28,9 @@ class FedexBookingEntry {
             this.commentTripNumTrackingEntry(infoObj)
             Sleep 500
 
+            this.crsNumEntry(infoObj["tracking"])
+            Sleep 500
+
             if (infoObj["daysActual"] < pmsNts) {
                 this.dailyDetailsEntry(infoObj["daysActual"])
             }
@@ -147,7 +150,7 @@ class FedexBookingEntry {
         Sleep 100
         Send "{Enter}"
         Sleep 100
-        loop 3 {
+        loop 5 {
             Send "{Esc}"
             Sleep 200
         }
@@ -384,6 +387,29 @@ class FedexBookingEntry {
         Send "!c"
         Sleep 200
     }
+
+    static crsNumEntry(tracking, initX := 739, initY := 505){
+        MouseMove initX, initY
+        Sleep 100
+        Click
+        Sleep 100
+        Send "!n"
+        Sleep 100
+        MouseMove initX - 29, initY - 99
+        Sleep 100
+        Click
+        Sleep 100
+        Send "{Down}"
+        Sleep 100
+        Send "!o"
+        Sleep 100
+        Send Format("{Text}{1}", tracking)
+        Sleep 100
+        Send "!o"
+        Sleep 100
+        Send "!c"
+        Sleep 100
+    }   
 }
 
 RH_Fedex(infoObj) {
@@ -432,7 +458,7 @@ RH_Fedex(infoObj) {
                 FedexBookingEntry.USE(infoObj, A_Index)
             }
             ; split and open a booking, modified again(second loop)
-            if (A_Index = 1) {
+            if (A_Index = 1 && roomQty > 1) {
                 ; change msgbox to save actions later!
                 MsgBox("已完成第一个新增`n`n请先保存，并打开 Party → Split → Resv 进入下一个预订继续修改", "RH-FedEx - ADD", "4096")
                 ; FedexBookingEntry.splitParty()
