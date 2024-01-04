@@ -192,15 +192,31 @@ class interface {
         }
         return controls
     }
+ 
+    static getCheckedRowNumbers(listViewCtrl) {
+		checkedRowNumbers := []
+		loop listViewCtrl.GetCount() {
+			curRow := listViewCtrl.GetNext(A_Index - 1, "Checked")
+			try {
+				if (curRow = prevRow || curRow = 0) {
+					Continue
+				}
+			}
+			checkedRowNumbers.Push(curRow)
+			prevRow := curRow
+		}
+		return checkedRowNumbers
+	}
 
-    static signal(val){
-        setter(newVal){
-            if (newVal is Func) {
-                return val := newVal(val)
-            } else {
-                return val := newVal
-            }
-        }
-        return [() => val, setter]
-    }
+	static getCheckedRowDataMap(listViewCtrl, mapKeys, checkedRows) {
+		checkedRowsData := []
+		for rowNumber in checkedRows {
+			dataMap := Map()
+			for key in mapKeys {
+				dataMap[key] := listViewCtrl.GetText(rowNumber, A_Index)
+			}
+			checkedRowsData.Push(dataMap)
+		}
+		return checkedRowsData
+	}
 }
