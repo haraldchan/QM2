@@ -139,7 +139,7 @@ showScheduleList(scheduledPath) {
 	LV.OnEvent("ItemCheck", checkIsCheckedAll)
 
 	checkIsCheckedAll(*){
-		checkedRows := getCheckedRowNumbers(LV, flights)
+		checkedRows := interface.getCheckedRowNumbers(LV)
 		checkAllBtn.Value := (checkedRows.Length = flights.Length)
 		global isCheckedAll := checkAllBtn.Value
 	}
@@ -165,7 +165,7 @@ showScheduleList(scheduledPath) {
 			"flightOut",
 		]
 
-		checkedFlights := filterCheckedRowDataMap(LV, flightKeys, getCheckedRowNumbers(LV, flights))
+		checkedFlights := interface.getCheckedRowDataMap(LV, flightKeys, interface.getCheckedRowNumbers(LV))
 
 		FSR.Hide()
 		SchdList.Hide()
@@ -173,33 +173,6 @@ showScheduleList(scheduledPath) {
 		FedexScheduledReservations.writeReservations(checkedFlights)
 
 		FSR.Show()
-	}
-
-	getCheckedRowNumbers(listViewCtrl, listData) {
-		checkedRowNumbers := []
-		loop listData.Length {
-			curRow := listViewCtrl.GetNext(A_Index - 1, "Checked")
-			try {
-				if (curRow = prevRow || curRow = 0) {
-					Continue
-				}
-			}
-			checkedRowNumbers.Push(curRow)
-			prevRow := curRow
-		}
-		return checkedRowNumbers
-	}
-
-	filterCheckedRowDataMap(listViewCtrl, mapKeys, checkedRows) {
-		checkedRowsData := []
-		for rowNumber in checkedRows {
-			dataMap := Map()
-			for key in mapKeys {
-				dataMap[key] := listViewCtrl.GetText(rowNumber, A_Index)
-			}
-			checkedRowsData.Push(dataMap)
-		}
-		return checkedRowsData
 	}
 }
 
