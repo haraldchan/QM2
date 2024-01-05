@@ -1,7 +1,8 @@
 #Include "./_JXON.ahk"
 
-;Utils: general utility methods
+;utils: general utility methods
 class utils {
+    ; Reset windows and key states.
     static cleanReload(winGroup, quit := 0) {
         ; Windows set default
         loop winGroup.Length {
@@ -19,20 +20,23 @@ class utils {
         Reload
     }
 
+    ; Exit app with clean reload.
     static quitApp(appName, popupTitle, winGroup) {
         quitConfirm := MsgBox(Format("是否退出 {1}？", appName), popupTitle, "OKCancel 4096")
         quitConfirm = "OK" ? this.cleanReload(winGroup, "quit") : this.cleanReload(winGroup)
     }
 
+    ; Insert text at the beginning of file.
     static filePrepend(textToInsert, fileToPrepend) {
         textOrigin := FileRead(fileToPrepend)
         FileDelete fileToPrepend
         FileAppend textToInsert . textOrigin, fileToPrepend
     }
 
-    static paramTypeCheck(param, type, errMsg){
-        if (!(param is type)) {
-            throw TypeError(errMsg)
+    ; Type checking with error msg.
+    static checkType(val, typeChecking, errMsg) {
+        if (!(val is typeChecking)) {
+            throw TypeError(Format("{1}; `n`nCurrent Type: {2}", errMsg, Type(val)))
         }
     }
 }
@@ -46,15 +50,15 @@ class json {
     static fileWrite(newJson, jsonFile) {
         jsonOrigin := FileRead(jsonFile)
         FileDelete jsonOrigin
-        FileAppend Jxon_Dump(newJson), jsonFile 
+        FileAppend Jxon_Dump(newJson), jsonFile
     }
 }
 
-; JSA: array methods that mimic JavaScript's Array.Prototype methods.
+; jsa: array methods that mimic JavaScript's Array.Prototype methods.
 class jsa {
     static some(fn, targetArray) {
-        utils.paramTypeCheck(fn, Func, "First parameter is not a Function Object.")
-        utils.paramTypeCheck(targetArray, Array, "Second parameter is not an Array")
+        utils.checkType(fn, Func, "First parameter is not a Function Object.")
+        utils.checkType(targetArray, Array, "Second parameter is not an Array")
 
         loop targetArray.Length {
             if (fn(targetArray[A_Index])) {
@@ -65,8 +69,8 @@ class jsa {
     }
 
     static every(fn, targetArray) {
-        utils.paramTypeCheck(fn, Func, "First parameter is not a Function Object.")
-        utils.paramTypeCheck(targetArray, Array, "Second parameter is not an Array")
+        utils.checkType(fn, Func, "First parameter is not a Function Object.")
+        utils.checkType(targetArray, Array, "Second parameter is not an Array")
 
         loop targetArray.Length {
             if (!fn(targetArray[A_Index])) {
@@ -77,8 +81,8 @@ class jsa {
     }
 
     static filter(fn, targetArray) {
-        utils.paramTypeCheck(fn, Func, "First parameter is not a Function Object.")
-        utils.paramTypeCheck(targetArray, Array, "Second parameter is not an Array")
+        utils.checkType(fn, Func, "First parameter is not a Function Object.")
+        utils.checkType(targetArray, Array, "Second parameter is not an Array")
 
         newArray := []
         loop targetArray.Length {
@@ -90,8 +94,8 @@ class jsa {
     }
 
     static map(fn, targetArray) {
-        utils.paramTypeCheck(fn, Func, "First parameter is not a Function Object.")
-        utils.paramTypeCheck(targetArray, Array, "Second parameter is not an Array")
+        utils.checkType(fn, Func, "First parameter is not a Function Object.")
+        utils.checkType(targetArray, Array, "Second parameter is not an Array")
 
         newArray := []
         loop targetArray.Length {
@@ -101,9 +105,9 @@ class jsa {
     }
 
     static reduce(fn, targetArray, initialValue := 0) {
-        utils.paramTypeCheck(fn, Func, "First parameter is not a Function Object.")
-        utils.paramTypeCheck(targetArray, Array, "Second parameter is not an Array")
-        utils.paramTypeCheck(initialValue, Number, "Third parameter is not an Number")
+        utils.checkType(fn, Func, "First parameter is not a Function Object.")
+        utils.checkType(targetArray, Array, "Second parameter is not an Array")
+        utils.checkType(initialValue, Number, "Third parameter is not an Number")
 
         initIsSet := !(initialValue = 0)
         accumulator := initIsSet ? initialValue : targetArray[1]
@@ -128,7 +132,7 @@ class jsa {
         if (index > targetArray.Length) {
             throw ValueError("Index out of range")
         }
-        utils.paramTypeCheck(targetArray, Array, "Third parameter is not an Array")
+        utils.checkType(targetArray, Array, "Third parameter is not an Array")
 
         newArray := []
         loop targetArray.Length {
@@ -139,82 +143,107 @@ class jsa {
     }
 }
 
-; Interface: methods to interact with GUI controls.
+; interface: methods to interact with GUI controls.
 class interface {
     static getCtrlByName(vName, ctrlArray) {
-        utils.paramTypeCheck(ctrlArray, Array, "Second parameter is not an Array")
-        
-        loop ctrlArray.Length {
-            if (ctrlArray[A_Index] is Array) {
-                arrElement := ctrlArray[A_Index]
+        utils.checkType(ctrlArray, Array, "Second parameter is not an Array")
+
+        for item in ctrlArray {
+            if (item is Array) {
+                arrElement := item
+                utils.checkType(arrElement, Gui.Control, Format("{1} is not an GUI Contol", arrElement))
                 this.getCtrlByName(vName, arrElement)
             }
-            if (vName = ctrlArray[A_Index].Name) {
-                return ctrlArray[A_Index]
+            utils.checkType(item, Gui.Control, Format("{1} is not an GUI Contol", item))
+            if (vName = item.Name) {
+                return item
             }
         }
     }
 
     static getCtrlByType(ctrlType, ctrlArray) {
-        utils.paramTypeCheck(ctrlArray, Array, "Second parameter is not an Array")
+        utils.checkType(ctrlArray, Array, "Second parameter is not an Array")
 
-        if (ctrlArray[A_Index] is Array) {
-            arrElement := ctrlArray[A_Index]
-            this.getCtrlByName(ctrlType, arrElement)
-        }
-        loop ctrlArray.Length {
-            if (type = ctrlArray[A_Index].Type) {
-                return ctrlArray[A_Index]
+        ; if (ctrlArray[A_Index] is Array) {
+        ;     arrElement := ctrlArray[A_Index]
+        ;     utils.checkType(arrElement, Gui.Control, Format("{1} is not an GUI Contol", arrElement))
+        ;     this.getCtrlByType(ctrlType, arrElement)
+        ; }
+        ; loop ctrlArray.Length {
+        ;     utils.checkType(ctrlArray[A_Index], Gui.Control, Format("{1} is not an GUI Contol", ctrlArray[A_Index]))
+        ;     if (ctrlType = ctrlArray[A_Index].Type) {
+        ;         return ctrlArray[A_Index]
+        ;     }
+        ; }
+
+        for item in ctrlArray {
+            if (item is Array) {
+                arrElement := item
+                utils.checkType(arrElement, Gui.Control, Format("{1} is not an GUI Contol", arrElement))
+                this.getCtrlByType(ctrlType, arrElement)
+            }
+            utils.checkType(item, Gui.Control, Format("{1} is not an GUI Contol", item))
+            if (ctrlType = item.Type) {
+                return item
             }
         }
     }
 
-    static getCtrlByTypeAll(type, ctrlArray) {
-        utils.paramTypeCheck(ctrlArray, Array, "Second parameter is not an Array")
+    static getCtrlByTypeAll(ctrlType, ctrlArray) {
+        utils.checkType(ctrlArray, Array, "Second parameter is not an Array")
 
         controls := []
-        loop ctrlArray.Length {
-            if (type = ctrlArray[A_Index].Type) {
-                controls.Push(ctrlArray[A_Index])
+        ; loop ctrlArray.Length {
+        ;     utils.checkType(ctrlArray[A_Index], Gui.Control, Format("{1} is not an GUI Contol", ctrlArray[A_Index]))
+        ;     if (ctrlType = ctrlArray[A_Index].Type) {
+        ;         controls.Push(ctrlArray[A_Index])
+        ;     }
+        ; }
+
+        for item in ctrlArray {
+            utils.checkType(ctrlArray[A_Index], Gui.Control, Format("{1} is not an GUI Contol", item))
+            if (ctrlType = item.Type) {
+                controls.Push(item)
             }
         }
+
         return controls
     }
- 
+
     static getCheckedRowNumbers(listViewCtrl) {
         if (!(listViewCtrl is Gui.Control) || listViewCtrl.Type != "ListView") {
             throw TypeError("Parameter is not an ListView.")
         }
 
-		checkedRowNumbers := []
-		loop listViewCtrl.GetCount() {
-			curRow := listViewCtrl.GetNext(A_Index - 1, "Checked")
-			try {
-				if (curRow = prevRow || curRow = 0) {
-					Continue
-				}
-			}
-			checkedRowNumbers.Push(curRow)
-			prevRow := curRow
-		}
-		return checkedRowNumbers
-	}
+        checkedRowNumbers := []
+        loop listViewCtrl.GetCount() {
+            curRow := listViewCtrl.GetNext(A_Index - 1, "Checked")
+            try {
+                if (curRow = prevRow || curRow = 0) {
+                    Continue
+                }
+            }
+            checkedRowNumbers.Push(curRow)
+            prevRow := curRow
+        }
+        return checkedRowNumbers
+    }
 
-	static getCheckedRowDataMap(listViewCtrl, mapKeys, checkedRows) {
+    static getCheckedRowDataMap(listViewCtrl, mapKeys, checkedRows) {
         if (!(listViewCtrl is Gui.Control) || listViewCtrl.Type != "ListView") {
             throw TypeError("Parameter is not an ListView.")
         }
-        utils.paramTypeCheck(mapKeys, Array, "Second parameter is not an Array")
-        utils.paramTypeCheck(checkedRows, Array, "Third parameter is not an Array")
-        
-		checkedRowsData := []
-		for rowNumber in checkedRows {
-			dataMap := Map()
-			for key in mapKeys {
-				dataMap[key] := listViewCtrl.GetText(rowNumber, A_Index)
-			}
-			checkedRowsData.Push(dataMap)
-		}
-		return checkedRowsData
-	}
+        utils.checkType(mapKeys, Array, "Second parameter is not an Array")
+        utils.checkType(checkedRows, Array, "Third parameter is not an Array")
+
+        checkedRowsData := []
+        for rowNumber in checkedRows {
+            dataMap := Map()
+            for key in mapKeys {
+                dataMap[key] := listViewCtrl.GetText(rowNumber, A_Index)
+            }
+            checkedRowsData.Push(dataMap)
+        }
+        return checkedRowsData
+    }
 }
