@@ -30,10 +30,10 @@ class utils {
         FileAppend textToInsert . textOrigin, fileToPrepend
     }
 
-    static mouseMoveOffset(initX, initY, targetX, targetY) {
-        offsetX := targetX - initX
-        offsetY := targetY - initY
-        MouseMove initX + offsetX, initY + offsetY
+    static paramTypeCheck(param, type, errMsg){
+        if (!(param is type)) {
+            throw TypeError(errMsg)
+        }
     }
 }
 
@@ -53,12 +53,9 @@ class json {
 ; JSA: array methods that mimic JavaScript's Array.Prototype methods.
 class jsa {
     static some(fn, targetArray) {
-        if (!(fn is Func)) {
-            throw TypeError("First parameter is not a Function Object.")
-        }
-        if (!(targetArray is Array)) {
-            throw TypeError("Second parameter is not an Array")
-        }
+        utils.paramTypeCheck(fn, Func, "First parameter is not a Function Object.")
+        utils.paramTypeCheck(targetArray, Array, "Second parameter is not an Array")
+
         loop targetArray.Length {
             if (fn(targetArray[A_Index])) {
                 return true
@@ -68,12 +65,9 @@ class jsa {
     }
 
     static every(fn, targetArray) {
-        if (!(fn is Func)) {
-            throw TypeError("First parameter is not a Function Object.")
-        }
-        if (!(targetArray is Array)) {
-            throw TypeError("Second parameter is not an Array")
-        }
+        utils.paramTypeCheck(fn, Func, "First parameter is not a Function Object.")
+        utils.paramTypeCheck(targetArray, Array, "Second parameter is not an Array")
+
         loop targetArray.Length {
             if (!fn(targetArray[A_Index])) {
                 return false
@@ -83,12 +77,9 @@ class jsa {
     }
 
     static filter(fn, targetArray) {
-        if (!(fn is Func)) {
-            throw TypeError("First parameter is not a Function Object.")
-        }
-        if (!(targetArray is Array)) {
-            throw TypeError("Second parameter is not an Array")
-        }
+        utils.paramTypeCheck(fn, Func, "First parameter is not a Function Object.")
+        utils.paramTypeCheck(targetArray, Array, "Second parameter is not an Array")
+
         newArray := []
         loop targetArray.Length {
             if (fn(targetArray[A_Index])) {
@@ -99,12 +90,9 @@ class jsa {
     }
 
     static map(fn, targetArray) {
-        if (!(fn is Func)) {
-            throw TypeError("First parameter is not a Function Object.")
-        }
-        if (!(targetArray is Array)) {
-            throw TypeError("Second parameter is not an Array")
-        }
+        utils.paramTypeCheck(fn, Func, "First parameter is not a Function Object.")
+        utils.paramTypeCheck(targetArray, Array, "Second parameter is not an Array")
+
         newArray := []
         loop targetArray.Length {
             newArray.Push(fn(targetArray[A_Index]))
@@ -113,15 +101,10 @@ class jsa {
     }
 
     static reduce(fn, targetArray, initialValue := 0) {
-        if (!(fn is Func)) {
-            throw TypeError("First parameter is not a Function Object.")
-        }
-        if (!(targetArray is Array)) {
-            throw TypeError("Second parameter is not an Array")
-        }
-        if (!(initialValue is Number)) {
-            throw TypeError("Third parameter is not an Number")
-        }
+        utils.paramTypeCheck(fn, Func, "First parameter is not a Function Object.")
+        utils.paramTypeCheck(targetArray, Array, "Second parameter is not an Array")
+        utils.paramTypeCheck(initialValue, Number, "Third parameter is not an Number")
+
         initIsSet := !(initialValue = 0)
         accumulator := initIsSet ? initialValue : targetArray[1]
         currentValue := initIsSet ? targetArray[1] : targetArray[2]
@@ -145,9 +128,8 @@ class jsa {
         if (index > targetArray.Length) {
             throw ValueError("Index out of range")
         }
-        if (!(targetArray is Array)) {
-            throw TypeError("Third parameter is not an Array")
-        }
+        utils.paramTypeCheck(targetArray, Array, "Third parameter is not an Array")
+
         newArray := []
         loop targetArray.Length {
             newArray.Push(targetArray[A_Index])
@@ -160,6 +142,8 @@ class jsa {
 ; Interface: methods to interact with GUI controls.
 class interface {
     static getCtrlByName(vName, ctrlArray) {
+        utils.paramTypeCheck(ctrlArray, Array, "Second parameter is not an Array")
+        
         loop ctrlArray.Length {
             if (ctrlArray[A_Index] is Array) {
                 arrElement := ctrlArray[A_Index]
@@ -172,6 +156,8 @@ class interface {
     }
 
     static getCtrlByType(ctrlType, ctrlArray) {
+        utils.paramTypeCheck(ctrlArray, Array, "Second parameter is not an Array")
+
         if (ctrlArray[A_Index] is Array) {
             arrElement := ctrlArray[A_Index]
             this.getCtrlByName(ctrlType, arrElement)
@@ -184,6 +170,8 @@ class interface {
     }
 
     static getCtrlByTypeAll(type, ctrlArray) {
+        utils.paramTypeCheck(ctrlArray, Array, "Second parameter is not an Array")
+
         controls := []
         loop ctrlArray.Length {
             if (type = ctrlArray[A_Index].Type) {
@@ -194,6 +182,10 @@ class interface {
     }
  
     static getCheckedRowNumbers(listViewCtrl) {
+        if (!(listViewCtrl is Gui.Control) || listViewCtrl.Type != "ListView") {
+            throw TypeError("Parameter is not an ListView.")
+        }
+
 		checkedRowNumbers := []
 		loop listViewCtrl.GetCount() {
 			curRow := listViewCtrl.GetNext(A_Index - 1, "Checked")
@@ -209,6 +201,12 @@ class interface {
 	}
 
 	static getCheckedRowDataMap(listViewCtrl, mapKeys, checkedRows) {
+        if (!(listViewCtrl is Gui.Control) || listViewCtrl.Type != "ListView") {
+            throw TypeError("Parameter is not an ListView.")
+        }
+        utils.paramTypeCheck(mapKeys, Array, "Second parameter is not an Array")
+        utils.paramTypeCheck(checkedRows, Array, "Third parameter is not an Array")
+        
 		checkedRowsData := []
 		for rowNumber in checkedRows {
 			dataMap := Map()
