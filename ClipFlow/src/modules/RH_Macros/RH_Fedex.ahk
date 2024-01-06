@@ -114,45 +114,43 @@ class FedexBookingEntry {
         MouseMove initX + 9, initY - 150 ; 332, 356
         Sleep 100
         ; fill-in checkin/checkout
-        Click "Down"
-        MouseMove initX - 145, initY - 146 ; 178, 360
-        Sleep 100
-        Click "Up"
-        MouseMove initX - 151, initY - 146 ; 172, 360
-        Sleep 100
-        Send Format("{Text}{1}", pmsCiDate)
-        Sleep 100
-        MouseMove initX + 2, initY - 108 ; 325, 398
-        Sleep 100
-        Click
-        Sleep 100
-        MouseMove initX + 338, initY + 37 ; 661, 543
-        Sleep 100
-        Click
-        MouseMove initX + 313, initY + 37 ; 636, 543
-        Sleep 100
-        Click
-        MouseMove initX + 312, initY + 37 ; 635, 543
-        Sleep 100
-        Click
-        Sleep 100
-        Click
-        Sleep 100
-        MouseMove initX + 12, initY - 101 ; 335, 405
-        Sleep 100
-        Click "Down"
-        MouseMove initX - 141, initY - 97 ; 182, 409
-        Sleep 100
-        Click "Up"
-        MouseMove initX - 116, initY - 91 ; 207, 415
-        Sleep 100
-        Send Format("{Text}{1}", pmsCoDate)
-        Sleep 100
-        Send "{Enter}"
-        Sleep 100
+        MouseMove initX + 9, initY - 150 ; 332, 356
+		Sleep 100
+		Click 2 
+		Sleep 100
+		Send "!c"
+		Sleep 100
+		Send Format("{Text}{1}", pmsCiDate)
+		Sleep 100
+		MouseMove initX + 2, initY - 108 ; 325, 398
+		Sleep 100
+		Click
+		Sleep 100
+		MouseMove initX + 338, initY + 37 ; 661, 543
+		Sleep 100
+		Click
+		MouseMove initX + 313, initY + 37 ; 636, 543
+		Sleep 100
+		Click
+		MouseMove initX + 312, initY + 37 ; 635, 543
+		Sleep 100
+		Click
+		Sleep 100
+		Click
+		Sleep 100
+		MouseMove initX + 12, initY - 101 ; 335, 405
+		Sleep 100
+		Click 2 
+		Sleep 100
+		Send "!c"
+		Sleep 100
+		Send Format("{Text}{1}", pmsCoDate)
+		Sleep 100
+		Send "{Enter}"
+		Sleep 100
         loop 5 {
             Send "{Esc}"
-            Sleep 200
+            Sleep 300
         }
         ; fill in ETA & ETD
         MouseMove initX - 29, initY + 91 ; 294, 597
