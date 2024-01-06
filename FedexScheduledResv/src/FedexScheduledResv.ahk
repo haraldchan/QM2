@@ -158,7 +158,6 @@ class FsrEntry {
 
 	static dateTimeEntry(checkin, checkout, ETA, ETD, initX := 323, initY := 506) {
 		; fill-in checkin/checkout
-
 		MouseMove initX + 9, initY - 150 ; 332, 356
 		Sleep 100
 		Click 2 
@@ -195,7 +194,7 @@ class FsrEntry {
 		Sleep 100
 		loop 5 {
 			Send "{Esc}"
-			Sleep 200
+			Sleep 300
 		}
 		; fill in ETA & ETD
 		MouseMove initX - 29, initY + 91 ; 294, 597
