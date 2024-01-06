@@ -164,18 +164,6 @@ class interface {
     static getCtrlByType(ctrlType, ctrlArray) {
         utils.checkType(ctrlArray, Array, "Second parameter is not an Array")
 
-        ; if (ctrlArray[A_Index] is Array) {
-        ;     arrElement := ctrlArray[A_Index]
-        ;     utils.checkType(arrElement, Gui.Control, Format("{1} is not an GUI Contol", arrElement))
-        ;     this.getCtrlByType(ctrlType, arrElement)
-        ; }
-        ; loop ctrlArray.Length {
-        ;     utils.checkType(ctrlArray[A_Index], Gui.Control, Format("{1} is not an GUI Contol", ctrlArray[A_Index]))
-        ;     if (ctrlType = ctrlArray[A_Index].Type) {
-        ;         return ctrlArray[A_Index]
-        ;     }
-        ; }
-
         for item in ctrlArray {
             if (item is Array) {
                 arrElement := item
@@ -193,20 +181,12 @@ class interface {
         utils.checkType(ctrlArray, Array, "Second parameter is not an Array")
 
         controls := []
-        ; loop ctrlArray.Length {
-        ;     utils.checkType(ctrlArray[A_Index], Gui.Control, Format("{1} is not an GUI Contol", ctrlArray[A_Index]))
-        ;     if (ctrlType = ctrlArray[A_Index].Type) {
-        ;         controls.Push(ctrlArray[A_Index])
-        ;     }
-        ; }
-
         for item in ctrlArray {
             utils.checkType(ctrlArray[A_Index], Gui.Control, Format("{1} is not an GUI Contol", item))
             if (ctrlType = item.Type) {
                 controls.Push(item)
             }
         }
-
         return controls
     }
 
