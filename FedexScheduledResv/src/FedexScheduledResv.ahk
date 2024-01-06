@@ -53,8 +53,8 @@ class FedexScheduledReservations {
 				FsrEntry.USE(line, this.bringForwardTime)
 			}
 		}
-        WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-        BlockInput false
+		WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+		BlockInput false
 
 		MsgBox("已完成FedEx 预订录入，请抽检以确保准确！", "FedexScheduledReservations")
 	}
@@ -122,12 +122,22 @@ class FsrEntry {
 	}
 
 	static saveBooking() {
-		Send "!o"
+		checkApplyPopup() {
+			CoordMode "Pixel", "Screen"
+			; TODO: get the target coord and hex color code
+			if (PixelGetColor(000, 000) != "popup title bar") {
+				return
+			}
+			SetTimer(, 0)
+		}
 		Sleep 1000
+		Send "!o"
+		; Sleep 5000
+		SetTimer(checkApplyPopup, 500)
 		Send "!o"
 		Sleep 1000
 		Send "{Down}"
-		Sleep 2000
+		Sleep 1000
 	}
 
 	static profileEntry(flightIn, tripNumber, initX := 467, initY := 201) {
@@ -160,7 +170,7 @@ class FsrEntry {
 		; fill-in checkin/checkout
 		MouseMove initX + 9, initY - 150 ; 332, 356
 		Sleep 100
-		Click 2 
+		Click 2
 		Sleep 100
 		Send "!c"
 		Sleep 100
@@ -184,7 +194,7 @@ class FsrEntry {
 		Sleep 100
 		MouseMove initX + 12, initY - 101 ; 335, 405
 		Sleep 100
-		Click 2 
+		Click 2
 		Sleep 100
 		Send "!c"
 		Sleep 100
