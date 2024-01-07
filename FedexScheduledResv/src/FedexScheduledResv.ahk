@@ -122,22 +122,27 @@ class FsrEntry {
 	}
 
 	static saveBooking() {
-		checkApplyPopup() {
+		static saveBooking() {
 			CoordMode "Pixel", "Screen"
-			; TODO: get the target coord and hex color code
-			if (PixelGetColor(000, 000) != "popup title bar") {
-				return
+			Send "!o"
+			Sleep 1000
+			loop {
+				Sleep 500
+				if (PixelGetColor(610, 330) = "0x99B4D1") { 
+					break
+				}
+				if (A_Index = 20) {
+					WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+					BlockInput false
+					MsgBox("已停止。")
+					cleanReload()
+				}
 			}
-			SetTimer(, 0)
+			Send "!o"
+			Sleep 1000
+			Send "{Down}"
+			Sleep 1000
 		}
-		Sleep 1000
-		Send "!o"
-		; Sleep 5000
-		SetTimer(checkApplyPopup, 500)
-		Send "!o"
-		Sleep 1000
-		Send "{Down}"
-		Sleep 1000
 	}
 
 	static profileEntry(flightIn, tripNumber, initX := 467, initY := 201) {
