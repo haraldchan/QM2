@@ -60,8 +60,8 @@ class ResvHandler {
                 msgbox(v)
                 for key, val in v {
                     outputVal .= Format("   {1}: {2}`n", key, val)
-                } 
-            } 
+                }
+            }
 
             popupInfo .= Format("{1}：{2}`n", k, outputVal)
 
@@ -97,6 +97,8 @@ class ResvHandler {
             case "kingsley":
                 RH_Kingsley(bookingInfoObj)
             case "fliggy":
+                RH_Fliggy(bookingInfoObj)
+            case "webbeds":
                 RH_Fliggy(bookingInfoObj)
             default:
         }

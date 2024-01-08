@@ -2,28 +2,35 @@
 
 class BookingEntry {
     ; the initX, initY for USE() should be top-left corner of current booking window
-    static USE(curTemplate, infoObj, roomType, comment, pmsGuestNames, initX := 193, initY := 182) {
+    static USE(infoObj, roomType, comment, pmsGuestNames, initX := 193, initY := 182) {
         MsgBox("Start in seconds...", "Reservation Handler", "T1 4096")
         ; BookingEntry.addFromTemplates(curTemplate)
         ; Sleep 500
         BookingEntry.profileEntry(pmsGuestNames[1])
-        ; Sleep 500
+        Sleep 500
+
         BookingEntry.roomQtyEntry(infoObj["roomQty"])
-        ; Sleep 500
+        Sleep 500
+
         BookingEntry.roomTypeEntry(roomType)
-        ; Sleep 500
+        Sleep 500
+
         BookingEntry.dateTimeEntry(infoObj["ciDate"], infoObj["coDate"])
-        ; Sleep 500
+        Sleep 500
+
         BookingEntry.commentOrderIdEntry(infoObj["orderId"], comment)
-        ; Sleep 500
+        Sleep 500
+
         if (!(jsa.every((item) => item = 0, infoObj["bbf"]))) {
             BookingEntry.breakfastEntry(infoObj["bbf"])
         }
-        ; Sleep 500
+        Sleep 500
+
         BookingEntry.roomRatesEntry(infoObj["roomRates"])
-        ; Sleep 500
+        Sleep 500
+
         MsgBox("Completed.", "Reservation Handler", "T2 4096")
-        ; Utils.cleanReload(winGroup)
+        Utils.cleanReload(winGroup)
     }
 
     ; tested
@@ -139,47 +146,43 @@ class BookingEntry {
         pmsCiDate := FormatTime(checkin, "MMddyyyy")
         pmsCoDate := FormatTime(checkout, "MMddyyyy")
         Sleep 100
-        MouseMove initX, initY ;332, 356
-        Sleep 1000
-        Click "Down"
-        MouseMove initX - 154, initY + 4 ;178, 360
+        MouseMove initX + 9, initY - 150 ; 332, 356
         Sleep 100
-        Click "Up"
-        MouseMove initX - 160, initY + 4 ;172, 360
+        Click 2
+        Sleep 100
+        Send "!c"
         Sleep 100
         Send Format("{Text}{1}", pmsCiDate)
         Sleep 100
-        MouseMove initX - 7, initY + 42 ;325, 398
+        MouseMove initX + 2, initY - 108 ; 325, 398
         Sleep 100
         Click
         Sleep 100
-        MouseMove initX + 329, initY + 187 ;661, 543
+        MouseMove initX + 338, initY + 37 ; 661, 543
         Sleep 100
         Click
-        MouseMove initX + 304, initY + 187 ;636, 543
+        MouseMove initX + 313, initY + 37 ; 636, 543
         Sleep 100
         Click
-        MouseMove initX + 303, initY + 187 ;635, 543
-        Sleep 100
-        Click
+        MouseMove initX + 312, initY + 37 ; 635, 543
         Sleep 100
         Click
         Sleep 100
-        MouseMove initX + 3, initY + 49 ;335, 405
+        Click
         Sleep 100
-        Click "Down"
-        MouseMove initX - 150, initY + 53 ;182, 409
+        MouseMove initX + 12, initY - 101 ; 335, 405
         Sleep 100
-        Click "Up"
-        MouseMove initX - 125, initY + 59 ;207, 415
+        Click 2
+        Sleep 100
+        Send "!c"
         Sleep 100
         Send Format("{Text}{1}", pmsCoDate)
         Sleep 100
-        Send "{Tab}"
+        Send "{Enter}"
         Sleep 100
         loop 5 {
             Send "{Esc}"
-            Sleep 100
+            Sleep 300
         }
         Sleep 100
     }
@@ -274,7 +277,7 @@ class BookingEntry {
         Send Format("{Text}{1}", bbf[1])
         ; Send "1"
         Sleep 100
-                loop 5 {
+        loop 5 {
             Send "{Esc}"
             Sleep 100
         }
@@ -305,6 +308,42 @@ class BookingEntry {
     }
 }
 
+getPmsRoomType(OtaRoomType, roomTypeMap) {
+    roomType := ""
+    for k, v in roomTypeMap {
+        if (OtaRoomType = k) {
+            roomType := v
+        }
+    }
+    return roomType
+}
+
+multiBookingNotifier(roomQty, popupTitle) {
+    notifierOC := Format("
+    (
+        订单数量：{1}, 已完成{2}个。
+        请先从对应 Agent booking Add-On预订。
+
+        确定(Enter)：     开始修改预订
+        取消(Esc)：       退出修改
+    )", roomQty, A_Index - 1)
+    notifierYNC := Format("
+    (
+        订单数量：{1}, 已完成{2}个。
+        请先打开需要修改的 Fedex 预订。
+
+        是(Yes)：         开始修改预订
+        否(No):           跳过此修改    
+        取消(Cancel):     退出修改
+    )", roomQty, A_Index - 1)
+    
+    options := roomQty >= 2 ? "YesNoCancel" : "OKCancel"
+    notifier := roomQty >= 2 ? notifierYNC : notifierOC
+    result := MsgBox(notifier, popupTitle, options . " 4096")
+    
+    return result
+}
+
 ; Kingsley WIP
 RH_Kingsley(infoObj, addFromConf := 0) {
     ; template booking name
@@ -323,13 +362,7 @@ RH_Kingsley(infoObj, addFromConf := 0) {
         "行政豪华江景双床房", "CTR"
         "行政尊贵套房", "CSK"
     )
-    roomType := ""
-    for k, v in roomTypeRef {
-        if (infoObj["roomType"] = k) {
-            roomType := v
-        }
-    }
-
+    roomType := getPmsRoomType(infoObj["roomType"], roomTypeRef)
     ; define breakfast comment
     breakfastType := (SubStr(roomType, 1, 1) = "C") ? "CBF" : "BBF"
     breakfastQty := infoObj["bbf"][1]
@@ -379,21 +412,15 @@ RH_Fliggy(infoObj, addFromConf := 0) {
         "城景行政豪华大床房", "CKR",
         "行政尊贵套房", "CSK",
     )
-    roomType := ""
-    for k, v in roomTypeRef {
-        if (infoObj["roomType"] = k) {
-            roomType := v
-        }
-    }
-
+    roomType := getPmsRoomType(infoObj["roomType"], roomTypeRef)
     breakfastType := (SubStr(roomType, 1, 1) = "C") ? "CBF" : "BBF"
     breakfastQty := infoObj["bbf"][1]
 
     commentBreakfast := (breakfastQty = 0)
         ? ""
         : Format(" INCL {1}{2} ", breakfastQty, breakfastType)
-    commentBenefits := infoObj["remarks"] = "" 
-        ? "" 
+    commentBenefits := infoObj["remarks"] = ""
+        ? ""
         : Format(",{1}", infoObj["remarks"])
     comment := infoObj["payment"] = "信用住"
         ? Format("All{1}{2} TO 信用住。{3}", commentBreakfast, commentBenefits, infoObj["invoiceMemo"])
@@ -416,7 +443,6 @@ RH_Fliggy(infoObj, addFromConf := 0) {
 
     ; Main booking modification
     BookingEntry.USE(
-        thisTemplate,
         infoObj,
         roomType,
         comment,
@@ -438,13 +464,48 @@ RH_Agoda(infoObj, addFromConf := 0) {
         "Club Premier Suite", "CPK",
     )
 
-    roomType := ""
-    for k, v in roomTypeRef {
-        if (infoObj["roomType"] = k) {
-            roomType := v
+    roomType := getPmsRoomType(infoObj["roomType"], roomTypeRef)
+
+    breakfastType := (SubStr(roomType, 1, 1) = "C") ? "CBF" : "BBF"
+    comment := Format("ROOM INCL {1}{2} PAY BY AGODA", infoObj["bbf"][1], breakfastType)
+}
+
+RH_Webbeds(infoObj) {
+    roomTypeRef := Map(
+        "CITY VIEW DELUXE KING ROOM", "DKC"
+        "CITY VIEW DELUXE TWIN ROOM", "DTC",
+        "RIVER VIEW DELUXE KING ROOM", "DKR",
+        "RIVER VIEW DELUXE TWIN ROOM", "DTR",
+    )
+
+    roomType := getPmsRoomType(infoObj["roomType"], roomTypeRef)
+    breakfastType := (SubStr(roomType, 1, 1) = "C") ? "CBF" : "BBF"
+    orderIdList := infoObj["orderId"]
+
+    loop infoObj["roomQty"] {
+        infoObj["orderId"] = orderIdList[A_Index]
+        
+        bbf := infoObj["bbf"][1] = 0
+            ? "" : infoObj["bbf"][1] = 1
+            ? "INCL 1" . breakfastType : "INCL 2" . breakfastType
+        comment := Format("RM {1}PAY BY GIVEN CREDIT CARD: {2} EXP:{3}",
+            bbf,
+            infoObj["creditCardNumbers"][A_Index],
+            infoObj["creditCardExp"][A_Index])
+
+        popup := multiBookingNotifier(infoObj["roomQty"], "Reservation Handler")
+
+        if (popup = "Cancel") {
+            utils.cleanReload(winGroup)
+        } else if (popup = "No") {
+            continue
+        } else if (popup = "Yes" && A_Index = 1) {
+            BookingEntry.USE(infoObj, roomType, comment, infoObj["guestNames"])
+        } else {
+            BookingEntry.commentOrderIdEntry(infoObj["orderId"], comment)
+        }
+        if (A_Index = infoObj["roomQty"]) {
+            MsgBox("已完成所有录入。", "Reservation Handler", "T1 4096")
         }
     }
-
-    breakfastType := (roomType = "CKC" || roomType = "CKR") ? "CBF" : "BBF"
-    comment := Format("ROOM INCL {1}{2} PAY BY AGODA", infoObj["bbf"][1], breakfastType)
 }
