@@ -64,7 +64,7 @@ class FedexBookingEntry {
 
         ; check profile existence
         CoordMode "Pixel", "Screen"
-        if (PixelGetColor(initX + 99, initY + 288) != "0x0000FF") { ; profile is found
+        if (PixelGetColor(initX + 109, initY + 288) != "0x0000FF") { ; profile is found 580, 505
             Send "{Enter}"
             Sleep 100
         } else { ; profile not found, create a new one
@@ -115,39 +115,39 @@ class FedexBookingEntry {
         Sleep 100
         ; fill-in checkin/checkout
         MouseMove initX + 9, initY - 150 ; 332, 356
-		Sleep 100
-		Click 2 
-		Sleep 100
-		Send "!c"
-		Sleep 100
-		Send Format("{Text}{1}", pmsCiDate)
-		Sleep 100
-		MouseMove initX + 2, initY - 108 ; 325, 398
-		Sleep 100
-		Click
-		Sleep 100
-		MouseMove initX + 338, initY + 37 ; 661, 543
-		Sleep 100
-		Click
-		MouseMove initX + 313, initY + 37 ; 636, 543
-		Sleep 100
-		Click
-		MouseMove initX + 312, initY + 37 ; 635, 543
-		Sleep 100
-		Click
-		Sleep 100
-		Click
-		Sleep 100
-		MouseMove initX + 12, initY - 101 ; 335, 405
-		Sleep 100
-		Click 2 
-		Sleep 100
-		Send "!c"
-		Sleep 100
-		Send Format("{Text}{1}", pmsCoDate)
-		Sleep 100
-		Send "{Enter}"
-		Sleep 100
+        Sleep 100
+        Click 2 
+        Sleep 100
+        Send "!c"
+        Sleep 100
+        Send Format("{Text}{1}", pmsCiDate)
+        Sleep 100
+        MouseMove initX + 2, initY - 108 ; 325, 398
+        Sleep 100
+        Click
+        Sleep 100
+        MouseMove initX + 338, initY + 37 ; 661, 543
+        Sleep 100
+        Click
+        MouseMove initX + 313, initY + 37 ; 636, 543
+        Sleep 100
+        Click
+        MouseMove initX + 312, initY + 37 ; 635, 543
+        Sleep 100
+        Click
+        Sleep 100
+        Click
+        Sleep 100
+        MouseMove initX + 12, initY - 101 ; 335, 405
+        Sleep 100
+        Click 2 
+        Sleep 100
+        Send "!c"
+        Sleep 100
+        Send Format("{Text}{1}", pmsCoDate)
+        Sleep 100
+        Send "{Enter}"
+        Sleep 100
         loop 5 {
             Send "{Esc}"
             Sleep 300
@@ -232,54 +232,42 @@ class FedexBookingEntry {
         Sleep 100
         Click
         Sleep 100
-        MouseMove initX + 450, initY + 126 ; 686, 459
-        Sleep 200
-        Click "Down"
-        MouseMove initX + 242, initY + 126 ; 478, 459
+        MouseMove 680, 460
         Sleep 100
-        Click "Up"
+        Click 2
         Sleep 100
         Send Format("{Text}{1}", infoObj["flightIn"])
         Sleep 100
-        MouseMove initX + 436, initY + 170 ; 672, 503
-        Sleep 100
-        Click "Down"
-        MouseMove initX + 287, initY + 170 ; 523, 503
-        Sleep 100
-        Click "Up"
+        loop 2 {
+            Send "{Tab}"
+            Sleep 100
+        }
         Send Format("{Text}{1}", schdCiDate)
         Sleep 100
-        MouseMove initX + 449, initY + 193 ; 685, 526
+        Send "{Tab}"
         Sleep 100
-        Click "Down"
-        MouseMove initX + 186, initY + 188 ; 422, 521
-        Sleep 100
-        Click "Up"
         Send Format("{Text}{1}", infoObj["ETA"])
         Sleep 100
-        MouseMove initX + 686, initY + 128 ; 922, 461
+        MouseMove 917, 465
         Sleep 100
-        Click "Down"
-        MouseMove initX + 468, initY + 126 ; 704, 459
+        Click 2
         Sleep 100
-        Click "Up"
         Send Format("{Text}{1}", infoObj["flightOut"])
         Sleep 100
-        MouseMove initX + 681, initY + 170 ; 917, 503
-        Sleep 100
-        Click "Down"
-        MouseMove initX + 401, initY + 174 ; 637, 507
-        Sleep 100
-        Click "Up"
+        loop 2 {
+            Send "{Tab}"
+            Sleep 100
+        }
         Sleep 100
         Send Format("{Text}{1}", schdCoDate)
         Sleep 100
-        MouseMove initX + 686, initY + 191 ; 922, 524
-        Sleep 100
-        Click "Down"
-        MouseMove initX + 404, initY + 190 ; 640, 523
-        Sleep 100
-        Click "Up"
+        ; MouseMove initX + 686, initY + 191 ; 922, 524
+        ; Sleep 100
+        ; Click "Down"
+        ; MouseMove initX + 404, initY + 190 ; 640, 523
+        ; Sleep 100
+        ; Click "Up"
+        Send "{Tab}"
         Sleep 100
         Send Format("{Text}{1}", infoObj["ETD"])
         Sleep 100
