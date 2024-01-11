@@ -25,7 +25,7 @@ class FedexBookingEntry {
             this.moreFieldsEntry(infoObj)
             Sleep 500
 
-            this.commentTripNumTrackingEntry(infoObj)
+            this.commentEntry(infoObj)
             Sleep 500
 
             this.crsNumEntry(infoObj["tracking"])
@@ -175,7 +175,7 @@ class FedexBookingEntry {
         Sleep 100
     }
 
-    static commentTripNumTrackingEntry(infoObj, initX := 622, initY := 589) {
+    static commentEntry(infoObj, initX := 622, initY := 589) {
         comment := ""
 
         ; select current comment
@@ -200,7 +200,7 @@ class FedexBookingEntry {
         ; fill-in comment
         Sleep 100
         MouseMove initX, initY ; 622, 596
-        Sleep 100
+        Sleep 500
         Click
         Sleep 100
         Send Format("{Text}{1}", comment)
@@ -212,15 +212,6 @@ class FedexBookingEntry {
         Click 3
         Sleep 100
         Send Format("{Text}{1}  {2}", infoObj["flightIn"], infoObj["tripNum"])
-        Sleep 100
-
-        ; fill-in tracking No.
-        MouseMove initX + 301, initY - 84 ; 923, 505
-        Sleep 100
-        Click 3
-        Sleep 100
-        ; entry tracking number at field "contact", easier to access
-        Send Format("{Text}Tracking:{1}", infoObj["tracking"])
         Sleep 100
     }
 
