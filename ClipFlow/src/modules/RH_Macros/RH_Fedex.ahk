@@ -252,12 +252,6 @@ class FedexBookingEntry {
         Sleep 100
         Send Format("{Text}{1}", schdCoDate)
         Sleep 100
-        ; MouseMove initX + 686, initY + 191 ; 922, 524
-        ; Sleep 100
-        ; Click "Down"
-        ; MouseMove initX + 404, initY + 190 ; 640, 523
-        ; Sleep 100
-        ; Click "Up"
         Send "{Tab}"
         Sleep 100
         Send Format("{Text}{1}", infoObj["ETD"])
@@ -289,7 +283,7 @@ class FedexBookingEntry {
         Sleep 100
         Send "!o"
         loop 3 {
-            Send "{Enter}"
+            Send "{Escape}"
             Sleep 200
         }
         Sleep 300
