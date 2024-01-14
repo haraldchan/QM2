@@ -198,10 +198,13 @@ class FedexBookingEntry {
         }
 
         ; fill-in comment
-        Sleep 100
-        MouseMove initX, initY ; 622, 596
-        Sleep 500
-        Click
+
+        ; probably no need to click again (might cause unexpected double click).
+        ; Sleep 100
+        ; MouseMove initX, initY ; 622, 596
+        ; Sleep 500
+        ; Click
+
         Sleep 100
         Send Format("{Text}{1}", comment)
         Sleep 100
