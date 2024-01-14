@@ -593,3 +593,126 @@ upsell(){
     Sleep 200
     return fileName
 }
+
+lobbyBarAFT(){
+    fileName := Format("{1} 大堂吧下午茶", FormatTime(A_Now, "yyyyMMdd"))
+    Sleep 200
+    Send "{Tab}"
+    Sleep 200
+    Send "^c"
+    Sleep 200
+    Send "{Tab}"
+    Sleep 200
+    Send "^v"
+    MouseMove 764, 373
+    Sleep 200
+    Click
+    Sleep 200
+    Send "!n"
+    Sleep 200
+    Send "{Text}ATPR-2"
+    Sleep 200
+    Send "!h"
+    Sleep 200
+    Send "!a"
+    Sleep 200
+    Send "!o"
+    Sleep 200
+    return fileName
+}
+
+hongtuMorningTea(){
+    WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+    BlockInput false
+    query := MsgBox("保存报表日期？`n`n(Y)  - 今天`n(N) - 昨天", "Report Master", "4096 YN")
+    Sleep 100
+    WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
+    BlockInput true
+
+    queryDate := query = "Yes" ? A_Now : DateAdd(A_Now, -1, "Days")
+    fileName := Format("{1} 宏图府早茶", FormatTime(queryDate, "yyyyMMdd"))
+    Sleep 500
+    MouseMove 659, 271
+    Sleep 200
+    Click 
+    Sleep 200
+    Send "!c"
+    Sleep 200
+    Send FormatTime(queryDate, "MMddyyyy")
+    Sleep 200
+
+    MouseMove 659, 300
+    Sleep 200
+    Click 
+    Sleep 200
+    Send "!c"
+    Sleep 200
+    Send FormatTime(queryDate, "MMddyyyy")
+    Sleep 200
+
+    MouseMove 764, 373
+    Sleep 200
+    Click
+    Sleep 200
+    Send "!n"
+    Sleep 200
+    Send "{Tab}"
+    Sleep 200
+    Send "{Text}%宏图府"
+    Sleep 200
+    Send "!h"
+    Sleep 200
+    Send "!a"
+    Sleep 200
+    Send "!o"
+    Sleep 200
+    return fileName
+}
+
+silkroadMorningTea(){
+    WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+    BlockInput false
+    query := MsgBox("保存报表日期？`n`n(Y)  - 今天`n(N) - 昨天", "Report Master", "4096 YN")
+    Sleep 100
+    WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
+    BlockInput true
+
+    queryDate := query = "Yes" ? A_Now : DateAdd(A_Now, -1, "Days")
+    fileName := Format("{1} 丝绸之路早茶", FormatTime(queryDate, "yyyyMMdd"))
+    Sleep 500
+    MouseMove 659, 271
+    Sleep 200
+    Click 
+    Sleep 200
+    Send "!c"
+    Sleep 200
+    Send FormatTime(queryDate, "MMddyyyy")
+    Sleep 200
+
+    MouseMove 659, 300
+    Sleep 200
+    Click 
+    Sleep 200
+    Send "!c"
+    Sleep 200
+    Send FormatTime(queryDate, "MMddyyyy")
+    Sleep 200
+
+    MouseMove 764, 373
+    Sleep 200
+    Click
+    Sleep 200
+    Send "!n"
+    Sleep 200
+    Send "{Tab}"
+    Sleep 200
+    Send "{Text}%丝绸之路"
+    Sleep 200
+    Send "!h"
+    Sleep 200
+    Send "!a"
+    Sleep 200
+    Send "!o"
+    Sleep 200
+    return fileName
+}

@@ -95,6 +95,18 @@ class ReportMaster {
 			searchStr: "pkgforecast",
 			name: "Upselling - 当天 Upsell 报表",
 			saveFn: upsell
+		}, {
+			searchStr: "pkgforecast",
+			name: "Afternoon Tea - 当天 大堂吧下午茶 报表",
+			saveFn: lobbyBarAFT
+		}, {
+			searchStr: "pkgforecast",
+			name: "Morning Tea - 宏图府早茶 报表",
+			saveFn: hongtuMorningTea
+		}, {
+			searchStr: "pkgforecast",
+			name: "Morning Tea - 丝绸之路早茶 报表",
+			saveFn: silkroadMorningTea
 		},
 		]
 	}
@@ -119,7 +131,7 @@ class ReportMaster {
 		miscReports := []
 
 		for report in this.reportList.misc {
-			radioStyle := (A_Index = 1) ? "Checked h15 xp y+12" : "h15 xp y+12"
+			radioStyle := (A_Index = 1) ? "Checked h15 xp y+15" : "h15 xp y+15"
 			miscReports.Push(
 				RM.AddRadio(radioStyle, report.name)
 			)
