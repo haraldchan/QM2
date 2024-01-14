@@ -258,64 +258,46 @@ class FsrEntry {
 
 	static moreFieldsEntry(sCheckin, sCheckout, ETA, ETD, flightIn, flightOut, initX := 236, initY := 333) {
 		MouseMove initX, initY ; 236, 333
-		Sleep 100
-		Click
-		Sleep 100
-		MouseMove initX + 450, initY + 126 ; 686, 459
-		Sleep 200
-		Click "Down"
-		MouseMove initX + 242, initY + 126 ; 478, 459
-		Sleep 100
-		Click "Up"
-		Sleep 100
-		Send Format("{Text}{1}", flightIn)
-		Sleep 100
-		MouseMove initX + 436, initY + 170 ; 672, 503
-		Sleep 100
-		Click "Down"
-		MouseMove initX + 287, initY + 170 ; 523, 503
-		Sleep 100
-		Click "Up"
-		Send Format("{Text}{1}", sCheckin)
-		Sleep 100
-		MouseMove initX + 449, initY + 193 ; 685, 526
-		Sleep 100
-		Click "Down"
-		MouseMove initX + 186, initY + 188 ; 422, 521
-		Sleep 100
-		Click "Up"
-		Send Format("{Text}{1}", ETA)
-		Sleep 100
-		MouseMove initX + 686, initY + 128 ; 922, 461
-		Sleep 100
-		Click "Down"
-		MouseMove initX + 468, initY + 126 ; 704, 459
-		Sleep 100
-		Click "Up"
-		Send Format("{Text}{1}", flightOut)
-		Sleep 100
-		MouseMove initX + 681, initY + 170 ; 917, 503
-		Sleep 100
-		Click "Down"
-		MouseMove initX + 401, initY + 174 ; 637, 507
-		Sleep 100
-		Click "Up"
-		Sleep 100
-		Send Format("{Text}{1}", sCheckout)
-		Sleep 100
-		MouseMove initX + 686, initY + 191 ; 922, 524
-		Sleep 100
-		Click "Down"
-		MouseMove initX + 404, initY + 190 ; 640, 523
-		Sleep 100
-		Click "Up"
-		Sleep 100
-		Send Format("{Text}{1}", ETD)
-		Sleep 100
-		MouseMove initX + 605, initY + 347 ; 841, 680
-		Sleep 100
-		Click
-		Sleep 100
+        Sleep 100
+        Click
+        Sleep 100
+        MouseMove 680, 460
+        Sleep 100
+        Click 2
+        Sleep 100
+        Send Format("{Text}{1}", flightIn)
+        Sleep 100
+        loop 2 {
+            Send "{Tab}"
+            Sleep 100
+        }
+        Send Format("{Text}{1}", sCheckin)
+        Sleep 100
+        Send "{Tab}"
+        Sleep 100
+        Send Format("{Text}{1}", ETA)
+        Sleep 100
+        MouseMove 917, 465
+        Sleep 100
+        Click 2
+        Sleep 100
+        Send Format("{Text}{1}", flightOut)
+        Sleep 100
+        loop 2 {
+            Send "{Tab}"
+            Sleep 100
+        }
+        Sleep 100
+        Send Format("{Text}{1}", sCheckout)
+        Sleep 100
+        Send "{Tab}"
+        Sleep 100
+        Send Format("{Text}{1}", ETD)
+        Sleep 100
+        MouseMove initX + 605, initY + 347 ; 841, 680
+        Sleep 100
+        Click
+        Sleep 100
 	}
 
 	static dailyDetailsEntry(daysActual, initX := 372, initY := 524) {
@@ -339,7 +321,7 @@ class FsrEntry {
 		Sleep 100
 		Send "!o"
 		loop 3 {
-			Send "{Enter}"
+			Send "{Escape}"
 			Sleep 200
 		}
 		Sleep 300
