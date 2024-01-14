@@ -59,12 +59,12 @@ class InhShare {
 		Sleep 1000
 		loop 4 {
 			Send "{Esc}"
-			Sleep 100
+			Sleep 500
 		}
 		Sleep 3500
 		Send "!i"
 		Sleep 3000
-		loop 3 {
+		loop 5 {
 			Send "{Esc}"
 			Sleep 100
 		}
