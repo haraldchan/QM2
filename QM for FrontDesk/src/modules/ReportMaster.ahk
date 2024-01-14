@@ -84,16 +84,21 @@ class ReportMaster {
 		},
 		],
 		misc: [{
+			searchStr: "GRPRMLIST",
+			name: "Group Arrival - 当天预抵团单",
+			saveFn: arrivingGroups
+		}, {
 			searchStr: "Wshgz_special",
 			name: "Specials - 当天水果5 报表",
 			saveFn: special
 		}, {
-			searchStr: "GRPRMLIST",
-			name: "Group Arrival - 当天预抵团单",
-			saveFn: arrivingGroups
+			searchStr: "pkgforecast",
+			name: "Upselling - 当天 Upsell 报表",
+			saveFn: upsell
 		},
 		]
 	}
+
 
 	static USE() {
 		RM := Gui("", this.popupTitle)
@@ -182,9 +187,9 @@ class ReportMaster {
 	}
 
 	static handleMiscReportOptions(reportInfoObj, fileType, options*) {
-		if (reportInfoObj.name = "Specials - 当天水果5 报表") {
+		if (reportInfoObj.name != "Group Arrival - 当天预抵团单") {
 			reportFiling(reportInfoObj, fileType)
-		} else if (reportInfoObj.name = "Group Arrival - 当天预抵团单") {
+		} else if (reportInfoObj.name != "Group Arrival - 当天预抵团单") {
 			this.groupArrivingOptions(fileType)
 		}
 		return reportInfoObj.name

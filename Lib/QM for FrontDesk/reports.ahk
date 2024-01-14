@@ -566,3 +566,30 @@ special(initX := 600, initY := 482) {
     Sleep 200
     return fileName
 }
+
+upsell(){
+    fileName := Format("{1} Upsell", FormatTime(A_Now, "yyyyMMdd"))
+    Sleep 200
+    Send "{Tab}"
+    Sleep 200
+    Send "^c"
+    Sleep 200
+    Send "{Tab}"
+    Sleep 200
+    Send "^v"
+    MouseMove 764, 373
+    Sleep 200
+    Click
+    Sleep 200
+    Send "!n"
+    Sleep 200
+    Send "{Text}%US"
+    Sleep 200
+    Send "!h"
+    Sleep 200
+    Send "!a"
+    Sleep 200
+    Send "!o"
+    Sleep 200
+    return fileName
+}
