@@ -4,33 +4,26 @@ class BookingEntry {
     ; the initX, initY for USE() should be top-left corner of current booking window
     static USE(infoObj, roomType, comment, pmsGuestNames, initX := 193, initY := 182) {
         MsgBox("Start in seconds...", "Reservation Handler", "T1 4096")
-        ; BookingEntry.addFromTemplates(curTemplate)
-        ; Sleep 500
+
         BookingEntry.profileEntry(pmsGuestNames[1])
-        Sleep 500
+        Sleep 1000
 
         BookingEntry.roomQtyEntry(infoObj["roomQty"])
-        Sleep 500
 
         BookingEntry.roomTypeEntry(roomType)
-        Sleep 500
 
         BookingEntry.dateTimeEntry(infoObj["ciDate"], infoObj["coDate"])
-        Sleep 500
 
         BookingEntry.commentOrderIdEntry(infoObj["orderId"], comment)
-        Sleep 500
 
         if (!(jsa.every((item) => item = 0, infoObj["bbf"]))) {
             BookingEntry.breakfastEntry(infoObj["bbf"])
         }
-        Sleep 500
 
         BookingEntry.roomRatesEntry(infoObj["roomRates"])
-        Sleep 500
 
-        MsgBox("Completed.", "Reservation Handler", "T2 4096")
-        Utils.cleanReload(winGroup)
+        MsgBox("Completed.", "Reservation Handler", "T1 4096")
+        ; Utils.cleanReload(winGroup)
     }
 
     ; tested
@@ -56,7 +49,6 @@ class BookingEntry {
         Sleep 100
     }
 
-    ; tested
     static profileEntry(guestName, initX := 471, initY := 217) {
         trayTip "录入中：Profile"
         Sleep 1000
@@ -91,7 +83,6 @@ class BookingEntry {
         Sleep 2000
     }
 
-    ; tested
     static roomQtyEntry(roomQty, initX := 294, initY := 441) {
         trayTip "录入中：房间数量"
         ; TODO: fill-in roomQty
@@ -105,74 +96,65 @@ class BookingEntry {
         Sleep 100
         loop 5 {
             Send "{Esc}"
-            Sleep 200
+            Sleep 300
         }
         Sleep 100
     }
 
-    ; tested
     static roomTypeEntry(roomType, initX := 472, initY := 465) {
         trayTip "录入中：房型"
-        MouseMove initX, initY
+        MouseMove 500, 469 ; RTC btn
         Sleep 100
-        Click 2
+        Click
         Sleep 100
-        Send roomType
+        Send Format("{Text}{1}", roomType)
         Sleep 100
-        Send "{Tab}"
+        Send "!o"
         Sleep 100
-        loop 5 {
+        loop 3 {
             Send "{Esc}"
-            Sleep 200
+            Sleep 400
         }
+        
+        MouseMove 350, 469 ; Room Type btn
         Sleep 100
-        MouseMove initX - 152, initY  ;320, 461
+        Click
         Sleep 100
-        Click "Down"
+        Send Format("{Text}{1}", roomType)
         Sleep 100
-        MouseMove initX - 232, initY ; 240, 465
+        Send "!o"
         Sleep 100
-        Click "Up"
-        Sleep 100
-        Send roomType
-        Sleep 100
-        Send "{Tab}"
+        loop 3 {
+            Send "{Esc}"
+            Sleep 400
+        }
+
         Sleep 100
     }
 
-    ; tested
     static dateTimeEntry(checkin, checkout, initX := 332, initY := 356) {
         trayTip "录入中：入住/退房日期"
         pmsCiDate := FormatTime(checkin, "MMddyyyy")
         pmsCoDate := FormatTime(checkout, "MMddyyyy")
         Sleep 100
-        MouseMove initX + 9, initY - 150 ; 332, 356
+        MouseMove 349, 363
         Sleep 100
-        Click 2
+        Click 
         Sleep 100
         Send "!c"
         Sleep 100
         Send Format("{Text}{1}", pmsCiDate)
         Sleep 100
-        MouseMove initX + 2, initY - 108 ; 325, 398
+        Send "{Tab}"
         Sleep 100
-        Click
+        loop 5 {
+            Send "{Esc}"
+            Sleep 300
+        }
+
+        MouseMove 350, 404
         Sleep 100
-        MouseMove initX + 338, initY + 37 ; 661, 543
-        Sleep 100
-        Click
-        MouseMove initX + 313, initY + 37 ; 636, 543
-        Sleep 100
-        Click
-        MouseMove initX + 312, initY + 37 ; 635, 543
-        Sleep 100
-        Click
-        Sleep 100
-        Click
-        Sleep 100
-        MouseMove initX + 12, initY - 101 ; 335, 405
-        Sleep 100
-        Click 2
+        Click 
         Sleep 100
         Send "!c"
         Sleep 100
@@ -187,7 +169,6 @@ class BookingEntry {
         Sleep 100
     }
 
-    ; tested
     static commentOrderIdEntry(orderId, comment, initX := 622, initY := 596) {
         trayTip "录入中：COMMENT，订单号"
         ; fill-in comment
@@ -219,7 +200,6 @@ class BookingEntry {
         Sleep 100
     }
 
-    ; tested?
     static roomRatesEntry(roomRates, initX := 372, initY := 524) {
         trayTip "录入中：房价"
         MouseMove initX, initY ;372, 504
@@ -234,14 +214,17 @@ class BookingEntry {
         Send "!d"
         Sleep 1000
         loop roomRates.Length {
+            Send "!e"
+            Sleep 100
+            MouseMove 503, 422
+            Sleep 100
+            Click 3
+            Sleep 100
             Send roomRates[A_Index]
             Sleep 100
+            Send "!o"
             Send "{Down}"
             Sleep 100
-            Send "{Enter}"
-            Sleep 1000
-            ; Send "{Enter}"
-            ; Sleep 2000
         }
         Sleep 100
         MouseMove initX + 356, initY + 44 ;728, 548
@@ -251,7 +234,7 @@ class BookingEntry {
         Send "{Esc}"
         Sleep 100
     }
-    ; tested
+
     static breakfastEntry(bbf, initX := 352, initY := 548) {
         trayTip "录入中：早餐"
         ;entry bbf package
@@ -472,7 +455,7 @@ RH_Agoda(infoObj, addFromConf := 0) {
 
 RH_Webbeds(infoObj) {
     roomTypeRef := Map(
-        "CITY VIEW DELUXE KING ROOM", "DKC"
+        "CITY VIEW DELUXE KING ROOM", "DKC",
         "CITY VIEW DELUXE TWIN ROOM", "DTC",
         "RIVER VIEW DELUXE KING ROOM", "DKR",
         "RIVER VIEW DELUXE TWIN ROOM", "DTR",
@@ -483,7 +466,7 @@ RH_Webbeds(infoObj) {
     orderIdList := infoObj["orderId"]
 
     loop infoObj["roomQty"] {
-        infoObj["orderId"] = orderIdList[A_Index]
+        infoObj["orderId"] := orderIdList[A_Index]
         
         bbf := infoObj["bbf"][1] = 0
             ? "" : infoObj["bbf"][1] = 1
@@ -492,6 +475,7 @@ RH_Webbeds(infoObj) {
             bbf,
             infoObj["creditCardNumbers"][A_Index],
             infoObj["creditCardExp"][A_Index])
+        guestNames := [ StrSplit(infoObj["guestNames"][1], " ") ]
 
         popup := multiBookingNotifier(infoObj["roomQty"], "Reservation Handler")
 
@@ -499,8 +483,8 @@ RH_Webbeds(infoObj) {
             utils.cleanReload(winGroup)
         } else if (popup = "No") {
             continue
-        } else if (popup = "Yes" && A_Index = 1) {
-            BookingEntry.USE(infoObj, roomType, comment, infoObj["guestNames"])
+        } else if (A_Index = 1 && popup = "Yes" || popup = "OK") {
+            BookingEntry.USE(infoObj, roomType, comment, guestNames)
         } else {
             BookingEntry.commentOrderIdEntry(infoObj["orderId"], comment)
         }

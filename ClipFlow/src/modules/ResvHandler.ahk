@@ -99,7 +99,7 @@ class ResvHandler {
             case "fliggy":
                 RH_Fliggy(bookingInfoObj)
             case "webbeds":
-                RH_Fliggy(bookingInfoObj)
+                RH_Webbeds(bookingInfoObj)
             default:
         }
         Sleep 500
