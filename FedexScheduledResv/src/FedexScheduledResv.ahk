@@ -122,27 +122,25 @@ class FsrEntry {
 	}
 
 	static saveBooking() {
-		static saveBooking() {
-			CoordMode "Pixel", "Screen"
-			Send "!o"
-			Sleep 1000
-			loop {
-				Sleep 500
-				if (PixelGetColor(610, 330) = "0x99B4D1") { 
-					break
-				}
-				if (A_Index = 20) {
-					WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-					BlockInput false
-					MsgBox("已停止。")
-					cleanReload()
-				}
+		CoordMode "Pixel", "Screen"
+		Send "!o"
+		Sleep 1000
+		loop {
+			Sleep 500
+			if (PixelGetColor(610, 330) = "0x99B4D1") { 
+				break
 			}
-			Send "!o"
-			Sleep 1000
-			Send "{Down}"
-			Sleep 1000
+			if (A_Index = 20) {
+				WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
+				BlockInput false
+				MsgBox("已停止。")
+				cleanReload()
+			}
 		}
+		Send "!o"
+		Sleep 1000
+		Send "{Down}"
+		Sleep 1000
 	}
 
 	static profileEntry(flightIn, tripNumber, initX := 467, initY := 201) {
@@ -321,15 +319,15 @@ class FsrEntry {
 		Sleep 100
 		Send "!o"
 		loop 3 {
-			Send "{Escape}"
-			Sleep 200
+			Send "{Esc}"
+			Sleep 500
 		}
-		Sleep 300
+		Sleep 100
 		Send "!o"
 		Sleep 100
 		loop 5 {
-			Send "{Escape}"
-			Sleep 200
+			Send "{Esc}"
+			Sleep 500
 		}
 		Sleep 100
 	}
