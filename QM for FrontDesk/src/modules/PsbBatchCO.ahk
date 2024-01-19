@@ -33,10 +33,11 @@ class PsbBatchCO {
         )"
         selector := MsgBox(textMsg, this.popupTitle, "YesNoCancel")
         if (selector = "No") {
-            this.batchOut(path)
+            this.batchOut(xlPath)
         } else if (selector = "Yes") {
-            this.saveDep(path)
-            this.batchOut(path)
+            this.saveDep(xlPath)
+            Sleep 500
+            this.batchOut(xlPath)
         } else {
             utils.cleanReload(winGroup)
         }
@@ -52,22 +53,22 @@ class PsbBatchCO {
             name: "FO03 - Departures",
             saveFn: depForBatchOut
         }, "XML")
-        xmlPath := Format(A_MyDocuments . "\{1} - 退房.XML", FormatTime(A_Now, "yyyyMMdd"))
+        xmlPath := Format(A_MyDocuments . "\{1} - Departures.XML", FormatTime(A_Now, "yyyyMMdd"))
         ; wait for file
         loop 10 {
-            if (FileExist(xmlPath)) {
-                break
-            }
             Sleep 500
+            if (FileExist(xmlPath)) {
+                this.xmlToSpreadSheet(xmlPath, path)
+                Sleep 100
+                Run path
+                return
+            }
             if (A_Index = 10) {
                 MsgBox("保存失败，请重试！",this.popupTitle)
+                return
             }
         }
-        ; write Xl
-        this.xmlToSpreadSheet(xmlPath, path)
-        Sleep 100
-        Run path
-        ; }
+
         continueText := "
         (
         请打开蓝豆查看“续住工单”，剔除excel中续住的房间后，点击确定继续拍out。
@@ -139,15 +140,16 @@ class PsbBatchCO {
         for element in roomElements {
             roomNumbersRead.Push(element.ChildNodes[0].nodeValue)
         }
-        uniqueRooms := this.getUniqueRoomNums(roomNumsRead)
+        uniqueRooms := this.getUniqueRoomNums(roomNumbersRead)
 
         Xl := ComObject("Excel.Application")
         CheckOut := Xl.Workbooks.Open(xlPath)
         depRooms := CheckOut.Worksheets("Sheet1")
-        ; write Xl
+
         for roomNumber in uniqueRooms {
             depRooms.Cells(A_Index, 1).Value := roomNumber
         }
+        CheckOut.Save()
         Xl.Quit()
     }
 

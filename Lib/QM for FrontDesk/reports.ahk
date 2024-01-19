@@ -718,11 +718,12 @@ silkroadMorningTea(){
 }
 
 depForBatchOut(){
-    fileName := Format("{1} - 退房", FormatTime(A_Now, "yyyyMMdd"))
+    fileName := Format("{1} - Departures", FormatTime(A_Now, "yyyyMMdd"))
 
     WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
     BlockInput false
 
+    Sleep 1000
     timePeriod := InputBox(
             textMsg := "
         (
@@ -753,16 +754,19 @@ depForBatchOut(){
             toTime := InputBox("请输入结束时间（格式：“hhmm”）", "Report Master").Value
         default:
             MsgBox("请输入对应时间的指令。")
+            return
     }
 
     Sleep 100
     WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
     BlockInput true
 
-    loop 6 {
-        Send "{Tab}"
-        Sleep 100
-    }
+    WinActivate "ahk_class SunAwtFrame"
+    Sleep 100
+    MouseMove 490, 363
+    Sleep 100
+    Click 3
+    Sleep 100
     Send Format("{Text}{1}", frTime)
     Sleep 100
     Send "{Tab}"
