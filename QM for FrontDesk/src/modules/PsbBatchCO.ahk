@@ -58,7 +58,7 @@ class PsbBatchCO {
         loop 10 {
             Sleep 500
             if (FileExist(xmlPath)) {
-                this.xmlToSpreadSheet(xmlPath, path)
+                this.xmlToXl(xmlPath, path)
                 Sleep 100
                 Run path
                 return
@@ -130,7 +130,7 @@ class PsbBatchCO {
         }
     }
 
-    static xmlToSpreadSheet(xmlPath, xlPath){
+    static xmlToXl(xmlPath, xlPath){
         roomNumbersRead := []
         xmlDoc := ComObject("msxml2.DOMDocument.6.0")
         xmlDoc.async := false
