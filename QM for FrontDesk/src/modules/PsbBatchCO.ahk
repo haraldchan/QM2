@@ -7,7 +7,7 @@ class PsbBatchCO {
     static popupTitle := "PSB CheckOut(Batch)"
     static scriptHost := SubStr(A_ScriptDir, 1, InStr(A_ScriptDir, "\", , -1, -1) - 1)
     static path := IniRead(this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "PsbBatchCO", "xlsPath")
-    static blockingPopups := []
+    static blockingPopups := ["来访提示", "数据验证"]
 
     static USE(desktopMode := 0) {
         if (desktopMode = true) {
@@ -108,11 +108,19 @@ class PsbBatchCO {
             Send "^v"
             Sleep 100
             Send "^f"
-            Sleep 500
+            Sleep 300
+            WinWait("系统确认", , 2)
+            Sleep 100
             Send "{Enter}"
-            Sleep 500
+            Sleep 1000
+            WinWait("提示", , 2)
+            Sleep 100
             Send "{Esc}"
-            Sleep 500
+            Sleep 100
+            if (!WinExist("ahk_class ThunderRT6FormDC")) {
+                MsgBox(Format("错误退出！ 最后房号：{1}", A_Clipboard),,"4096")
+                return
+            }
         }
 
         ; IniWrite("null", this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "PsbBatchCO", "errorQuitAt")
@@ -123,9 +131,9 @@ class PsbBatchCO {
     }
 
     static winDetectAndClose(targetWins) {
-        loop targetWins.Length {
-            if (WinExist(winGroup[A_Index])) {
-                WinClose winGroup[A_Index]
+        for winTitle in targetWins {
+            if (WinExist(Format("ahk_class {1}", winTitle))) {
+                WinClose Format("ahk_class {1}", winTitle)
             }
         }
     }
