@@ -145,6 +145,7 @@ class PsbBatchCO {
         Xl := ComObject("Excel.Application")
         CheckOut := Xl.Workbooks.Open(xlPath)
         depRooms := CheckOut.Worksheets("Sheet1")
+        depRooms.Range("A:A").Clear()
 
         for roomNumber in uniqueRooms {
             depRooms.Cells(A_Index, 1).Value := roomNumber
