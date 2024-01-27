@@ -7,7 +7,8 @@ class PsbBatchCO {
     static popupTitle := "PSB CheckOut(Batch)"
     static scriptHost := SubStr(A_ScriptDir, 1, InStr(A_ScriptDir, "\", , -1, -1) - 1)
     static path := IniRead(this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "PsbBatchCO", "xlsPath")
-    static blockingPopups := ["来访提示", "数据验证"]
+    static errorQuitAt := IniRead(this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "PsbBatchCO", "errorQuitAt")
+    static blockingPopups := ["来访提示", "数据验证", "旅馆业发送提示"]
 
     static USE(desktopMode := 0) {
         if (desktopMode = true) {
@@ -47,8 +48,7 @@ class PsbBatchCO {
         WinMaximize "ahk_class SunAwtFrame"
         WinActivate "ahk_class SunAwtFrame"
         ; save Departures XML
-        reportFiling(
-        {
+        reportFiling({
             searchStr: "FO03",
             name: "FO03 - Departures",
             saveFn: depForBatchOut
@@ -64,7 +64,7 @@ class PsbBatchCO {
                 return
             }
             if (A_Index = 10) {
-                MsgBox("保存失败，请重试！",this.popupTitle)
+                MsgBox("保存失败，请重试！", this.popupTitle)
                 return
             }
         }
@@ -118,12 +118,14 @@ class PsbBatchCO {
             Send "{Esc}"
             Sleep 100
             if (!WinExist("ahk_class ThunderRT6FormDC")) {
-                MsgBox(Format("错误退出！ 最后房号：{1}", A_Clipboard),,"4096")
+                IniWrite(A_Clipboard, this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "PsbBatchCO", "errorQuitAt")
+                MsgBox(Format("错误退出！ 最后房号：{1}", A_Clipboard), , "4096")
                 return
             }
         }
 
         ; IniWrite("null", this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "PsbBatchCO", "errorQuitAt")
+
         Sleep 1000
         MsgBox("PSB 批量拍Out 已完成！", this.popupTitle)
 
@@ -138,7 +140,7 @@ class PsbBatchCO {
         }
     }
 
-    static xmlToXl(xmlPath, xlPath){
+    static xmlToXl(xmlPath, xlPath) {
         roomNumbersRead := []
         xmlDoc := ComObject("msxml2.DOMDocument.6.0")
         xmlDoc.async := false
