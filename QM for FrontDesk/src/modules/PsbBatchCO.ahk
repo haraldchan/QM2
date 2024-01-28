@@ -7,7 +7,6 @@ class PsbBatchCO {
     static popupTitle := "PSB CheckOut(Batch)"
     static scriptHost := SubStr(A_ScriptDir, 1, InStr(A_ScriptDir, "\", , -1, -1) - 1)
     static path := IniRead(this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "PsbBatchCO", "xlsPath")
-    static errorQuitAt := IniRead(this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "PsbBatchCO", "errorQuitAt")
     static blockingPopups := ["来访提示", "数据验证", "旅馆业发送提示"]
 
     static USE(desktopMode := 0) {
@@ -78,6 +77,11 @@ class PsbBatchCO {
     }
 
     static batchOut(path) {
+        errorQuitAt := IniRead(this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "PsbBatchCO", "errorQuitAt")
+        if (errorQuitAt != 0) {
+            isResume := MsgBox(Format("错误退出前已拍 Out 至：{1}，是否继续？", errorQuitAt, "YesNo"), this.popupTitle)
+        }
+
         autoOut := MsgBox("即将开始自动拍Out脚本`n请先打开PSB，进入“旅客退房”界面", PsbBatchCo.popupTitle, "OKCancel")
         if (autoOut = "Cancel") {
             utils.cleanReload(winGroup)
@@ -94,6 +98,16 @@ class PsbBatchCO {
         CheckOut.Close()
         Xl.Quit()
         TrayTip "读入完成"
+
+        if (isResume = "Yes") {
+            for roomNumber in depRoomNums {
+                if (roomNumber != errorQuitAt) {
+                    depRoomNums.RemoveAt(A_Index)
+                } else {
+                    break
+                }
+            }
+        }
 
         ; SetTimer(this.winDetectAndClose(this.blockingPopups))
 
@@ -123,8 +137,8 @@ class PsbBatchCO {
                 return
             }
         }
-
-        ; IniWrite("null", this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "PsbBatchCO", "errorQuitAt")
+        ;reset to 0
+        IniWrite(0, this.scriptHost . "\Lib\QM for FrontDesk\config.ini", "PsbBatchCO", "errorQuitAt")
 
         Sleep 1000
         MsgBox("PSB 批量拍Out 已完成！", this.popupTitle)
