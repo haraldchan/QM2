@@ -27,7 +27,10 @@ Sleep 100
 tabPos := IniRead(store, "App", "tabPos")
 clipHisObj := IniRead(store, "ClipHistory", "clipHisArr")
 clipHisArr := Jxon_Load(&clipHisObj)
-onTop := false
+; onTop := false
+state := {
+    onTop: false
+}
 
 
 ; GUI template
@@ -58,13 +61,14 @@ ClipFlow.AddButton("h30 w130", "Clear").OnEvent("Click", clearList)
 ClipFlow.AddButton("h30 w130 x+20", "Refresh").OnEvent("Click", (*) => utils.cleanReload(winGroup))
 
 ClipFlow.Show()
-WinSetAlwaysOnTop onTop, popupTitle
+WinSetAlwaysOnTop state.onTop, popupTitle
 ; }
 
 ; { function scripts
 keepOnTop(*) {
-    global onTop := !onTop
-    WinSetAlwaysOnTop onTop, popupTitle
+    ; global onTop := !onTop
+    state.onTop := !state.onTop
+    WinSetAlwaysOnTop state.onTop, popupTitle
 }
 
 addToHistory(*) {

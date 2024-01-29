@@ -13,7 +13,11 @@ class ShareClip {
     static archiveDays := 5
 
     static USE(App) {
-        OnClipboardChange this.listenAndSend
+        state := {
+            isListening: false,
+            readyToSend: false,
+        }
+        OnClipboardChange () => this.listenAndSend(state.isListening)
         ; create new shareclip dir/txt
         if (!DirExist(this.shareClipFolder)) {
             DirCreate(this.shareClipFolder)
@@ -28,8 +32,8 @@ class ShareClip {
             }
         }
 
-        global isListening := false
-        global readyToSend := false
+        ; global isListening := false
+        ; global readyToSend := false
 
         ui := [
             App.AddGroupBox("R15.5 w250 y+20", this.title),
@@ -48,15 +52,11 @@ class ShareClip {
         sendTextBtn := interface.getCtrlByName("sendTextBtn", ui)
         showShareClipboardBtn := interface.getCtrlByName("showShareClipboardBtn", ui)
 
-        clbListener.OnEvent("Click", toggleListen)
+        clbListener.OnEvent("Click", (*) => state.isListening := !state.isListening)
         sendHistoryBtn.OnEvent("Click", sendHistory)
         userInputText.OnEvent("Change", checkInput)
         sendTextBtn.OnEvent("Click", sendUserInputText)
         showShareClipboardBtn.OnEvent("Click", showShareClipboard)
-
-        toggleListen(*) {
-            global isListening := !isListening
-        }
 
         sendHistory(*) {
             his := IniRead(store, "ClipHistory", "clipHisArr")
@@ -73,7 +73,7 @@ class ShareClip {
         }
 
         sendUserInputText(*) {
-            if (!readyToSend) {
+            if (!state.readyToSend) {
                 return
             }
             text := this.sendUserInputText(userInputText.Text)
@@ -87,9 +87,9 @@ class ShareClip {
         }
     }
 
-    static listenAndSend() {
+    static listenAndSend(listenState) {
         this := ShareClip
-        if (isListening = true) {
+        if (listenState = true) {
             utils.filePrepend(this.prefix . A_Clipboard . "`r`n`r`n", this.shareTxt)
             MsgBox(this.prefix . A_Clipboard, this.popupTitle, "4096 T1")
         } else {
@@ -113,7 +113,10 @@ class ShareClip {
 
     static showShareClipboard(showShareClipboardBtn) {
         sharedText := FileRead(this.shareTxt)
-        isAutoRefresh := false
+        ; isAutoRefresh := false
+        state := {
+            isAutoRefresh: false 
+        }
 
         shareCLB := Gui(, "Share 剪贴板")
         ui := [
@@ -136,8 +139,8 @@ class ShareClip {
         shareCLB.OnEvent("Close", closeShareClipboardWin)
 
         toggleAutoRefresh(*){
-            isAutoRefresh := !isAutoRefresh
-            if (isAutoRefresh = true) {
+            state.isAutoRefresh := !state.isAutoRefresh
+            if (state.isAutoRefresh = true) {
                 SetTimer(getUpdateSharedText, 3000)
             } else {
                 SetTimer(getUpdateSharedText, 0)

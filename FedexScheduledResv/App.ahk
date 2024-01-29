@@ -83,6 +83,10 @@ saveTime(*) {
 }
 
 showScheduleList(scheduledPath) {
+	state := {
+		isCheckedAll: true
+	}
+
 	colTitles := [
 		"Trip No.  ",
 		"Qty",
@@ -130,7 +134,7 @@ showScheduleList(scheduledPath) {
 
 	SchdList.Show()
 
-	global isCheckedAll := true
+	; global isCheckedAll := true
 	checkAllBtn := interface.getCtrlByName("checkAllBtn", footer)
 	startBtn := interface.getCtrlByName("startBtn", footer)
 
@@ -141,12 +145,12 @@ showScheduleList(scheduledPath) {
 	checkIsCheckedAll(*){
 		checkedRows := interface.getCheckedRowNumbers(LV)
 		checkAllBtn.Value := (checkedRows.Length = flights.Length)
-		global isCheckedAll := checkAllBtn.Value
+		state.isCheckedAll := checkAllBtn.Value
 	}
 
 	setCheckAll(*){
-		global isCheckedAll := !isCheckedAll
-		checkStatus := isCheckedAll = true
+		state.isCheckedAll := !state.isCheckedAll
+		checkStatus := (state.isCheckedAll = true)
 			? "Check"
 			: "-Check"
 			LV.Modify(0, checkStatus)

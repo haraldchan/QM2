@@ -23,8 +23,12 @@ scriptHost := SubStr(A_ScriptDir, 1, InStr(A_ScriptDir, "\", , -1, -1) - 1)
 config := scriptHost . "\Lib\QM for FrontDesk\config.ini"
 winGroup := ["ahk_class SunAwtFrame"]
 popupTitle := "QM for FrontDesk " . version
-cityLedgerOn := true
-desktopMode := false
+; cityLedgerOn := true
+; desktopMode := false
+state := {
+    cityLedgerOn: false,
+    desktopMode: false,
+}
 
 ; script classes
 scriptIndex := [
@@ -171,11 +175,12 @@ openXlFile(file, *) {
 }
 
 toggleDesktopMode(*) {
-    global desktopMode := !desktopMode
+    ; global desktopMode := !desktopMode
+    state.desktopMode := !state.desktopMode
     loop xldp.Length {
-        xldp[A_Index][2].Enabled := !desktopMode
-        xldp[A_Index][3].Enabled := !desktopMode
-        xldp[A_Index][4].Enabled := !desktopMode
+        xldp[A_Index][2].Enabled := !state.desktopMode
+        xldp[A_Index][3].Enabled := !state.desktopMode
+        xldp[A_Index][4].Enabled := !state.desktopMode
     }
 }
 
@@ -191,7 +196,7 @@ runSelectedScript(*) {
         loop xldp.Length {
             if (xldp[A_Index][1].Value = 1) {
                 QM.Hide()
-                scriptIndex[2][A_Index].USE(desktopMode)
+                scriptIndex[2][A_Index].USE(state.desktopMode)
             }
         }
     } else {
@@ -205,9 +210,8 @@ F9:: {
     QM.Show()
  } 
 F12:: utils.cleanReload(winGroup)
-; ^F12:: utils.quitApp("QM for FrontDesk", popupTitle, winGroup)
 
-#HotIf cityLedgerOn
+#HotIf state.cityLedgerOn
 ^o::CityLedgerCo.USE()
 MButton::CityLedgerCo.USE()
 #Hotif WinActive(popupTitle)
