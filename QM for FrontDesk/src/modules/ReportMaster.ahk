@@ -86,7 +86,9 @@ class ReportMaster {
 		misc: [{
 			searchStr: "GRPRMLIST",
 			name: "Group Arrival - 当天预抵团单",
-			saveFn: arrivingGroups
+			saveFn: arrivingGroups,
+			blockCode: "",
+			blockName: ""
 		}, {
 			searchStr: "Wshgz_special",
 			name: "Specials - 当天水果5 报表",
@@ -201,7 +203,7 @@ class ReportMaster {
 	static handleMiscReportOptions(reportInfoObj, fileType, options*) {
 		if (reportInfoObj.name != "Group Arrival - 当天预抵团单") {
 			reportFiling(reportInfoObj, fileType)
-		} else if (reportInfoObj.name != "Group Arrival - 当天预抵团单") {
+		} else {
 			this.groupArrivingOptions(fileType)
 		}
 		return reportInfoObj.name
@@ -232,6 +234,14 @@ class ReportMaster {
 	}
 
 	static groupArrivingOptions(fileType) {
+		groupReport := {}
+		for reportObj in this.reportList.misc {
+			if (reportObj.HasOwnProp("blockCode")) {
+				groupReport := reportObj
+				break
+			}
+		}
+
 		reportName := "当天 Arrival 团单"
 		onDayGroup := Format("\\10.0.2.13\fd\9-ON DAY GROUP DETAILS\{2}\{2}{3}\{1}Group ARR&DEP.xlsx", today, A_Year, A_MM)
 		blockInfo := this.getBlockInfo(onDayGroup)
@@ -250,9 +260,9 @@ class ReportMaster {
 			取消：退出脚本
 			)", blockInfoText), this.popupTitle, "YesNoCancel")
 		if (rmListSaver = "Yes") {
-			this.saveGroupAll(blockinfo, fileType)
+			this.saveGroupAll(blockinfo, fileType, groupReport)
 		} else if (rmListSaver = "No") {
-			this.saveGroupRmList(fileType)
+			this.saveGroupRmList(fileType, groupReport)
 		} else {
 			utils.cleanReload(winGroup)
 		}
@@ -275,7 +285,7 @@ class ReportMaster {
 		return blockInfoMap
 	}
 
-	static saveGroupRmList(fileType) {
+	static saveGroupRmList(fileType, groupReportObj) {
 		groups := []
 		Loop {
 			blocks := InputBox("
@@ -295,25 +305,25 @@ class ReportMaster {
 		For g in groups {
 			if (InStr(g, "=")) {
 				g := StrSplit(g, "=")
-				this.reportList.misc[2].blockCode := g[1]
-				this.reportList.misc[2].blockName := g[2]
+				groupReportObj.blockCode := g[1]
+				groupReportObj.blockName := g[2]
 			} else {
-				this.reportList.misc[2].blockCode := g
-				this.reportList.misc[2].blockName := g
+				groupReportObj.blockCode := g
+				groupReportObj.blockName := g
 			}
-			reportFiling(this.reportList.misc[2], fileType)
+			reportFiling(this.reportList.misc[1], fileType)
 		}
 		WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 		BlockInput false
 	}
 
-	static saveGroupAll(blockInfo, fileType) {
+	static saveGroupAll(blockInfo, fileType, groupReportObj) {
 		BlockInput true
 		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
 		for blockName, blockCode in blockInfo {
-			this.reportList.misc[2].blockCode := blockCode
-			this.reportList.misc[2].blockName := blockName
-			reportFiling(this.reportList.misc[2], fileType)
+			groupReportObj.blockCode := blockCode
+			groupReportObj.blockName := blockName
+			reportFiling(groupReportObj, fileType)
 		}
 		WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
 		BlockInput false
