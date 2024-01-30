@@ -27,7 +27,7 @@ class PsbBatchCO {
         (
         即将开始批量拍Out 脚本
     
-        是(Y) = 保存FO03 - Departures数据txt 文件后开始
+        是(Y) = 保存FO03 - Departures数据文件后开始
         否(N) = 直接开始拍Out
         取消 = 退出脚本
         )"
