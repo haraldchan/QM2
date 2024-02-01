@@ -46,6 +46,50 @@ class ResvHandler {
         IniWrite(A_Clipboard, store, "ResvHandler", "JSON")
         clb := A_Clipboard
         bookingInfoObj := Jxon_Load(&clb)
+        
+        ; for k, v in bookingInfoObj {
+        ;     if (v is String || v is Number) {
+        ;         outputVal := v
+        ;     } else if (v is Array) {
+        ;         outputVal := ""
+        ;         loop v.Length {
+        ;             outputVal .= v[A_Index] . "，"
+        ;         }
+        ;         outputVal := SubStr(outputVal, 1, StrLen(outputVal) - 1)
+        ;     } else {
+        ;         outputVal := "`n"
+        ;         msgbox(v)
+        ;         for key, val in v {
+        ;             outputVal .= Format("   {1}: {2}`n", key, val)
+        ;         }
+        ;     }
+
+        ;     popupInfo .= Format("{1}：{2}`n", k, outputVal)
+
+
+        ; }
+        ; toOpera := MsgBox(Format("
+        ; (   
+        ; 已获取订单的信息：
+
+        ; {1}
+
+        ; 确定(Enter)：     打开 Opera
+        ; 取消(Esc)：       留在 当前页面
+        ; )", popupInfo), ResvHandler.popupTitle, "OKCancel 4096")
+        ; if (toOpera = "OK") {
+        ;     try {
+        ;         WinActivate "ahk_class SunAwtFrame"
+        ;         App.Show()
+        ;     } catch {
+        ;         MsgBox("请先打开 Opera 窗口。", ResvHandler.popupTitle)
+        ;     }
+        ; }
+        
+        ResvInfo := Gui("", "Reservation Handler")
+        LV := ResvInfo.AddListView("Checked w250 h330", ["字段", "信息详情"])
+
+        ResvDetails := []
         for k, v in bookingInfoObj {
             if (v is String || v is Number) {
                 outputVal := v
@@ -54,7 +98,7 @@ class ResvHandler {
                 loop v.Length {
                     outputVal .= v[A_Index] . "，"
                 }
-                outputVal := SubStr(outputVal, 1, StrLen(outputVal) - 1)
+            outputVal := SubStr(outputVal, 1, StrLen(outputVal) - 1)
             } else {
                 outputVal := "`n"
                 msgbox(v)
@@ -63,27 +107,20 @@ class ResvHandler {
                 }
             }
 
-            popupInfo .= Format("{1}：{2}`n", k, outputVal)
-
-
+            ResvDetails.Push(
+                LV.Add("Check", k, outputVal)
+            )
         }
-        toOpera := MsgBox(Format("
-        (   
-        已获取订单的信息：
 
-        {1}
+        LV.ModifyCol(1, 100)
 
-        确定(Enter)：     打开 Opera
-        取消(Esc)：       留在 当前页面
-        )", popupInfo), ResvHandler.popupTitle, "OKCancel 4096")
-        if (toOpera = "OK") {
-            try {
-                WinActivate "ahk_class SunAwtFrame"
-                App.Show()
-            } catch {
-                MsgBox("请先打开 Opera 窗口。", ResvHandler.popupTitle)
-            }
-        }
+        footer := [
+            ResvDetails.AddCheckbox("vcheckAllBtn Checked h25 y+10", "全选"),
+            ResvDetails.AddButton("vstartBtn Default x+10", "开始录入"),
+        ]
+
+        ResvInfo.Show()
+    
     }
 
     static modifyReservation(App) {
