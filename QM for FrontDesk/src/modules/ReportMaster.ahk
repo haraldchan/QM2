@@ -197,6 +197,7 @@ class ReportMaster {
 			}
 			Sleep 1000
 			this.openMyDocs(savedReport)
+			RM.Close()
 		}
 	}
 
