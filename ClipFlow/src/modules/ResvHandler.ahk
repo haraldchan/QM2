@@ -17,17 +17,12 @@ class ResvHandler {
 
             2、获取订单后点击弹窗的“确定”返回
               Opera PMS，让脚本完成订单录入。
-
-            ※各Agent模板订单均以
-              “template-Agent Name”形式命名，
-              是Add-On的来源。如Rate Code等信
-              信息有所更新，请及时更新模板！
         )"
     static initXpos := 0
     static initYpos := 0
 
     static USE(App) {
-        OnClipboardChange((*) => this.saveAddOnJson(App))
+        OnClipboardChange((*) => this.handleCapturedInfo(App))
         ui := [
             App.AddGroupBox("R10 w250 y+20", this.title),
             App.AddText("xp+10 yp+20", this.desc),
@@ -39,19 +34,52 @@ class ResvHandler {
 
     }
 
-    static saveAddOnJson(App) {
+    static handleCapturedInfo(App) {
         if (!InStr(A_Clipboard, '"identifier":"ReservationHandler"')) {
             return
         }
         IniWrite(A_Clipboard, store, "ResvHandler", "JSON")
         clb := A_Clipboard
-        bookingInfoObj := Jxon_Load(&clb)
+        resvInfoObj := Jxon_Load(&clb)
+
+        this.showCurrentResvDetails(resvInfoObj, App)
+    }
+
+    static showCurrentResvDetails(resvInfoObj, App) {
+        keyDesc := Map(
+            "identifier", "标识",
+            "agent", "订单来源",
+            "orderId", " 订单号",
+            "guestNames", "住客姓名",
+            "roomType", "预订房型",
+            "roomQty", " 订房数量",
+            "remarks", "备注信息",
+            "ciDate", "入住日期",
+            "coDate", "退房日期",
+            "roomRates", "房价构成",
+            "bbf", "早餐构成",
+            "payment", "支付方式",
+            " invoiceMemo", "发票信息",
+            "contacts", "联系方式",
+            "creditCardNumbers", "虚拟卡号",
+            "creditCardExp", "虚拟卡EXP",
+            "resvType", "订单类型",
+            "flightIn", "预抵航班",
+            "flightOut", "离开航班",
+            "ETA", "入住时间",
+            "ETD", "退房时间",
+            "stayHours", "在住时长",
+            "daysActual", " 计费天数",
+            "crewNames", "机组姓名",
+            "tripNum", "Trip No.",
+            "tracking", "Tracking 单号",
+        )
 
         ResvInfo := Gui("", "Reservation Handler")
         LV := ResvInfo.AddListView("Checked h300", ["字段", "信息详情"])
 
         ResvDetails := []
-        for k, v in bookingInfoObj {
+        for k, v in resvInfoObj {
             if (v is String || v is Number) {
                 outputVal := v
             } else if (v is Array) {
@@ -59,7 +87,7 @@ class ResvHandler {
                 loop v.Length {
                     outputVal .= v[A_Index] . "，"
                 }
-            outputVal := SubStr(outputVal, 1, StrLen(outputVal) - 1)
+                outputVal := SubStr(outputVal, 1, StrLen(outputVal) - 1)
             } else {
                 outputVal := "`n"
                 msgbox(v)
@@ -69,7 +97,7 @@ class ResvHandler {
             }
 
             ResvDetails.Push(
-                LV.Add("Check", k, outputVal)
+                LV.Add("Check", keyDesc[k], outputVal)
             )
         }
 
@@ -103,7 +131,7 @@ class ResvHandler {
             checkStatus := state.isCheckedAll = true
                 ? "Check"
                 : "-Check"
-                LV.Modify(0, checkStatus)
+            LV.Modify(0, checkStatus)
         }
 
         toOpera(*) {
@@ -112,9 +140,13 @@ class ResvHandler {
                 App.Show()
             } catch {
                 MsgBox("请先打开 Opera 窗口。", ResvHandler.popupTitle)
-            }      
+            }
         }
 
+    }
+
+    static updateSelectedDetails() {
+        
     }
 
     static modifyReservation(App) {
