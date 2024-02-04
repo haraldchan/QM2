@@ -242,28 +242,21 @@ vipInh() {
     return fileName
 }
 
-vipDep(initX := 600, initY := 545) {
+vipDep(initX := 622, initY := 391) {
     fileName := "FO03-VIP DEP"
     Sleep 200
     ; report options here
-    MouseMove initX, initY ; 600, 545
+    MouseMove initX, initY
     Sleep 150
     Click
-    MouseMove initX - 32, initY - 158 ; 632, 387
+    MouseMove 855 , 391
     Sleep 150
     Click
-    MouseMove initX + 264, initY - 160 ; 864, 385
-    Sleep 150
-    Click
-    MouseMove initX + 222, initY - 91 ; 822, 454
     Sleep 150
     Send "!a"
     Sleep 150
-    MouseMove initX + 250, initY + 33 ; 850, 578
-    Sleep 150
-    Click
-    MouseMove initX + 35, initY + 136 ; 635, 681
-    Sleep 150
+    Send "!o"
+    Sleep 200
     return fileName
 }
 
