@@ -1,24 +1,44 @@
-class ReactiveButton {
-    __New(GuiObject, options, label, callback) {
+class ReactiveControl {
+    __New(controlType, GuiObject, options, innerText, event := 0, bind := 0) {
         this.GuiObject := GuiObject
         this.options := options
-        this.label := label
-        this.callback := callback
-
-        this.btn := this.GuiObject.AddButton(options, label)
-        this.btn.OnEvent("Click", this.callback)
+        this.innerTextbel := innerText
+        this.ctrlType := controlType
+        ; event param should be an object like:
+        ; {event: "Click", callback: function}
+        this.ctrl := this.GuiObject.Add(this.ctrlType, options, innerText)
+        if (event != 0) {
+            this.event := event.event
+            this.callback := event.callback
+            this.ctrl.OnEvent(this.event, (*) => this.callback())
+        }
     }
 
-    setOptions(newOptions){
-        this.btn.Opt(newOptions)
+    setOptions(newOptions) {
+        this.ctrl.Opt(newOptions)
     }
 
-    setLabel(newLabel){
-        this.btn.Text := newLabel
+    getInnerText() {
+        return this.ctrl.Text
     }
 
-    setCallback(newEvent := "Click", newCallback := this.callback){
-        this.btn.OnEvent(newEvent, newCallback)
+    setInnerText(newInnerText) {
+        this.ctrl.Text := newInnerText
+    }
+
+    setEvent(newEvent) {
+        this.ctrl.OnEvent(newEvent.event, (*) => newEvent.callback())
     }
 }
 
+class ReactiveButton extends ReactiveControl {
+    __New(GuiObject, options, innerText, event := 0) {
+        super.__New("Button", GuiObject, options, innerText, event := 0)
+    }
+}
+
+class ReactiveEdit extends ReactiveControl {
+    __New(GuiObject, options, innerText, event := 0) {
+        super.__New("Edit", GuiObject, options, innerText, event := 0)
+    }
+}
