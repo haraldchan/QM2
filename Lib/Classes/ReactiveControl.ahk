@@ -10,7 +10,7 @@ class ReactiveControl {
         if (event != 0) {
             this.event := event.event
             this.callback := event.callback
-            this.ctrl.OnEvent(this.event, (*) => this.callback.Call())
+            this.ctrl.OnEvent(this.event, (*) => this.callback())
         }
     }
 
