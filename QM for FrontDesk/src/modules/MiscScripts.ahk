@@ -7,39 +7,48 @@ class MiscScripts {
     static description := "杂项辅助脚本集（Billing、入Deposit等）"
     static popupTitle := "Misc Scripts"
     static pwd := ""
+    static paymentType := Map(
+        9002, "9002 - Bank Transfer"
+        9132, "9132 - Alipay",
+        9138, "9138 - EFT-Wechat"
+    )
     static state := {
         passwordIsShow: false
     }
 
-    static USE(){
+    static USE() {
         Misc := Gui("+Resize +AlwaysOnTop +MinSize250x300", this.popupTitle)
-        ReactiveText(Misc, "h20", "Opera 密码")
-        this.pwd := ReactiveEdit(Misc, "Password* h20 w100 x+10", "")
-        ReactiveCheckbox(Misc, "h20 x+10", "显示", {event: "Click", callback: MiscScripts.togglePasswordVisibility})
+        addReactiveText(Misc, "h20", "Opera 密码")
+        this.pwd := addReactiveEdit(Misc, "Password* h20 w100 x+10", "")
+        addReactiveCheckBox(Misc, "h20 x+10", "显示", { event: "Click", callback: MiscScripts.togglePasswordVisibility })
 
-        Misc.AddGroupBox("x10 w230 r5", "快捷键")
+        ; persist hotkey shotcuts
+        Misc.AddGroupBox("r5 x10 w230", "快捷键")
         Misc.AddText("xp+10 yp+20", "pw      - 快速输入密码")
         Misc.AddText("yp+20", "Alt+F11 - InHouse 界面打开Billing")
+
+        Misc.AddGroupBox("r5 x10 w230", "录入 Deposit")
+        Misc.AddText("xp+10 yp+20 h20", "Deposit 类型")
+        paymentType := addReactiveComboBox(Misc, "yp+20 w230", this.paymentType)
+        depositBtn := addReactiveButton(Misc, "yp+20 w80", "录入 &Deposit", { event: "Click", callback: () => this.depositEntry(paymentType.getValue())})
 
         Misc.Show()
     }
 
-    static sendPassword(){
-        userPwd := this.pwd.getInnerText()
-        Send userPwd
+    static sendPassword() {
+        Send Format("{Text}{1}", this.pwd.getInnerText())
     }
 
-    static togglePasswordVisibility(){
-        if (MiscScripts.state.passwordIsShow = true){
+    static togglePasswordVisibility() {
+        if (MiscScripts.state.passwordIsShow = true) {
             MiscScripts.pwd.setOptions("+Password*")
         } else {
-            MiscScripts.pwd.setOptions("-Password*") 
+            MiscScripts.pwd.setOptions("-Password*")
         }
         MiscScripts.state.passwordIsShow := !MiscScripts.state.passwordIsShow
     }
 
     static openBilling() {
-        userPwd := this.pwd.getInnerText()
         try {
             WinMaximize "ahk_class SunAwtFrame"
             WinActivate "ahk_class SunAwtFrame"
@@ -51,97 +60,77 @@ class MiscScripts {
         Sleep 100
         Send "!b"
         Sleep 100
-        Send Format("{Text}{1}", userPwd)
+        Send Format("{Text}{1}", this.pwd.getInnerText())
         Sleep 100
         Send "{Enter}"
     }
+
+    static depositEntry(paymentTypeSelected) {
+        try {
+            WinMaximize "ahk_class SunAwtFrame"
+            WinActivate "ahk_class SunAwtFrame"
+        } catch {
+            MsgBox("请先打开Opera PMS")
+            return
+        }
+        amount := InputBox("请输入金额")
+        supplement := InputBox("请输入单号（后四位即可）")
+        if (amount.Result = "Cancel") {
+            utils.cleanReload(winGroup)
+        }
+        if (supplement.Result = "Cancel") {
+            utils.cleanReload(winGroup)
+        }
+        Sleep 500
+        Send "!t"
+        MouseMove 710, 378
+        Sleep 500
+        Click 1
+        Sleep 500
+        Send "!p"
+        Sleep 200
+        MouseMove 584, 446
+        Sleep 300
+        Send "{BackSpace}"
+        Sleep 100
+        Send Format("{Text}{1}", this.pwd.getInnerText())
+        Sleep 200
+        MouseMove 707, 397
+        Sleep 500
+        Send "{Enter}"
+        Sleep 100
+        Send Format("{Text}{1}", paymentTypeSelected)
+        Sleep 200
+        MouseMove 944, 387
+        Sleep 450
+        Send "{Tab}"
+        Sleep 200
+        Send "{Tab}"
+        Sleep 200
+        Send Format("{Text}{1}", amount.Value)
+        Sleep 200
+        MouseMove 577, 326
+        Sleep 100
+        Send "{Tab}"
+        Sleep 100
+        Send Format("{Text}{1}", supplement.Value)
+        Sleep 100
+        MouseMove 596, 421
+        Sleep 500
+        Send "!o"
+        Sleep 300
+        Send "{Escape}"
+        Sleep 200
+        Send "{Escape}"
+        Sleep 200
+        Send "{Escape}"
+        Sleep 200
+        Send "!c"
+        Sleep 200
+        Send "!c"
+        Sleep 200
+    }
 }
-
-; funcs
-; openBilling() {
-;     try {
-;         WinMaximize "ahk_class SunAwtFrame"
-;         WinActivate "ahk_class SunAwtFrame"
-;     } catch {
-;         MsgBox("请先打开Opera PMS")
-;         return
-;     }
-;     Send "!t"
-;     Sleep 100
-;     Send "!b"
-;     Sleep 100
-;     Send Format("{Text}{1}", pwd)
-;     Sleep 100
-;     Send "{Enter}"
-; }
-
-; deposit(paymentCode) {
-
-;     try {
-;         WinMaximize "ahk_class SunAwtFrame"
-;         WinActivate "ahk_class SunAwtFrame"
-;     } catch {
-;         MsgBox("请先打开Opera PMS")
-;         return
-;     }
-;     A_Clipboard := paymentCode
-;     amount := InputBox("请输入金额")
-;     supplement := InputBox("请输入单号（后四位即可）")
-;     if (amount.Result = "Cancel") {
-;         cleanReload()
-;     }
-;     if (supplement.Result = "Cancel") {
-;         cleanReload()
-;     }
-;     Sleep 500
-;     Send "!t"
-;     MouseMove 710, 378
-;     Sleep 500
-;     Click 1
-;     Sleep 500
-;     Send "!p"
-;     Sleep 200
-;     MouseMove 584, 446
-;     Sleep 300
-;     Send "{BackSpace}"
-;     Sleep 100
-;     Send Format("{Text}{1}", pwd)
-;     Sleep 200
-;     MouseMove 707, 397
-;     Sleep 500
-;     Send "{Enter}"
-;     Sleep 100
-;     Send "^v"
-;     Sleep 200
-;     MouseMove 944, 387
-;     Sleep 450
-;     Send "{Tab}"
-;     Sleep 200
-;     Send "{Tab}"
-;     Sleep 200
-;     Send Format("{Text}{1}", amount.Value)
-;     Sleep 200
-;     MouseMove 577, 326
-;     Sleep 100
-;     Send "{Tab}"
-;     Sleep 100
-;     Send Format("{Text}{1}", supplement.Value)
-;     Sleep 100
-;     MouseMove 596, 421
-;     Sleep 500
-;     Send "!o"
-;     Sleep 300
-;     Send "{Escape}"
-;     Sleep 200
-;     Send "{Escape}"
-;     Sleep 200
-;     Send "{Escape}"
-;     Sleep 200
-;     Send "!c"
-;     Sleep 200
-;     Send "!c"
-;     Sleep 200
-; }
 
 ; blockBilling() {
 ;     try {
@@ -227,7 +216,7 @@ class MiscScripts {
 
 
 ; ########################
-cleanReload(quit := 0){
+cleanReload(quit := 0) {
     ; Windows set default
     if (WinExist("ahk_class SunAwtFrame")) {
         WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
@@ -254,27 +243,27 @@ quitApp() {
 }
 
 ; hotstrings setup
-::rrr::{
+::rrr:: {
     ; TrayTip "Reloaded"
     ; cleanReload()
 }
-::blk::{
+::blk:: {
     ; blockBilling()
 }
-::quit::{
+::quit:: {
     ; quitApp()
 }
-::agd::{
+::agd:: {
     ; agoda8888()
 }
-::pw::{
+::pw:: {
     ; Send Format("{Text}{1}", pwd)
 }
 
 ; hotkeys setup
 ; #Hotif WinExist(MiscScripts.popupTitle)
-::pw::{
+::pw:: {
     MiscScripts.sendPassword()
 }
-!F11::MiscScripts.openBilling()
+!F11:: MiscScripts.openBilling()
 ; #F11::deposit("9132")
