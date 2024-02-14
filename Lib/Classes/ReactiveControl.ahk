@@ -31,39 +31,56 @@ class ReactiveControl {
     }
 }
 
-class ReactiveButton extends ReactiveControl {
+class addReactiveButton extends ReactiveControl {
     __New(GuiObject, options, innerText, event := 0) {
         super.__New("Button", GuiObject, options, innerText, event)
     }
 }
 
-class ReactiveEdit extends ReactiveControl {
+class addReactiveEdit extends ReactiveControl {
     __New(GuiObject, options, innerText, event := 0) {
         super.__New("Edit", GuiObject, options, innerText, event)
     }
 }
 
-class ReactiveCheckbox extends ReactiveControl {
+class addReactiveCheckBox extends ReactiveControl {
     __New(GuiObject, options, innerText, event := 0) {
         super.__New("CheckBox", GuiObject, options, innerText, event)
     }
 
-    getValue(){
-    	return this.ctrl.Value
+    getValue() {
+        return this.ctrl.Value
     }
 
-    setValue(newValue){
-    	this.ctrl.Value := newValue
+    setValue(newValue) {
+        this.ctrl.Value := newValue
     }
 }
 
-class ReactiveText extends ReactiveControl {
+class addReactiveComboBox extends ReactiveControl {
+    __New(GuiObject, options, items, event := 0) {
+        this.items := items
+        this.vals := []
+        this.texts := []
+        for val, text in items {
+            this.vals.Push(val)
+            this.texts.Push(text)
+        }
+        super.__New("ComboBox", GuiObject, options, this.texts, event)
+    }
+
+    getValue(){
+        return this.vals[this.ctrl.Value]
+    }
+}
+
+class addReactiveText extends ReactiveControl {
     __New(GuiObject, options, innerText, event := 0) {
         super.__New("Text", GuiObject, options, innerText, event)
     }
 }
 
-class ReactiveRadio extends ReactiveControl {
+class addReactiveRadio extends ReactiveControl {
     __New(GuiObject, options, innerText, event := 0) {
         super.__New("Radio", GuiObject, options, innerText, event)
     }
