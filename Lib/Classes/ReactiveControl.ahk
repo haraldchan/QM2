@@ -1,3 +1,17 @@
+class ReactiveSignal {
+    __New(val) {
+        this.val := val
+    }
+
+    get(){
+        return this.val
+    }
+
+    set(newSignalValue){
+        this.val := newSignalValue
+    }
+}
+
 class ReactiveControl {
     __New(controlType, GuiObject, options, innerText, event := 0, bind := 0) {
         this.GuiObject := GuiObject

@@ -12,9 +12,8 @@ class MiscScripts {
         9132, "9132 - Alipay",
         9138, "9138 - EFT-Wechat"
     )
-    static state := {
-        passwordIsShow: false
-    }
+
+    static passwordIsShow := ReactiveSignal(false)
 
     static USE() {
         Misc := Gui("+Resize +AlwaysOnTop +MinSize250x300", this.popupTitle)
@@ -40,7 +39,7 @@ class MiscScripts {
     }
 
     static togglePasswordVisibility() {
-        if (MiscScripts.state.passwordIsShow = true) {
+        if (MiscScripts.passwordIsShow.get() = true) {
             MiscScripts.pwd.setOptions("+Password*")
         } else {
             MiscScripts.pwd.setOptions("-Password*")
@@ -214,34 +213,6 @@ class MiscScripts {
 ;     MsgBox("DONE.","Agoda Transfer", "T1 4096")
 ; }
 
-
-; ########################
-cleanReload(quit := 0) {
-    ; Windows set default
-    if (WinExist("ahk_class SunAwtFrame")) {
-        WinSetAlwaysOnTop false, "ahk_class SunAwtFrame"
-    }
-    ; Key/Mouse state set default
-    BlockInput false
-    SetCapsLockState false
-    CoordMode "Mouse", "Screen"
-    ; Excel Quit
-    ComObject("Excel.Application").Quit()
-    if (quit = "quit") {
-        ExitApp
-    }
-    Reload
-}
-
-quitApp() {
-    quitConfirm := MsgBox("是否确定退出Private? ", , "OKCancel 4096")
-    if (quitConfirm = "OK") {
-        cleanReload("quit")
-    } else {
-        cleanReload()
-    }
-}
-
 ; hotstrings setup
 ::rrr:: {
     ; TrayTip "Reloaded"
@@ -256,14 +227,9 @@ quitApp() {
 ::agd:: {
     ; agoda8888()
 }
-::pw:: {
-    ; Send Format("{Text}{1}", pwd)
-}
-
 ; hotkeys setup
 ; #Hotif WinExist(MiscScripts.popupTitle)
 ::pw:: {
     MiscScripts.sendPassword()
 }
 !F11:: MiscScripts.openBilling()
-; #F11::deposit("9132")
