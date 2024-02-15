@@ -3,12 +3,17 @@ class ReactiveSignal {
         this.val := val
     }
 
-    get(){
+    get() {
         return this.val
     }
 
-    set(newSignalValue){
-        this.val := newSignalValue
+    set(newSignalValue) {
+        if (newSignalValue == this.val) {
+            return
+        }
+        this.val := newSignalValue is Func
+            ? newSignalValue(this.val)
+            : newSignalValue
     }
 }
 
@@ -37,7 +42,9 @@ class ReactiveControl {
     }
 
     setInnerText(newInnerText) {
-        this.ctrl.Text := newInnerText
+        this.ctrl.Text := newInnerText is Func
+            ? newInnerText(this.ctrl.Text)
+            : newInnerText
     }
 
     setEvent(newEvent) {
@@ -67,7 +74,9 @@ class addReactiveCheckBox extends ReactiveControl {
     }
 
     setValue(newValue) {
-        this.ctrl.Value := newValue
+        this.ctrl.Value := newValue is Func
+            ? newValue(this.ctrl.Value)
+            : newValue
     }
 }
 
@@ -83,7 +92,7 @@ class addReactiveComboBox extends ReactiveControl {
         super.__New("ComboBox", GuiObject, options, this.texts, event)
     }
 
-    getValue(){
+    getValue() {
         return this.vals[this.ctrl.Value]
     }
 }
