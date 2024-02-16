@@ -9,7 +9,7 @@
 #Include "./src/modules/GroupProfilesModify.ahk"
 #Include "./src/modules/PsbBatchCO.ahk"
 #Include "./src/modules/Phrases.ahk"
-#Include src/modules/CashieringScripts.ahk
+#Include "./src/modules/CashieringScripts.ahk"
 
 #SingleInstance Force
 TraySetIcon A_ScriptDir . "\src\assets\QMTray.ico"
@@ -24,12 +24,8 @@ scriptHost := SubStr(A_ScriptDir, 1, InStr(A_ScriptDir, "\", , -1, -1) - 1)
 config := scriptHost . "\Lib\QM for FrontDesk\config.ini"
 winGroup := ["ahk_class SunAwtFrame"]
 popupTitle := "QM for FrontDesk " . version
-; cityLedgerOn := true
-; desktopMode := false
-state := {
-    cityLedgerOn: false,
-    desktopMode: false,
-}
+cityLedgerOn := true
+desktopMode := false
 
 ; script classes
 scriptIndex := [
@@ -177,12 +173,11 @@ openXlFile(file, *) {
 }
 
 toggleDesktopMode(*) {
-    ; global desktopMode := !desktopMode
-    state.desktopMode := !state.desktopMode
+    global desktopMode := !desktopMode
     loop xldp.Length {
-        xldp[A_Index][2].Enabled := !state.desktopMode
-        xldp[A_Index][3].Enabled := !state.desktopMode
-        xldp[A_Index][4].Enabled := !state.desktopMode
+        xldp[A_Index][2].Enabled := !desktopMode
+        xldp[A_Index][3].Enabled := !desktopMode
+        xldp[A_Index][4].Enabled := !desktopMode
     }
 }
 
@@ -198,7 +193,7 @@ runSelectedScript(*) {
         loop xldp.Length {
             if (xldp[A_Index][1].Value = 1) {
                 QM.Hide()
-                scriptIndex[2][A_Index].USE(state.desktopMode)
+                scriptIndex[2][A_Index].USE(desktopMode)
             }
         }
     } else {
@@ -213,11 +208,21 @@ F9:: {
  } 
 F12:: utils.cleanReload(winGroup)
 
-#HotIf state.cityLedgerOn
+#HotIf cityLedgerOn
 ^o::CityLedgerCo.USE()
 MButton::CityLedgerCo.USE()
-#Hotif WinActive(popupTitle)
-Esc:: {
-    QM.Hide()
+
+#HotIf WinActive(popupTitle)
+Esc:: QM.Hide()
+
+#HotIf WinExist(CashieringScripts.popupTitle)
+::pw:: {
+    CashieringScripts.sendPassword()
 }
-Enter:: runSelectedScript()
+::agd::{
+    CashieringScripts.agodaBalanceTransfer()
+}
+::blk::{
+    CashieringScripts.blockPmBilling()
+}
+!F11:: CashieringScripts.openBilling()
