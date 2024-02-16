@@ -9,7 +9,7 @@
 #Include "./src/modules/GroupProfilesModify.ahk"
 #Include "./src/modules/PsbBatchCO.ahk"
 #Include "./src/modules/Phrases.ahk"
-#Include src/modules/MiscScripts.ahk
+#Include src/modules/CashieringScripts.ahk
 
 #SingleInstance Force
 TraySetIcon A_ScriptDir . "\src\assets\QMTray.ico"
@@ -39,7 +39,7 @@ scriptIndex := [
         GroupShare,
         DoNotMove,
         ReportMaster,
-        MiscScripts
+        CashieringScripts
     ],
     [
         GroupKeys,
