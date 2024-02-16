@@ -1,28 +1,20 @@
 class ReactiveSignal {
     __New(val) {
-        this.subscriberEffects := []
         this.val := val
     }
 
-    get(effect := 0) {
-        if (effect != 0) {
-            this.subscribers.Push(effect)
-        }
+    get() {
         return this.val
     }
 
     set(newSignalValue) {
-        if (newSignalValue == this.val) {
+        if (newSignalValue = this.val) {
             return
         }
         ; update val with new value
         this.val := newSignalValue is Func
             ? newSignalValue(this.val)
             : newSignalValue
-        ; uodate all with subscribers with effects
-        for effect in this.subscriberEffects {
-            effect()
-        }
     }
 }
 
@@ -38,7 +30,7 @@ class ReactiveControl {
         if (event != 0) {
             this.event := event.event
             this.callback := event.callback
-            this.ctrl.OnEvent(this.event, (*) => this.callback())
+            this.ctrl.OnEvent(this.event, (*) => event.callback())
         }
     }
 
@@ -59,6 +51,8 @@ class ReactiveControl {
     setEvent(newEvent) {
         this.ctrl.OnEvent(newEvent.event, (*) => newEvent.callback())
     }
+
+
 }
 
 class addReactiveButton extends ReactiveControl {
