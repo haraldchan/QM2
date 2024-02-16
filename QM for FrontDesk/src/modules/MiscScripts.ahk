@@ -1,5 +1,5 @@
 #Include "../../../Lib/Classes/utils.ahk"
-#Include "../../../Lib/Classes/ReactiveControl.ahk"
+#Include "../../../Lib/Classes/Reactive.ahk"
 CoordMode "Mouse", "Screen"
 TrayTip "Private running"
 
