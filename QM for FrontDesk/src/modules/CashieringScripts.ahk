@@ -6,20 +6,22 @@ TrayTip "Private running"
 class CashieringScripts {
     static description := "入账关联 - 快速打开Billing、入Deposit等）"
     static popupTitle := "Cashiering Scripts"
-    static pwd := ""
     static paymentType := Map(
         9002, "9002 - Bank Transfer",
         9132, "9132 - Alipay",
         9138, "9138 - EFT-Wechat",
         9140, "9140 - EFT-Alipay",
     )
-    static passwordIsShow := ReactiveSignal(false)
+    static showPassword := ReactiveSignal(false)
     static paymentTypeSelected := ReactiveSignal(9132)
+    static userPassword := ReactiveSignal("")
 
     static USE() {
         CS := Gui("+AlwaysOnTop +MinSize250x300", this.popupTitle)
         addReactiveText(CS, "h20", "Opera 密码")
         this.pwd := addReactiveEdit(CS, "Password* h20 w110 x+10", "")
+        this.pwd.setEvent({ event: "Change", callback: (*) => this.userPassword.set(this.pwd.getInnerText())})
+
         addReactiveCheckBox(CS, "h20 x+10", "显示", { event: "Click", callback: CashieringScripts.togglePasswordVisibility })
 
         ; persist hotkey shotcuts
@@ -32,22 +34,22 @@ class CashieringScripts {
         CS.AddGroupBox("r4 x10 y+20 w260", " Deposit ")
         CS.AddText("xp+10 yp+20 h20", "支付类型")
         paymentType := addReactiveComboBox(CS, "yp+20 w200 Choose2", this.paymentType)
-        depositBtn := addReactiveButton(CS, "y+10 w100", "录入 &Deposit", { event: "Click", callback: (*) => this.depositEntry(paymentType.getValue())})
+        depositBtn := addReactiveButton(CS, "y+10 w100", "录入 &Deposit", { event: "Click", callback: (*) => this.depositEntry(paymentType.getValue()) })
 
         CS.Show()
     }
 
     static sendPassword() {
-        Send Format("{Text}{1}", this.pwd.getInnerText())
+        Send Format("{Text}{1}", this.userPassword.get())
     }
 
     static togglePasswordVisibility() {
-        if (CashieringScripts.passwordIsShow.get() = true) {
+        if (CashieringScripts.showPassword.get() = true) {
             CashieringScripts.pwd.setOptions("+Password*")
         } else {
             CashieringScripts.pwd.setOptions("-Password*")
         }
-        CashieringScripts.passwordIsShow.set(!CashieringScripts.passwordIsShow.get())
+        CashieringScripts.showPassword.set(!CashieringScripts.showPassword.get())
     }
 
     static openBilling() {
@@ -62,7 +64,7 @@ class CashieringScripts {
         Sleep 100
         Send "!b"
         Sleep 100
-        Send Format("{Text}{1}", this.pwd.getInnerText())
+        Send Format("{Text}{1}", this.userPassword.get())
         Sleep 100
         Send "{Enter}"
     }
@@ -95,7 +97,7 @@ class CashieringScripts {
         Sleep 300
         Send "{BackSpace}"
         Sleep 100
-        Send Format("{Text}{1}", this.pwd.getInnerText())
+        Send Format("{Text}{1}", this.userPassword.get())
         Sleep 200
         MouseMove 707, 397
         Sleep 500
@@ -133,7 +135,7 @@ class CashieringScripts {
         Sleep 200
     }
 
-    static agodaBalanceTransfer(){
+    static agodaBalanceTransfer() {
         balance := InputBox("请输入账单金额")
         orderId := InputBox("请输入单号")
         WinActivate "ahk_class SunAwtFrame"
@@ -170,10 +172,10 @@ class CashieringScripts {
         Send "!o"
         Sleep 100
         Send "!c"
-        MsgBox("DONE.","Agoda Transfer", "T1 4096")
+        MsgBox("DONE.", "Agoda Transfer", "T1 4096")
     }
 
-    static blockPmBilling(){
+    static blockPmBilling() {
         try {
             WinMaximize "ahk_class SunAwtFrame"
             WinActivate "ahk_class SunAwtFrame"
@@ -187,7 +189,7 @@ class CashieringScripts {
         Sleep 100
         Send "!a"
         Sleep 100
-        loop 6{
+        loop 6 {
             Send "{Tab}"
             Sleep 100
         }
@@ -211,8 +213,8 @@ class CashieringScripts {
         Sleep 100
         Send "!b"
         Sleep 100
-        Send Format("{Text}{1}", this.pwd.getInnerText())
+        Send Format("{Text}{1}", this.userPassword.get())
         Sleep 100
         Send "{Enter}"
-    }   
+    }
 }
