@@ -4,35 +4,37 @@ CoordMode "Mouse", "Screen"
 TrayTip "Private running"
 
 class CashieringScripts {
-    static description := "杂项辅助脚本集（快速打开Billing、入Deposit等）"
+    static description := "入账关联 - 快速打开Billing、入Deposit等）"
     static popupTitle := "Cashiering Scripts"
     static pwd := ""
     static paymentType := Map(
         9002, "9002 - Bank Transfer",
         9132, "9132 - Alipay",
-        9138, "9138 - EFT-Wechat"
+        9138, "9138 - EFT-Wechat",
+        9140, "9140 - EFT-Alipay",
     )
     static passwordIsShow := ReactiveSignal(false)
+    static paymentTypeSelected := ReactiveSignal(9132)
 
     static USE() {
-        Misc := Gui("+AlwaysOnTop +MinSize250x300", this.popupTitle)
-        addReactiveText(Misc, "h20", "Opera 密码")
-        this.pwd := addReactiveEdit(Misc, "Password* h20 w110 x+10", "")
-        addReactiveCheckBox(Misc, "h20 x+10", "显示", { event: "Click", callback: CashieringScripts.togglePasswordVisibility })
+        CS := Gui("+AlwaysOnTop +MinSize250x300", this.popupTitle)
+        addReactiveText(CS, "h20", "Opera 密码")
+        this.pwd := addReactiveEdit(CS, "Password* h20 w110 x+10", "")
+        addReactiveCheckBox(CS, "h20 x+10", "显示", { event: "Click", callback: CashieringScripts.togglePasswordVisibility })
 
         ; persist hotkey shotcuts
-        Misc.AddGroupBox("r4 x10 w240", "快捷键")
-        Misc.AddText("xp+10 yp+20", "pw      - 快速输入密码")
-        Misc.AddText("yp+20", "agd     - 生成Agoda BalanceTransfer")
-        Misc.AddText("yp+20", "blk     - Block 界面打开PM (主管权限)")
-        Misc.AddText("yp+20", "Alt+F11 - InHouse 界面打开Billing")
+        CS.AddGroupBox("r4 x10 w260", " 快捷键 ")
+        CS.AddText("xp+10 yp+20", "输入:pw   - 快速输入密码")
+        CS.AddText("yp+20", "输入:agd  - 生成Agoda BalanceTransfer")
+        CS.AddText("yp+20", "输入:blk  - Blocks 界面打开PM (主管权限)")
+        CS.AddText("yp+20", "Alt+F11   - InHouse 界面打开Billing")
 
-        Misc.AddGroupBox("r4 x10 y+20 w240", "Deposit")
-        Misc.AddText("xp+10 yp+20 h20", "支付类型")
-        paymentType := addReactiveComboBox(Misc, "yp+20 w200 Choose2", this.paymentType)
-        depositBtn := addReactiveButton(Misc, "y+10 w80", "录入 &Deposit", { event: "Click", callback: (*) => this.depositEntry(paymentType.getValue())})
+        CS.AddGroupBox("r4 x10 y+20 w260", " Deposit ")
+        CS.AddText("xp+10 yp+20 h20", "支付类型")
+        paymentType := addReactiveComboBox(CS, "yp+20 w200 Choose2", this.paymentType)
+        depositBtn := addReactiveButton(CS, "y+10 w100", "录入 &Deposit", { event: "Click", callback: (*) => this.depositEntry(paymentType.getValue())})
 
-        Misc.Show()
+        CS.Show()
     }
 
     static sendPassword() {
@@ -212,17 +214,5 @@ class CashieringScripts {
         Send Format("{Text}{1}", this.pwd.getInnerText())
         Sleep 100
         Send "{Enter}"
-    }
-    
+    }   
 }
-
-::pw:: {
-    CashieringScripts.sendPassword()
-}
-::agd::{
-    CashieringScripts.agodaBalanceTransfer()
-}
-::blk::{
-    CashieringScripts.blockPmBilling()
-}
-!F11:: CashieringScripts.openBilling()
