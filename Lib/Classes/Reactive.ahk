@@ -1,9 +1,13 @@
 class ReactiveSignal {
     __New(val) {
+        this.subscriberEffects := []
         this.val := val
     }
 
-    get() {
+    get(effect := 0) {
+        if (effect != 0) {
+            this.subscribers.Push(effect)
+        }
         return this.val
     }
 
@@ -11,14 +15,19 @@ class ReactiveSignal {
         if (newSignalValue == this.val) {
             return
         }
+        ; update val with new value
         this.val := newSignalValue is Func
             ? newSignalValue(this.val)
             : newSignalValue
+        ; uodate all with subscribers with effects
+        for effect in this.subscriberEffects {
+            effect()
+        }
     }
 }
 
 class ReactiveControl {
-    __New(controlType, GuiObject, options, innerText, event := 0, bind := 0) {
+    __New(controlType, GuiObject, options, innerText, event := 0) {
         this.GuiObject := GuiObject
         this.options := options
         this.innerTextbel := innerText
