@@ -3,8 +3,12 @@ class ReactiveSignal {
         this.val := val
     }
 
-    get() {
-        return this.val
+    get(deriveFunction := 0) {
+        if (deriveFunction != 0 && deriveFunction is Func) {
+            return deriveFunction(this.val)
+        } else {
+            return this.val
+        }
     }
 
     set(newSignalValue) {
