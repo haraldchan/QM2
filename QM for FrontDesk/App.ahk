@@ -226,3 +226,4 @@ Esc:: QM.Hide()
     CashieringScripts.blockPmBilling()
 }
 !F11:: CashieringScripts.openBilling()
+#F11:: CashieringScripts.depositEntry()

@@ -6,7 +6,7 @@ TrayTip "Private running"
 class CashieringScripts {
     static description := "入账关联 - 快速打开Billing、入Deposit等）"
     static popupTitle := "Cashiering Scripts"
-    static paymentType := Map(
+    static paymentTypeMap := Map(
         9002, "9002 - Bank Transfer",
         9132, "9132 - Alipay",
         9138, "9138 - EFT-Wechat",
@@ -20,7 +20,7 @@ class CashieringScripts {
         CS := Gui("+AlwaysOnTop +MinSize250x300", this.popupTitle)
         addReactiveText(CS, "h20", "Opera 密码")
         this.pwd := addReactiveEdit(CS, "Password* h20 w110 x+10", "")
-        this.pwd.setEvent({ event: "Change", callback: (*) => this.userPassword.set(this.pwd.getInnerText())})
+        this.pwd.setEvent({ event: "Change", callback: (*) => this.userPassword.set(this.pwd.getInnerText()) })
 
         addReactiveCheckBox(CS, "h20 x+10", "显示", { event: "Click", callback: CashieringScripts.togglePasswordVisibility })
 
@@ -33,8 +33,9 @@ class CashieringScripts {
 
         CS.AddGroupBox("r4 x10 y+20 w260", " Deposit ")
         CS.AddText("xp+10 yp+20 h20", "支付类型")
-        paymentType := addReactiveComboBox(CS, "yp+20 w200 Choose2", this.paymentType)
-        depositBtn := addReactiveButton(CS, "y+10 w100", "录入 &Deposit", { event: "Click", callback: (*) => this.depositEntry(paymentType.getValue()) })
+        paymentType := addReactiveComboBox(CS, "yp+20 w200 Choose2", this.paymentTypeMap)
+        paymentType.setEvent({ event: "Change", callback: (*) => this.paymentTypeSelected.set(paymentType.getValue()) })
+        depositBtn := addReactiveButton(CS, "y+10 w100", "录入 &Deposit", { event: "Click", callback: this.depositEntry })
 
         CS.Show()
     }
@@ -69,7 +70,7 @@ class CashieringScripts {
         Send "{Enter}"
     }
 
-    static depositEntry(paymentTypeSelected) {
+    static depositEntry() {
         try {
             WinMaximize "ahk_class SunAwtFrame"
             WinActivate "ahk_class SunAwtFrame"
@@ -103,7 +104,7 @@ class CashieringScripts {
         Sleep 500
         Send "{Enter}"
         Sleep 100
-        Send Format("{Text}{1}", paymentTypeSelected)
+        Send Format("{Text}{1}", this.paymentTypeSelected)
         Sleep 200
         MouseMove 944, 387
         Sleep 450
