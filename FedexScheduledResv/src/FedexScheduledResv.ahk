@@ -46,6 +46,7 @@ class FedexScheduledReservations {
 
 	static writeReservations(inboundflights) {
 		WinSetAlwaysOnTop true, "ahk_class SunAwtFrame"
+		WinMaximize "ahk_class SunAwtFrame"
 		BlockInput true
 
 		for line in inboundflights {
