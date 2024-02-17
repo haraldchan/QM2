@@ -59,7 +59,7 @@ class ResvHandler {
             "roomRates", "房价构成",
             "bbf", "早餐构成",
             "payment", "支付方式",
-            " invoiceMemo", "发票信息",
+            "invoiceMemo", "发票信息",
             "contacts", "联系方式",
             "creditCardNumbers", "虚拟卡号",
             "creditCardExp", "虚拟卡EXP",
