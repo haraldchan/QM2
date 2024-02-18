@@ -47,19 +47,19 @@ class ResvHandler {
 
     static showCurrentResvDetails(resvInfoObj, App) {
         keyDesc := Map(
-            "identifier", "标识",
+            "identifier", "插件标识",
             "agent", "订单来源",
-            "orderId", " 订单号",
+            "orderId", "订单号",
             "guestNames", "住客姓名",
             "roomType", "预订房型",
-            "roomQty", " 订房数量",
+            "roomQty", "订房数量",
             "remarks", "备注信息",
             "ciDate", "入住日期",
             "coDate", "退房日期",
             "roomRates", "房价构成",
             "bbf", "早餐构成",
             "payment", "支付方式",
-            " invoiceMemo", "发票信息",
+            "invoiceMemo", "发票信息",
             "contacts", "联系方式",
             "creditCardNumbers", "虚拟卡号",
             "creditCardExp", "虚拟卡EXP",
@@ -69,14 +69,14 @@ class ResvHandler {
             "ETA", "入住时间",
             "ETD", "退房时间",
             "stayHours", "在住时长",
-            "daysActual", " 计费天数",
+            "daysActual", "计费天数",
             "crewNames", "机组姓名",
             "tripNum", "Trip No.",
             "tracking", "Tracking 单号",
         )
 
         ResvInfo := Gui("", "Reservation Handler")
-        LV := ResvInfo.AddListView("Checked h300", ["字段", "信息详情"])
+        LV := ResvInfo.AddListView("h300", ["字段", "信息详情"])
 
         ResvDetails := []
         for k, v in resvInfoObj {
@@ -97,15 +97,14 @@ class ResvHandler {
             }
 
             ResvDetails.Push(
-                LV.Add("Check", keyDesc[k], outputVal)
+                LV.Add(, keyDesc[k], outputVal)
             )
         }
 
         LV.ModifyCol(1, 100)
 
         footer := [
-            ResvInfo.AddCheckbox("vcheckAllBtn Checked h25 y+10", "全选"),
-            ResvInfo.AddButton("vstartBtn Default x+10", "转到 Opera"),
+            ResvInfo.AddButton("vstartBtn Default y+10", "转到 Opera"),
         ]
 
         ResvInfo.Show()
@@ -113,26 +112,6 @@ class ResvHandler {
         checkAllBtn := interface.getCtrlByName("checkAllBtn", footer)
         startBtn := interface.getCtrlByName("startBtn", footer)
         startBtn.OnEvent("Click", toOpera)
-        checkAllBtn.OnEvent("Click", setCheckAll)
-        LV.OnEvent("ItemCheck", checkIsCheckedAll)
-
-        state := {
-            isCheckedAll: true
-        }
-
-        checkIsCheckedAll(*) {
-            checkedRows := interface.getCheckedRowNumbers(LV)
-            checkAllBtn.Value := (checkedRows.Length = ResvDetails.Length)
-            state.isCheckedAll := checkAllBtn.Value
-        }
-
-        setCheckAll(*) {
-            state.isCheckedAll := !state.isCheckedAll
-            checkStatus := state.isCheckedAll = true
-                ? "Check"
-                : "-Check"
-            LV.Modify(0, checkStatus)
-        }
 
         toOpera(*) {
             try {
