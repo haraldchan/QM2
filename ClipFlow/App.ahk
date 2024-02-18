@@ -1,24 +1,27 @@
 #Include "../Lib/Classes/utils.ahk"
+#Include "../Lib/Classes/Reactive.ahk"
 #Include "../Lib/Classes/_JXON.ahk"
 #Include "./src/modules/ProfileModify.ahk"
 #Include "./src/modules/InvoiceWechat.ahk"
 #Include "./src/modules/ShareClip.ahk"
 #Include "./src/modules/ResvHandler.ahk"
+#Include ../QM for FrontDesk/App.ahk
 
 #SingleInstance Force
 CoordMode "Mouse", "Screen"
 TraySetIcon A_ScriptDir . "\src\assets\CFTray.ico"
 OnClipboardChange addToHistory
+
+version := "1.2.0"
+popupTitle := "ClipFlow " . version
+scriptHost := SubStr(A_ScriptDir, 1, InStr(A_ScriptDir, "\", , -1, -1) - 1)
 modules := [
     ProfileModify,
-    ; InvoiceWechat, 
-    ; ShareClip,  
+    InvoiceWechat,
+    ShareClip,
     ResvHandler,
 ]
 winGroup := ["ahk_class SunAwtFrame", "旅客信息"]
-version := "1.2.0"
-scriptHost := SubStr(A_ScriptDir, 1, InStr(A_ScriptDir, "\", , -1, -1) - 1)
-popupTitle := "ClipFlow " . version
 if (!FileExist(A_MyDocuments . "\ClipFlow.ini")) {
     FileCopy scriptHost . "\Lib\ClipFlow\ClipFlow.ini", A_MyDocuments
 }
@@ -27,18 +30,14 @@ Sleep 100
 tabPos := IniRead(store, "App", "tabPos")
 clipHisObj := IniRead(store, "ClipHistory", "clipHisArr")
 clipHisArr := Jxon_Load(&clipHisObj)
-; onTop := false
-state := {
-    onTop: false
-}
-
+onTop := ReactiveSignal(false)
 
 ; GUI template
 ClipFlow := Gui(, popupTitle)
-ClipFlow.OnEvent("Close", (*) => 
+ClipFlow.OnEvent("Close", (*) =>
     IniWrite(1, store, "App", "tabPos")
     utils.quitApp("ClipFlow", popupTitle, winGroup)
-    )
+)
 ClipFlow.AddCheckbox("h25 x15", "保持 ClipFlow 置顶    / 停止脚本: Ctrl+F12").OnEvent("Click", keepOnTop)
 
 tab3 := ClipFlow.AddTab3("w280 x15 " . "Choose" . tabPos, ["Flow Modes", "History", "DevTool"])
@@ -61,14 +60,12 @@ ClipFlow.AddButton("h30 w130", "Clear").OnEvent("Click", clearList)
 ClipFlow.AddButton("h30 w130 x+20", "Refresh").OnEvent("Click", (*) => utils.cleanReload(winGroup))
 
 ClipFlow.Show()
-WinSetAlwaysOnTop state.onTop, popupTitle
 ; }
 
 ; { function scripts
 keepOnTop(*) {
-    ; global onTop := !onTop
-    state.onTop := !state.onTop
-    WinSetAlwaysOnTop state.onTop, popupTitle
+    onTop.set(onTop => !onTop)
+    WinSetAlwaysOnTop onTop.get(), popupTitle
 }
 
 addToHistory(*) {
@@ -84,7 +81,6 @@ addToHistory(*) {
 
 clearList(*) {
     FileDelete(store)
-    ; FileCopy(A_ScriptDir . "\src\lib\ClipFlow.ini", A_MyDocuments)
     FileCopy("../Lib/ClipFlow/ClipFlow.ini", A_MyDocuments)
     utils.cleanReload(winGroup)
 }
@@ -126,11 +122,11 @@ renderHistory() {
     loop clipHisArr.Length {
         tabHistory.Push(
             ClipFlow.AddEdit("x30 h40 w220 y+10 ReadOnly", clipHisArr[A_Index]),
-            ClipFlow.AddButton("x+0 w30 h40","×").OnEvent("Click", delHistoryItem.Bind(A_Index))
+            ClipFlow.AddButton("x+0 w30 h40", "×").OnEvent("Click", delHistoryItem.Bind(A_Index))
         )
     }
 
-    delHistoryItem(index, *){
+    delHistoryItem(index, *) {
         clipHisArr.RemoveAt(index)
         IniWrite(Jxon_Dump(clipHisArr), store, "ClipHistory", "clipHisArr")
         utils.cleanReload(winGroup)

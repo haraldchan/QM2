@@ -1,4 +1,5 @@
 #Include "../Lib/Classes/utils.ahk"
+#Include "../Lib/Classes/Reactive.ahk"
 #Include "./src/modules/CityLedgerCO.ahk"
 #Include "./src/modules/InhShare.ahk"
 #Include "./src/modules/Pbpf.ahk"
@@ -18,17 +19,14 @@ CoordMode "Mouse", "Screen"
 
 ; globals and states
 version := "2.1.0"
-today := FormatTime(A_Now, "yyyyMMdd")
-; scriptHost := "\\10.0.2.13\fd\19-个人文件夹\HC\Software - 软件及脚本\AHK_Scripts\QM2 - Nightly"
-scriptHost := SubStr(A_ScriptDir, 1, InStr(A_ScriptDir, "\", , -1, -1) - 1)
-config := scriptHost . "\Lib\QM for FrontDesk\config.ini"
-winGroup := ["ahk_class SunAwtFrame"]
 popupTitle := "QM for FrontDesk " . version
-cityLedgerOn := true
-desktopMode := false
-
-; script classes
-scriptIndex := [
+today := FormatTime(A_Now, "yyyyMMdd")
+scriptHost := SubStr(A_ScriptDir, 1, InStr(A_ScriptDir, "\", , -1, -1) - 1)
+store := scriptHost . "\Lib\QM for FrontDesk\config.ini"
+winGroup := ["ahk_class SunAwtFrame"]
+cityLedgerPersist := ReactiveSignal(false)
+useDesktopFile := ReactiveSignal(false)
+moduleIndex := [
     [
         InhShare,
         Pbpf,
@@ -69,15 +67,17 @@ F12:       强制停止脚本/重载
 常驻脚本(按下即启动)
 Ctrl+O 或 鼠标中键:    CityLedger挂账
 )")
-QM.AddCheckbox("Checked h25 y+10", "令 CityLedger 挂账保持常驻").OnEvent("Click", cityLedgerKeepAlive)
+QM.AddCheckbox("Checked h25 y+10", "令 CityLedger 挂账保持常驻")
+    .OnEvent("Click", (*) => cityLedgerPersist.set(on => !on))
 
 tab3 := QM.AddTab3("", ["一键运行", "Excel辅助", "常用语句"])
+
 tab3.UseTab(1)
 basic := []
-loop scriptIndex[1].Length {
+loop moduleIndex[1].Length {
     radioStyle := (A_Index = 1) ? "Checked h25" : "h25 y+10"
     basic.Push(
-        QM.AddRadio(radioStyle, scriptIndex[1][A_Index].description),
+        QM.AddRadio(radioStyle, moduleIndex[1][A_Index].description),
     )
 }
 reportMasterInfo := "
@@ -93,16 +93,16 @@ Report Master 常见问题：
 
 3、 重启浏览器以及 QM 2
 )"
-QM.AddText("y+25", reportMasterInfo)
+QM.AddText("y+35", reportMasterInfo)
 
 tab3.UseTab(2)
 xldp := []
-loop scriptIndex[2].length {
+loop moduleIndex[2].length {
     radioStyle := (A_Index = 1) ? "Checked h20 y+10" : "x20 h20 y+10"
     xldp.Push(
         [
-            QM.AddRadio(radioStyle, scriptIndex[2][A_Index].description),
-            QM.AddEdit("h25 w150 x20 y+10", scriptIndex[2][A_Index].path),
+            QM.AddRadio(radioStyle, moduleIndex[2][A_Index].description),
+            QM.AddEdit("h25 w150 x20 y+10", moduleIndex[2][A_Index].path),
             QM.AddButton("h25 w70 x+20", "选择文件"),
             QM.AddButton("h25 w70 x+10", "打开表格"),
         ]
@@ -110,8 +110,8 @@ loop scriptIndex[2].length {
 }
 loop xldp.Length {
     xldp[A_Index][1].OnEvent("Click", singleSelect.Bind(xldp[A_Index][1]))
-    xldp[A_Index][2].OnEvent("LoseFocus", saveXlPath.Bind(scriptIndex[2][A_Index].name, xldp[A_Index][2]))
-    xldp[A_Index][3].OnEvent("Click", getXlPath.Bind(scriptIndex[2][A_Index].name, xldp[A_Index][2]))
+    xldp[A_Index][2].OnEvent("LoseFocus", saveXlPath.Bind(moduleIndex[2][A_Index].name, xldp[A_Index][2]))
+    xldp[A_Index][3].OnEvent("Click", getXlPath.Bind(moduleIndex[2][A_Index].name, xldp[A_Index][2]))
     xldp[A_Index][4].OnEvent("Click", openXlFile.Bind(xldp[A_Index][2].Text))
 }
 QM.AddCheckbox("h25 x20 y+10", "使用桌面文件模式").OnEvent("Click", toggleDesktopMode)
@@ -142,9 +142,6 @@ QM.AddButton("h40 w165 x+18", "隐藏窗口").OnEvent("Click", (*) => QM.Hide())
 ; }
 
 ; { function scripts
-cityLedgerKeepAlive(*) {
-    global cityLedgerOn := !cityLedgerOn
-}
 
 singleSelect(ctrlObj, *) {
     loop xldp.Length {
@@ -154,7 +151,7 @@ singleSelect(ctrlObj, *) {
 }
 
 saveXlPath(script, ctrlObj, *) {
-    IniWrite(ctrlObj.Text, config, script, "xlsPath")
+    IniWrite(ctrlObj.Text, store, script, "xlsPath")
 }
 
 getXlPath(script, ctrlObj, *) {
@@ -165,7 +162,7 @@ getXlPath(script, ctrlObj, *) {
         return
     }
     ctrlObj.Value := selectedFile
-    IniWrite(selectedFile, config, script, "xlsPath")
+    IniWrite(selectedFile, store, script, "xlsPath")
 }
 
 openXlFile(file, *) {
@@ -173,11 +170,11 @@ openXlFile(file, *) {
 }
 
 toggleDesktopMode(*) {
-    global desktopMode := !desktopMode
+    useDesktopFile.set(use => !use)
     loop xldp.Length {
-        xldp[A_Index][2].Enabled := !desktopMode
-        xldp[A_Index][3].Enabled := !desktopMode
-        xldp[A_Index][4].Enabled := !desktopMode
+        xldp[A_Index][2].Enabled := useDesktopFile.get()
+        xldp[A_Index][3].Enabled := useDesktopFile.get()
+        xldp[A_Index][4].Enabled := useDesktopFile.get()
     }
 }
 
@@ -186,14 +183,14 @@ runSelectedScript(*) {
         loop basic.Length {
             if (basic[A_Index].Value = 1) {
                 QM.Hide()
-                scriptIndex[1][A_Index].USE()
+                moduleIndex[1][A_Index].USE()
             }
         }
     } else if (tab3.Value = 2) {
         loop xldp.Length {
             if (xldp[A_Index][1].Value = 1) {
                 QM.Hide()
-                scriptIndex[2][A_Index].USE(desktopMode)
+                moduleIndex[2][A_Index].USE(useDesktopFile.get())
             }
         }
     } else {
@@ -205,12 +202,12 @@ runSelectedScript(*) {
 ; hotkey setup
 F9:: {
     QM.Show()
- } 
+}
 F12:: utils.cleanReload(winGroup)
 
-#HotIf cityLedgerOn
-^o::CityLedgerCo.USE()
-MButton::CityLedgerCo.USE()
+#HotIf cityLedgerPersist.get()
+^o:: CityLedgerCo.USE()
+MButton:: CityLedgerCo.USE()
 
 #HotIf WinActive(popupTitle)
 Esc:: QM.Hide()
@@ -219,10 +216,10 @@ Esc:: QM.Hide()
 ::pw:: {
     CashieringScripts.sendPassword()
 }
-::agd::{
+::agd:: {
     CashieringScripts.agodaBalanceTransfer()
 }
-::blk::{
+::blk:: {
     CashieringScripts.blockPmBilling()
 }
 !F11:: CashieringScripts.openBilling()
