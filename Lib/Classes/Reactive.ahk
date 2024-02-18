@@ -1,6 +1,18 @@
+; class ReactiveUpdater {
+;     static states := []
+;     static subEffects := []
+
+;     static sync(signal, newVal){
+;         for state in this.states {
+;             state[signal] := newVal
+;         }
+;     }
+; }
+
 class ReactiveSignal {
     __New(val) {
         this.val := val
+        ; ReactiveUpdater.states.Push(Map(this, this.val))
     }
 
     get(deriveFunction := 0) {
@@ -19,6 +31,8 @@ class ReactiveSignal {
         this.val := newSignalValue is Func
             ? newSignalValue(this.val)
             : newSignalValue
+        
+        ; ReactiveUpdater.sync(this, this.val)
     }
 }
 
@@ -26,15 +40,14 @@ class ReactiveControl {
     __New(controlType, GuiObject, options, innerText, event := 0) {
         this.GuiObject := GuiObject
         this.options := options
-        this.innerTextbel := innerText
+        this.innerText := innerText
         this.ctrlType := controlType
-        ; event param should be an object like:
-        ; {event: "Click", callback: function}
+        
         this.ctrl := this.GuiObject.Add(this.ctrlType, options, innerText)
         if (event != 0) {
-            this.event := event.event
-            this.callback := event.callback
-            this.ctrl.OnEvent(this.event, (*) => event.callback())
+            this.event := event[1]
+            this.callback := event[2]
+            this.ctrl.OnEvent(this.event, (*) => this.callback())
         }
     }
 
@@ -52,11 +65,23 @@ class ReactiveControl {
             : newInnerText
     }
 
-    setEvent(newEvent) {
-        this.ctrl.OnEvent(newEvent.event, (*) => newEvent.callback())
+    getValue() {
+        return this.ctrl.Value
+    }
+    
+    setValue(newValue) {
+        this.ctrl.Value := newValue is Func
+            ? newValue(this.ctrl.Value)
+            : newValue
     }
 
+    setEvent(event, callback) {
+        this.ctrl.OnEvent(event, (*) => callback())
+    }
 
+    disable(boolean){
+        this.ctrl.Enabled := !boolean
+    }
 }
 
 class addReactiveButton extends ReactiveControl {
@@ -74,16 +99,6 @@ class addReactiveEdit extends ReactiveControl {
 class addReactiveCheckBox extends ReactiveControl {
     __New(GuiObject, options, innerText, event := 0) {
         super.__New("CheckBox", GuiObject, options, innerText, event)
-    }
-
-    getValue() {
-        return this.ctrl.Value
-    }
-
-    setValue(newValue) {
-        this.ctrl.Value := newValue is Func
-            ? newValue(this.ctrl.Value)
-            : newValue
     }
 }
 
