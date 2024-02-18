@@ -20,9 +20,9 @@ class CashieringScripts {
         CS := Gui("+AlwaysOnTop +MinSize250x300", this.popupTitle)
         addReactiveText(CS, "h20", "Opera 密码")
         this.pwd := addReactiveEdit(CS, "Password* h20 w110 x+10", "")
-        this.pwd.setEvent({ event: "Change", callback: (*) => this.userPassword.set(this.pwd.getInnerText()) })
+        this.pwd.setEvent("Change", (*) => this.userPassword.set(this.pwd.getInnerText()))
 
-        addReactiveCheckBox(CS, "h20 x+10", "显示", { event: "Click", callback: CashieringScripts.togglePasswordVisibility })
+        addReactiveCheckBox(CS, "h20 x+10", "显示", ["Click", CashieringScripts.togglePasswordVisibility])
 
         ; persist hotkey shotcuts
         CS.AddGroupBox("r4 x10 w260", " 快捷键 ")
@@ -34,8 +34,8 @@ class CashieringScripts {
         CS.AddGroupBox("r4 x10 y+20 w260", " Deposit ")
         CS.AddText("xp+10 yp+20 h20", "支付类型")
         paymentType := addReactiveComboBox(CS, "yp+20 w200 Choose2", this.paymentTypeMap)
-        paymentType.setEvent({ event: "Change", callback: (*) => this.paymentTypeSelected.set(paymentType.getValue()) })
-        depositBtn := addReactiveButton(CS, "y+10 w100", "录入 &Deposit", { event: "Click", callback: this.depositEntry })
+        paymentType.setEvent("Change", (*) => this.paymentTypeSelected.set(paymentType.getValue()))
+        depositBtn := addReactiveButton(CS, "y+10 w100", "录入 &Deposit", ["Click", this.depositEntry])
 
         CS.Show()
     }
