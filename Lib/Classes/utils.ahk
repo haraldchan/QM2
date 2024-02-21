@@ -41,16 +41,22 @@ class utils {
     }
 }
 
-class json {
-    static fileRead(jsonFile) {
-        json := FileRead(jsonFile)
-        return Jxon_Load(&json)
+;debug: save output log / show msgbox
+class debug {
+    static mb(res) {
+        prefix := res
+        str := Jxon_Dump(res)
+        MsgBox(str, "Debug")
     }
 
-    static fileWrite(newJson, jsonFile) {
-        jsonOrigin := FileRead(jsonFile)
-        FileDelete jsonOrigin
-        FileAppend Jxon_Dump(newJson), jsonFile
+    static log(res) {
+        log := A_MyDocuments . "\" . FormatTime(A_Now, "yyyyMMdd") . "-log.txt" 
+        if (!FileExist(log)) {
+            FileAppend("", log)
+        }
+        sendPrefix := Format("From: {1}, {2} `r`n", A_UserName, FormatTime(A_Now))
+        logText := Jxon_Dump(res)
+        utils.filePrepend(sendPrefix . logText, log)
     }
 }
 
@@ -151,10 +157,10 @@ class interface {
         for item in ctrlArray {
             if (item is Array) {
                 arrElement := item
-                utils.checkType(arrElement, Gui.Control, Format("{1} is not an GUI Contol", arrElement))
+                utils.checkType(arrElement, Gui.Control, "Item is not an GUI Contol")
                 this.getCtrlByName(vName, arrElement)
             }
-            utils.checkType(item, Gui.Control, Format("{1} is not an GUI Contol", item))
+            utils.checkType(item, Gui.Control, "Item is not an GUI Contol")
             if (vName = item.Name) {
                 return item
             }
@@ -170,7 +176,7 @@ class interface {
                 utils.checkType(arrElement, Gui.Control, Format("{1} is not an GUI Contol", arrElement))
                 this.getCtrlByType(ctrlType, arrElement)
             }
-            utils.checkType(item, Gui.Control, Format("{1} is not an GUI Contol", item))
+            utils.checkType(item, Gui.Control, "Item is not an GUI Contol")
             if (ctrlType = item.Type) {
                 return item
             }
@@ -181,12 +187,14 @@ class interface {
         utils.checkType(ctrlArray, Array, "Second parameter is not an Array")
 
         controls := []
+
         for item in ctrlArray {
-            utils.checkType(ctrlArray[A_Index], Gui.Control, Format("{1} is not an GUI Contol", item))
+            utils.checkType(ctrlArray[A_Index], Gui.Control, "Item is not an GUI Contol")
             if (ctrlType = item.Type) {
                 controls.Push(item)
             }
         }
+
         return controls
     }
 
