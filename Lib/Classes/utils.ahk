@@ -56,7 +56,7 @@ class debug {
         }
         sendPrefix := Format("From: {1}, {2} `r`n", A_UserName, FormatTime(A_Now))
         logText := Jxon_Dump(res)
-        utils.filePrepend(sendPrefix . logText, log)
+        utils.filePrepend(sendPrefix . logText . "`r`n`r`n", log)
     }
 }
 
