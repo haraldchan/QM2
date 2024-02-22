@@ -104,12 +104,6 @@ class ReactiveControl {
     }
 
     reformat(text, vals*) {
-        newStr := ""
-        ; reconcat(text, val) {
-        ;     insertIndex := InStr(text, "{{")
-        ;     return Format(SubStr(text, 0, insertIndex) . "{1}" . SubStr(text, insertIndex + 5), val)
-        ; }
-
         reconcat(text, val) {
             lIndex := InStr(text, "{{")
             lPart := SubStr(text, 0, lIndex)
@@ -119,12 +113,11 @@ class ReactiveControl {
 
             return Format(lPart . "{1}" . rPart, val)
         }
-
+        newStr := text
         ; e.g:
         ; 0: "this is a text, val1 is {{ num1 }}, val2 is {{ num2 }}"
         ; 1: "this is a text, val1 is num1, val2 is {{ num2 }}"
         ; 2: "this is a text, val1 is num1, val2 is num2"
-        newStr := text
         loop vals.Length {
             newStr := reconcat(newStr, vals[A_Index])
         }
