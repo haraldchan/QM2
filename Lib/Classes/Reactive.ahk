@@ -44,11 +44,11 @@ class ComputedSignal {
         this.mutation := mutation
         this.val := this.mutation(this.signal.get())
         this.subs := []
-        
+
         signal.addComp(this)
     }
 
-    sync(newVal){
+    sync(newVal) {
         for ctrl in this.subs {
             ctrl.update(newVal)
         }
@@ -58,9 +58,6 @@ class ComputedSignal {
         this.subs.Push(controlInstance)
     }
 }
-
-
-
 
 class ReactiveControl {
     __New(controlType, depend, GuiObject, options, innerText, event := 0) {
@@ -100,10 +97,23 @@ class ReactiveControl {
 
     update(newValue) {
         if (this.ctrl is Gui.Text || this.ctrl is Gui.Button) {
-            this.ctrl.Text := newValue
+            this.ctrl.Text := this.reformat(this.innerText, newValue)
         } else if (this.ctrl is Gui.Edit) {
-            this.ctrl.Value := newValue
+            this.ctrl.Value := this.reformat(this.innerText, newValue)
         }
+    }
+
+    reformat(text, vals*) {
+        newStr := ""
+        reconcat(text, val) {
+            insertIndex := InStr(text, "{{")
+            return Format(SubStr(text, 0, insertIndex) . "{1}" . SubStr(text, insertIndex + 5), val)
+        }
+
+        loop vals.Length {
+            newStr := reconcat(text, vals[A_Index])
+        }
+        return newStr
     }
 }
 
