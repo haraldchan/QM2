@@ -2,7 +2,7 @@ class ReactiveSignal {
     __New(val) {
         this.val := val
         this.subs := []
-        return this.val
+        this.comps := []
     }
 
     get(mutateFunction := 0) {
@@ -24,6 +24,34 @@ class ReactiveSignal {
         for ctrl in this.subs {
             ctrl.update(this.val)
         }
+        for comp in this.comps {
+            comp.sync(this.val)
+        }
+    }
+
+    addSub(controlInstance) {
+        this.subs.Push(controlInstance)
+    }
+
+    addComp(computed) {
+        this.comps.Push(computed)
+    }
+}
+
+class ComputedSignal {
+    __New(signal, mutation) {
+        this.signal := signal
+        this.mutation := mutation
+        this.val := this.mutation(this.signal.get())
+        this.subs := []
+        
+        signal.addComp(this)
+    }
+
+    sync(newVal){
+        for ctrl in this.subs {
+            ctrl.update(newVal)
+        }
     }
 
     addSub(controlInstance) {
@@ -31,17 +59,8 @@ class ReactiveSignal {
     }
 }
 
-; class DerivedSignal extends ReactiveSignal {
-;     __New(depend, mutation){
-;         this.val := depend.get()
-;         this.subs := []
-;         this.depend := depend
-;         this.mutation := mutation
-;     }
 
 
-
-; }
 
 class ReactiveControl {
     __New(controlType, depend, GuiObject, options, innerText, event := 0) {
@@ -80,9 +99,9 @@ class ReactiveControl {
     }
 
     update(newValue) {
-        if (Type(this.ctrl) = "Gui.Text" || Type(this.ctrl) = "Gui.Button" ) {
+        if (this.ctrl is Gui.Text || this.ctrl is Gui.Button) {
             this.ctrl.Text := newValue
-        } else if (Type(this.ctrl) = "Gui.Edit") {
+        } else if (this.ctrl is Gui.Edit) {
             this.ctrl.Value := newValue
         }
     }
