@@ -2,6 +2,7 @@ class ReactiveSignal {
     __New(val) {
         this.val := val
         this.subs := []
+        return this.val
     }
 
     get(mutateFunction := 0) {
@@ -21,7 +22,7 @@ class ReactiveSignal {
             ? newSignalValue(this.val)
             : newSignalValue
         for ctrl in this.subs {
-            ctrl.setInnerText(this.val)
+            ctrl.update(this.val)
         }
     }
 
@@ -37,6 +38,9 @@ class ReactiveSignal {
 ;         this.depend := depend
 ;         this.mutation := mutation
 ;     }
+
+
+
 ; }
 
 class ReactiveControl {
@@ -75,7 +79,13 @@ class ReactiveControl {
         this.ctrl.OnEvent(event, (*) => callback())
     }
 
-
+    update(newValue) {
+        if (Type(this.ctrl) = "Gui.Text" || Type(this.ctrl) = "Gui.Button" ) {
+            this.ctrl.Text := newValue
+        } else if (Type(this.ctrl) = "Gui.Edit") {
+            this.ctrl.Value := newValue
+        }
+    }
 }
 
 class addReactiveButton extends ReactiveControl {
