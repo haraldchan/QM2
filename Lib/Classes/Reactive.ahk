@@ -22,7 +22,7 @@ class ReactiveSignal {
             ? newSignalValue(this.val)
             : newSignalValue
         for ctrl in this.subs {
-            ctrl.update(this.val)
+            ctrl.update(this)
         }
         for comp in this.comps {
             comp.sync(this.val)
@@ -42,15 +42,17 @@ class ComputedSignal {
     __New(signal, mutation) {
         this.signal := signal
         this.mutation := mutation
-        this.val := this.mutation(this.signal.get())
+        this.val := this.mutation.Call(this.signal.get())
+        ; msgbox this.mutation.Call(this.signal.get())
         this.subs := []
 
         signal.addComp(this)
     }
 
     sync(newVal) {
+        this.val := this.mutation.Call(newVal)
         for ctrl in this.subs {
-            ctrl.update(newVal)
+            ctrl.update(this)
         }
     }
 
@@ -60,21 +62,29 @@ class ComputedSignal {
 }
 
 class ReactiveControl {
-    __New(controlType, depend, GuiObject, options, innerText, event := 0) {
+    __New(controlType, GuiObject, options, innerText, depend, event := 0) {
         this.depend := depend
         this.GuiObject := GuiObject
         this.options := options
         this.innerText := innerText
+        this.fromattedText := this.reformat(innerText, depend)
         this.ctrlType := controlType
 
-        this.ctrl := this.GuiObject.Add(this.ctrlType, options, innerText)
+        this.ctrl := this.GuiObject.Add(this.ctrlType, options, this.fromattedText)
         if (event != 0) {
             this.event := event[1]
             this.callback := event[2]
             this.ctrl.OnEvent(this.event, (*) => this.callback())
         }
 
-        depend.addSub(this)
+        if (depend is Array) {
+            for dep in depend {
+                dep.addSub(this)
+            }
+        } else {
+            depend.addSub(this)
+        }
+
     }
 
     setOptions(newOptions) {
@@ -95,45 +105,57 @@ class ReactiveControl {
         this.ctrl.OnEvent(event, (*) => callback())
     }
 
-    update(newValue) {
+    update(depend) {
         if (this.ctrl is Gui.Text || this.ctrl is Gui.Button) {
-            this.ctrl.Text := this.reformat(this.innerText, newValue)
+            this.ctrl.Text := this.reformat(this.innerText, depend)
         } else if (this.ctrl is Gui.Edit) {
-            this.ctrl.Value := this.reformat(this.innerText, newValue)
+            this.ctrl.Value := this.reformat(this.innerText, this.depend)
         }
     }
 
-    reformat(text, vals*) {
+    reformat(text, depend) {
         reconcat(text, val) {
-            lIndex := InStr(text, "{{")
-            lPart := SubStr(text, 0, lIndex)
+            lCurl :=  InStr(text, "{") + 1
+            rCurl := InStr(text, "}") 
 
-            rIndex := InStr(text, "}}")
-            rPart := SubStr(text, rIndex + 1)
+            index := Trim(SubStr(text, lCurl, rCurl - lCurl - 1 )) = "" 
+                ? 1 
+                : Trim(SubStr(text, lCurl, rCurl - lCurl - 1 ))
+
+            lPart := SubStr(text, 1, lCurl - 1)
+            rPart := SubStr(text, rCurl)
 
             return Format(lPart . "{1}" . rPart, val)
         }
+        
         newStr := text
-        ; e.g:
-        ; 0: "this is a text, val1 is {{ num1 }}, val2 is {{ num2 }}"
-        ; 1: "this is a text, val1 is num1, val2 is {{ num2 }}"
-        ; 2: "this is a text, val1 is num1, val2 is num2"
+        vals := []
+        if (depend is Array) {
+            for dep in depend {
+                vals.Push(dep.val)  
+            }
+        } else {
+            vals.Push(depend.val)
+
+        }
         loop vals.Length {
             newStr := reconcat(newStr, vals[A_Index])
+            newStr := StrReplace(newStr, "{", "",,,1)
+            newStr := StrReplace(newStr, "}", "",,,1)
         }
         return newStr
     }
 }
 
 class addReactiveButton extends ReactiveControl {
-    __New(depend, GuiObject, options, innerText, event := 0) {
-        super.__New("Button", depend, GuiObject, options, innerText, event)
+    __New(GuiObject, options, innerText, depend, event := 0) {
+        super.__New("Button", GuiObject, options, innerText, depend, event)
     }
 }
 
 class addReactiveEdit extends ReactiveControl {
-    __New(depend, GuiObject, options, innerText, event := 0) {
-        super.__New("Edit", depend, GuiObject, options, innerText, event)
+    __New(GuiObject, options, innerText, depend, event := 0) {
+        super.__New("Edit", GuiObject, options, innerText, depend, event)
     }
 
     getValue() {
@@ -142,8 +164,8 @@ class addReactiveEdit extends ReactiveControl {
 }
 
 class addReactiveCheckBox extends ReactiveControl {
-    __New(depend, GuiObject, options, innerText, event := 0) {
-        super.__New("CheckBox", depend, GuiObject, options, innerText, event)
+    __New(GuiObject, options, innerText, depend, event := 0) {
+        super.__New("CheckBox", GuiObject, options, innerText, depend, event)
     }
 
     getValue() {
@@ -175,13 +197,13 @@ class addReactiveComboBox extends ReactiveControl {
 }
 
 class addReactiveText extends ReactiveControl {
-    __New(depend, GuiObject, options, innerText, event := 0) {
-        super.__New("Text", depend, GuiObject, options, innerText, event)
+    __New(GuiObject, options, innerText, depend, event := 0) {
+        super.__New("Text", GuiObject, options, innerText, depend, event)
     }
 }
 
 class addReactiveRadio extends ReactiveControl {
-    __New(depend, GuiObject, options, innerText, event := 0) {
-        super.__New("Radio", depend, GuiObject, options, innerText, event)
+    __New(GuiObject, options, innerText, depend, event := 0) {
+        super.__New("Radio", GuiObject, options, innerText, depend, event)
     }
 }
