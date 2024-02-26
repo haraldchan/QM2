@@ -22,9 +22,8 @@ modules := [
     ResvHandler,
 ]
 winGroup := ["ahk_class SunAwtFrame", "旅客信息"]
-if (!FileExist(A_MyDocuments . "\ClipFlow.ini")) {
-    FileCopy scriptHost . "\Lib\ClipFlow\ClipFlow.ini", A_MyDocuments
-}
+
+iniChecker()
 store := A_MyDocuments . "\ClipFlow.ini"
 Sleep 100
 tabPos := IniRead(store, "App", "tabPos")
@@ -36,8 +35,7 @@ onTop := ReactiveSignal(false)
 ClipFlow := Gui(, popupTitle)
 ClipFlow.OnEvent("Close", (*) =>
     IniWrite(1, store, "App", "tabPos")
-    utils.quitApp("ClipFlow", popupTitle, winGroup)
-)
+    utils.quitApp("ClipFlow", popupTitle, winGroup))
 ClipFlow.AddCheckbox("h25 x15", "保持 ClipFlow 置顶    / 停止脚本: Ctrl+F12").OnEvent("Click", keepOnTop)
 
 tab3 := ClipFlow.AddTab3("w280 x15 " . "Choose" . tabPos, ["Flow Modes", "History", "DevTool"])
@@ -83,6 +81,35 @@ clearList(*) {
     FileDelete(store)
     FileCopy("../Lib/ClipFlow/ClipFlow.ini", A_MyDocuments)
     utils.cleanReload(winGroup)
+}
+
+iniChecker() {
+    ; check ini file existence
+    if (!FileExist(A_MyDocuments . "\ClipFlow.ini")) {
+        FileCopy scriptHost . "\Lib\ClipFlow\ClipFlow.ini", A_MyDocuments
+    }
+    store := A_MyDocuments . "\ClipFlow.ini"
+    ; check keys
+    ini := Map(
+        "App", ["tabPos", "moduleSelected"],
+        "ClipHistory", "clipHisArr",
+        "ResvHandler", "JSON"
+    )
+    try {
+        for section, key in ini {
+            if (key is Array) {
+                for nestedKey in key {
+                    IniRead(store, section, nestedKey)
+                }
+            } else {
+                IniRead(store, section, key)
+            }
+        }
+    } catch {
+        FileDelete A_MyDocuments . "\ClipFlow.ini"
+        Sleep 100
+        FileCopy scriptHost . "\Lib\ClipFlow\ClipFlow.ini", A_MyDocuments
+    }
 }
 
 moduleLoader(App) {
