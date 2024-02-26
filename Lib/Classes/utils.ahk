@@ -44,7 +44,6 @@ class utils {
 ;debug: save output log / show msgbox
 class debug {
     static mb(res) {
-        prefix := res
         str := Jxon_Dump(res)
         MsgBox(str, "Debug")
     }
@@ -233,5 +232,19 @@ class interface {
             checkedRowsData.Push(dataMap)
         }
         return checkedRowsData
+    }
+}
+
+defineArrayMethod(Array)
+defineArrayMethod(arrObj){
+    arrObj.Prototype.some := some
+
+    some(fn){
+        for item in arrObj {
+            if (fn(item)) {
+                return true
+            }
+        }
+        return false
     }
 }
