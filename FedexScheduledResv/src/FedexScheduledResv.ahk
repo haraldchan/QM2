@@ -75,7 +75,7 @@ class FsrEntry {
 			? DateAdd(schdCiDate, -1, "days")
 			: schdCiDate
 		pmsCoDate := schdCoDate
-		comment := Format("RM INCL 1BBF TO CO,Hours@Hotel: {1}={2}day(s), ActualStay: {3}-{4}",
+		comment := Format("{Text}RM INCL 1BBF TO CO,Hours@Hotel: {1}={2}day(s), ActualStay: {3}-{4}",
 			inboundFlightLine["stayHours"],
 			daysActual,
 			schdCiDate,
@@ -91,43 +91,36 @@ class FsrEntry {
 		pmsCoDate := FormatTime(pmsCoDate, "MMddyyyy")
 		; }
 		this.openBooking()
-		Sleep 1000
-
+		
 		this.profileEntry(inboundFlightLine["flightIn"], inboundFlightLine["tripNum"])
-		Sleep 3000
 
 		this.dateTimeEntry(pmsCiDate, pmsCoDate, inboundFlightLine["ETA"], inboundFlightLine["ETD"])
-		Sleep 1000
 
 		this.commentIbdTripEntry(comment, inboundFlightLine["flightIn"], inboundFlightLine["tripNum"])
-		Sleep 1000
 
 		this.moreFieldsEntry(schdCiDate, schdCoDate, inboundFlightLine["ETA"], inboundFlightLine["ETD"], inboundFlightLine["flightIn"], inboundFlightLine["flightOut"])
-		Sleep 1000
 
 		if (daysActual < pmsNts) {
 			this.dailyDetailsEntry(daysActual)
 		}
-		Sleep 1000
 
 		this.saveBooking()
-		Sleep 1000
 	}
 
 	static openBooking() {
-		Sleep 1000
+		waitLoading()
 		MouseMove 399, 244
 		Sleep 150
 		Send "!e"
-		Sleep 2000
+		waitLoading()
 	}
 
 	static saveBooking() {
 		CoordMode "Pixel", "Screen"
 		Send "!o"
-		Sleep 1000
+		waitLoading()
 		loop {
-			Sleep 500
+			waitLoading()
 			if (PixelGetColor(610, 330) = "0x99B4D1") { 
 				break
 			}
@@ -139,197 +132,192 @@ class FsrEntry {
 			}
 		}
 		Send "!o"
-		Sleep 1000
+		waitLoading()
 		Send "{Down}"
-		Sleep 1000
+		waitLoading()
 	}
 
 	static profileEntry(flightIn, tripNumber, initX := 467, initY := 201) {
 		MouseMove 467, 221
-		Sleep 100
+		waitLoading()
 		Click
-		Sleep 1000
+		waitLoading()
 		MouseMove 442, 284
-		Sleep 100
+		waitLoading()
 		Click "Down"
 		MouseMove 214, 289
-		Sleep 100
+		waitLoading()
 		Click "Up"
-		Sleep 100
+		waitLoading()
 		Send "{Backspace}"
-		Sleep 100
+		waitLoading()
 		Send Format("{Text}{1}  {2}", flightIn, tripNumber)
-		Sleep 100
+		waitLoading()
 		MouseMove 594, 414
-		Sleep 150
+		waitLoading()
 		Send "!o"
-		Sleep 100
+		waitLoading()
 		MouseMove 812, 507
-		Sleep 100
+		waitLoading()
 		Click
-		Sleep 500
+		waitLoading()
 	}
 
 	static dateTimeEntry(checkin, checkout, ETA, ETD, initX := 323, initY := 506) {
 		; fill-in checkin/checkout
-		MouseMove initX + 9, initY - 150 ; 332, 356
-		Sleep 100
-		Click 2
-		Sleep 100
+		MouseMove 345, initY - 150 ; 332, 356
+		waitLoading()
+		Click 1
+		waitLoading()
 		Send "!c"
-		Sleep 100
+		waitLoading()
 		Send Format("{Text}{1}", checkin)
-		Sleep 100
+		waitLoading()
 		MouseMove initX + 2, initY - 108 ; 325, 398
-		Sleep 100
+		waitLoading()
 		Click
-		Sleep 100
+		waitLoading()
 		MouseMove initX + 338, initY + 37 ; 661, 543
-		Sleep 100
+		waitLoading()
 		Click
 		MouseMove initX + 313, initY + 37 ; 636, 543
-		Sleep 100
+		waitLoading()
 		Click
 		MouseMove initX + 312, initY + 37 ; 635, 543
-		Sleep 100
+		waitLoading()
 		Click
-		Sleep 100
+		waitLoading()
 		Click
-		Sleep 100
-		MouseMove initX + 12, initY - 101 ; 335, 405
-		Sleep 100
-		Click 2
-		Sleep 100
+		waitLoading()
+		MouseMove 345, initY - 101 ; 335, 405
+		waitLoading()
+		Click 1
+		waitLoading()
 		Send "!c"
-		Sleep 100
+		waitLoading()
 		Send Format("{Text}{1}", checkout)
-		Sleep 100
+		waitLoading()
 		Send "{Enter}"
-		Sleep 100
+		waitLoading()
 		loop 5 {
 			Send "{Esc}"
-			Sleep 300
+			waitLoading()
 		}
 		; fill in ETA & ETD
-		MouseMove initX - 29, initY + 91 ; 294, 597
-		Sleep 100
-		MouseMove initX - 3, initY + 91 ; 320, 597
-		Sleep 100
-		Click "Down"
-		MouseMove initX - 123, initY + 91 ; 200, 597
-		Sleep 100
-		Click "Up"
-		Sleep 100
+		MouseMove 320, 599
+		waitLoading()
+		Click 3
+		waitLoading()
 		Send Format("{Text}{1}", ETA)
-		Sleep 100
-		MouseMove initX + 176, initY + 91 ; 499, 597
-		Sleep 100
-		Click "Down"
-		MouseMove initX + 7, initY + 88 ; 330, 594
-		Sleep 100
-		Click "Up"
-		Sleep 100
+		waitLoading()
+		Send "{Tab}"
+		waitLoading()
+		MouseMove 454, 599
+		waitLoading()
+		Click 3
+		waitLoading()
 		Send Format("{Text}{1}", ETD)
-		Sleep 100
+		Send "{Tab}"
+		waitLoading()
 	}
 
 	static commentIbdTripEntry(comment, flightIn, tripNumber, initX := 622, initY := 589) {
 		; select all and re-enter comment
 		MouseMove initX, initY ; 622, 596
-		Sleep 100
+		waitLoading()
 		Click "Down"
 		MouseMove initX + 518, initY + 36 ; 1140, 605
-		Sleep 100
+		waitLoading()
 		Click "Up"
-		Sleep 100
+		waitLoading()
 		Send "{Backspace}"
-		Sleep 100
+		waitLoading()
 		Send comment
-		Sleep 100
+		waitLoading()
 		; fill-in new flight and trip
 		MouseMove initX + 307, initY - 35 ; 929, 554
-		Sleep 100
+		waitLoading()
 		Click 3
-		Sleep 100
+		waitLoading()
 		Send Format("{Text}{1}  {2}", flightIn, tripNumber)
-		Sleep 100
+		waitLoading()
 	}
 
 	static moreFieldsEntry(sCheckin, sCheckout, ETA, ETD, flightIn, flightOut, initX := 236, initY := 333) {
 		MouseMove initX, initY ; 236, 333
-        Sleep 100
+		waitLoading()
         Click
-        Sleep 100
+		waitLoading()
         MouseMove 680, 460
-        Sleep 100
+		waitLoading()
         Click 2
-        Sleep 100
+		waitLoading()
         Send Format("{Text}{1}", flightIn)
-        Sleep 100
+		waitLoading()
         loop 2 {
             Send "{Tab}"
-            Sleep 100
+			waitLoading()
         }
         Send Format("{Text}{1}", sCheckin)
         Sleep 100
         Send "{Tab}"
-        Sleep 100
+		waitLoading()
         Send Format("{Text}{1}", ETA)
-        Sleep 100
+		waitLoading()
         MouseMove 917, 465
-        Sleep 100
+		waitLoading()
         Click 2
-        Sleep 100
+		waitLoading()
         Send Format("{Text}{1}", flightOut)
-        Sleep 100
+		waitLoading()
         loop 2 {
             Send "{Tab}"
-            Sleep 100
+			waitLoading()
         }
-        Sleep 100
+		waitLoading()
         Send Format("{Text}{1}", sCheckout)
-        Sleep 100
+		waitLoading()
         Send "{Tab}"
-        Sleep 100
+		waitLoading()
         Send Format("{Text}{1}", ETD)
-        Sleep 100
+		waitLoading()
         MouseMove initX + 605, initY + 347 ; 841, 680
-        Sleep 100
+		waitLoading()
         Click
-        Sleep 100
+		waitLoading()
 	}
 
 	static dailyDetailsEntry(daysActual, initX := 372, initY := 524) {
 		MouseMove initX, initY ; 372, 524
-		Sleep 100
+		waitLoading()
 		Click
-		Sleep 100
+		waitLoading()
 		Send "!d"
-		Sleep 1500
+		waitLoading()
 		loop daysActual {
 			Send "{Down}"
-			Sleep 200
+			waitLoading()
 		}
 		Send "!e"
-		Sleep 100
+		waitLoading()
 		loop 4 {
 			Send "{Tab}"
-			Sleep 200
+			waitLoading()		
 		}
 		Send "{Text}NRR"
-		Sleep 100
+		waitLoading()
 		Send "!o"
 		loop 3 {
 			Send "{Esc}"
-			Sleep 500
+			waitLoading()
 		}
-		Sleep 100
+		waitLoading()
 		Send "!o"
-		Sleep 100
+		waitLoading()
 		loop 5 {
 			Send "{Esc}"
-			Sleep 500
+		waitLoading()
 		}
-		Sleep 100
+		waitLoading()
 	}
 }

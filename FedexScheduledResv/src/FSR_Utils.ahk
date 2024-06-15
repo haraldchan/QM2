@@ -46,3 +46,12 @@ getBringForwardTime(timeString) {
             return 10
     }
 }
+
+waitLoading() {
+    loop {
+        sleep 150
+        if (A_Cursor != "Wait") {
+            break
+        }
+    }
+}
