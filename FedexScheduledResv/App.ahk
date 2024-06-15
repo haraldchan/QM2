@@ -60,6 +60,7 @@ savePath(*) {
 }
 
 getSchd(*) {
+	
 	FSR.Opt("+OwnDialogs")
 	selectFile := FileSelect(3, , "请选择 Schedule 文件")
 	if (selectFile = "") {
@@ -83,10 +84,6 @@ saveTime(*) {
 }
 
 showScheduleList(scheduledPath) {
-	state := {
-		isCheckedAll: true
-	}
-
 	colTitles := [
 		"Trip No.  ",
 		"Qty",
@@ -107,7 +104,7 @@ showScheduleList(scheduledPath) {
 
 	SchdList := Gui("", Format("FedEx Schedule {1}", FormatTime(selectedDate.Value, "yyyy/MM/dd")))
 	SchdList.OnEvent("Close", cleanReload)
-	LV := SchdList.AddListView("Checked w620 h350", colTitles)
+	LV := SchdList.AddListView("Checked Grid w620 h350", colTitles)
 
 	; render list
 	SchdDetails := []
@@ -134,7 +131,7 @@ showScheduleList(scheduledPath) {
 
 	SchdList.Show()
 
-	; global isCheckedAll := true
+	global isCheckedAll := true
 	checkAllBtn := interface.getCtrlByName("checkAllBtn", footer)
 	startBtn := interface.getCtrlByName("startBtn", footer)
 
@@ -145,12 +142,12 @@ showScheduleList(scheduledPath) {
 	checkIsCheckedAll(*){
 		checkedRows := interface.getCheckedRowNumbers(LV)
 		checkAllBtn.Value := (checkedRows.Length = flights.Length)
-		state.isCheckedAll := checkAllBtn.Value
+		global isCheckedAll := checkAllBtn.Value
 	}
 
 	setCheckAll(*){
-		state.isCheckedAll := !state.isCheckedAll
-		checkStatus := (state.isCheckedAll = true)
+		global isCheckedAll := !isCheckedAll
+		checkStatus := isCheckedAll = true
 			? "Check"
 			: "-Check"
 			LV.Modify(0, checkStatus)
