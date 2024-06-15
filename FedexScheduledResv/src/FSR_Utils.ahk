@@ -47,9 +47,9 @@ getBringForwardTime(timeString) {
     }
 }
 
-waitLoading() {
+waitLoading(interval := 150) {
     loop {
-        sleep 150
+        sleep interval 
         if (A_Cursor != "Wait") {
             break
         }
